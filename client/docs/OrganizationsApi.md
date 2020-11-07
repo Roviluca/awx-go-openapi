@@ -361,7 +361,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_44("AuthorizationGrantType_example", "ClientType_example", "Name_example", 123) // InlineObject44 |  (optional)
+    data := openapiclient.inline_object_44{AuthorizationGrantType: "AuthorizationGrantType_example", ClientType: "ClientType_example", Description: "Description_example", Name: "Name_example", Organization: 123, RedirectUris: "RedirectUris_example", SkipAuthorization: false} // InlineObject44 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -508,7 +508,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsCreate(context.Background()).Data(data).Execute()
+    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsCreate(context.Background(), ).Data(data).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsCreate``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -569,7 +569,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_45(123, "Name_example") // InlineObject45 |  (optional)
+    data := openapiclient.inline_object_45{CredentialType: 123, Description: "Description_example", Inputs: 123, Name: "Name_example", Organization: 123} // InlineObject45 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -1145,7 +1145,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_46("Name_example") // InlineObject46 |  (optional)
+    data := openapiclient.inline_object_46{AllowSimultaneous: false, AskCredentialOnLaunch: false, AskDiffModeOnLaunch: false, AskInventoryOnLaunch: false, AskJobTypeOnLaunch: false, AskLimitOnLaunch: false, AskScmBranchOnLaunch: false, AskSkipTagsOnLaunch: false, AskTagsOnLaunch: false, AskVariablesOnLaunch: false, AskVerbosityOnLaunch: false, BecomeEnabled: false, CustomVirtualenv: "CustomVirtualenv_example", Description: "Description_example", DiffMode: false, ExtraVars: "ExtraVars_example", ForceHandlers: false, Forks: 123, HostConfigKey: "HostConfigKey_example", Inventory: 123, JobSliceCount: 123, JobTags: "JobTags_example", JobType: "JobType_example", Limit: "Limit_example", Name: "Name_example", Playbook: "Playbook_example", Project: "Project_example", ScmBranch: "ScmBranch_example", SkipTags: "SkipTags_example", StartAtTask: "StartAtTask_example", SurveyEnabled: false, Timeout: 123, UseFactCache: false, Verbosity: "Verbosity_example", WebhookCredential: 123, WebhookService: "WebhookService_example"} // InlineObject46 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -1294,7 +1294,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsList(context.Background()).Page(page).PageSize(pageSize).Search(search).Execute()
+    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1501,7 +1501,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_47("Name_example", "NotificationType_example", 123) // InlineObject47 |  (optional)
+    data := openapiclient.inline_object_47{Description: "Description_example", Messages: "Messages_example", Name: "Name_example", NotificationConfiguration: "NotificationConfiguration_example", NotificationType: "NotificationType_example", Organization: 123} // InlineObject47 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -1571,7 +1571,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_48("Name_example", "NotificationType_example", 123) // InlineObject48 |  (optional)
+    data := openapiclient.inline_object_48{Description: "Description_example", Messages: "Messages_example", Name: "Name_example", NotificationConfiguration: "NotificationConfiguration_example", NotificationType: "NotificationType_example", Organization: 123} // InlineObject48 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -1933,7 +1933,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_49("Name_example", "NotificationType_example", 123) // InlineObject49 |  (optional)
+    data := openapiclient.inline_object_49{Description: "Description_example", Messages: "Messages_example", Name: "Name_example", NotificationConfiguration: "NotificationConfiguration_example", NotificationType: "NotificationType_example", Organization: 123} // InlineObject49 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -2223,7 +2223,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_50("Name_example") // InlineObject50 |  (optional)
+    data := openapiclient.inline_object_50{AllowOverride: false, Credential: 123, CustomVirtualenv: "CustomVirtualenv_example", Description: "Description_example", LocalPath: "LocalPath_example", Name: "Name_example", Organization: 123, ScmBranch: "ScmBranch_example", ScmClean: false, ScmDeleteOnUpdate: false, ScmRefspec: "ScmRefspec_example", ScmType: "ScmType_example", ScmUpdateCacheTimeout: 123, ScmUpdateOnLaunch: false, ScmUrl: "ScmUrl_example", Timeout: 123} // InlineObject50 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -2437,7 +2437,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_51("Name_example", 123) // InlineObject51 |  (optional)
+    data := openapiclient.inline_object_51{Description: "Description_example", Name: "Name_example", Organization: 123} // InlineObject51 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -2797,7 +2797,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_52("Name_example") // InlineObject52 |  (optional)
+    data := openapiclient.inline_object_52{AllowSimultaneous: false, AskInventoryOnLaunch: false, AskLimitOnLaunch: false, AskScmBranchOnLaunch: false, AskVariablesOnLaunch: false, Description: "Description_example", ExtraVars: "ExtraVars_example", Inventory: 123, Limit: "Limit_example", Name: "Name_example", Organization: 123, ScmBranch: "ScmBranch_example", SurveyEnabled: false, WebhookCredential: 123, WebhookService: "WebhookService_example"} // InlineObject52 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)

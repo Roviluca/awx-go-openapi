@@ -201,7 +201,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_54("Name_example") // InlineObject54 |  (optional)
+    data := openapiclient.inline_object_54{Name: "Name_example"} // InlineObject54 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -346,7 +346,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.ProjectsApi.ProjectsProjectsCreate(context.Background()).Data(data).Execute()
+    resp, r, err := api_client.ProjectsApi.ProjectsProjectsCreate(context.Background(), ).Data(data).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `ProjectsApi.ProjectsProjectsCreate``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -552,7 +552,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.ProjectsApi.ProjectsProjectsList(context.Background()).Page(page).PageSize(pageSize).Search(search).Execute()
+    resp, r, err := api_client.ProjectsApi.ProjectsProjectsList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `ProjectsApi.ProjectsProjectsList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -615,7 +615,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_55("Name_example", "NotificationType_example", 123) // InlineObject55 |  (optional)
+    data := openapiclient.inline_object_55{Description: "Description_example", Messages: "Messages_example", Name: "Name_example", NotificationConfiguration: "NotificationConfiguration_example", NotificationType: "NotificationType_example", Organization: 123} // InlineObject55 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -903,7 +903,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_56("Name_example", "NotificationType_example", 123) // InlineObject56 |  (optional)
+    data := openapiclient.inline_object_56{Description: "Description_example", Messages: "Messages_example", Name: "Name_example", NotificationConfiguration: "NotificationConfiguration_example", NotificationType: "NotificationType_example", Organization: 123} // InlineObject56 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -1407,7 +1407,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_57("Name_example", "Rrule_example", 123) // InlineObject57 |  (optional)
+    data := openapiclient.inline_object_57{Description: "Description_example", DiffMode: false, Enabled: false, ExtraData: "ExtraData_example", Inventory: 123, JobTags: "JobTags_example", JobType: "JobType_example", Limit: "Limit_example", Name: "Name_example", Rrule: "Rrule_example", ScmBranch: "ScmBranch_example", SkipTags: "SkipTags_example", UnifiedJobTemplate: 123, Verbosity: "Verbosity_example"} // InlineObject57 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -1700,7 +1700,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_53("Name_example") // InlineObject53 |  (optional)
+    data := openapiclient.inline_object_53{AllowOverride: false, Credential: 123, CustomVirtualenv: "CustomVirtualenv_example", Description: "Description_example", LocalPath: "LocalPath_example", Name: "Name_example", Organization: 123, ScmBranch: "ScmBranch_example", ScmClean: false, ScmDeleteOnUpdate: false, ScmRefspec: "ScmRefspec_example", ScmType: "ScmType_example", ScmUpdateCacheTimeout: 123, ScmUpdateOnLaunch: false, ScmUrl: "ScmUrl_example", Timeout: 123} // InlineObject53 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)

@@ -124,7 +124,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_7() // InlineObject7 |  (optional)
+    data := openapiclient.inline_object_7{BecomeEnabled: false, Credential: 123, DiffMode: false, ExtraVars: "ExtraVars_example", Forks: 123, Inventory: 123, JobType: "JobType_example", Limit: "Limit_example", ModuleArgs: "ModuleArgs_example", ModuleName: "ModuleName_example", Verbosity: "Verbosity_example"} // InlineObject7 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -485,11 +485,11 @@ import (
 )
 
 func main() {
-    data := *openapiclient.Newinline_object_5(123, "Name_example") // InlineObject5 |  (optional)
+    data := openapiclient.inline_object_5{Description: "Description_example", Inventory: 123, Name: "Name_example", Variables: "Variables_example"} // InlineObject5 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.GroupsApi.GroupsGroupsCreate(context.Background()).Data(data).Execute()
+    resp, r, err := api_client.GroupsApi.GroupsGroupsCreate(context.Background(), ).Data(data).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `GroupsApi.GroupsGroupsCreate``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -991,7 +991,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.GroupsApi.GroupsGroupsList(context.Background()).Page(page).PageSize(pageSize).Search(search).Execute()
+    resp, r, err := api_client.GroupsApi.GroupsGroupsList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `GroupsApi.GroupsGroupsList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1055,7 +1055,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_6() // InlineObject6 |  (optional)
+    data := openapiclient.inline_object_6{Description: "Description_example", Inventory: 123, Name: "Name_example", Variables: "Variables_example"} // InlineObject6 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -1343,7 +1343,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_9() // InlineObject9 |  (optional)
+    data := openapiclient.inline_object_9{Variables: "Variables_example"} // InlineObject9 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -1485,7 +1485,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_8() // InlineObject8 |  (optional)
+    data := openapiclient.inline_object_8{Variables: "Variables_example"} // InlineObject8 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)

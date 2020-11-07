@@ -350,7 +350,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_21("Name_example") // InlineObject21 |  (optional)
+    data := openapiclient.inline_object_21{Name: "Name_example"} // InlineObject21 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -495,7 +495,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesCreate(context.Background()).Data(data).Execute()
+    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesCreate(context.Background(), ).Data(data).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesCreate``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1281,7 +1281,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesList(context.Background()).Page(page).PageSize(pageSize).Search(search).Execute()
+    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1558,7 +1558,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_22(123, "Name_example") // InlineObject22 |  (optional)
+    data := openapiclient.inline_object_22{Description: "Description_example", Inventory: 123, Name: "Name_example", Variables: "Variables_example"} // InlineObject22 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)

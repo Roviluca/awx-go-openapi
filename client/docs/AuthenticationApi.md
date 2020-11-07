@@ -123,7 +123,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationApplicationsCreate0(context.Background()).Data(data).Execute()
+    resp, r, err := api_client.AuthenticationApi.AuthenticationApplicationsCreate0(context.Background(), ).Data(data).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationApplicationsCreate0``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -259,7 +259,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationApplicationsList0(context.Background()).Page(page).PageSize(pageSize).Search(search).Execute()
+    resp, r, err := api_client.AuthenticationApi.AuthenticationApplicationsList0(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationApplicationsList0``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -609,7 +609,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object("AuthorizationGrantType_example", "ClientType_example", "Name_example", 123) // InlineObject |  (optional)
+    data := openapiclient.inline_object{AuthorizationGrantType: "AuthorizationGrantType_example", ClientType: "ClientType_example", Description: "Description_example", Name: "Name_example", Organization: 123, RedirectUris: "RedirectUris_example", SkipAuthorization: false} // InlineObject |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -682,7 +682,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationOList(context.Background()).Execute()
+    resp, r, err := api_client.AuthenticationApi.AuthenticationOList(context.Background(), ).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationOList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -816,7 +816,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationTokensCreate0(context.Background()).Data(data).Execute()
+    resp, r, err := api_client.AuthenticationApi.AuthenticationTokensCreate0(context.Background(), ).Data(data).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationTokensCreate0``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -952,7 +952,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationTokensList0(context.Background()).Page(page).PageSize(pageSize).Search(search).Execute()
+    resp, r, err := api_client.AuthenticationApi.AuthenticationTokensList0(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationTokensList0``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1158,7 +1158,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_68() // InlineObject68 |  (optional)
+    data := openapiclient.inline_object_68{Description: "Description_example", Scope: "Scope_example"} // InlineObject68 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)

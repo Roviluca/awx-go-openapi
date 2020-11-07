@@ -33,11 +33,11 @@ import (
 )
 
 func main() {
-    data := *openapiclient.Newinline_object_37("Name_example", 123) // InlineObject37 |  (optional)
+    data := openapiclient.inline_object_37{Name: "Name_example", Organization: 123} // InlineObject37 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.LabelsApi.LabelsLabelsCreate(context.Background()).Data(data).Execute()
+    resp, r, err := api_client.LabelsApi.LabelsLabelsCreate(context.Background(), ).Data(data).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `LabelsApi.LabelsLabelsCreate``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -103,7 +103,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.LabelsApi.LabelsLabelsList(context.Background()).Page(page).PageSize(pageSize).Search(search).Execute()
+    resp, r, err := api_client.LabelsApi.LabelsLabelsList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `LabelsApi.LabelsLabelsList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -167,7 +167,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_39() // InlineObject39 |  (optional)
+    data := openapiclient.inline_object_39{Name: "Name_example", Organization: 123} // InlineObject39 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -309,7 +309,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_38("Name_example", 123) // InlineObject38 |  (optional)
+    data := openapiclient.inline_object_38{Name: "Name_example", Organization: 123} // InlineObject38 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)

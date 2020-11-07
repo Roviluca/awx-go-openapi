@@ -37,7 +37,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_43("Name_example") // InlineObject43 |  (optional)
+    data := openapiclient.inline_object_43{Name: "Name_example"} // InlineObject43 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -178,11 +178,11 @@ import (
 )
 
 func main() {
-    data := *openapiclient.Newinline_object_40("Name_example", "NotificationType_example", 123) // InlineObject40 |  (optional)
+    data := openapiclient.inline_object_40{Description: "Description_example", Messages: "Messages_example", Name: "Name_example", NotificationConfiguration: "NotificationConfiguration_example", NotificationType: "NotificationType_example", Organization: 123} // InlineObject40 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.NotificationTemplatesApi.NotificationTemplatesNotificationTemplatesCreate(context.Background()).Data(data).Execute()
+    resp, r, err := api_client.NotificationTemplatesApi.NotificationTemplatesNotificationTemplatesCreate(context.Background(), ).Data(data).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `NotificationTemplatesApi.NotificationTemplatesNotificationTemplatesCreate``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -318,7 +318,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.NotificationTemplatesApi.NotificationTemplatesNotificationTemplatesList(context.Background()).Page(page).PageSize(pageSize).Search(search).Execute()
+    resp, r, err := api_client.NotificationTemplatesApi.NotificationTemplatesNotificationTemplatesList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `NotificationTemplatesApi.NotificationTemplatesNotificationTemplatesList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -456,7 +456,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_42() // InlineObject42 |  (optional)
+    data := openapiclient.inline_object_42{Description: "Description_example", Messages: "Messages_example", Name: "Name_example", NotificationConfiguration: "NotificationConfiguration_example", NotificationType: "NotificationType_example", Organization: 123} // InlineObject42 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -664,7 +664,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_41("Name_example", "NotificationType_example", 123) // InlineObject41 |  (optional)
+    data := openapiclient.inline_object_41{Description: "Description_example", Messages: "Messages_example", Name: "Name_example", NotificationConfiguration: "NotificationConfiguration_example", NotificationType: "NotificationType_example", Organization: 123} // InlineObject41 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)

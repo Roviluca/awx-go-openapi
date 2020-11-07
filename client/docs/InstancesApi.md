@@ -36,7 +36,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_20("Name_example") // InlineObject20 |  (optional)
+    data := openapiclient.inline_object_20{Credential: 123, Name: "Name_example", PodSpecOverride: "PodSpecOverride_example", PolicyInstanceList: []string{"PolicyInstanceList_example"), PolicyInstanceMinimum: 123, PolicyInstancePercentage: 123} // InlineObject20 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -259,7 +259,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InstancesApi.InstancesInstancesList(context.Background()).Page(page).PageSize(pageSize).Search(search).Execute()
+    resp, r, err := api_client.InstancesApi.InstancesInstancesList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `InstancesApi.InstancesInstancesList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -323,7 +323,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_19() // InlineObject19 |  (optional)
+    data := openapiclient.inline_object_19{CapacityAdjustment: 123, Enabled: false, ManagedByPolicy: false} // InlineObject19 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -465,7 +465,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_18() // InlineObject18 |  (optional)
+    data := openapiclient.inline_object_18{CapacityAdjustment: 123, Enabled: false, ManagedByPolicy: false} // InlineObject18 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)

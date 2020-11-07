@@ -36,7 +36,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AdHocCommandEventsApi.AdHocCommandEventsAdHocCommandEventsList(context.Background()).Page(page).PageSize(pageSize).Search(search).Execute()
+    resp, r, err := api_client.AdHocCommandEventsApi.AdHocCommandEventsAdHocCommandEventsList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `AdHocCommandEventsApi.AdHocCommandEventsAdHocCommandEventsList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)

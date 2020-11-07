@@ -212,7 +212,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_80("Name_example") // InlineObject80 |  (optional)
+    data := openapiclient.inline_object_80{Name: "Name_example"} // InlineObject80 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -355,11 +355,11 @@ import (
 )
 
 func main() {
-    data := *openapiclient.Newinline_object_78("Name_example") // InlineObject78 |  (optional)
+    data := openapiclient.inline_object_78{AllowSimultaneous: false, AskInventoryOnLaunch: false, AskLimitOnLaunch: false, AskScmBranchOnLaunch: false, AskVariablesOnLaunch: false, Description: "Description_example", ExtraVars: "ExtraVars_example", Inventory: 123, Limit: "Limit_example", Name: "Name_example", Organization: 123, ScmBranch: "ScmBranch_example", SurveyEnabled: false, WebhookCredential: 123, WebhookService: "WebhookService_example"} // InlineObject78 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.WorkflowJobTemplatesApi.WorkflowJobTemplatesWorkflowJobTemplatesCreate(context.Background()).Data(data).Execute()
+    resp, r, err := api_client.WorkflowJobTemplatesApi.WorkflowJobTemplatesWorkflowJobTemplatesCreate(context.Background(), ).Data(data).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `WorkflowJobTemplatesApi.WorkflowJobTemplatesWorkflowJobTemplatesCreate``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -622,7 +622,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_81("Name_example", 123) // InlineObject81 |  (optional)
+    data := openapiclient.inline_object_81{Name: "Name_example", Organization: 123} // InlineObject81 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -766,7 +766,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_82() // InlineObject82 |  (optional)
+    data := openapiclient.inline_object_82{AskLimitOnLaunch: false, AskScmBranchOnLaunch: false, ExtraVars: "ExtraVars_example", Inventory: 123, Limit: "Limit_example", ScmBranch: "ScmBranch_example"} // InlineObject82 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -911,7 +911,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.WorkflowJobTemplatesApi.WorkflowJobTemplatesWorkflowJobTemplatesList(context.Background()).Page(page).PageSize(pageSize).Search(search).Execute()
+    resp, r, err := api_client.WorkflowJobTemplatesApi.WorkflowJobTemplatesWorkflowJobTemplatesList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `WorkflowJobTemplatesApi.WorkflowJobTemplatesWorkflowJobTemplatesList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1118,7 +1118,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_83("Name_example", "NotificationType_example", 123) // InlineObject83 |  (optional)
+    data := openapiclient.inline_object_83{Description: "Description_example", Messages: "Messages_example", Name: "Name_example", NotificationConfiguration: "NotificationConfiguration_example", NotificationType: "NotificationType_example", Organization: 123} // InlineObject83 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -1406,7 +1406,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_84("Name_example", "NotificationType_example", 123) // InlineObject84 |  (optional)
+    data := openapiclient.inline_object_84{Description: "Description_example", Messages: "Messages_example", Name: "Name_example", NotificationConfiguration: "NotificationConfiguration_example", NotificationType: "NotificationType_example", Organization: 123} // InlineObject84 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -2125,7 +2125,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_79("Name_example") // InlineObject79 |  (optional)
+    data := openapiclient.inline_object_79{AllowSimultaneous: false, AskInventoryOnLaunch: false, AskLimitOnLaunch: false, AskScmBranchOnLaunch: false, AskVariablesOnLaunch: false, Description: "Description_example", ExtraVars: "ExtraVars_example", Inventory: 123, Limit: "Limit_example", Name: "Name_example", Organization: 123, ScmBranch: "ScmBranch_example", SurveyEnabled: false, WebhookCredential: 123, WebhookService: "WebhookService_example"} // InlineObject79 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)

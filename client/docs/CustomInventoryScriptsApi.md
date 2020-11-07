@@ -36,7 +36,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_26("Name_example") // InlineObject26 |  (optional)
+    data := openapiclient.inline_object_26{Name: "Name_example"} // InlineObject26 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -177,11 +177,11 @@ import (
 )
 
 func main() {
-    data := *openapiclient.Newinline_object_23("Name_example", 123, "Script_example") // InlineObject23 |  (optional)
+    data := openapiclient.inline_object_23{Description: "Description_example", Name: "Name_example", Organization: 123, Script: "Script_example"} // InlineObject23 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsCreate(context.Background()).Data(data).Execute()
+    resp, r, err := api_client.CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsCreate(context.Background(), ).Data(data).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsCreate``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -317,7 +317,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsList(context.Background()).Page(page).PageSize(pageSize).Search(search).Execute()
+    resp, r, err := api_client.CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -455,7 +455,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_25() // InlineObject25 |  (optional)
+    data := openapiclient.inline_object_25{Description: "Description_example", Name: "Name_example", Organization: 123, Script: "Script_example"} // InlineObject25 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -597,7 +597,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_24("Name_example", 123, "Script_example") // InlineObject24 |  (optional)
+    data := openapiclient.inline_object_24{Description: "Description_example", Name: "Name_example", Organization: 123, Script: "Script_example"} // InlineObject24 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)

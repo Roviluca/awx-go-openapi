@@ -192,11 +192,11 @@ import (
 )
 
 func main() {
-    data := *openapiclient.Newinline_object_64("Name_example", 123) // InlineObject64 |  (optional)
+    data := openapiclient.inline_object_64{Description: "Description_example", Name: "Name_example", Organization: 123} // InlineObject64 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.TeamsApi.TeamsTeamsCreate(context.Background()).Data(data).Execute()
+    resp, r, err := api_client.TeamsApi.TeamsTeamsCreate(context.Background(), ).Data(data).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `TeamsApi.TeamsTeamsCreate``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -476,7 +476,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.TeamsApi.TeamsTeamsList(context.Background()).Page(page).PageSize(pageSize).Search(search).Execute()
+    resp, r, err := api_client.TeamsApi.TeamsTeamsList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `TeamsApi.TeamsTeamsList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -614,7 +614,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_66() // InlineObject66 |  (optional)
+    data := openapiclient.inline_object_66{Description: "Description_example", Name: "Name_example", Organization: 123} // InlineObject66 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -974,7 +974,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_65("Name_example", 123) // InlineObject65 |  (optional)
+    data := openapiclient.inline_object_65{Description: "Description_example", Name: "Name_example", Organization: 123} // InlineObject65 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -1045,7 +1045,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_67("Username_example") // InlineObject67 |  (optional)
+    data := openapiclient.inline_object_67{Email: "Email_example", FirstName: "FirstName_example", IsSuperuser: false, IsSystemAuditor: false, LastName: "LastName_example", Password: "Password_example", Username: "Username_example"} // InlineObject67 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)

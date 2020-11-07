@@ -179,7 +179,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_73() // InlineObject73 |  (optional)
+    data := openapiclient.inline_object_73{Description: "Description_example", Name: "Name_example", Timeout: 123} // InlineObject73 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -321,7 +321,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_72("Name_example") // InlineObject72 |  (optional)
+    data := openapiclient.inline_object_72{Description: "Description_example", Name: "Name_example", Timeout: 123} // InlineObject72 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)

@@ -35,7 +35,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.SystemConfigurationApi.SystemConfigurationAuthList(context.Background()).Execute()
+    resp, r, err := api_client.SystemConfigurationApi.SystemConfigurationAuthList(context.Background(), ).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `SystemConfigurationApi.SystemConfigurationAuthList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -92,7 +92,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.SystemConfigurationApi.SystemConfigurationConfigCreate(context.Background()).Execute()
+    resp, r, err := api_client.SystemConfigurationApi.SystemConfigurationConfigCreate(context.Background(), ).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `SystemConfigurationApi.SystemConfigurationConfigCreate``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -149,7 +149,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.SystemConfigurationApi.SystemConfigurationConfigDelete(context.Background()).Execute()
+    resp, r, err := api_client.SystemConfigurationApi.SystemConfigurationConfigDelete(context.Background(), ).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `SystemConfigurationApi.SystemConfigurationConfigDelete``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -206,7 +206,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.SystemConfigurationApi.SystemConfigurationConfigList(context.Background()).Execute()
+    resp, r, err := api_client.SystemConfigurationApi.SystemConfigurationConfigList(context.Background(), ).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `SystemConfigurationApi.SystemConfigurationConfigList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -263,7 +263,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.SystemConfigurationApi.SystemConfigurationConfigSubscriptionsCreate(context.Background()).Execute()
+    resp, r, err := api_client.SystemConfigurationApi.SystemConfigurationConfigSubscriptionsCreate(context.Background(), ).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `SystemConfigurationApi.SystemConfigurationConfigSubscriptionsCreate``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -322,7 +322,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.SystemConfigurationApi.SystemConfigurationPingList(context.Background()).Execute()
+    resp, r, err := api_client.SystemConfigurationApi.SystemConfigurationPingList(context.Background(), ).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `SystemConfigurationApi.SystemConfigurationPingList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)

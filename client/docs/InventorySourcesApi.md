@@ -130,7 +130,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventorySourcesApi.InventorySourcesInventorySourcesCreate(context.Background()).Data(data).Execute()
+    resp, r, err := api_client.InventorySourcesApi.InventorySourcesInventorySourcesCreate(context.Background(), ).Data(data).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `InventorySourcesApi.InventorySourcesInventorySourcesCreate``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -191,7 +191,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_28(123, "Name_example") // InlineObject28 |  (optional)
+    data := openapiclient.inline_object_28{CredentialType: 123, Description: "Description_example", Inputs: 123, Name: "Name_example", Organization: 123} // InlineObject28 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -772,7 +772,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventorySourcesApi.InventorySourcesInventorySourcesList(context.Background()).Page(page).PageSize(pageSize).Search(search).Execute()
+    resp, r, err := api_client.InventorySourcesApi.InventorySourcesInventorySourcesList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `InventorySourcesApi.InventorySourcesInventorySourcesList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -835,7 +835,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_29("Name_example", "NotificationType_example", 123) // InlineObject29 |  (optional)
+    data := openapiclient.inline_object_29{Description: "Description_example", Messages: "Messages_example", Name: "Name_example", NotificationConfiguration: "NotificationConfiguration_example", NotificationType: "NotificationType_example", Organization: 123} // InlineObject29 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -1123,7 +1123,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_30("Name_example", "NotificationType_example", 123) // InlineObject30 |  (optional)
+    data := openapiclient.inline_object_30{Description: "Description_example", Messages: "Messages_example", Name: "Name_example", NotificationConfiguration: "NotificationConfiguration_example", NotificationType: "NotificationType_example", Organization: 123} // InlineObject30 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -1409,7 +1409,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_31("Name_example", "Rrule_example", 123) // InlineObject31 |  (optional)
+    data := openapiclient.inline_object_31{Description: "Description_example", DiffMode: false, Enabled: false, ExtraData: "ExtraData_example", Inventory: 123, JobTags: "JobTags_example", JobType: "JobType_example", Limit: "Limit_example", Name: "Name_example", Rrule: "Rrule_example", ScmBranch: "ScmBranch_example", SkipTags: "SkipTags_example", UnifiedJobTemplate: 123, Verbosity: "Verbosity_example"} // InlineObject31 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -1554,7 +1554,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_27(123, "Name_example") // InlineObject27 |  (optional)
+    data := openapiclient.inline_object_27{Credential: 123, CustomVirtualenv: "CustomVirtualenv_example", Description: "Description_example", EnabledValue: "EnabledValue_example", EnabledVar: "EnabledVar_example", HostFilter: "HostFilter_example", Inventory: 123, Name: "Name_example", Overwrite: false, OverwriteVars: false, Source: "Source_example", SourcePath: "SourcePath_example", SourceProject: "SourceProject_example", SourceScript: 123, SourceVars: "SourceVars_example", Timeout: 123, UpdateCacheTimeout: 123, UpdateOnLaunch: false, UpdateOnProjectUpdate: false, Verbosity: "Verbosity_example"} // InlineObject27 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)

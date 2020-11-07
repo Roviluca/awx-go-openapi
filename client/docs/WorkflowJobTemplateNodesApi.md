@@ -188,11 +188,11 @@ import (
 )
 
 func main() {
-    data := *openapiclient.Newinline_object_75("WorkflowJobTemplate_example") // InlineObject75 |  (optional)
+    data := openapiclient.inline_object_75{AllParentsMustConverge: false, DiffMode: false, ExtraData: "ExtraData_example", Identifier: "Identifier_example", Inventory: 123, JobTags: "JobTags_example", JobType: "JobType_example", Limit: "Limit_example", ScmBranch: "ScmBranch_example", SkipTags: "SkipTags_example", UnifiedJobTemplate: 123, Verbosity: "Verbosity_example", WorkflowJobTemplate: "WorkflowJobTemplate_example"} // InlineObject75 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.WorkflowJobTemplateNodesApi.WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreate(context.Background()).Data(data).Execute()
+    resp, r, err := api_client.WorkflowJobTemplateNodesApi.WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreate(context.Background(), ).Data(data).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `WorkflowJobTemplateNodesApi.WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreate``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -756,7 +756,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.WorkflowJobTemplateNodesApi.WorkflowJobTemplateNodesWorkflowJobTemplateNodesList(context.Background()).Page(page).PageSize(pageSize).Search(search).Execute()
+    resp, r, err := api_client.WorkflowJobTemplateNodesApi.WorkflowJobTemplateNodesWorkflowJobTemplateNodesList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `WorkflowJobTemplateNodesApi.WorkflowJobTemplateNodesWorkflowJobTemplateNodesList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -820,7 +820,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_77() // InlineObject77 |  (optional)
+    data := openapiclient.inline_object_77{AllParentsMustConverge: false, DiffMode: false, ExtraData: "ExtraData_example", Identifier: "Identifier_example", Inventory: 123, JobTags: "JobTags_example", JobType: "JobType_example", Limit: "Limit_example", ScmBranch: "ScmBranch_example", SkipTags: "SkipTags_example", UnifiedJobTemplate: 123, Verbosity: "Verbosity_example", WorkflowJobTemplate: "WorkflowJobTemplate_example"} // InlineObject77 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -1106,7 +1106,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_76("WorkflowJobTemplate_example") // InlineObject76 |  (optional)
+    data := openapiclient.inline_object_76{AllParentsMustConverge: false, DiffMode: false, ExtraData: "ExtraData_example", Identifier: "Identifier_example", Inventory: 123, JobTags: "JobTags_example", JobType: "JobType_example", Limit: "Limit_example", ScmBranch: "ScmBranch_example", SkipTags: "SkipTags_example", UnifiedJobTemplate: 123, Verbosity: "Verbosity_example", WorkflowJobTemplate: "WorkflowJobTemplate_example"} // InlineObject76 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)

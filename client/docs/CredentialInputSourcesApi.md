@@ -38,7 +38,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CredentialInputSourcesApi.CredentialInputSourcesCredentialInputSourcesCreate(context.Background()).Data(data).Execute()
+    resp, r, err := api_client.CredentialInputSourcesApi.CredentialInputSourcesCredentialInputSourcesCreate(context.Background(), ).Data(data).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `CredentialInputSourcesApi.CredentialInputSourcesCredentialInputSourcesCreate``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -174,7 +174,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CredentialInputSourcesApi.CredentialInputSourcesCredentialInputSourcesList(context.Background()).Page(page).PageSize(pageSize).Search(search).Execute()
+    resp, r, err := api_client.CredentialInputSourcesApi.CredentialInputSourcesCredentialInputSourcesList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `CredentialInputSourcesApi.CredentialInputSourcesCredentialInputSourcesList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -380,7 +380,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_1("InputFieldName_example", 123, 123) // InlineObject1 |  (optional)
+    data := openapiclient.inline_object_1{Description: "Description_example", InputFieldName: "InputFieldName_example", Metadata: 123, SourceCredential: 123, TargetCredential: 123} // InlineObject1 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)

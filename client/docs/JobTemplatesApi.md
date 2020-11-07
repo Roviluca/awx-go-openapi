@@ -358,7 +358,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_32("Name_example") // InlineObject32 |  (optional)
+    data := openapiclient.inline_object_32{Name: "Name_example"} // InlineObject32 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -503,7 +503,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.JobTemplatesApi.JobTemplatesJobTemplatesCreate(context.Background()).Data(data).Execute()
+    resp, r, err := api_client.JobTemplatesApi.JobTemplatesJobTemplatesCreate(context.Background(), ).Data(data).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `JobTemplatesApi.JobTemplatesJobTemplatesCreate``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1128,7 +1128,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_33("Name_example", 123) // InlineObject33 |  (optional)
+    data := openapiclient.inline_object_33{Name: "Name_example", Organization: 123} // InlineObject33 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -1417,7 +1417,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.JobTemplatesApi.JobTemplatesJobTemplatesList(context.Background()).Page(page).PageSize(pageSize).Search(search).Execute()
+    resp, r, err := api_client.JobTemplatesApi.JobTemplatesJobTemplatesList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `JobTemplatesApi.JobTemplatesJobTemplatesList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -1480,7 +1480,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_34("Name_example", "NotificationType_example", 123) // InlineObject34 |  (optional)
+    data := openapiclient.inline_object_34{Description: "Description_example", Messages: "Messages_example", Name: "Name_example", NotificationConfiguration: "NotificationConfiguration_example", NotificationType: "NotificationType_example", Organization: 123} // InlineObject34 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -1768,7 +1768,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_35("Name_example", "NotificationType_example", 123) // InlineObject35 |  (optional)
+    data := openapiclient.inline_object_35{Description: "Description_example", Messages: "Messages_example", Name: "Name_example", NotificationConfiguration: "NotificationConfiguration_example", NotificationType: "NotificationType_example", Organization: 123} // InlineObject35 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -2272,7 +2272,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_36("Name_example") // InlineObject36 |  (optional)
+    data := openapiclient.inline_object_36{AllowSimultaneous: false, Description: "Description_example", ExtraVars: "ExtraVars_example", Inventory: 123, IsSlicedJob: false, JobTemplate: "JobTemplate_example", Limit: "Limit_example", Name: "Name_example", ScmBranch: "ScmBranch_example", WebhookCredential: 123, WebhookGuid: "WebhookGuid_example", WebhookService: "WebhookService_example", WorkflowJobTemplate: "WorkflowJobTemplate_example"} // InlineObject36 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)

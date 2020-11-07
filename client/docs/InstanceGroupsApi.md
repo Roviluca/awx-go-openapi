@@ -37,11 +37,11 @@ import (
 )
 
 func main() {
-    data := *openapiclient.Newinline_object_15("Name_example") // InlineObject15 |  (optional)
+    data := openapiclient.inline_object_15{Credential: 123, Name: "Name_example", PodSpecOverride: "PodSpecOverride_example", PolicyInstanceList: []string{"PolicyInstanceList_example"), PolicyInstanceMinimum: 123, PolicyInstancePercentage: 123} // InlineObject15 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InstanceGroupsApi.InstanceGroupsInstanceGroupsCreate(context.Background()).Data(data).Execute()
+    resp, r, err := api_client.InstanceGroupsApi.InstanceGroupsInstanceGroupsCreate(context.Background(), ).Data(data).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `InstanceGroupsApi.InstanceGroupsInstanceGroupsCreate``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -172,7 +172,7 @@ import (
 
 func main() {
     id := "id_example" // string | 
-    data := *openapiclient.Newinline_object_17() // InlineObject17 |  (optional)
+    data := openapiclient.inline_object_17{CapacityAdjustment: 123, Enabled: false, ManagedByPolicy: false} // InlineObject17 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
@@ -395,7 +395,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InstanceGroupsApi.InstanceGroupsInstanceGroupsList(context.Background()).Page(page).PageSize(pageSize).Search(search).Execute()
+    resp, r, err := api_client.InstanceGroupsApi.InstanceGroupsInstanceGroupsList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `InstanceGroupsApi.InstanceGroupsInstanceGroupsList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -601,7 +601,7 @@ import (
 func main() {
     id := "id_example" // string | 
     search := "search_example" // string | A search term. (optional)
-    data := *openapiclient.Newinline_object_16("Name_example") // InlineObject16 |  (optional)
+    data := openapiclient.inline_object_16{Credential: 123, Name: "Name_example", PodSpecOverride: "PodSpecOverride_example", PolicyInstanceList: []string{"PolicyInstanceList_example"), PolicyInstanceMinimum: 123, PolicyInstancePercentage: 123} // InlineObject16 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)

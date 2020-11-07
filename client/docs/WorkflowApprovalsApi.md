@@ -174,11 +174,11 @@ import (
 )
 
 func main() {
-    data := *openapiclient.Newinline_object_74("Name_example") // InlineObject74 |  (optional)
+    data := openapiclient.inline_object_74{Description: "Description_example", Name: "Name_example"} // InlineObject74 |  (optional)
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsCreate(context.Background()).Data(data).Execute()
+    resp, r, err := api_client.WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsCreate(context.Background(), ).Data(data).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsCreate``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -452,7 +452,7 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsList(context.Background()).Page(page).PageSize(pageSize).Search(search).Execute()
+    resp, r, err := api_client.WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsList``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
