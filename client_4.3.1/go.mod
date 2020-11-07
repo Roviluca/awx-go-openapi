@@ -1,4 +1,4 @@
-module github.com/roviluca/awx-open-api/client_4.3.1
+module github.com/roviluca/awx-go-openapi/client_4.3.1
 
 go 1.15
 
