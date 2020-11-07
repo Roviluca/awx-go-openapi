@@ -17,53 +17,19 @@ Method | HTTP request | Description
 
 ## WorkflowApprovalsWorkflowApprovalsApproveCreate
 
-> WorkflowApprovalsWorkflowApprovalsApproveCreate(ctx, id).Execute()
+> WorkflowApprovalsWorkflowApprovalsApproveCreate(ctx, id)
 
  Retrieve a Workflow Approval
 
+ Make GET request to this resource to retrieve a single workflow approval record containing the following fields:
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsApproveCreate(context.Background(), id).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsApproveCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiWorkflowApprovalsWorkflowApprovalsApproveCreateRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
+**id** | **string**|  | 
 
 ### Return type
 
@@ -85,55 +51,30 @@ No authorization required
 
 ## WorkflowApprovalsWorkflowApprovalsApproveRead
 
-> WorkflowApprovalsWorkflowApprovalsApproveRead(ctx, id).Search(search).Execute()
+> WorkflowApprovalsWorkflowApprovalsApproveRead(ctx, id, optional)
 
  Retrieve a Workflow Approval
 
+ Make GET request to this resource to retrieve a single workflow approval record containing the following fields:
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsApproveRead(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsApproveRead``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***WorkflowApprovalsWorkflowApprovalsApproveReadOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiWorkflowApprovalsWorkflowApprovalsApproveReadRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a WorkflowApprovalsWorkflowApprovalsApproveReadOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -155,49 +96,28 @@ No authorization required
 
 ## WorkflowApprovalsWorkflowApprovalsCreate
 
-> WorkflowApprovalsWorkflowApprovalsCreate(ctx).Data(data).Execute()
+> WorkflowApprovalsWorkflowApprovalsCreate(ctx, optional)
 
  Create a Workflow Approval
 
+ Make a POST request to this resource with the following workflow approval fields to create a new workflow approval:          * `name`: Name of this workflow approval. (string, required) * `description`: Optional description of this workflow approval. (string, default=`\"\"`)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    data := openapiclient.inline_object_74{Description: "Description_example", Name: "Name_example"} // InlineObject74 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsCreate(context.Background(), ).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiWorkflowApprovalsWorkflowApprovalsCreateRequest struct via the builder pattern
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **data** | [**InlineObject74**](InlineObject74.md) |  | 
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***WorkflowApprovalsWorkflowApprovalsCreateOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a WorkflowApprovalsWorkflowApprovalsCreateOpts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **data** | [**optional.Interface of InlineObject74**](InlineObject74.md)|  | 
 
 ### Return type
 
@@ -219,55 +139,30 @@ No authorization required
 
 ## WorkflowApprovalsWorkflowApprovalsDelete
 
-> WorkflowApprovalsWorkflowApprovalsDelete(ctx, id).Search(search).Execute()
+> WorkflowApprovalsWorkflowApprovalsDelete(ctx, id, optional)
 
  Delete a Workflow Approval
 
+ Make a DELETE request to this resource to delete this workflow approval.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsDelete(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsDelete``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***WorkflowApprovalsWorkflowApprovalsDeleteOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiWorkflowApprovalsWorkflowApprovalsDeleteRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a WorkflowApprovalsWorkflowApprovalsDeleteOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -289,53 +184,19 @@ No authorization required
 
 ## WorkflowApprovalsWorkflowApprovalsDenyCreate
 
-> WorkflowApprovalsWorkflowApprovalsDenyCreate(ctx, id).Execute()
+> WorkflowApprovalsWorkflowApprovalsDenyCreate(ctx, id)
 
  Retrieve a Workflow Approval
 
+ Make GET request to this resource to retrieve a single workflow approval record containing the following fields:
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsDenyCreate(context.Background(), id).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsDenyCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiWorkflowApprovalsWorkflowApprovalsDenyCreateRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
+**id** | **string**|  | 
 
 ### Return type
 
@@ -357,55 +218,30 @@ No authorization required
 
 ## WorkflowApprovalsWorkflowApprovalsDenyRead
 
-> WorkflowApprovalsWorkflowApprovalsDenyRead(ctx, id).Search(search).Execute()
+> WorkflowApprovalsWorkflowApprovalsDenyRead(ctx, id, optional)
 
  Retrieve a Workflow Approval
 
+ Make GET request to this resource to retrieve a single workflow approval record containing the following fields:
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsDenyRead(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsDenyRead``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***WorkflowApprovalsWorkflowApprovalsDenyReadOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiWorkflowApprovalsWorkflowApprovalsDenyReadRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a WorkflowApprovalsWorkflowApprovalsDenyReadOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -427,53 +263,30 @@ No authorization required
 
 ## WorkflowApprovalsWorkflowApprovalsList
 
-> WorkflowApprovalsWorkflowApprovalsList(ctx).Page(page).PageSize(pageSize).Search(search).Execute()
+> WorkflowApprovalsWorkflowApprovalsList(ctx, optional)
 
  List Workflow Approvals
 
+ Make a GET request to this resource to retrieve the list of workflow approvals.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of workflow approvals found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more workflow approval records.    ## Results  Each workflow approval data structure includes the following fields:  * `id`: Database ID for this workflow approval. (integer) * `type`: Data type for this workflow approval. (choice) * `url`: URL for this workflow approval. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this workflow approval was created. (datetime) * `modified`: Timestamp when this workflow approval was last modified. (datetime) * `name`: Name of this workflow approval. (string) * `description`: Optional description of this workflow approval. (string) * `unified_job_template`:  (id) * `launch_type`:  (choice)     - `manual`: Manual     - `relaunch`: Relaunch     - `callback`: Callback     - `scheduled`: Scheduled     - `dependency`: Dependency     - `workflow`: Workflow     - `webhook`: Webhook     - `sync`: Sync     - `scm`: SCM Update * `status`:  (choice)     - `new`: New     - `pending`: Pending     - `waiting`: Waiting     - `running`: Running     - `successful`: Successful     - `failed`: Failed     - `error`: Error     - `canceled`: Canceled * `failed`:  (boolean) * `started`: The date and time the job was queued for starting. (datetime) * `finished`: The date and time the job finished execution. (datetime) * `canceled_on`: The date and time when the cancel request was sent. (datetime) * `elapsed`: Elapsed time in seconds that the job ran. (decimal) * `job_explanation`: A status field to indicate the state of the job if it wasn&#39;t able to run and capture stdout (string) * `can_approve_or_deny`:  (field) * `approval_expiration`:  (field) * `timed_out`:  (boolean)    ## Sorting  To specify that workflow approvals are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiWorkflowApprovalsWorkflowApprovalsListRequest struct via the builder pattern
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***WorkflowApprovalsWorkflowApprovalsListOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a WorkflowApprovalsWorkflowApprovalsListOpts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -495,55 +308,30 @@ No authorization required
 
 ## WorkflowApprovalsWorkflowApprovalsRead
 
-> WorkflowApprovalsWorkflowApprovalsRead(ctx, id).Search(search).Execute()
+> WorkflowApprovalsWorkflowApprovalsRead(ctx, id, optional)
 
  Retrieve a Workflow Approval
 
+ Make GET request to this resource to retrieve a single workflow approval record containing the following fields:  * `id`: Database ID for this workflow approval. (integer) * `type`: Data type for this workflow approval. (choice) * `url`: URL for this workflow approval. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this workflow approval was created. (datetime) * `modified`: Timestamp when this workflow approval was last modified. (datetime) * `name`: Name of this workflow approval. (string) * `description`: Optional description of this workflow approval. (string) * `unified_job_template`:  (id) * `launch_type`:  (choice)     - `manual`: Manual     - `relaunch`: Relaunch     - `callback`: Callback     - `scheduled`: Scheduled     - `dependency`: Dependency     - `workflow`: Workflow     - `webhook`: Webhook     - `sync`: Sync     - `scm`: SCM Update * `status`:  (choice)     - `new`: New     - `pending`: Pending     - `waiting`: Waiting     - `running`: Running     - `successful`: Successful     - `failed`: Failed     - `error`: Error     - `canceled`: Canceled * `failed`:  (boolean) * `started`: The date and time the job was queued for starting. (datetime) * `finished`: The date and time the job finished execution. (datetime) * `canceled_on`: The date and time when the cancel request was sent. (datetime) * `elapsed`: Elapsed time in seconds that the job ran. (decimal) * `job_args`:  (string) * `job_cwd`:  (string) * `job_env`:  (json) * `job_explanation`: A status field to indicate the state of the job if it wasn&#39;t able to run and capture stdout (string) * `result_traceback`:  (string) * `event_processing_finished`: Indicates whether all of the events generated by this unified job have been saved to the database. (boolean) * `can_approve_or_deny`:  (field) * `approval_expiration`:  (field) * `timed_out`:  (boolean)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsRead(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `WorkflowApprovalsApi.WorkflowApprovalsWorkflowApprovalsRead``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***WorkflowApprovalsWorkflowApprovalsReadOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiWorkflowApprovalsWorkflowApprovalsReadRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a WorkflowApprovalsWorkflowApprovalsReadOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 

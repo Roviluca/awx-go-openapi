@@ -15,42 +15,13 @@ Method | HTTP request | Description
 
 ## SystemConfigurationAuthList
 
-> SystemConfigurationAuthList(ctx).Execute()
+> SystemConfigurationAuthList(ctx, )
 
 List enabled single-sign-on endpoints
 
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.SystemConfigurationApi.SystemConfigurationAuthList(context.Background(), ).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `SystemConfigurationApi.SystemConfigurationAuthList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 This endpoint does not need any parameter.
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiSystemConfigurationAuthListRequest struct via the builder pattern
-
 
 ### Return type
 
@@ -72,42 +43,13 @@ No authorization required
 
 ## SystemConfigurationConfigCreate
 
-> SystemConfigurationConfigCreate(ctx).Execute()
+> SystemConfigurationConfigCreate(ctx, )
 
 
 
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.SystemConfigurationApi.SystemConfigurationConfigCreate(context.Background(), ).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `SystemConfigurationApi.SystemConfigurationConfigCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 This endpoint does not need any parameter.
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiSystemConfigurationConfigCreateRequest struct via the builder pattern
-
 
 ### Return type
 
@@ -129,42 +71,13 @@ No authorization required
 
 ## SystemConfigurationConfigDelete
 
-> SystemConfigurationConfigDelete(ctx).Execute()
+> SystemConfigurationConfigDelete(ctx, )
 
 
 
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.SystemConfigurationApi.SystemConfigurationConfigDelete(context.Background(), ).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `SystemConfigurationApi.SystemConfigurationConfigDelete``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 This endpoint does not need any parameter.
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiSystemConfigurationConfigDeleteRequest struct via the builder pattern
-
 
 ### Return type
 
@@ -186,42 +99,13 @@ No authorization required
 
 ## SystemConfigurationConfigList
 
-> SystemConfigurationConfigList(ctx).Execute()
+> SystemConfigurationConfigList(ctx, )
 
 Return various sitewide configuration settings
 
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.SystemConfigurationApi.SystemConfigurationConfigList(context.Background(), ).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `SystemConfigurationApi.SystemConfigurationConfigList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 This endpoint does not need any parameter.
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiSystemConfigurationConfigListRequest struct via the builder pattern
-
 
 ### Return type
 
@@ -243,42 +127,13 @@ No authorization required
 
 ## SystemConfigurationConfigSubscriptionsCreate
 
-> SystemConfigurationConfigSubscriptionsCreate(ctx).Execute()
+> SystemConfigurationConfigSubscriptionsCreate(ctx, )
 
 
 
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.SystemConfigurationApi.SystemConfigurationConfigSubscriptionsCreate(context.Background(), ).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `SystemConfigurationApi.SystemConfigurationConfigSubscriptionsCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 This endpoint does not need any parameter.
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiSystemConfigurationConfigSubscriptionsCreateRequest struct via the builder pattern
-
 
 ### Return type
 
@@ -300,44 +155,15 @@ No authorization required
 
 ## SystemConfigurationPingList
 
-> SystemConfigurationPingList(ctx).Execute()
+> SystemConfigurationPingList(ctx, )
 
 Return some basic information about this instance
 
+ Everything returned here should be considered public / insecure, as this requires no auth and is intended for use by the installer process.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.SystemConfigurationApi.SystemConfigurationPingList(context.Background(), ).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `SystemConfigurationApi.SystemConfigurationPingList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 This endpoint does not need any parameter.
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiSystemConfigurationPingListRequest struct via the builder pattern
-
 
 ### Return type
 

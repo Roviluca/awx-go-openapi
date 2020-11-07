@@ -20,59 +20,32 @@ Method | HTTP request | Description
 
 ## CredentialTypesCredentialTypesActivityStreamList
 
-> CredentialTypesCredentialTypesActivityStreamList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> CredentialTypesCredentialTypesActivityStreamList(ctx, id, optional)
 
  List Activity Streams for a Credential Type
 
+ Make a GET request to this resource to retrieve a list of activity streams associated with the selected credential type.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of activity streams found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more activity stream records.    ## Results  Each activity stream data structure includes the following fields:  * `id`: Database ID for this activity stream. (integer) * `type`: Data type for this activity stream. (choice) * `url`: URL for this activity stream. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `timestamp`:  (datetime) * `operation`: The action taken with respect to the given object(s). (choice)     - `create`: Entity Created     - `update`: Entity Updated     - `delete`: Entity Deleted     - `associate`: Entity Associated with another Entity     - `disassociate`: Entity was Disassociated with another Entity * `changes`: A summary of the new and changed values when an object is created, updated, or deleted (json) * `object1`: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string) * `object2`: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string) * `object_association`: When present, shows the field name of the role or relationship that changed. (field) * `action_node`: The cluster node the activity took place on. (string) * `object_type`: When present, shows the model on which the role or relationship was defined. (field)    ## Sorting  To specify that activity streams are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CredentialTypesApi.CredentialTypesCredentialTypesActivityStreamList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CredentialTypesApi.CredentialTypesCredentialTypesActivityStreamList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***CredentialTypesCredentialTypesActivityStreamListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiCredentialTypesCredentialTypesActivityStreamListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a CredentialTypesCredentialTypesActivityStreamListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -94,49 +67,28 @@ No authorization required
 
 ## CredentialTypesCredentialTypesCreate
 
-> CredentialTypesCredentialTypesCreate(ctx).Data(data).Execute()
+> CredentialTypesCredentialTypesCreate(ctx, optional)
 
  Create a Credential Type
 
+ Make a POST request to this resource with the following credential type fields to create a new credential type:          * `name`: Name of this credential type. (string, required) * `description`: Optional description of this credential type. (string, default=`\"\"`) * `kind`:  (choice, required)     - `net`: Network     - `cloud`: Cloud   * `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`) * `injectors`: Enter injectors using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CredentialTypesApi.CredentialTypesCredentialTypesCreate(context.Background(), ).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CredentialTypesApi.CredentialTypesCredentialTypesCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiCredentialTypesCredentialTypesCreateRequest struct via the builder pattern
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **data** | **map[string]interface{}** |  | 
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***CredentialTypesCredentialTypesCreateOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a CredentialTypesCredentialTypesCreateOpts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -158,55 +110,30 @@ No authorization required
 
 ## CredentialTypesCredentialTypesCredentialsCreate
 
-> CredentialTypesCredentialTypesCredentialsCreate(ctx, id).Data(data).Execute()
+> CredentialTypesCredentialTypesCredentialsCreate(ctx, id, optional)
 
  Create a Credential for a Credential Type
 
+ Make a POST request to this resource with the following credential fields to create a new credential associated with this credential type.          * `name`: Name of this credential. (string, required) * `description`: Optional description of this credential. (string, default=`\"\"`) * `organization`:  (id, default=`None`) * `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id, required)  * `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := openapiclient.inline_object_3{CredentialType: 123, Description: "Description_example", Inputs: 123, Name: "Name_example", Organization: 123} // InlineObject3 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CredentialTypesApi.CredentialTypesCredentialTypesCredentialsCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CredentialTypesApi.CredentialTypesCredentialTypesCredentialsCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***CredentialTypesCredentialTypesCredentialsCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiCredentialTypesCredentialTypesCredentialsCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a CredentialTypesCredentialTypesCredentialsCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**InlineObject3**](InlineObject3.md) |  | 
+ **data** | [**optional.Interface of InlineObject3**](InlineObject3.md)|  | 
 
 ### Return type
 
@@ -228,59 +155,32 @@ No authorization required
 
 ## CredentialTypesCredentialTypesCredentialsList
 
-> CredentialTypesCredentialTypesCredentialsList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> CredentialTypesCredentialTypesCredentialsList(ctx, id, optional)
 
  List Credentials for a Credential Type
 
+ Make a GET request to this resource to retrieve a list of credentials associated with the selected credential type.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of credentials found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more credential records.    ## Results  Each credential data structure includes the following fields:  * `id`: Database ID for this credential. (integer) * `type`: Data type for this credential. (choice) * `url`: URL for this credential. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this credential was created. (datetime) * `modified`: Timestamp when this credential was last modified. (datetime) * `name`: Name of this credential. (string) * `description`: Optional description of this credential. (string) * `organization`:  (id) * `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id) * `managed_by_tower`:  (boolean) * `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json) * `kind`:  (field) * `cloud`:  (field) * `kubernetes`:  (field)    ## Sorting  To specify that credentials are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CredentialTypesApi.CredentialTypesCredentialTypesCredentialsList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CredentialTypesApi.CredentialTypesCredentialTypesCredentialsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***CredentialTypesCredentialTypesCredentialsListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiCredentialTypesCredentialTypesCredentialsListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a CredentialTypesCredentialTypesCredentialsListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -302,55 +202,30 @@ No authorization required
 
 ## CredentialTypesCredentialTypesDelete
 
-> CredentialTypesCredentialTypesDelete(ctx, id).Search(search).Execute()
+> CredentialTypesCredentialTypesDelete(ctx, id, optional)
 
  Delete a Credential Type
 
+ Make a DELETE request to this resource to delete this credential type.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CredentialTypesApi.CredentialTypesCredentialTypesDelete(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CredentialTypesApi.CredentialTypesCredentialTypesDelete``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***CredentialTypesCredentialTypesDeleteOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiCredentialTypesCredentialTypesDeleteRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a CredentialTypesCredentialTypesDeleteOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -372,53 +247,30 @@ No authorization required
 
 ## CredentialTypesCredentialTypesList
 
-> CredentialTypesCredentialTypesList(ctx).Page(page).PageSize(pageSize).Search(search).Execute()
+> CredentialTypesCredentialTypesList(ctx, optional)
 
  List Credential Types
 
+ Make a GET request to this resource to retrieve the list of credential types.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of credential types found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more credential type records.    ## Results  Each credential type data structure includes the following fields:  * `id`: Database ID for this credential type. (integer) * `type`: Data type for this credential type. (choice) * `url`: URL for this credential type. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this credential type was created. (datetime) * `modified`: Timestamp when this credential type was last modified. (datetime) * `name`: Name of this credential type. (string) * `description`: Optional description of this credential type. (string) * `kind`:  (choice)     - `ssh`: Machine     - `vault`: Vault     - `net`: Network     - `scm`: Source Control     - `cloud`: Cloud     - `token`: Personal Access Token     - `insights`: Insights     - `external`: External     - `kubernetes`: Kubernetes     - `galaxy`: Galaxy/Automation Hub * `namespace`:  (string) * `managed_by_tower`:  (boolean) * `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json) * `injectors`: Enter injectors using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json)    ## Sorting  To specify that credential types are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CredentialTypesApi.CredentialTypesCredentialTypesList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CredentialTypesApi.CredentialTypesCredentialTypesList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiCredentialTypesCredentialTypesListRequest struct via the builder pattern
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***CredentialTypesCredentialTypesListOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a CredentialTypesCredentialTypesListOpts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -440,57 +292,31 @@ No authorization required
 
 ## CredentialTypesCredentialTypesPartialUpdate
 
-> CredentialTypesCredentialTypesPartialUpdate(ctx, id).Search(search).Data(data).Execute()
+> CredentialTypesCredentialTypesPartialUpdate(ctx, id, optional)
 
  Update a Credential Type
 
+ Make a PUT or PATCH request to this resource to update this credential type.  The following fields may be modified:          * `name`: Name of this credential type. (string, required) * `description`: Optional description of this credential type. (string, default=`\"\"`) * `kind`:  (choice, required)     - `net`: Network     - `cloud`: Cloud   * `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`) * `injectors`: Enter injectors using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)         For a PATCH request, include only the fields that are being modified.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CredentialTypesApi.CredentialTypesCredentialTypesPartialUpdate(context.Background(), id).Search(search).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CredentialTypesApi.CredentialTypesCredentialTypesPartialUpdate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***CredentialTypesCredentialTypesPartialUpdateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiCredentialTypesCredentialTypesPartialUpdateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a CredentialTypesCredentialTypesPartialUpdateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
- **data** | **map[string]interface{}** |  | 
+ **search** | **optional.String**| A search term. | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -512,55 +338,30 @@ No authorization required
 
 ## CredentialTypesCredentialTypesRead
 
-> CredentialTypesCredentialTypesRead(ctx, id).Search(search).Execute()
+> CredentialTypesCredentialTypesRead(ctx, id, optional)
 
  Retrieve a Credential Type
 
+ Make GET request to this resource to retrieve a single credential type record containing the following fields:  * `id`: Database ID for this credential type. (integer) * `type`: Data type for this credential type. (choice) * `url`: URL for this credential type. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this credential type was created. (datetime) * `modified`: Timestamp when this credential type was last modified. (datetime) * `name`: Name of this credential type. (string) * `description`: Optional description of this credential type. (string) * `kind`:  (choice)     - `ssh`: Machine     - `vault`: Vault     - `net`: Network     - `scm`: Source Control     - `cloud`: Cloud     - `token`: Personal Access Token     - `insights`: Insights     - `external`: External     - `kubernetes`: Kubernetes     - `galaxy`: Galaxy/Automation Hub * `namespace`:  (string) * `managed_by_tower`:  (boolean) * `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json) * `injectors`: Enter injectors using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CredentialTypesApi.CredentialTypesCredentialTypesRead(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CredentialTypesApi.CredentialTypesCredentialTypesRead``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***CredentialTypesCredentialTypesReadOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiCredentialTypesCredentialTypesReadRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a CredentialTypesCredentialTypesReadOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -582,55 +383,30 @@ No authorization required
 
 ## CredentialTypesCredentialTypesTestCreate
 
-> CredentialTypesCredentialTypesTestCreate(ctx, id).Data(data).Execute()
+> CredentialTypesCredentialTypesTestCreate(ctx, id, optional)
 
  Retrieve a Credential Type
 
+ Make GET request to this resource to retrieve a single credential type record containing the following fields:
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CredentialTypesApi.CredentialTypesCredentialTypesTestCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CredentialTypesApi.CredentialTypesCredentialTypesTestCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***CredentialTypesCredentialTypesTestCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiCredentialTypesCredentialTypesTestCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a CredentialTypesCredentialTypesTestCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | **map[string]interface{}** |  | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -652,55 +428,30 @@ No authorization required
 
 ## CredentialTypesCredentialTypesTestRead
 
-> CredentialTypesCredentialTypesTestRead(ctx, id).Search(search).Execute()
+> CredentialTypesCredentialTypesTestRead(ctx, id, optional)
 
  Retrieve a Credential Type
 
+ Make GET request to this resource to retrieve a single credential type record containing the following fields:
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CredentialTypesApi.CredentialTypesCredentialTypesTestRead(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CredentialTypesApi.CredentialTypesCredentialTypesTestRead``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***CredentialTypesCredentialTypesTestReadOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiCredentialTypesCredentialTypesTestReadRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a CredentialTypesCredentialTypesTestReadOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -722,57 +473,31 @@ No authorization required
 
 ## CredentialTypesCredentialTypesUpdate
 
-> CredentialTypesCredentialTypesUpdate(ctx, id).Search(search).Data(data).Execute()
+> CredentialTypesCredentialTypesUpdate(ctx, id, optional)
 
  Update a Credential Type
 
+ Make a PUT or PATCH request to this resource to update this credential type.  The following fields may be modified:          * `name`: Name of this credential type. (string, required) * `description`: Optional description of this credential type. (string, default=`\"\"`) * `kind`:  (choice, required)     - `net`: Network     - `cloud`: Cloud   * `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`) * `injectors`: Enter injectors using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)       For a PUT request, include **all** fields in the request.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-    data := openapiclient.inline_object_2{Description: "Description_example", Injectors: 123, Inputs: 123, Kind: "Kind_example", Name: "Name_example"} // InlineObject2 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CredentialTypesApi.CredentialTypesCredentialTypesUpdate(context.Background(), id).Search(search).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CredentialTypesApi.CredentialTypesCredentialTypesUpdate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***CredentialTypesCredentialTypesUpdateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiCredentialTypesCredentialTypesUpdateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a CredentialTypesCredentialTypesUpdateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
- **data** | [**InlineObject2**](InlineObject2.md) |  | 
+ **search** | **optional.String**| A search term. | 
+ **data** | [**optional.Interface of InlineObject2**](InlineObject2.md)|  | 
 
 ### Return type
 

@@ -49,59 +49,32 @@ Method | HTTP request | Description
 
 ## OrganizationsOrganizationsAccessListList
 
-> OrganizationsOrganizationsAccessListList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> OrganizationsOrganizationsAccessListList(ctx, id, optional)
 
  List Users
 
+ Make a GET request to this resource to retrieve the list of users.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of users found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more user records.    ## Results  Each user data structure includes the following fields:  * `id`: Database ID for this user. (integer) * `type`: Data type for this user. (choice) * `url`: URL for this user. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this user was created. (datetime) * `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string) * `first_name`:  (string) * `last_name`:  (string) * `email`:  (string) * `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean) * `is_system_auditor`:  (boolean)  * `ldap_dn`:  (string) * `last_login`:  (datetime) * `external_account`: Set if the account is managed by an external service (field)    ## Sorting  To specify that users are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=username  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-username  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=username,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsAccessListList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsAccessListList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsAccessListListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsAccessListListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsAccessListListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -123,59 +96,32 @@ No authorization required
 
 ## OrganizationsOrganizationsActivityStreamList
 
-> OrganizationsOrganizationsActivityStreamList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> OrganizationsOrganizationsActivityStreamList(ctx, id, optional)
 
  List Activity Streams for an Organization
 
+ Make a GET request to this resource to retrieve a list of activity streams associated with the selected organization.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of activity streams found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more activity stream records.    ## Results  Each activity stream data structure includes the following fields:  * `id`: Database ID for this activity stream. (integer) * `type`: Data type for this activity stream. (choice) * `url`: URL for this activity stream. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `timestamp`:  (datetime) * `operation`: The action taken with respect to the given object(s). (choice)     - `create`: Entity Created     - `update`: Entity Updated     - `delete`: Entity Deleted     - `associate`: Entity Associated with another Entity     - `disassociate`: Entity was Disassociated with another Entity * `changes`: A summary of the new and changed values when an object is created, updated, or deleted (json) * `object1`: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string) * `object2`: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string) * `object_association`: When present, shows the field name of the role or relationship that changed. (field) * `action_node`: The cluster node the activity took place on. (string) * `object_type`: When present, shows the model on which the role or relationship was defined. (field)    ## Sorting  To specify that activity streams are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsActivityStreamList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsActivityStreamList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsActivityStreamListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsActivityStreamListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsActivityStreamListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -197,55 +143,30 @@ No authorization required
 
 ## OrganizationsOrganizationsAdminsCreate
 
-> OrganizationsOrganizationsAdminsCreate(ctx, id).Data(data).Execute()
+> OrganizationsOrganizationsAdminsCreate(ctx, id, optional)
 
  Create an Admin User for an Organization
 
+ Make a POST request to this resource with the following admin user fields to create a new admin user associated with this organization.         * `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string, required) * `first_name`:  (string, default=`\"\"`) * `last_name`:  (string, default=`\"\"`) * `email`:  (string, default=`\"\"`) * `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean, default=`False`) * `is_system_auditor`:  (boolean, default=`False`) * `password`: Write-only field used to change the password. (string, default=`\"\"`)            # Add Admin Users for an Organization:  Make a POST request to this resource with only an `id` field to associate an existing admin user with this organization.  # Remove Admin Users from this Organization:  Make a POST request to this resource with `id` and `disassociate` fields to remove the admin user from this organization  without deleting the admin user.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsAdminsCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsAdminsCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsAdminsCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsAdminsCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsAdminsCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | **map[string]interface{}** |  | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -267,59 +188,32 @@ No authorization required
 
 ## OrganizationsOrganizationsAdminsList
 
-> OrganizationsOrganizationsAdminsList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> OrganizationsOrganizationsAdminsList(ctx, id, optional)
 
  List Admin Users for an Organization
 
+ Make a GET request to this resource to retrieve a list of admin users associated with the selected organization.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of admin users found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more admin user records.    ## Results  Each admin user data structure includes the following fields:  * `id`: Database ID for this user. (integer) * `type`: Data type for this user. (choice) * `url`: URL for this user. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this user was created. (datetime) * `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string) * `first_name`:  (string) * `last_name`:  (string) * `email`:  (string) * `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean) * `is_system_auditor`:  (boolean)  * `ldap_dn`:  (string) * `last_login`:  (datetime) * `external_account`: Set if the account is managed by an external service (field)    ## Sorting  To specify that admin users are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=username  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-username  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=username,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsAdminsList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsAdminsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsAdminsListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsAdminsListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsAdminsListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -341,55 +235,30 @@ No authorization required
 
 ## OrganizationsOrganizationsApplicationsCreate
 
-> OrganizationsOrganizationsApplicationsCreate(ctx, id).Data(data).Execute()
+> OrganizationsOrganizationsApplicationsCreate(ctx, id, optional)
 
  Create an Application for an Organization
 
+ Make a POST request to this resource with the following application fields to create a new application associated with this organization.          * `name`: Name of this application. (string, required) * `description`: Optional description of this application. (string, default=`\"\"`)   * `client_type`: Set to Public or Confidential depending on how secure the client device is. (choice, required)     - `confidential`: Confidential     - `public`: Public * `redirect_uris`: Allowed URIs list, space separated (string, default=`\"\"`) * `authorization_grant_type`: The Grant type the user must use for acquire tokens for this application. (choice, required)     - `authorization-code`: Authorization code     - `password`: Resource owner password-based * `skip_authorization`: Set True to skip authorization step for completely trusted applications. (boolean, default=`False`)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := openapiclient.inline_object_44{AuthorizationGrantType: "AuthorizationGrantType_example", ClientType: "ClientType_example", Description: "Description_example", Name: "Name_example", Organization: 123, RedirectUris: "RedirectUris_example", SkipAuthorization: false} // InlineObject44 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsApplicationsCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsApplicationsCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsApplicationsCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsApplicationsCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsApplicationsCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**InlineObject44**](InlineObject44.md) |  | 
+ **data** | [**optional.Interface of InlineObject44**](InlineObject44.md)|  | 
 
 ### Return type
 
@@ -411,59 +280,32 @@ No authorization required
 
 ## OrganizationsOrganizationsApplicationsList
 
-> OrganizationsOrganizationsApplicationsList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> OrganizationsOrganizationsApplicationsList(ctx, id, optional)
 
  List Applications for an Organization
 
+ Make a GET request to this resource to retrieve a list of applications associated with the selected organization.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of applications found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more application records.    ## Results  Each application data structure includes the following fields:  * `id`: Database ID for this application. (integer) * `type`: Data type for this application. (choice) * `url`: URL for this application. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this application was created. (datetime) * `modified`: Timestamp when this application was last modified. (datetime) * `name`: Name of this application. (string) * `description`: Optional description of this application. (string) * `client_id`:  (string) * `client_secret`: Used for more stringent verification of access to an application when creating a token. (string) * `client_type`: Set to Public or Confidential depending on how secure the client device is. (choice)     - `confidential`: Confidential     - `public`: Public * `redirect_uris`: Allowed URIs list, space separated (string) * `authorization_grant_type`: The Grant type the user must use for acquire tokens for this application. (choice)     - `authorization-code`: Authorization code     - `password`: Resource owner password-based * `skip_authorization`: Set True to skip authorization step for completely trusted applications. (boolean) * `organization`: Organization containing this application. (id)    ## Sorting  To specify that applications are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsApplicationsList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsApplicationsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsApplicationsListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsApplicationsListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsApplicationsListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -485,49 +327,28 @@ No authorization required
 
 ## OrganizationsOrganizationsCreate
 
-> OrganizationsOrganizationsCreate(ctx).Data(data).Execute()
+> OrganizationsOrganizationsCreate(ctx, optional)
 
  Create an Organization
 
+ Make a POST request to this resource with the following organization fields to create a new organization:          * `name`: Name of this organization. (string, required) * `description`: Optional description of this organization. (string, default=`\"\"`) * `max_hosts`: Maximum number of hosts allowed to be managed by this organization. (integer, default=`0`) * `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string, default=`\"\"`)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsCreate(context.Background(), ).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsCreateRequest struct via the builder pattern
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **data** | **map[string]interface{}** |  | 
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***OrganizationsOrganizationsCreateOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsCreateOpts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -549,55 +370,30 @@ No authorization required
 
 ## OrganizationsOrganizationsCredentialsCreate
 
-> OrganizationsOrganizationsCredentialsCreate(ctx, id).Data(data).Execute()
+> OrganizationsOrganizationsCredentialsCreate(ctx, id, optional)
 
  Create a Credential for an Organization
 
+ Make a POST request to this resource with the following credential fields to create a new credential associated with this organization.          * `name`: Name of this credential. (string, required) * `description`: Optional description of this credential. (string, default=`\"\"`)  * `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id, required)  * `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := openapiclient.inline_object_45{CredentialType: 123, Description: "Description_example", Inputs: 123, Name: "Name_example", Organization: 123} // InlineObject45 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsCredentialsCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsCredentialsCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsCredentialsCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsCredentialsCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsCredentialsCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**InlineObject45**](InlineObject45.md) |  | 
+ **data** | [**optional.Interface of InlineObject45**](InlineObject45.md)|  | 
 
 ### Return type
 
@@ -619,59 +415,32 @@ No authorization required
 
 ## OrganizationsOrganizationsCredentialsList
 
-> OrganizationsOrganizationsCredentialsList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> OrganizationsOrganizationsCredentialsList(ctx, id, optional)
 
  List Credentials for an Organization
 
+ Make a GET request to this resource to retrieve a list of credentials associated with the selected organization.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of credentials found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more credential records.    ## Results  Each credential data structure includes the following fields:  * `id`: Database ID for this credential. (integer) * `type`: Data type for this credential. (choice) * `url`: URL for this credential. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this credential was created. (datetime) * `modified`: Timestamp when this credential was last modified. (datetime) * `name`: Name of this credential. (string) * `description`: Optional description of this credential. (string) * `organization`: Inherit permissions from organization roles. If provided on creation, do not give either user or team. (id) * `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id) * `managed_by_tower`:  (boolean) * `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json) * `kind`:  (field) * `cloud`:  (field) * `kubernetes`:  (field)    ## Sorting  To specify that credentials are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsCredentialsList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsCredentialsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsCredentialsListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsCredentialsListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsCredentialsListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -693,55 +462,30 @@ No authorization required
 
 ## OrganizationsOrganizationsDelete
 
-> OrganizationsOrganizationsDelete(ctx, id).Search(search).Execute()
+> OrganizationsOrganizationsDelete(ctx, id, optional)
 
  Delete an Organization
 
+ Make a DELETE request to this resource to delete this organization.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsDelete(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsDelete``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsDeleteOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsDeleteRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsDeleteOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -763,55 +507,30 @@ No authorization required
 
 ## OrganizationsOrganizationsGalaxyCredentialsCreate
 
-> OrganizationsOrganizationsGalaxyCredentialsCreate(ctx, id).Data(data).Execute()
+> OrganizationsOrganizationsGalaxyCredentialsCreate(ctx, id, optional)
 
  Create a Credential for an Organization
 
+ Make a POST request to this resource with the following credential fields to create a new credential associated with this organization.          * `name`: Name of this credential. (string, required) * `description`: Optional description of this credential. (string, default=`\"\"`) * `organization`:  (id, default=`None`) * `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id, required)  * `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)            # Add Credentials for an Organization:  Make a POST request to this resource with only an `id` field to associate an existing credential with this organization.  # Remove Credentials from this Organization:  Make a POST request to this resource with `id` and `disassociate` fields to remove the credential from this organization  without deleting the credential.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsGalaxyCredentialsCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsGalaxyCredentialsCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsGalaxyCredentialsCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsGalaxyCredentialsCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsGalaxyCredentialsCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | **map[string]interface{}** |  | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -833,59 +552,32 @@ No authorization required
 
 ## OrganizationsOrganizationsGalaxyCredentialsList
 
-> OrganizationsOrganizationsGalaxyCredentialsList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> OrganizationsOrganizationsGalaxyCredentialsList(ctx, id, optional)
 
  List Credentials for an Organization
 
+ Make a GET request to this resource to retrieve a list of credentials associated with the selected organization.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of credentials found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more credential records.    ## Results  Each credential data structure includes the following fields:  * `id`: Database ID for this credential. (integer) * `type`: Data type for this credential. (choice) * `url`: URL for this credential. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this credential was created. (datetime) * `modified`: Timestamp when this credential was last modified. (datetime) * `name`: Name of this credential. (string) * `description`: Optional description of this credential. (string) * `organization`:  (id) * `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id) * `managed_by_tower`:  (boolean) * `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json) * `kind`:  (field) * `cloud`:  (field) * `kubernetes`:  (field)    ## Sorting  To specify that credentials are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsGalaxyCredentialsList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsGalaxyCredentialsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsGalaxyCredentialsListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsGalaxyCredentialsListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsGalaxyCredentialsListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -907,55 +599,30 @@ No authorization required
 
 ## OrganizationsOrganizationsInstanceGroupsCreate
 
-> OrganizationsOrganizationsInstanceGroupsCreate(ctx, id).Data(data).Execute()
+> OrganizationsOrganizationsInstanceGroupsCreate(ctx, id, optional)
 
  Create an Instance Group for an Organization
 
+ Make a POST request to this resource with the following instance group fields to create a new instance group associated with this organization.       * `name`: Name of this instance group. (string, required)              * `credential`:  (id, default=``) * `policy_instance_percentage`: Minimum percentage of all instances that will be automatically assigned to this group when new instances come online. (integer, default=`0`) * `policy_instance_minimum`: Static minimum number of Instances that will be automatically assign to this group when new instances come online. (integer, default=`0`) * `policy_instance_list`: List of exact-match Instances that will be assigned to this group (json, default=``) * `pod_spec_override`:  (string, default=`\"\"`)          # Add Instance Groups for an Organization:  Make a POST request to this resource with only an `id` field to associate an existing instance group with this organization.  # Remove Instance Groups from this Organization:  Make a POST request to this resource with `id` and `disassociate` fields to remove the instance group from this organization  without deleting the instance group.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsInstanceGroupsCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsInstanceGroupsCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsInstanceGroupsCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsInstanceGroupsCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsInstanceGroupsCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | **map[string]interface{}** |  | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -977,59 +644,32 @@ No authorization required
 
 ## OrganizationsOrganizationsInstanceGroupsList
 
-> OrganizationsOrganizationsInstanceGroupsList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> OrganizationsOrganizationsInstanceGroupsList(ctx, id, optional)
 
  List Instance Groups for an Organization
 
+ Make a GET request to this resource to retrieve a list of instance groups associated with the selected organization.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of instance groups found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more instance group records.    ## Results  Each instance group data structure includes the following fields:  * `id`: Database ID for this instance group. (integer) * `type`: Data type for this instance group. (choice) * `url`: URL for this instance group. (string) * `related`: Data structure with URLs of related resources. (object) * `name`: Name of this instance group. (string) * `created`: Timestamp when this instance group was created. (datetime) * `modified`: Timestamp when this instance group was last modified. (datetime) * `capacity`:  (field) * `committed_capacity`:  (field) * `consumed_capacity`:  (field) * `percent_capacity_remaining`:  (field) * `jobs_running`: Count of jobs in the running or waiting state that are targeted for this instance group (integer) * `jobs_total`: Count of all jobs that target this instance group (integer) * `instances`:  (field) * `controller`: Instance Group to remotely control this group. (id) * `is_controller`: Indicates whether instance group controls any other group (boolean) * `is_isolated`: Indicates whether instances in this group are isolated.Isolated groups have a designated controller group. (boolean) * `is_containerized`: Indicates whether instances in this group are containerized.Containerized groups have a designated Openshift or Kubernetes cluster. (boolean) * `credential`:  (id) * `policy_instance_percentage`: Minimum percentage of all instances that will be automatically assigned to this group when new instances come online. (integer) * `policy_instance_minimum`: Static minimum number of Instances that will be automatically assign to this group when new instances come online. (integer) * `policy_instance_list`: List of exact-match Instances that will be assigned to this group (json) * `pod_spec_override`:  (string) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)    ## Sorting  To specify that instance groups are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsInstanceGroupsList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsInstanceGroupsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsInstanceGroupsListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsInstanceGroupsListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsInstanceGroupsListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1051,59 +691,32 @@ No authorization required
 
 ## OrganizationsOrganizationsInventoriesList
 
-> OrganizationsOrganizationsInventoriesList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> OrganizationsOrganizationsInventoriesList(ctx, id, optional)
 
  List Inventories for an Organization
 
+ Make a GET request to this resource to retrieve a list of inventories associated with the selected organization.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of inventories found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more inventory records.    ## Results  Each inventory data structure includes the following fields:  * `id`: Database ID for this inventory. (integer) * `type`: Data type for this inventory. (choice) * `url`: URL for this inventory. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this inventory was created. (datetime) * `modified`: Timestamp when this inventory was last modified. (datetime) * `name`: Name of this inventory. (string) * `description`: Optional description of this inventory. (string) * `organization`: Organization containing this inventory. (id) * `kind`: Kind of inventory being represented. (choice)     - `\"\"`: Hosts have a direct link to this inventory.     - `smart`: Hosts for inventory generated using the host_filter property. * `host_filter`: Filter that will be applied to the hosts of this inventory. (string) * `variables`: Inventory variables in JSON or YAML format. (json) * `has_active_failures`: This field is deprecated and will be removed in a future release. Flag indicating whether any hosts in this inventory have failed. (boolean) * `total_hosts`: This field is deprecated and will be removed in a future release. Total number of hosts in this inventory. (integer) * `hosts_with_active_failures`: This field is deprecated and will be removed in a future release. Number of hosts in this inventory with active failures. (integer) * `total_groups`: This field is deprecated and will be removed in a future release. Total number of groups in this inventory. (integer) * `has_inventory_sources`: This field is deprecated and will be removed in a future release. Flag indicating whether this inventory has any external inventory sources. (boolean) * `total_inventory_sources`: Total number of external inventory sources configured within this inventory. (integer) * `inventory_sources_with_failures`: Number of external inventory sources in this inventory with failures. (integer) * `insights_credential`: Credentials to be used by hosts belonging to this inventory when accessing Red Hat Insights API. (id) * `pending_deletion`: Flag indicating the inventory is being deleted. (boolean)    ## Sorting  To specify that inventories are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsInventoriesList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsInventoriesList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsInventoriesListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsInventoriesListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsInventoriesListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1125,55 +738,30 @@ No authorization required
 
 ## OrganizationsOrganizationsJobTemplatesCreate
 
-> OrganizationsOrganizationsJobTemplatesCreate(ctx, id).Data(data).Execute()
+> OrganizationsOrganizationsJobTemplatesCreate(ctx, id, optional)
 
  Create a Job Template for an Organization
 
+ Make a POST request to this resource with the following job template fields to create a new job template associated with this organization.          * `name`: Name of this job template. (string, required) * `description`: Optional description of this job template. (string, default=`\"\"`) * `job_type`:  (choice)     - `run`: Run (default)     - `check`: Check * `inventory`:  (id, default=``) * `project`:  (id, default=``) * `playbook`:  (string, default=`\"\"`) * `scm_branch`: Branch to use in job run. Project default used if blank. Only allowed if project allow_override field is set to true. (string, default=`\"\"`) * `forks`:  (integer, default=`0`) * `limit`:  (string, default=`\"\"`) * `verbosity`:  (choice)     - `0`: 0 (Normal) (default)     - `1`: 1 (Verbose)     - `2`: 2 (More Verbose)     - `3`: 3 (Debug)     - `4`: 4 (Connection Debug)     - `5`: 5 (WinRM Debug) * `extra_vars`:  (json, default=``) * `job_tags`:  (string, default=`\"\"`) * `force_handlers`:  (boolean, default=`False`) * `skip_tags`:  (string, default=`\"\"`) * `start_at_task`:  (string, default=`\"\"`) * `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer, default=`0`) * `use_fact_cache`: If enabled, Tower will act as an Ansible Fact Cache Plugin; persisting facts at the end of a playbook run to the database and caching facts for use by Ansible. (boolean, default=`False`)      * `host_config_key`:  (string, default=`\"\"`) * `ask_scm_branch_on_launch`:  (boolean, default=`False`) * `ask_diff_mode_on_launch`:  (boolean, default=`False`) * `ask_variables_on_launch`:  (boolean, default=`False`) * `ask_limit_on_launch`:  (boolean, default=`False`) * `ask_tags_on_launch`:  (boolean, default=`False`) * `ask_skip_tags_on_launch`:  (boolean, default=`False`) * `ask_job_type_on_launch`:  (boolean, default=`False`) * `ask_verbosity_on_launch`:  (boolean, default=`False`) * `ask_inventory_on_launch`:  (boolean, default=`False`) * `ask_credential_on_launch`:  (boolean, default=`False`) * `survey_enabled`:  (boolean, default=`False`) * `become_enabled`:  (boolean, default=`False`) * `diff_mode`: If enabled, textual changes made to any templated files on the host are shown in the standard output (boolean, default=`False`) * `allow_simultaneous`:  (boolean, default=`False`) * `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string, default=`\"\"`) * `job_slice_count`: The number of jobs to slice into at runtime. Will cause the Job Template to launch a workflow if value is greater than 1. (integer, default=`1`) * `webhook_service`: Service that webhook requests will be accepted from (choice)     - `\"\"`: ---------     - `github`: GitHub     - `gitlab`: GitLab * `webhook_credential`: Personal Access Token for posting back the status to the service API (id, default=``)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := openapiclient.inline_object_46{AllowSimultaneous: false, AskCredentialOnLaunch: false, AskDiffModeOnLaunch: false, AskInventoryOnLaunch: false, AskJobTypeOnLaunch: false, AskLimitOnLaunch: false, AskScmBranchOnLaunch: false, AskSkipTagsOnLaunch: false, AskTagsOnLaunch: false, AskVariablesOnLaunch: false, AskVerbosityOnLaunch: false, BecomeEnabled: false, CustomVirtualenv: "CustomVirtualenv_example", Description: "Description_example", DiffMode: false, ExtraVars: "ExtraVars_example", ForceHandlers: false, Forks: 123, HostConfigKey: "HostConfigKey_example", Inventory: 123, JobSliceCount: 123, JobTags: "JobTags_example", JobType: "JobType_example", Limit: "Limit_example", Name: "Name_example", Playbook: "Playbook_example", Project: "Project_example", ScmBranch: "ScmBranch_example", SkipTags: "SkipTags_example", StartAtTask: "StartAtTask_example", SurveyEnabled: false, Timeout: 123, UseFactCache: false, Verbosity: "Verbosity_example", WebhookCredential: 123, WebhookService: "WebhookService_example"} // InlineObject46 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsJobTemplatesCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsJobTemplatesCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsJobTemplatesCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsJobTemplatesCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsJobTemplatesCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**InlineObject46**](InlineObject46.md) |  | 
+ **data** | [**optional.Interface of InlineObject46**](InlineObject46.md)|  | 
 
 ### Return type
 
@@ -1195,59 +783,32 @@ No authorization required
 
 ## OrganizationsOrganizationsJobTemplatesList
 
-> OrganizationsOrganizationsJobTemplatesList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> OrganizationsOrganizationsJobTemplatesList(ctx, id, optional)
 
  List Job Templates for an Organization
 
+ Make a GET request to this resource to retrieve a list of job templates associated with the selected organization.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of job templates found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more job template records.    ## Results  Each job template data structure includes the following fields:  * `id`: Database ID for this job template. (integer) * `type`: Data type for this job template. (choice) * `url`: URL for this job template. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this job template was created. (datetime) * `modified`: Timestamp when this job template was last modified. (datetime) * `name`: Name of this job template. (string) * `description`: Optional description of this job template. (string) * `job_type`:  (choice)     - `run`: Run     - `check`: Check * `inventory`:  (id) * `project`:  (id) * `playbook`:  (string) * `scm_branch`: Branch to use in job run. Project default used if blank. Only allowed if project allow_override field is set to true. (string) * `forks`:  (integer) * `limit`:  (string) * `verbosity`:  (choice)     - `0`: 0 (Normal)     - `1`: 1 (Verbose)     - `2`: 2 (More Verbose)     - `3`: 3 (Debug)     - `4`: 4 (Connection Debug)     - `5`: 5 (WinRM Debug) * `extra_vars`:  (json) * `job_tags`:  (string) * `force_handlers`:  (boolean) * `skip_tags`:  (string) * `start_at_task`:  (string) * `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer) * `use_fact_cache`: If enabled, Tower will act as an Ansible Fact Cache Plugin; persisting facts at the end of a playbook run to the database and caching facts for use by Ansible. (boolean) * `organization`: The organization used to determine access to this template. (id) * `last_job_run`:  (datetime) * `last_job_failed`:  (boolean) * `next_job_run`:  (datetime) * `status`:  (choice)     - `new`: New     - `pending`: Pending     - `waiting`: Waiting     - `running`: Running     - `successful`: Successful     - `failed`: Failed     - `error`: Error     - `canceled`: Canceled     - `never updated`: Never Updated * `host_config_key`:  (string) * `ask_scm_branch_on_launch`:  (boolean) * `ask_diff_mode_on_launch`:  (boolean) * `ask_variables_on_launch`:  (boolean) * `ask_limit_on_launch`:  (boolean) * `ask_tags_on_launch`:  (boolean) * `ask_skip_tags_on_launch`:  (boolean) * `ask_job_type_on_launch`:  (boolean) * `ask_verbosity_on_launch`:  (boolean) * `ask_inventory_on_launch`:  (boolean) * `ask_credential_on_launch`:  (boolean) * `survey_enabled`:  (boolean) * `become_enabled`:  (boolean) * `diff_mode`: If enabled, textual changes made to any templated files on the host are shown in the standard output (boolean) * `allow_simultaneous`:  (boolean) * `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string) * `job_slice_count`: The number of jobs to slice into at runtime. Will cause the Job Template to launch a workflow if value is greater than 1. (integer) * `webhook_service`: Service that webhook requests will be accepted from (choice)     - `\"\"`: ---------     - `github`: GitHub     - `gitlab`: GitLab * `webhook_credential`: Personal Access Token for posting back the status to the service API (id)    ## Sorting  To specify that job templates are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsJobTemplatesList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsJobTemplatesList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsJobTemplatesListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsJobTemplatesListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsJobTemplatesListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1269,53 +830,30 @@ No authorization required
 
 ## OrganizationsOrganizationsList
 
-> OrganizationsOrganizationsList(ctx).Page(page).PageSize(pageSize).Search(search).Execute()
+> OrganizationsOrganizationsList(ctx, optional)
 
  List Organizations
 
+ Make a GET request to this resource to retrieve the list of organizations.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of organizations found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more organization records.    ## Results  Each organization data structure includes the following fields:  * `id`: Database ID for this organization. (integer) * `type`: Data type for this organization. (choice) * `url`: URL for this organization. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this organization was created. (datetime) * `modified`: Timestamp when this organization was last modified. (datetime) * `name`: Name of this organization. (string) * `description`: Optional description of this organization. (string) * `max_hosts`: Maximum number of hosts allowed to be managed by this organization. (integer) * `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string)    ## Sorting  To specify that organizations are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsListRequest struct via the builder pattern
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***OrganizationsOrganizationsListOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsListOpts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1337,55 +875,30 @@ No authorization required
 
 ## OrganizationsOrganizationsNotificationTemplatesApprovalsCreate
 
-> OrganizationsOrganizationsNotificationTemplatesApprovalsCreate(ctx, id).Data(data).Execute()
+> OrganizationsOrganizationsNotificationTemplatesApprovalsCreate(ctx, id, optional)
 
  Create a Notification Template for an Organization
 
+ Make a POST request to this resource with the following notification template fields to create a new notification template associated with this organization.          * `name`: Name of this notification template. (string, required) * `description`: Optional description of this notification template. (string, default=`\"\"`) * `organization`:  (id, required) * `notification_type`:  (choice, required)     - `email`: Email     - `grafana`: Grafana     - `irc`: IRC     - `mattermost`: Mattermost     - `pagerduty`: Pagerduty     - `rocketchat`: Rocket.Chat     - `slack`: Slack     - `twilio`: Twilio     - `webhook`: Webhook * `notification_configuration`:  (json, default=`{}`) * `messages`: Optional custom messages for notification template. (json, default=`{&#39;started&#39;: None, &#39;success&#39;: None, &#39;error&#39;: None, &#39;workflow_approval&#39;: None}`)         # Add Notification Templates for an Organization:  Make a POST request to this resource with only an `id` field to associate an existing notification template with this organization.  # Remove Notification Templates from this Organization:  Make a POST request to this resource with `id` and `disassociate` fields to remove the notification template from this organization  without deleting the notification template.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsNotificationTemplatesApprovalsCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsNotificationTemplatesApprovalsCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsNotificationTemplatesApprovalsCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsNotificationTemplatesApprovalsCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsNotificationTemplatesApprovalsCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | **map[string]interface{}** |  | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -1407,59 +920,32 @@ No authorization required
 
 ## OrganizationsOrganizationsNotificationTemplatesApprovalsList
 
-> OrganizationsOrganizationsNotificationTemplatesApprovalsList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> OrganizationsOrganizationsNotificationTemplatesApprovalsList(ctx, id, optional)
 
  List Notification Templates for an Organization
 
+ Make a GET request to this resource to retrieve a list of notification templates associated with the selected organization.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of notification templates found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more notification template records.    ## Results  Each notification template data structure includes the following fields:  * `id`: Database ID for this notification template. (integer) * `type`: Data type for this notification template. (choice) * `url`: URL for this notification template. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this notification template was created. (datetime) * `modified`: Timestamp when this notification template was last modified. (datetime) * `name`: Name of this notification template. (string) * `description`: Optional description of this notification template. (string) * `organization`:  (id) * `notification_type`:  (choice)     - `email`: Email     - `grafana`: Grafana     - `irc`: IRC     - `mattermost`: Mattermost     - `pagerduty`: Pagerduty     - `rocketchat`: Rocket.Chat     - `slack`: Slack     - `twilio`: Twilio     - `webhook`: Webhook * `notification_configuration`:  (json) * `messages`: Optional custom messages for notification template. (json)    ## Sorting  To specify that notification templates are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsNotificationTemplatesApprovalsList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsNotificationTemplatesApprovalsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsNotificationTemplatesApprovalsListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsNotificationTemplatesApprovalsListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsNotificationTemplatesApprovalsListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1481,55 +967,30 @@ No authorization required
 
 ## OrganizationsOrganizationsNotificationTemplatesCreate
 
-> OrganizationsOrganizationsNotificationTemplatesCreate(ctx, id).Data(data).Execute()
+> OrganizationsOrganizationsNotificationTemplatesCreate(ctx, id, optional)
 
  Create a Notification Template for an Organization
 
+ Make a POST request to this resource with the following notification template fields to create a new notification template associated with this organization.          * `name`: Name of this notification template. (string, required) * `description`: Optional description of this notification template. (string, default=`\"\"`)  * `notification_type`:  (choice, required)     - `email`: Email     - `grafana`: Grafana     - `irc`: IRC     - `mattermost`: Mattermost     - `pagerduty`: Pagerduty     - `rocketchat`: Rocket.Chat     - `slack`: Slack     - `twilio`: Twilio     - `webhook`: Webhook * `notification_configuration`:  (json, default=`{}`) * `messages`: Optional custom messages for notification template. (json, default=`{&#39;started&#39;: None, &#39;success&#39;: None, &#39;error&#39;: None, &#39;workflow_approval&#39;: None}`)         # Remove Organization Notification Templates:  Make a POST request to this resource with `id` and `disassociate` fields to delete the associated notification template.      {         \"id\": 123,         \"disassociate\": true     }
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := openapiclient.inline_object_47{Description: "Description_example", Messages: "Messages_example", Name: "Name_example", NotificationConfiguration: "NotificationConfiguration_example", NotificationType: "NotificationType_example", Organization: 123} // InlineObject47 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsNotificationTemplatesCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsNotificationTemplatesCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsNotificationTemplatesCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsNotificationTemplatesCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsNotificationTemplatesCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**InlineObject47**](InlineObject47.md) |  | 
+ **data** | [**optional.Interface of InlineObject47**](InlineObject47.md)|  | 
 
 ### Return type
 
@@ -1551,55 +1012,30 @@ No authorization required
 
 ## OrganizationsOrganizationsNotificationTemplatesErrorCreate
 
-> OrganizationsOrganizationsNotificationTemplatesErrorCreate(ctx, id).Data(data).Execute()
+> OrganizationsOrganizationsNotificationTemplatesErrorCreate(ctx, id, optional)
 
  Create a Notification Template for an Organization
 
+ Make a POST request to this resource with the following notification template fields to create a new notification template associated with this organization.          * `name`: Name of this notification template. (string, required) * `description`: Optional description of this notification template. (string, default=`\"\"`) * `organization`:  (id, required) * `notification_type`:  (choice, required)     - `email`: Email     - `grafana`: Grafana     - `irc`: IRC     - `mattermost`: Mattermost     - `pagerduty`: Pagerduty     - `rocketchat`: Rocket.Chat     - `slack`: Slack     - `twilio`: Twilio     - `webhook`: Webhook * `notification_configuration`:  (json, default=`{}`) * `messages`: Optional custom messages for notification template. (json, default=`{&#39;started&#39;: None, &#39;success&#39;: None, &#39;error&#39;: None, &#39;workflow_approval&#39;: None}`)         # Add Notification Templates for an Organization:  Make a POST request to this resource with only an `id` field to associate an existing notification template with this organization.  # Remove Notification Templates from this Organization:  Make a POST request to this resource with `id` and `disassociate` fields to remove the notification template from this organization  without deleting the notification template.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := openapiclient.inline_object_48{Description: "Description_example", Messages: "Messages_example", Name: "Name_example", NotificationConfiguration: "NotificationConfiguration_example", NotificationType: "NotificationType_example", Organization: 123} // InlineObject48 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsNotificationTemplatesErrorCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsNotificationTemplatesErrorCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsNotificationTemplatesErrorCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsNotificationTemplatesErrorCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsNotificationTemplatesErrorCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**InlineObject48**](InlineObject48.md) |  | 
+ **data** | [**optional.Interface of InlineObject48**](InlineObject48.md)|  | 
 
 ### Return type
 
@@ -1621,59 +1057,32 @@ No authorization required
 
 ## OrganizationsOrganizationsNotificationTemplatesErrorList
 
-> OrganizationsOrganizationsNotificationTemplatesErrorList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> OrganizationsOrganizationsNotificationTemplatesErrorList(ctx, id, optional)
 
  List Notification Templates for an Organization
 
+ Make a GET request to this resource to retrieve a list of notification templates associated with the selected organization.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of notification templates found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more notification template records.    ## Results  Each notification template data structure includes the following fields:  * `id`: Database ID for this notification template. (integer) * `type`: Data type for this notification template. (choice) * `url`: URL for this notification template. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this notification template was created. (datetime) * `modified`: Timestamp when this notification template was last modified. (datetime) * `name`: Name of this notification template. (string) * `description`: Optional description of this notification template. (string) * `organization`:  (id) * `notification_type`:  (choice)     - `email`: Email     - `grafana`: Grafana     - `irc`: IRC     - `mattermost`: Mattermost     - `pagerduty`: Pagerduty     - `rocketchat`: Rocket.Chat     - `slack`: Slack     - `twilio`: Twilio     - `webhook`: Webhook * `notification_configuration`:  (json) * `messages`: Optional custom messages for notification template. (json)    ## Sorting  To specify that notification templates are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsNotificationTemplatesErrorList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsNotificationTemplatesErrorList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsNotificationTemplatesErrorListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsNotificationTemplatesErrorListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsNotificationTemplatesErrorListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1695,59 +1104,32 @@ No authorization required
 
 ## OrganizationsOrganizationsNotificationTemplatesList
 
-> OrganizationsOrganizationsNotificationTemplatesList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> OrganizationsOrganizationsNotificationTemplatesList(ctx, id, optional)
 
  List Notification Templates for an Organization
 
+ Make a GET request to this resource to retrieve a list of notification templates associated with the selected organization.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of notification templates found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more notification template records.    ## Results  Each notification template data structure includes the following fields:  * `id`: Database ID for this notification template. (integer) * `type`: Data type for this notification template. (choice) * `url`: URL for this notification template. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this notification template was created. (datetime) * `modified`: Timestamp when this notification template was last modified. (datetime) * `name`: Name of this notification template. (string) * `description`: Optional description of this notification template. (string) * `organization`:  (id) * `notification_type`:  (choice)     - `email`: Email     - `grafana`: Grafana     - `irc`: IRC     - `mattermost`: Mattermost     - `pagerduty`: Pagerduty     - `rocketchat`: Rocket.Chat     - `slack`: Slack     - `twilio`: Twilio     - `webhook`: Webhook * `notification_configuration`:  (json) * `messages`: Optional custom messages for notification template. (json)    ## Sorting  To specify that notification templates are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsNotificationTemplatesList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsNotificationTemplatesList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsNotificationTemplatesListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsNotificationTemplatesListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsNotificationTemplatesListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1769,55 +1151,30 @@ No authorization required
 
 ## OrganizationsOrganizationsNotificationTemplatesStartedCreate
 
-> OrganizationsOrganizationsNotificationTemplatesStartedCreate(ctx, id).Data(data).Execute()
+> OrganizationsOrganizationsNotificationTemplatesStartedCreate(ctx, id, optional)
 
  Create a Notification Template for an Organization
 
+ Make a POST request to this resource with the following notification template fields to create a new notification template associated with this organization.          * `name`: Name of this notification template. (string, required) * `description`: Optional description of this notification template. (string, default=`\"\"`) * `organization`:  (id, required) * `notification_type`:  (choice, required)     - `email`: Email     - `grafana`: Grafana     - `irc`: IRC     - `mattermost`: Mattermost     - `pagerduty`: Pagerduty     - `rocketchat`: Rocket.Chat     - `slack`: Slack     - `twilio`: Twilio     - `webhook`: Webhook * `notification_configuration`:  (json, default=`{}`) * `messages`: Optional custom messages for notification template. (json, default=`{&#39;started&#39;: None, &#39;success&#39;: None, &#39;error&#39;: None, &#39;workflow_approval&#39;: None}`)         # Add Notification Templates for an Organization:  Make a POST request to this resource with only an `id` field to associate an existing notification template with this organization.  # Remove Notification Templates from this Organization:  Make a POST request to this resource with `id` and `disassociate` fields to remove the notification template from this organization  without deleting the notification template.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsNotificationTemplatesStartedCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsNotificationTemplatesStartedCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsNotificationTemplatesStartedCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsNotificationTemplatesStartedCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsNotificationTemplatesStartedCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | **map[string]interface{}** |  | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -1839,59 +1196,32 @@ No authorization required
 
 ## OrganizationsOrganizationsNotificationTemplatesStartedList
 
-> OrganizationsOrganizationsNotificationTemplatesStartedList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> OrganizationsOrganizationsNotificationTemplatesStartedList(ctx, id, optional)
 
  List Notification Templates for an Organization
 
+ Make a GET request to this resource to retrieve a list of notification templates associated with the selected organization.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of notification templates found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more notification template records.    ## Results  Each notification template data structure includes the following fields:  * `id`: Database ID for this notification template. (integer) * `type`: Data type for this notification template. (choice) * `url`: URL for this notification template. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this notification template was created. (datetime) * `modified`: Timestamp when this notification template was last modified. (datetime) * `name`: Name of this notification template. (string) * `description`: Optional description of this notification template. (string) * `organization`:  (id) * `notification_type`:  (choice)     - `email`: Email     - `grafana`: Grafana     - `irc`: IRC     - `mattermost`: Mattermost     - `pagerduty`: Pagerduty     - `rocketchat`: Rocket.Chat     - `slack`: Slack     - `twilio`: Twilio     - `webhook`: Webhook * `notification_configuration`:  (json) * `messages`: Optional custom messages for notification template. (json)    ## Sorting  To specify that notification templates are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsNotificationTemplatesStartedList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsNotificationTemplatesStartedList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsNotificationTemplatesStartedListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsNotificationTemplatesStartedListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsNotificationTemplatesStartedListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1913,55 +1243,30 @@ No authorization required
 
 ## OrganizationsOrganizationsNotificationTemplatesSuccessCreate
 
-> OrganizationsOrganizationsNotificationTemplatesSuccessCreate(ctx, id).Data(data).Execute()
+> OrganizationsOrganizationsNotificationTemplatesSuccessCreate(ctx, id, optional)
 
  Create a Notification Template for an Organization
 
+ Make a POST request to this resource with the following notification template fields to create a new notification template associated with this organization.          * `name`: Name of this notification template. (string, required) * `description`: Optional description of this notification template. (string, default=`\"\"`) * `organization`:  (id, required) * `notification_type`:  (choice, required)     - `email`: Email     - `grafana`: Grafana     - `irc`: IRC     - `mattermost`: Mattermost     - `pagerduty`: Pagerduty     - `rocketchat`: Rocket.Chat     - `slack`: Slack     - `twilio`: Twilio     - `webhook`: Webhook * `notification_configuration`:  (json, default=`{}`) * `messages`: Optional custom messages for notification template. (json, default=`{&#39;started&#39;: None, &#39;success&#39;: None, &#39;error&#39;: None, &#39;workflow_approval&#39;: None}`)         # Add Notification Templates for an Organization:  Make a POST request to this resource with only an `id` field to associate an existing notification template with this organization.  # Remove Notification Templates from this Organization:  Make a POST request to this resource with `id` and `disassociate` fields to remove the notification template from this organization  without deleting the notification template.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := openapiclient.inline_object_49{Description: "Description_example", Messages: "Messages_example", Name: "Name_example", NotificationConfiguration: "NotificationConfiguration_example", NotificationType: "NotificationType_example", Organization: 123} // InlineObject49 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsNotificationTemplatesSuccessCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsNotificationTemplatesSuccessCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsNotificationTemplatesSuccessCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsNotificationTemplatesSuccessCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsNotificationTemplatesSuccessCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**InlineObject49**](InlineObject49.md) |  | 
+ **data** | [**optional.Interface of InlineObject49**](InlineObject49.md)|  | 
 
 ### Return type
 
@@ -1983,59 +1288,32 @@ No authorization required
 
 ## OrganizationsOrganizationsNotificationTemplatesSuccessList
 
-> OrganizationsOrganizationsNotificationTemplatesSuccessList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> OrganizationsOrganizationsNotificationTemplatesSuccessList(ctx, id, optional)
 
  List Notification Templates for an Organization
 
+ Make a GET request to this resource to retrieve a list of notification templates associated with the selected organization.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of notification templates found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more notification template records.    ## Results  Each notification template data structure includes the following fields:  * `id`: Database ID for this notification template. (integer) * `type`: Data type for this notification template. (choice) * `url`: URL for this notification template. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this notification template was created. (datetime) * `modified`: Timestamp when this notification template was last modified. (datetime) * `name`: Name of this notification template. (string) * `description`: Optional description of this notification template. (string) * `organization`:  (id) * `notification_type`:  (choice)     - `email`: Email     - `grafana`: Grafana     - `irc`: IRC     - `mattermost`: Mattermost     - `pagerduty`: Pagerduty     - `rocketchat`: Rocket.Chat     - `slack`: Slack     - `twilio`: Twilio     - `webhook`: Webhook * `notification_configuration`:  (json) * `messages`: Optional custom messages for notification template. (json)    ## Sorting  To specify that notification templates are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsNotificationTemplatesSuccessList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsNotificationTemplatesSuccessList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsNotificationTemplatesSuccessListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsNotificationTemplatesSuccessListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsNotificationTemplatesSuccessListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -2057,59 +1335,32 @@ No authorization required
 
 ## OrganizationsOrganizationsObjectRolesList
 
-> OrganizationsOrganizationsObjectRolesList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> OrganizationsOrganizationsObjectRolesList(ctx, id, optional)
 
  List Roles for an Organization
 
+ Make a GET request to this resource to retrieve a list of roles associated with the selected organization.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of roles found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more role records.    ## Results  Each role data structure includes the following fields:  * `id`: Database ID for this role. (integer) * `type`: Data type for this role. (choice) * `url`: URL for this role. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `name`: Name of this role. (field) * `description`: Optional description of this role. (field)    ## Sorting  To specify that roles are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsObjectRolesList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsObjectRolesList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsObjectRolesListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsObjectRolesListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsObjectRolesListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -2131,57 +1382,31 @@ No authorization required
 
 ## OrganizationsOrganizationsPartialUpdate
 
-> OrganizationsOrganizationsPartialUpdate(ctx, id).Search(search).Data(data).Execute()
+> OrganizationsOrganizationsPartialUpdate(ctx, id, optional)
 
  Update an Organization
 
+ Make a PUT or PATCH request to this resource to update this organization.  The following fields may be modified:          * `name`: Name of this organization. (string, required) * `description`: Optional description of this organization. (string, default=`\"\"`) * `max_hosts`: Maximum number of hosts allowed to be managed by this organization. (integer, default=`0`) * `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string, default=`\"\"`)         For a PATCH request, include only the fields that are being modified.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsPartialUpdate(context.Background(), id).Search(search).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsPartialUpdate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsPartialUpdateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsPartialUpdateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsPartialUpdateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
- **data** | **map[string]interface{}** |  | 
+ **search** | **optional.String**| A search term. | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -2203,55 +1428,30 @@ No authorization required
 
 ## OrganizationsOrganizationsProjectsCreate
 
-> OrganizationsOrganizationsProjectsCreate(ctx, id).Data(data).Execute()
+> OrganizationsOrganizationsProjectsCreate(ctx, id, optional)
 
  Create a Project for an Organization
 
+ Make a POST request to this resource with the following project fields to create a new project associated with this organization.          * `name`: Name of this project. (string, required) * `description`: Optional description of this project. (string, default=`\"\"`) * `local_path`: Local path (relative to PROJECTS_ROOT) containing playbooks and related files for this project. (string, default=`\"\"`) * `scm_type`: Specifies the source control system used to store the project. (choice)     - `\"\"`: Manual (default)     - `git`: Git     - `hg`: Mercurial     - `svn`: Subversion     - `insights`: Red Hat Insights     - `archive`: Remote Archive * `scm_url`: The location where the project is stored. (string, default=`\"\"`) * `scm_branch`: Specific branch, tag or commit to checkout. (string, default=`\"\"`) * `scm_refspec`: For git projects, an additional refspec to fetch. (string, default=`\"\"`) * `scm_clean`: Discard any local changes before syncing the project. (boolean, default=`False`) * `scm_delete_on_update`: Delete the project before syncing. (boolean, default=`False`) * `credential`:  (id, default=``) * `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer, default=`0`)       * `scm_update_on_launch`: Update the project when a job is launched that uses the project. (boolean, default=`False`) * `scm_update_cache_timeout`: The number of seconds after the last project update ran that a new project update will be launched as a job dependency. (integer, default=`0`) * `allow_override`: Allow changing the SCM branch or revision in a job template that uses this project. (boolean, default=`False`) * `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string, default=`\"\"`)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := openapiclient.inline_object_50{AllowOverride: false, Credential: 123, CustomVirtualenv: "CustomVirtualenv_example", Description: "Description_example", LocalPath: "LocalPath_example", Name: "Name_example", Organization: 123, ScmBranch: "ScmBranch_example", ScmClean: false, ScmDeleteOnUpdate: false, ScmRefspec: "ScmRefspec_example", ScmType: "ScmType_example", ScmUpdateCacheTimeout: 123, ScmUpdateOnLaunch: false, ScmUrl: "ScmUrl_example", Timeout: 123} // InlineObject50 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsProjectsCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsProjectsCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsProjectsCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsProjectsCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsProjectsCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**InlineObject50**](InlineObject50.md) |  | 
+ **data** | [**optional.Interface of InlineObject50**](InlineObject50.md)|  | 
 
 ### Return type
 
@@ -2273,59 +1473,32 @@ No authorization required
 
 ## OrganizationsOrganizationsProjectsList
 
-> OrganizationsOrganizationsProjectsList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> OrganizationsOrganizationsProjectsList(ctx, id, optional)
 
  List Projects for an Organization
 
+ Make a GET request to this resource to retrieve a list of projects associated with the selected organization.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of projects found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more project records.    ## Results  Each project data structure includes the following fields:  * `id`: Database ID for this project. (integer) * `type`: Data type for this project. (choice) * `url`: URL for this project. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this project was created. (datetime) * `modified`: Timestamp when this project was last modified. (datetime) * `name`: Name of this project. (string) * `description`: Optional description of this project. (string) * `local_path`: Local path (relative to PROJECTS_ROOT) containing playbooks and related files for this project. (string) * `scm_type`: Specifies the source control system used to store the project. (choice)     - `\"\"`: Manual     - `git`: Git     - `hg`: Mercurial     - `svn`: Subversion     - `insights`: Red Hat Insights     - `archive`: Remote Archive * `scm_url`: The location where the project is stored. (string) * `scm_branch`: Specific branch, tag or commit to checkout. (string) * `scm_refspec`: For git projects, an additional refspec to fetch. (string) * `scm_clean`: Discard any local changes before syncing the project. (boolean) * `scm_delete_on_update`: Delete the project before syncing. (boolean) * `credential`:  (id) * `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer) * `scm_revision`: The last revision fetched by a project update (string) * `last_job_run`:  (datetime) * `last_job_failed`:  (boolean) * `next_job_run`:  (datetime) * `status`:  (choice)     - `new`: New     - `pending`: Pending     - `waiting`: Waiting     - `running`: Running     - `successful`: Successful     - `failed`: Failed     - `error`: Error     - `canceled`: Canceled     - `never updated`: Never Updated     - `ok`: OK     - `missing`: Missing * `organization`: The organization used to determine access to this template. (id) * `scm_update_on_launch`: Update the project when a job is launched that uses the project. (boolean) * `scm_update_cache_timeout`: The number of seconds after the last project update ran that a new project update will be launched as a job dependency. (integer) * `allow_override`: Allow changing the SCM branch or revision in a job template that uses this project. (boolean) * `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string) * `last_update_failed`:  (boolean) * `last_updated`:  (datetime)    ## Sorting  To specify that projects are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsProjectsList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsProjectsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsProjectsListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsProjectsListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsProjectsListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -2347,55 +1520,30 @@ No authorization required
 
 ## OrganizationsOrganizationsRead
 
-> OrganizationsOrganizationsRead(ctx, id).Search(search).Execute()
+> OrganizationsOrganizationsRead(ctx, id, optional)
 
  Retrieve an Organization
 
+ Make GET request to this resource to retrieve a single organization record containing the following fields:  * `id`: Database ID for this organization. (integer) * `type`: Data type for this organization. (choice) * `url`: URL for this organization. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this organization was created. (datetime) * `modified`: Timestamp when this organization was last modified. (datetime) * `name`: Name of this organization. (string) * `description`: Optional description of this organization. (string) * `max_hosts`: Maximum number of hosts allowed to be managed by this organization. (integer) * `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsRead(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsRead``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsReadOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsReadRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsReadOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -2417,55 +1565,30 @@ No authorization required
 
 ## OrganizationsOrganizationsTeamsCreate
 
-> OrganizationsOrganizationsTeamsCreate(ctx, id).Data(data).Execute()
+> OrganizationsOrganizationsTeamsCreate(ctx, id, optional)
 
  Create a Team for an Organization
 
+ Make a POST request to this resource with the following team fields to create a new team associated with this organization.          * `name`: Name of this team. (string, required) * `description`: Optional description of this team. (string, default=`\"\"`)          # Remove Organization Teams:  Make a POST request to this resource with `id` and `disassociate` fields to delete the associated team.      {         \"id\": 123,         \"disassociate\": true     }
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := openapiclient.inline_object_51{Description: "Description_example", Name: "Name_example", Organization: 123} // InlineObject51 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsTeamsCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsTeamsCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsTeamsCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsTeamsCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsTeamsCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**InlineObject51**](InlineObject51.md) |  | 
+ **data** | [**optional.Interface of InlineObject51**](InlineObject51.md)|  | 
 
 ### Return type
 
@@ -2487,59 +1610,32 @@ No authorization required
 
 ## OrganizationsOrganizationsTeamsList
 
-> OrganizationsOrganizationsTeamsList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> OrganizationsOrganizationsTeamsList(ctx, id, optional)
 
  List Teams for an Organization
 
+ Make a GET request to this resource to retrieve a list of teams associated with the selected organization.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of teams found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more team records.    ## Results  Each team data structure includes the following fields:  * `id`: Database ID for this team. (integer) * `type`: Data type for this team. (choice) * `url`: URL for this team. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this team was created. (datetime) * `modified`: Timestamp when this team was last modified. (datetime) * `name`: Name of this team. (string) * `description`: Optional description of this team. (string) * `organization`:  (id)    ## Sorting  To specify that teams are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsTeamsList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsTeamsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsTeamsListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsTeamsListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsTeamsListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -2561,57 +1657,31 @@ No authorization required
 
 ## OrganizationsOrganizationsUpdate
 
-> OrganizationsOrganizationsUpdate(ctx, id).Search(search).Data(data).Execute()
+> OrganizationsOrganizationsUpdate(ctx, id, optional)
 
  Update an Organization
 
+ Make a PUT or PATCH request to this resource to update this organization.  The following fields may be modified:          * `name`: Name of this organization. (string, required) * `description`: Optional description of this organization. (string, default=`\"\"`) * `max_hosts`: Maximum number of hosts allowed to be managed by this organization. (integer, default=`0`) * `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string, default=`\"\"`)       For a PUT request, include **all** fields in the request.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsUpdate(context.Background(), id).Search(search).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsUpdate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsUpdateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsUpdateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsUpdateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
- **data** | **map[string]interface{}** |  | 
+ **search** | **optional.String**| A search term. | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -2633,55 +1703,30 @@ No authorization required
 
 ## OrganizationsOrganizationsUsersCreate
 
-> OrganizationsOrganizationsUsersCreate(ctx, id).Data(data).Execute()
+> OrganizationsOrganizationsUsersCreate(ctx, id, optional)
 
  Create a User for an Organization
 
+ Make a POST request to this resource with the following user fields to create a new user associated with this organization.         * `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string, required) * `first_name`:  (string, default=`\"\"`) * `last_name`:  (string, default=`\"\"`) * `email`:  (string, default=`\"\"`) * `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean, default=`False`) * `is_system_auditor`:  (boolean, default=`False`) * `password`: Write-only field used to change the password. (string, default=`\"\"`)            # Add Users for an Organization:  Make a POST request to this resource with only an `id` field to associate an existing user with this organization.  # Remove Users from this Organization:  Make a POST request to this resource with `id` and `disassociate` fields to remove the user from this organization  without deleting the user.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsUsersCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsUsersCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsUsersCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsUsersCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsUsersCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | **map[string]interface{}** |  | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -2703,59 +1748,32 @@ No authorization required
 
 ## OrganizationsOrganizationsUsersList
 
-> OrganizationsOrganizationsUsersList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> OrganizationsOrganizationsUsersList(ctx, id, optional)
 
  List Users for an Organization
 
+ Make a GET request to this resource to retrieve a list of users associated with the selected organization.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of users found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more user records.    ## Results  Each user data structure includes the following fields:  * `id`: Database ID for this user. (integer) * `type`: Data type for this user. (choice) * `url`: URL for this user. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this user was created. (datetime) * `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string) * `first_name`:  (string) * `last_name`:  (string) * `email`:  (string) * `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean) * `is_system_auditor`:  (boolean)  * `ldap_dn`:  (string) * `last_login`:  (datetime) * `external_account`: Set if the account is managed by an external service (field)    ## Sorting  To specify that users are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=username  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-username  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=username,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsUsersList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsUsersList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsUsersListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsUsersListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsUsersListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -2777,55 +1795,30 @@ No authorization required
 
 ## OrganizationsOrganizationsWorkflowJobTemplatesCreate
 
-> OrganizationsOrganizationsWorkflowJobTemplatesCreate(ctx, id).Data(data).Execute()
+> OrganizationsOrganizationsWorkflowJobTemplatesCreate(ctx, id, optional)
 
  Create a Workflow Job Template for an Organization
 
+ Make a POST request to this resource with the following workflow job template fields to create a new workflow job template associated with this organization.          * `name`: Name of this workflow job template. (string, required) * `description`: Optional description of this workflow job template. (string, default=`\"\"`)     * `extra_vars`:  (json, default=``)  * `survey_enabled`:  (boolean, default=`False`) * `allow_simultaneous`:  (boolean, default=`False`) * `ask_variables_on_launch`:  (boolean, default=`False`) * `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id, default=``) * `limit`:  (string, default=`\"\"`) * `scm_branch`:  (string, default=`\"\"`) * `ask_inventory_on_launch`:  (boolean, default=`False`) * `ask_scm_branch_on_launch`:  (boolean, default=`False`) * `ask_limit_on_launch`:  (boolean, default=`False`) * `webhook_service`: Service that webhook requests will be accepted from (choice)     - `\"\"`: ---------     - `github`: GitHub     - `gitlab`: GitLab * `webhook_credential`: Personal Access Token for posting back the status to the service API (id, default=``)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := openapiclient.inline_object_52{AllowSimultaneous: false, AskInventoryOnLaunch: false, AskLimitOnLaunch: false, AskScmBranchOnLaunch: false, AskVariablesOnLaunch: false, Description: "Description_example", ExtraVars: "ExtraVars_example", Inventory: 123, Limit: "Limit_example", Name: "Name_example", Organization: 123, ScmBranch: "ScmBranch_example", SurveyEnabled: false, WebhookCredential: 123, WebhookService: "WebhookService_example"} // InlineObject52 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsWorkflowJobTemplatesCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsWorkflowJobTemplatesCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsWorkflowJobTemplatesCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsWorkflowJobTemplatesCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsWorkflowJobTemplatesCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**InlineObject52**](InlineObject52.md) |  | 
+ **data** | [**optional.Interface of InlineObject52**](InlineObject52.md)|  | 
 
 ### Return type
 
@@ -2847,59 +1840,32 @@ No authorization required
 
 ## OrganizationsOrganizationsWorkflowJobTemplatesList
 
-> OrganizationsOrganizationsWorkflowJobTemplatesList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> OrganizationsOrganizationsWorkflowJobTemplatesList(ctx, id, optional)
 
  List Workflow Job Templates for an Organization
 
+ Make a GET request to this resource to retrieve a list of workflow job templates associated with the selected organization.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of workflow job templates found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more workflow job template records.    ## Results  Each workflow job template data structure includes the following fields:  * `id`: Database ID for this workflow job template. (integer) * `type`: Data type for this workflow job template. (choice) * `url`: URL for this workflow job template. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this workflow job template was created. (datetime) * `modified`: Timestamp when this workflow job template was last modified. (datetime) * `name`: Name of this workflow job template. (string) * `description`: Optional description of this workflow job template. (string) * `last_job_run`:  (datetime) * `last_job_failed`:  (boolean) * `next_job_run`:  (datetime) * `status`:  (choice)     - `new`: New     - `pending`: Pending     - `waiting`: Waiting     - `running`: Running     - `successful`: Successful     - `failed`: Failed     - `error`: Error     - `canceled`: Canceled     - `never updated`: Never Updated     - `ok`: OK     - `missing`: Missing     - `none`: No External Source     - `updating`: Updating * `extra_vars`:  (json) * `organization`: The organization used to determine access to this template. (id) * `survey_enabled`:  (boolean) * `allow_simultaneous`:  (boolean) * `ask_variables_on_launch`:  (boolean) * `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id) * `limit`:  (string) * `scm_branch`:  (string) * `ask_inventory_on_launch`:  (boolean) * `ask_scm_branch_on_launch`:  (boolean) * `ask_limit_on_launch`:  (boolean) * `webhook_service`: Service that webhook requests will be accepted from (choice)     - `\"\"`: ---------     - `github`: GitHub     - `gitlab`: GitLab * `webhook_credential`: Personal Access Token for posting back the status to the service API (id)    ## Sorting  To specify that workflow job templates are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.OrganizationsApi.OrganizationsOrganizationsWorkflowJobTemplatesList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `OrganizationsApi.OrganizationsOrganizationsWorkflowJobTemplatesList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***OrganizationsOrganizationsWorkflowJobTemplatesListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiOrganizationsOrganizationsWorkflowJobTemplatesListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a OrganizationsOrganizationsWorkflowJobTemplatesListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 

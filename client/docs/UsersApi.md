@@ -34,53 +34,30 @@ Method | HTTP request | Description
 
 ## UsersMeList
 
-> UsersMeList(ctx).Page(page).PageSize(pageSize).Search(search).Execute()
+> UsersMeList(ctx, optional)
 
  Retrieve Information about the current User
 
+ Make a GET request to retrieve user information about the current user.  One result should be returned containing the following fields:  * `id`: Database ID for this user. (integer) * `type`: Data type for this user. (choice) * `url`: URL for this user. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this user was created. (datetime) * `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string) * `first_name`:  (string) * `last_name`:  (string) * `email`:  (string) * `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean) * `is_system_auditor`:  (boolean)  * `ldap_dn`:  (string) * `last_login`:  (datetime) * `external_account`: Set if the account is managed by an external service (field)    Use the primary URL for the user (/api/v2/users/N/) to modify the user.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersMeList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersMeList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiUsersMeListRequest struct via the builder pattern
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***UsersMeListOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a UsersMeListOpts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -102,59 +79,32 @@ No authorization required
 
 ## UsersUsersAccessListList
 
-> UsersUsersAccessListList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> UsersUsersAccessListList(ctx, id, optional)
 
  List Users
 
+ Make a GET request to this resource to retrieve the list of users.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of users found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more user records.    ## Results  Each user data structure includes the following fields:  * `id`: Database ID for this user. (integer) * `type`: Data type for this user. (choice) * `url`: URL for this user. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this user was created. (datetime) * `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string) * `first_name`:  (string) * `last_name`:  (string) * `email`:  (string) * `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean) * `is_system_auditor`:  (boolean)  * `ldap_dn`:  (string) * `last_login`:  (datetime) * `external_account`: Set if the account is managed by an external service (field)    ## Sorting  To specify that users are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=username  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-username  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=username,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersAccessListList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersAccessListList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersAccessListListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersAccessListListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersAccessListListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -176,59 +126,32 @@ No authorization required
 
 ## UsersUsersActivityStreamList
 
-> UsersUsersActivityStreamList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> UsersUsersActivityStreamList(ctx, id, optional)
 
  List Activity Streams for a User
 
+ Make a GET request to this resource to retrieve a list of activity streams associated with the selected user.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of activity streams found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more activity stream records.    ## Results  Each activity stream data structure includes the following fields:  * `id`: Database ID for this activity stream. (integer) * `type`: Data type for this activity stream. (choice) * `url`: URL for this activity stream. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `timestamp`:  (datetime) * `operation`: The action taken with respect to the given object(s). (choice)     - `create`: Entity Created     - `update`: Entity Updated     - `delete`: Entity Deleted     - `associate`: Entity Associated with another Entity     - `disassociate`: Entity was Disassociated with another Entity * `changes`: A summary of the new and changed values when an object is created, updated, or deleted (json) * `object1`: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string) * `object2`: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string) * `object_association`: When present, shows the field name of the role or relationship that changed. (field) * `action_node`: The cluster node the activity took place on. (string) * `object_type`: When present, shows the model on which the role or relationship was defined. (field)    ## Sorting  To specify that activity streams are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersActivityStreamList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersActivityStreamList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersActivityStreamListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersActivityStreamListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersActivityStreamListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -250,59 +173,32 @@ No authorization required
 
 ## UsersUsersAdminOfOrganizationsList
 
-> UsersUsersAdminOfOrganizationsList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> UsersUsersAdminOfOrganizationsList(ctx, id, optional)
 
  List Organizations Administered by this User
 
+ Make a GET request to this resource to retrieve a list of organizations of which the selected user is an admin.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of organizations found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more organization records.    ## Results  Each organization data structure includes the following fields:  * `id`: Database ID for this organization. (integer) * `type`: Data type for this organization. (choice) * `url`: URL for this organization. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this organization was created. (datetime) * `modified`: Timestamp when this organization was last modified. (datetime) * `name`: Name of this organization. (string) * `description`: Optional description of this organization. (string) * `max_hosts`: Maximum number of hosts allowed to be managed by this organization. (integer) * `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string)    ## Sorting  To specify that organizations are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersAdminOfOrganizationsList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersAdminOfOrganizationsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersAdminOfOrganizationsListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersAdminOfOrganizationsListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersAdminOfOrganizationsListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -324,55 +220,30 @@ No authorization required
 
 ## UsersUsersApplicationsCreate
 
-> UsersUsersApplicationsCreate(ctx, id).Data(data).Execute()
+> UsersUsersApplicationsCreate(ctx, id, optional)
 
  Create an Application
 
+ Make a POST request to this resource with the following application fields to create a new application:          * `name`: Name of this application. (string, required) * `description`: Optional description of this application. (string, default=`\"\"`)   * `client_type`: Set to Public or Confidential depending on how secure the client device is. (choice, required)     - `confidential`: Confidential     - `public`: Public * `redirect_uris`: Allowed URIs list, space separated (string, default=`\"\"`) * `authorization_grant_type`: The Grant type the user must use for acquire tokens for this application. (choice, required)     - `authorization-code`: Authorization code     - `password`: Resource owner password-based * `skip_authorization`: Set True to skip authorization step for completely trusted applications. (boolean, default=`False`) * `organization`: Organization containing this application. (id, required)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := openapiclient.inline_object_70{AuthorizationGrantType: "AuthorizationGrantType_example", ClientType: "ClientType_example", Description: "Description_example", Name: "Name_example", Organization: 123, RedirectUris: "RedirectUris_example", SkipAuthorization: false} // InlineObject70 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersApplicationsCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersApplicationsCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersApplicationsCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersApplicationsCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersApplicationsCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**InlineObject70**](InlineObject70.md) |  | 
+ **data** | [**optional.Interface of InlineObject70**](InlineObject70.md)|  | 
 
 ### Return type
 
@@ -394,59 +265,32 @@ No authorization required
 
 ## UsersUsersApplicationsList
 
-> UsersUsersApplicationsList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> UsersUsersApplicationsList(ctx, id, optional)
 
  List Applications
 
+ Make a GET request to this resource to retrieve the list of applications.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of applications found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more application records.    ## Results  Each application data structure includes the following fields:  * `id`: Database ID for this application. (integer) * `type`: Data type for this application. (choice) * `url`: URL for this application. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this application was created. (datetime) * `modified`: Timestamp when this application was last modified. (datetime) * `name`: Name of this application. (string) * `description`: Optional description of this application. (string) * `client_id`:  (string) * `client_secret`: Used for more stringent verification of access to an application when creating a token. (string) * `client_type`: Set to Public or Confidential depending on how secure the client device is. (choice)     - `confidential`: Confidential     - `public`: Public * `redirect_uris`: Allowed URIs list, space separated (string) * `authorization_grant_type`: The Grant type the user must use for acquire tokens for this application. (choice)     - `authorization-code`: Authorization code     - `password`: Resource owner password-based * `skip_authorization`: Set True to skip authorization step for completely trusted applications. (boolean) * `organization`: Organization containing this application. (id)    ## Sorting  To specify that applications are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersApplicationsList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersApplicationsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersApplicationsListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersApplicationsListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersApplicationsListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -468,55 +312,30 @@ No authorization required
 
 ## UsersUsersAuthorizedTokensCreate
 
-> UsersUsersAuthorizedTokensCreate(ctx, id).Data(data).Execute()
+> UsersUsersAuthorizedTokensCreate(ctx, id, optional)
 
  Create an Access Token for a User
 
+ Make a POST request to this resource with the following access token fields to create a new access token associated with this user.          * `description`: Optional description of this access token. (string, default=`\"\"`)    * `application`:  (id, required)  * `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string, default=`\"write\"`)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersAuthorizedTokensCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersAuthorizedTokensCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersAuthorizedTokensCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersAuthorizedTokensCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersAuthorizedTokensCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | **map[string]interface{}** |  | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -538,59 +357,32 @@ No authorization required
 
 ## UsersUsersAuthorizedTokensList
 
-> UsersUsersAuthorizedTokensList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> UsersUsersAuthorizedTokensList(ctx, id, optional)
 
  List Access Tokens for a User
 
+ Make a GET request to this resource to retrieve a list of access tokens associated with the selected user.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of access tokens found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more access token records.    ## Results  Each access token data structure includes the following fields:  * `id`: Database ID for this access token. (integer) * `type`: Data type for this access token. (choice) * `url`: URL for this access token. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this access token was created. (datetime) * `modified`: Timestamp when this access token was last modified. (datetime) * `description`: Optional description of this access token. (string) * `user`: The user representing the token owner (id) * `token`:  (string) * `refresh_token`:  (field) * `application`:  (id) * `expires`:  (datetime) * `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string)    ## Sorting  To specify that access tokens are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersAuthorizedTokensList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersAuthorizedTokensList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersAuthorizedTokensListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersAuthorizedTokensListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersAuthorizedTokensListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -612,49 +404,28 @@ No authorization required
 
 ## UsersUsersCreate
 
-> UsersUsersCreate(ctx).Data(data).Execute()
+> UsersUsersCreate(ctx, optional)
 
  Create a User
 
+ Make a POST request to this resource with the following user fields to create a new user:         * `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string, required) * `first_name`:  (string, default=`\"\"`) * `last_name`:  (string, default=`\"\"`) * `email`:  (string, default=`\"\"`) * `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean, default=`False`) * `is_system_auditor`:  (boolean, default=`False`) * `password`: Write-only field used to change the password. (string, default=`\"\"`)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersCreate(context.Background(), ).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiUsersUsersCreateRequest struct via the builder pattern
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **data** | **map[string]interface{}** |  | 
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***UsersUsersCreateOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a UsersUsersCreateOpts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -676,55 +447,30 @@ No authorization required
 
 ## UsersUsersCredentialsCreate
 
-> UsersUsersCredentialsCreate(ctx, id).Data(data).Execute()
+> UsersUsersCredentialsCreate(ctx, id, optional)
 
  Create a Credential for a User
 
+ Make a POST request to this resource with the following credential fields to create a new credential associated with this user.          * `name`: Name of this credential. (string, required) * `description`: Optional description of this credential. (string, default=`\"\"`) * `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id, required)  * `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersCredentialsCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersCredentialsCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersCredentialsCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersCredentialsCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersCredentialsCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | **map[string]interface{}** |  | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -746,59 +492,32 @@ No authorization required
 
 ## UsersUsersCredentialsList
 
-> UsersUsersCredentialsList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> UsersUsersCredentialsList(ctx, id, optional)
 
  List Credentials for a User
 
+ Make a GET request to this resource to retrieve a list of credentials associated with the selected user.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of credentials found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more credential records.    ## Results  Each credential data structure includes the following fields:  * `id`: Database ID for this credential. (integer) * `type`: Data type for this credential. (choice) * `url`: URL for this credential. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this credential was created. (datetime) * `modified`: Timestamp when this credential was last modified. (datetime) * `name`: Name of this credential. (string) * `description`: Optional description of this credential. (string) * `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id) * `managed_by_tower`:  (boolean) * `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json) * `kind`:  (field) * `cloud`:  (field) * `kubernetes`:  (field)     ## Sorting  To specify that credentials are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersCredentialsList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersCredentialsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersCredentialsListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersCredentialsListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersCredentialsListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -820,55 +539,30 @@ No authorization required
 
 ## UsersUsersDelete
 
-> UsersUsersDelete(ctx, id).Search(search).Execute()
+> UsersUsersDelete(ctx, id, optional)
 
  Delete a User
 
+ Make a DELETE request to this resource to delete this user.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersDelete(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersDelete``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersDeleteOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersDeleteRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersDeleteOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -890,53 +584,30 @@ No authorization required
 
 ## UsersUsersList
 
-> UsersUsersList(ctx).Page(page).PageSize(pageSize).Search(search).Execute()
+> UsersUsersList(ctx, optional)
 
  List Users
 
+ Make a GET request to this resource to retrieve the list of users.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of users found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more user records.    ## Results  Each user data structure includes the following fields:  * `id`: Database ID for this user. (integer) * `type`: Data type for this user. (choice) * `url`: URL for this user. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this user was created. (datetime) * `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string) * `first_name`:  (string) * `last_name`:  (string) * `email`:  (string) * `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean) * `is_system_auditor`:  (boolean)  * `ldap_dn`:  (string) * `last_login`:  (datetime) * `external_account`: Set if the account is managed by an external service (field)    ## Sorting  To specify that users are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=username  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-username  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=username,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiUsersUsersListRequest struct via the builder pattern
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***UsersUsersListOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a UsersUsersListOpts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -958,59 +629,32 @@ No authorization required
 
 ## UsersUsersOrganizationsList
 
-> UsersUsersOrganizationsList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> UsersUsersOrganizationsList(ctx, id, optional)
 
  List Organizations for a User
 
+ Make a GET request to this resource to retrieve a list of organizations associated with the selected user.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of organizations found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more organization records.    ## Results  Each organization data structure includes the following fields:  * `id`: Database ID for this organization. (integer) * `type`: Data type for this organization. (choice) * `url`: URL for this organization. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this organization was created. (datetime) * `modified`: Timestamp when this organization was last modified. (datetime) * `name`: Name of this organization. (string) * `description`: Optional description of this organization. (string) * `max_hosts`: Maximum number of hosts allowed to be managed by this organization. (integer) * `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string)    ## Sorting  To specify that organizations are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersOrganizationsList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersOrganizationsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersOrganizationsListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersOrganizationsListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersOrganizationsListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1032,57 +676,31 @@ No authorization required
 
 ## UsersUsersPartialUpdate
 
-> UsersUsersPartialUpdate(ctx, id).Search(search).Data(data).Execute()
+> UsersUsersPartialUpdate(ctx, id, optional)
 
  Update a User
 
+ Make a PUT or PATCH request to this resource to update this user.  The following fields may be modified:         * `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string, required) * `first_name`:  (string, default=`\"\"`) * `last_name`:  (string, default=`\"\"`) * `email`:  (string, default=`\"\"`) * `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean, default=`False`) * `is_system_auditor`:  (boolean, default=`False`) * `password`: Write-only field used to change the password. (string, default=`\"\"`)            For a PATCH request, include only the fields that are being modified.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersPartialUpdate(context.Background(), id).Search(search).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersPartialUpdate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersPartialUpdateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersPartialUpdateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersPartialUpdateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
- **data** | **map[string]interface{}** |  | 
+ **search** | **optional.String**| A search term. | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -1104,55 +722,30 @@ No authorization required
 
 ## UsersUsersPersonalTokensCreate
 
-> UsersUsersPersonalTokensCreate(ctx, id).Data(data).Execute()
+> UsersUsersPersonalTokensCreate(ctx, id, optional)
 
  Create an Access Token for a User
 
+ Make a POST request to this resource with the following access token fields to create a new access token associated with this user.          * `description`: Optional description of this access token. (string, default=`\"\"`)      * `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string, default=`\"write\"`)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := openapiclient.inline_object_71{Description: "Description_example", Scope: "Scope_example"} // InlineObject71 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersPersonalTokensCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersPersonalTokensCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersPersonalTokensCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersPersonalTokensCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersPersonalTokensCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**InlineObject71**](InlineObject71.md) |  | 
+ **data** | [**optional.Interface of InlineObject71**](InlineObject71.md)|  | 
 
 ### Return type
 
@@ -1174,59 +767,32 @@ No authorization required
 
 ## UsersUsersPersonalTokensList
 
-> UsersUsersPersonalTokensList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> UsersUsersPersonalTokensList(ctx, id, optional)
 
  List Access Tokens for a User
 
+ Make a GET request to this resource to retrieve a list of access tokens associated with the selected user.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of access tokens found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more access token records.    ## Results  Each access token data structure includes the following fields:  * `id`: Database ID for this access token. (integer) * `type`: Data type for this access token. (choice) * `url`: URL for this access token. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this access token was created. (datetime) * `modified`: Timestamp when this access token was last modified. (datetime) * `description`: Optional description of this access token. (string) * `user`: The user representing the token owner (id) * `token`:  (string) * `refresh_token`:  (field) * `application`:  (id) * `expires`:  (datetime) * `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string)    ## Sorting  To specify that access tokens are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersPersonalTokensList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersPersonalTokensList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersPersonalTokensListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersPersonalTokensListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersPersonalTokensListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1248,59 +814,32 @@ No authorization required
 
 ## UsersUsersProjectsList
 
-> UsersUsersProjectsList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> UsersUsersProjectsList(ctx, id, optional)
 
  List Projects for a User
 
+ Make a GET request to this resource to retrieve a list of projects associated with the selected user.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of projects found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more project records.    ## Results  Each project data structure includes the following fields:  * `id`: Database ID for this project. (integer) * `type`: Data type for this project. (choice) * `url`: URL for this project. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this project was created. (datetime) * `modified`: Timestamp when this project was last modified. (datetime) * `name`: Name of this project. (string) * `description`: Optional description of this project. (string) * `local_path`: Local path (relative to PROJECTS_ROOT) containing playbooks and related files for this project. (string) * `scm_type`: Specifies the source control system used to store the project. (choice)     - `\"\"`: Manual     - `git`: Git     - `hg`: Mercurial     - `svn`: Subversion     - `insights`: Red Hat Insights     - `archive`: Remote Archive * `scm_url`: The location where the project is stored. (string) * `scm_branch`: Specific branch, tag or commit to checkout. (string) * `scm_refspec`: For git projects, an additional refspec to fetch. (string) * `scm_clean`: Discard any local changes before syncing the project. (boolean) * `scm_delete_on_update`: Delete the project before syncing. (boolean) * `credential`:  (id) * `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer) * `scm_revision`: The last revision fetched by a project update (string) * `last_job_run`:  (datetime) * `last_job_failed`:  (boolean) * `next_job_run`:  (datetime) * `status`:  (choice)     - `new`: New     - `pending`: Pending     - `waiting`: Waiting     - `running`: Running     - `successful`: Successful     - `failed`: Failed     - `error`: Error     - `canceled`: Canceled     - `never updated`: Never Updated     - `ok`: OK     - `missing`: Missing * `organization`: The organization used to determine access to this template. (id) * `scm_update_on_launch`: Update the project when a job is launched that uses the project. (boolean) * `scm_update_cache_timeout`: The number of seconds after the last project update ran that a new project update will be launched as a job dependency. (integer) * `allow_override`: Allow changing the SCM branch or revision in a job template that uses this project. (boolean) * `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string) * `last_update_failed`:  (boolean) * `last_updated`:  (datetime)    ## Sorting  To specify that projects are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersProjectsList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersProjectsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersProjectsListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersProjectsListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersProjectsListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1322,55 +861,30 @@ No authorization required
 
 ## UsersUsersRead
 
-> UsersUsersRead(ctx, id).Search(search).Execute()
+> UsersUsersRead(ctx, id, optional)
 
  Retrieve a User
 
+ Make GET request to this resource to retrieve a single user record containing the following fields:  * `id`: Database ID for this user. (integer) * `type`: Data type for this user. (choice) * `url`: URL for this user. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this user was created. (datetime) * `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string) * `first_name`:  (string) * `last_name`:  (string) * `email`:  (string) * `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean) * `is_system_auditor`:  (boolean)  * `ldap_dn`:  (string) * `last_login`:  (datetime) * `external_account`: Set if the account is managed by an external service (field)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersRead(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersRead``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersReadOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersReadRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersReadOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1392,55 +906,30 @@ No authorization required
 
 ## UsersUsersRolesCreate
 
-> UsersUsersRolesCreate(ctx, id).Data(data).Execute()
+> UsersUsersRolesCreate(ctx, id, optional)
 
  Associate Roles with this User
 
+ Make a POST request to this resource to add or remove a role from this user. The following fields may be modified:     * `id`: The Role ID to add to the user. (int, required)    * `disassociate`: Provide if you want to remove the role. (any value, optional)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersRolesCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersRolesCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersRolesCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersRolesCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersRolesCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | **map[string]interface{}** |  | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -1462,59 +951,32 @@ No authorization required
 
 ## UsersUsersRolesList
 
-> UsersUsersRolesList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> UsersUsersRolesList(ctx, id, optional)
 
  List Roles for a User
 
+ Make a GET request to this resource to retrieve a list of roles associated with the selected user.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of roles found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more role records.    ## Results  Each role data structure includes the following fields:  * `id`: Database ID for this role. (integer) * `type`: Data type for this role. (choice) * `url`: URL for this role. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `name`: Name of this role. (field) * `description`: Optional description of this role. (field)    ## Sorting  To specify that roles are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersRolesList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersRolesList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersRolesListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersRolesListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersRolesListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1536,59 +998,32 @@ No authorization required
 
 ## UsersUsersTeamsList
 
-> UsersUsersTeamsList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> UsersUsersTeamsList(ctx, id, optional)
 
  List Teams for a User
 
+ Make a GET request to this resource to retrieve a list of teams associated with the selected user.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of teams found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more team records.    ## Results  Each team data structure includes the following fields:  * `id`: Database ID for this team. (integer) * `type`: Data type for this team. (choice) * `url`: URL for this team. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this team was created. (datetime) * `modified`: Timestamp when this team was last modified. (datetime) * `name`: Name of this team. (string) * `description`: Optional description of this team. (string) * `organization`:  (id)    ## Sorting  To specify that teams are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersTeamsList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersTeamsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersTeamsListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersTeamsListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersTeamsListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1610,55 +1045,30 @@ No authorization required
 
 ## UsersUsersTokensCreate
 
-> UsersUsersTokensCreate(ctx, id).Data(data).Execute()
+> UsersUsersTokensCreate(ctx, id, optional)
 
  Create an Access Token for a User
 
+ Make a POST request to this resource with the following access token fields to create a new access token associated with this user.          * `description`: Optional description of this access token. (string, default=`\"\"`)    * `application`:  (id, default=``)  * `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string, default=`\"write\"`)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersTokensCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersTokensCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersTokensCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersTokensCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersTokensCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | **map[string]interface{}** |  | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -1680,59 +1090,32 @@ No authorization required
 
 ## UsersUsersTokensList
 
-> UsersUsersTokensList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> UsersUsersTokensList(ctx, id, optional)
 
  List Access Tokens for a User
 
+ Make a GET request to this resource to retrieve a list of access tokens associated with the selected user.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of access tokens found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more access token records.    ## Results  Each access token data structure includes the following fields:  * `id`: Database ID for this access token. (integer) * `type`: Data type for this access token. (choice) * `url`: URL for this access token. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this access token was created. (datetime) * `modified`: Timestamp when this access token was last modified. (datetime) * `description`: Optional description of this access token. (string) * `user`: The user representing the token owner (id) * `token`:  (string) * `refresh_token`:  (field) * `application`:  (id) * `expires`:  (datetime) * `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string)    ## Sorting  To specify that access tokens are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersTokensList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersTokensList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersTokensListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersTokensListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersTokensListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1754,57 +1137,31 @@ No authorization required
 
 ## UsersUsersUpdate
 
-> UsersUsersUpdate(ctx, id).Search(search).Data(data).Execute()
+> UsersUsersUpdate(ctx, id, optional)
 
  Update a User
 
+ Make a PUT or PATCH request to this resource to update this user.  The following fields may be modified:         * `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string, required) * `first_name`:  (string, default=`\"\"`) * `last_name`:  (string, default=`\"\"`) * `email`:  (string, default=`\"\"`) * `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean, default=`False`) * `is_system_auditor`:  (boolean, default=`False`) * `password`: Write-only field used to change the password. (string, default=`\"\"`)          For a PUT request, include **all** fields in the request.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-    data := openapiclient.inline_object_69{Email: "Email_example", FirstName: "FirstName_example", IsSuperuser: false, IsSystemAuditor: false, LastName: "LastName_example", Password: "Password_example", Username: "Username_example"} // InlineObject69 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.UsersApi.UsersUsersUpdate(context.Background(), id).Search(search).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `UsersApi.UsersUsersUpdate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***UsersUsersUpdateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiUsersUsersUpdateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a UsersUsersUpdateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
- **data** | [**InlineObject69**](InlineObject69.md) |  | 
+ **search** | **optional.String**| A search term. | 
+ **data** | [**optional.Interface of InlineObject69**](InlineObject69.md)|  | 
 
 ### Return type
 

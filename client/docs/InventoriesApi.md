@@ -40,59 +40,32 @@ Method | HTTP request | Description
 
 ## InventoriesInventoriesAccessListList
 
-> InventoriesInventoriesAccessListList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> InventoriesInventoriesAccessListList(ctx, id, optional)
 
  List Users
 
+ Make a GET request to this resource to retrieve the list of users.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of users found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more user records.    ## Results  Each user data structure includes the following fields:  * `id`: Database ID for this user. (integer) * `type`: Data type for this user. (choice) * `url`: URL for this user. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this user was created. (datetime) * `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string) * `first_name`:  (string) * `last_name`:  (string) * `email`:  (string) * `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean) * `is_system_auditor`:  (boolean)  * `ldap_dn`:  (string) * `last_login`:  (datetime) * `external_account`: Set if the account is managed by an external service (field)    ## Sorting  To specify that users are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=username  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-username  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=username,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesAccessListList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesAccessListList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesAccessListListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesAccessListListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesAccessListListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -114,59 +87,32 @@ No authorization required
 
 ## InventoriesInventoriesActivityStreamList
 
-> InventoriesInventoriesActivityStreamList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> InventoriesInventoriesActivityStreamList(ctx, id, optional)
 
  List Activity Streams for an Inventory
 
+ Make a GET request to this resource to retrieve a list of activity streams associated with the selected inventory.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of activity streams found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more activity stream records.    ## Results  Each activity stream data structure includes the following fields:  * `id`: Database ID for this activity stream. (integer) * `type`: Data type for this activity stream. (choice) * `url`: URL for this activity stream. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `timestamp`:  (datetime) * `operation`: The action taken with respect to the given object(s). (choice)     - `create`: Entity Created     - `update`: Entity Updated     - `delete`: Entity Deleted     - `associate`: Entity Associated with another Entity     - `disassociate`: Entity was Disassociated with another Entity * `changes`: A summary of the new and changed values when an object is created, updated, or deleted (json) * `object1`: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string) * `object2`: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string) * `object_association`: When present, shows the field name of the role or relationship that changed. (field) * `action_node`: The cluster node the activity took place on. (string) * `object_type`: When present, shows the model on which the role or relationship was defined. (field)    ## Sorting  To specify that activity streams are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesActivityStreamList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesActivityStreamList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesActivityStreamListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesActivityStreamListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesActivityStreamListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -188,55 +134,30 @@ No authorization required
 
 ## InventoriesInventoriesAdHocCommandsCreate
 
-> InventoriesInventoriesAdHocCommandsCreate(ctx, id).Data(data).Execute()
+> InventoriesInventoriesAdHocCommandsCreate(ctx, id, optional)
 
  Create an Ad Hoc Command for an Inventory
 
+ Make a POST request to this resource with the following ad hoc command fields to create a new ad hoc command associated with this inventory.                     * `job_type`:  (choice)     - `run`: Run (default)     - `check`: Check  * `limit`:  (string, default=`\"\"`) * `credential`:  (id, default=``) * `module_name`:  (choice)     - `command` (default)     - `shell`     - `yum`     - `apt`     - `apt_key`     - `apt_repository`     - `apt_rpm`     - `service`     - `group`     - `user`     - `mount`     - `ping`     - `selinux`     - `setup`     - `win_ping`     - `win_service`     - `win_updates`     - `win_group`     - `win_user` * `module_args`:  (string, default=`\"\"`) * `forks`:  (integer, default=`0`) * `verbosity`:  (choice)     - `0`: 0 (Normal) (default)     - `1`: 1 (Verbose)     - `2`: 2 (More Verbose)     - `3`: 3 (Debug)     - `4`: 4 (Connection Debug)     - `5`: 5 (WinRM Debug) * `extra_vars`:  (string, default=`\"\"`) * `become_enabled`:  (boolean, default=`False`) * `diff_mode`:  (boolean, default=`False`)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesAdHocCommandsCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesAdHocCommandsCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesAdHocCommandsCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesAdHocCommandsCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesAdHocCommandsCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | **map[string]interface{}** |  | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -258,59 +179,32 @@ No authorization required
 
 ## InventoriesInventoriesAdHocCommandsList
 
-> InventoriesInventoriesAdHocCommandsList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> InventoriesInventoriesAdHocCommandsList(ctx, id, optional)
 
  List Ad Hoc Commands for an Inventory
 
+ Make a GET request to this resource to retrieve a list of ad hoc commands associated with the selected inventory.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of ad hoc commands found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more ad hoc command records.    ## Results  Each ad hoc command data structure includes the following fields:  * `id`: Database ID for this ad hoc command. (integer) * `type`: Data type for this ad hoc command. (choice) * `url`: URL for this ad hoc command. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this ad hoc command was created. (datetime) * `modified`: Timestamp when this ad hoc command was last modified. (datetime) * `name`: Name of this ad hoc command. (string) * `launch_type`:  (choice)     - `manual`: Manual     - `relaunch`: Relaunch     - `callback`: Callback     - `scheduled`: Scheduled     - `dependency`: Dependency     - `workflow`: Workflow     - `webhook`: Webhook     - `sync`: Sync     - `scm`: SCM Update * `status`:  (choice)     - `new`: New     - `pending`: Pending     - `waiting`: Waiting     - `running`: Running     - `successful`: Successful     - `failed`: Failed     - `error`: Error     - `canceled`: Canceled * `failed`:  (boolean) * `started`: The date and time the job was queued for starting. (datetime) * `finished`: The date and time the job finished execution. (datetime) * `canceled_on`: The date and time when the cancel request was sent. (datetime) * `elapsed`: Elapsed time in seconds that the job ran. (decimal) * `job_explanation`: A status field to indicate the state of the job if it wasn&#39;t able to run and capture stdout (string) * `execution_node`: The node the job executed on. (string) * `controller_node`: The instance that managed the isolated execution environment. (string) * `job_type`:  (choice)     - `run`: Run     - `check`: Check * `inventory`:  (id) * `limit`:  (string) * `credential`:  (id) * `module_name`:  (choice)     - `command`     - `shell`     - `yum`     - `apt`     - `apt_key`     - `apt_repository`     - `apt_rpm`     - `service`     - `group`     - `user`     - `mount`     - `ping`     - `selinux`     - `setup`     - `win_ping`     - `win_service`     - `win_updates`     - `win_group`     - `win_user` * `module_args`:  (string) * `forks`:  (integer) * `verbosity`:  (choice)     - `0`: 0 (Normal)     - `1`: 1 (Verbose)     - `2`: 2 (More Verbose)     - `3`: 3 (Debug)     - `4`: 4 (Connection Debug)     - `5`: 5 (WinRM Debug) * `extra_vars`:  (string) * `become_enabled`:  (boolean) * `diff_mode`:  (boolean)    ## Sorting  To specify that ad hoc commands are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesAdHocCommandsList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesAdHocCommandsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesAdHocCommandsListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesAdHocCommandsListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesAdHocCommandsListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -332,53 +226,28 @@ No authorization required
 
 ## InventoriesInventoriesCopyCreate
 
-> InventoriesInventoriesCopyCreate(ctx, id).Data(data).Execute()
+> InventoriesInventoriesCopyCreate(ctx, id, optional)
 
 
 
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := openapiclient.inline_object_21{Name: "Name_example"} // InlineObject21 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesCopyCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesCopyCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesCopyCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesCopyCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesCopyCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**InlineObject21**](InlineObject21.md) |  | 
+ **data** | [**optional.Interface of InlineObject21**](InlineObject21.md)|  | 
 
 ### Return type
 
@@ -400,57 +269,30 @@ No authorization required
 
 ## InventoriesInventoriesCopyList
 
-> InventoriesInventoriesCopyList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> InventoriesInventoriesCopyList(ctx, id, optional)
 
 
 
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesCopyList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesCopyList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesCopyListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesCopyListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesCopyListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -472,49 +314,28 @@ No authorization required
 
 ## InventoriesInventoriesCreate
 
-> InventoriesInventoriesCreate(ctx).Data(data).Execute()
+> InventoriesInventoriesCreate(ctx, optional)
 
  Create an Inventory
 
+ Make a POST request to this resource with the following inventory fields to create a new inventory:          * `name`: Name of this inventory. (string, required) * `description`: Optional description of this inventory. (string, default=`\"\"`) * `organization`: Organization containing this inventory. (id, required) * `kind`: Kind of inventory being represented. (choice)     - `\"\"`: Hosts have a direct link to this inventory. (default)     - `smart`: Hosts for inventory generated using the host_filter property. * `host_filter`: Filter that will be applied to the hosts of this inventory. (string, default=`\"\"`) * `variables`: Inventory variables in JSON or YAML format. (json, default=``)        * `insights_credential`: Credentials to be used by hosts belonging to this inventory when accessing Red Hat Insights API. (id, default=``)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesCreate(context.Background(), ).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiInventoriesInventoriesCreateRequest struct via the builder pattern
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **data** | **map[string]interface{}** |  | 
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***InventoriesInventoriesCreateOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a InventoriesInventoriesCreateOpts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -536,55 +357,30 @@ No authorization required
 
 ## InventoriesInventoriesDelete
 
-> InventoriesInventoriesDelete(ctx, id).Search(search).Execute()
+> InventoriesInventoriesDelete(ctx, id, optional)
 
  Delete an Inventory
 
+ Make a DELETE request to this resource to delete this inventory.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesDelete(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesDelete``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesDeleteOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesDeleteRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesDeleteOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -606,55 +402,30 @@ No authorization required
 
 ## InventoriesInventoriesGroupsCreate
 
-> InventoriesInventoriesGroupsCreate(ctx, id).Data(data).Execute()
+> InventoriesInventoriesGroupsCreate(ctx, id, optional)
 
  Create a Group for an Inventory
 
+ Make a POST request to this resource with the following group fields to create a new group associated with this inventory.          * `name`: Name of this group. (string, required) * `description`: Optional description of this group. (string, default=`\"\"`)  * `variables`: Group variables in JSON or YAML format. (json, default=``)         # Remove Inventory Groups:  Make a POST request to this resource with `id` and `disassociate` fields to delete the associated group.      {         \"id\": 123,         \"disassociate\": true     }
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesGroupsCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesGroupsCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesGroupsCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesGroupsCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesGroupsCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | **map[string]interface{}** |  | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -676,59 +447,32 @@ No authorization required
 
 ## InventoriesInventoriesGroupsList
 
-> InventoriesInventoriesGroupsList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> InventoriesInventoriesGroupsList(ctx, id, optional)
 
  List Groups for an Inventory
 
+ Make a GET request to this resource to retrieve a list of groups associated with the selected inventory.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of groups found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more group records.    ## Results  Each group data structure includes the following fields:  * `id`: Database ID for this group. (integer) * `type`: Data type for this group. (choice) * `url`: URL for this group. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this group was created. (datetime) * `modified`: Timestamp when this group was last modified. (datetime) * `name`: Name of this group. (string) * `description`: Optional description of this group. (string) * `inventory`:  (id) * `variables`: Group variables in JSON or YAML format. (json)    ## Sorting  To specify that groups are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesGroupsList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesGroupsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesGroupsListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesGroupsListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesGroupsListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -750,55 +494,30 @@ No authorization required
 
 ## InventoriesInventoriesHostsCreate
 
-> InventoriesInventoriesHostsCreate(ctx, id).Data(data).Execute()
+> InventoriesInventoriesHostsCreate(ctx, id, optional)
 
  Create a Host for an Inventory
 
+ Make a POST request to this resource with the following host fields to create a new host associated with this inventory.          * `name`: Name of this host. (string, required) * `description`: Optional description of this host. (string, default=`\"\"`)  * `enabled`: Is this host online and available for running jobs? (boolean, default=`True`) * `instance_id`: The value used by the remote inventory source to uniquely identify the host (string, default=`\"\"`) * `variables`: Host variables in JSON or YAML format. (json, default=``)               # Remove Inventory Hosts:  Make a POST request to this resource with `id` and `disassociate` fields to delete the associated host.      {         \"id\": 123,         \"disassociate\": true     }
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesHostsCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesHostsCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesHostsCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesHostsCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesHostsCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | **map[string]interface{}** |  | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -820,59 +539,32 @@ No authorization required
 
 ## InventoriesInventoriesHostsList
 
-> InventoriesInventoriesHostsList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> InventoriesInventoriesHostsList(ctx, id, optional)
 
  List Hosts for an Inventory
 
+ Make a GET request to this resource to retrieve a list of hosts associated with the selected inventory.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of hosts found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more host records.    ## Results  Each host data structure includes the following fields:  * `id`: Database ID for this host. (integer) * `type`: Data type for this host. (choice) * `url`: URL for this host. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this host was created. (datetime) * `modified`: Timestamp when this host was last modified. (datetime) * `name`: Name of this host. (string) * `description`: Optional description of this host. (string) * `inventory`:  (id) * `enabled`: Is this host online and available for running jobs? (boolean) * `instance_id`: The value used by the remote inventory source to uniquely identify the host (string) * `variables`: Host variables in JSON or YAML format. (json) * `has_active_failures`:  (field) * `has_inventory_sources`:  (field) * `last_job`:  (id) * `last_job_host_summary`:  (id) * `insights_system_id`: Red Hat Insights host unique identifier. (string) * `ansible_facts_modified`: The date and time ansible_facts was last modified. (datetime)    ## Sorting  To specify that hosts are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesHostsList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesHostsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesHostsListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesHostsListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesHostsListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -894,55 +586,30 @@ No authorization required
 
 ## InventoriesInventoriesInstanceGroupsCreate
 
-> InventoriesInventoriesInstanceGroupsCreate(ctx, id).Data(data).Execute()
+> InventoriesInventoriesInstanceGroupsCreate(ctx, id, optional)
 
  Create an Instance Group for an Inventory
 
+ Make a POST request to this resource with the following instance group fields to create a new instance group associated with this inventory.       * `name`: Name of this instance group. (string, required)              * `credential`:  (id, default=``) * `policy_instance_percentage`: Minimum percentage of all instances that will be automatically assigned to this group when new instances come online. (integer, default=`0`) * `policy_instance_minimum`: Static minimum number of Instances that will be automatically assign to this group when new instances come online. (integer, default=`0`) * `policy_instance_list`: List of exact-match Instances that will be assigned to this group (json, default=``) * `pod_spec_override`:  (string, default=`\"\"`)          # Add Instance Groups for an Inventory:  Make a POST request to this resource with only an `id` field to associate an existing instance group with this inventory.  # Remove Instance Groups from this Inventory:  Make a POST request to this resource with `id` and `disassociate` fields to remove the instance group from this inventory  without deleting the instance group.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesInstanceGroupsCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesInstanceGroupsCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesInstanceGroupsCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesInstanceGroupsCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesInstanceGroupsCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | **map[string]interface{}** |  | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -964,59 +631,32 @@ No authorization required
 
 ## InventoriesInventoriesInstanceGroupsList
 
-> InventoriesInventoriesInstanceGroupsList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> InventoriesInventoriesInstanceGroupsList(ctx, id, optional)
 
  List Instance Groups for an Inventory
 
+ Make a GET request to this resource to retrieve a list of instance groups associated with the selected inventory.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of instance groups found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more instance group records.    ## Results  Each instance group data structure includes the following fields:  * `id`: Database ID for this instance group. (integer) * `type`: Data type for this instance group. (choice) * `url`: URL for this instance group. (string) * `related`: Data structure with URLs of related resources. (object) * `name`: Name of this instance group. (string) * `created`: Timestamp when this instance group was created. (datetime) * `modified`: Timestamp when this instance group was last modified. (datetime) * `capacity`:  (field) * `committed_capacity`:  (field) * `consumed_capacity`:  (field) * `percent_capacity_remaining`:  (field) * `jobs_running`: Count of jobs in the running or waiting state that are targeted for this instance group (integer) * `jobs_total`: Count of all jobs that target this instance group (integer) * `instances`:  (field) * `controller`: Instance Group to remotely control this group. (id) * `is_controller`: Indicates whether instance group controls any other group (boolean) * `is_isolated`: Indicates whether instances in this group are isolated.Isolated groups have a designated controller group. (boolean) * `is_containerized`: Indicates whether instances in this group are containerized.Containerized groups have a designated Openshift or Kubernetes cluster. (boolean) * `credential`:  (id) * `policy_instance_percentage`: Minimum percentage of all instances that will be automatically assigned to this group when new instances come online. (integer) * `policy_instance_minimum`: Static minimum number of Instances that will be automatically assign to this group when new instances come online. (integer) * `policy_instance_list`: List of exact-match Instances that will be assigned to this group (json) * `pod_spec_override`:  (string) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)    ## Sorting  To specify that instance groups are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesInstanceGroupsList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesInstanceGroupsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesInstanceGroupsListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesInstanceGroupsListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesInstanceGroupsListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1038,55 +678,30 @@ No authorization required
 
 ## InventoriesInventoriesInventorySourcesCreate
 
-> InventoriesInventoriesInventorySourcesCreate(ctx, id).Data(data).Execute()
+> InventoriesInventoriesInventorySourcesCreate(ctx, id, optional)
 
  Create an Inventory Source for an Inventory
 
+ Make a POST request to this resource with the following inventory source fields to create a new inventory source associated with this inventory.          * `name`: Name of this inventory source. (string, required) * `description`: Optional description of this inventory source. (string, default=`\"\"`) * `source`:  (choice)     - `file`: File, Directory or Script     - `scm`: Sourced from a Project     - `ec2`: Amazon EC2     - `gce`: Google Compute Engine     - `azure_rm`: Microsoft Azure Resource Manager     - `vmware`: VMware vCenter     - `satellite6`: Red Hat Satellite 6     - `openstack`: OpenStack     - `rhv`: Red Hat Virtualization     - `tower`: Ansible Tower     - `custom`: Custom Script * `source_path`:  (string, default=`\"\"`) * `source_script`:  (id, default=``) * `source_vars`: Inventory source variables in YAML or JSON format. (string, default=`\"\"`) * `credential`: Cloud credential to use for inventory updates. (integer, default=`None`) * `enabled_var`: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &quot;foo.bar&quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&quot;foo&quot;, {}).get(&quot;bar&quot;, default) (string, default=`\"\"`) * `enabled_value`: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var=&quot;status.power_state&quot;and enabled_value=&quot;powered_on&quot; with host variables:{   &quot;status&quot;: {     &quot;power_state&quot;: &quot;powered_on&quot;,     &quot;created&quot;: &quot;2018-02-01T08:00:00.000000Z:00&quot;,     &quot;healthy&quot;: true    },    &quot;name&quot;: &quot;foobar&quot;,    &quot;ip_address&quot;: &quot;192.168.2.1&quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string, default=`\"\"`) * `host_filter`: Regex where only matching hosts will be imported into Tower. (string, default=`\"\"`) * `overwrite`: Overwrite local groups and hosts from remote inventory source. (boolean, default=`False`) * `overwrite_vars`: Overwrite local variables from remote inventory source. (boolean, default=`False`) * `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string, default=`\"\"`) * `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer, default=`0`) * `verbosity`:  (choice)     - `0`: 0 (WARNING)     - `1`: 1 (INFO) (default)     - `2`: 2 (DEBUG)      * `update_on_launch`:  (boolean, default=`False`) * `update_cache_timeout`:  (integer, default=`0`) * `source_project`: Project containing inventory file used as source. (id, default=``) * `update_on_project_update`:  (boolean, default=`False`)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesInventorySourcesCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesInventorySourcesCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesInventorySourcesCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesInventorySourcesCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesInventorySourcesCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | **map[string]interface{}** |  | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -1108,59 +723,32 @@ No authorization required
 
 ## InventoriesInventoriesInventorySourcesList
 
-> InventoriesInventoriesInventorySourcesList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> InventoriesInventoriesInventorySourcesList(ctx, id, optional)
 
  List Inventory Sources for an Inventory
 
+ Make a GET request to this resource to retrieve a list of inventory sources associated with the selected inventory.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of inventory sources found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more inventory source records.    ## Results  Each inventory source data structure includes the following fields:  * `id`: Database ID for this inventory source. (integer) * `type`: Data type for this inventory source. (choice) * `url`: URL for this inventory source. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this inventory source was created. (datetime) * `modified`: Timestamp when this inventory source was last modified. (datetime) * `name`: Name of this inventory source. (string) * `description`: Optional description of this inventory source. (string) * `source`:  (choice)     - `file`: File, Directory or Script     - `scm`: Sourced from a Project     - `ec2`: Amazon EC2     - `gce`: Google Compute Engine     - `azure_rm`: Microsoft Azure Resource Manager     - `vmware`: VMware vCenter     - `satellite6`: Red Hat Satellite 6     - `openstack`: OpenStack     - `rhv`: Red Hat Virtualization     - `tower`: Ansible Tower     - `custom`: Custom Script * `source_path`:  (string) * `source_script`:  (id) * `source_vars`: Inventory source variables in YAML or JSON format. (string) * `credential`: Cloud credential to use for inventory updates. (integer) * `enabled_var`: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &quot;foo.bar&quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&quot;foo&quot;, {}).get(&quot;bar&quot;, default) (string) * `enabled_value`: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var=&quot;status.power_state&quot;and enabled_value=&quot;powered_on&quot; with host variables:{   &quot;status&quot;: {     &quot;power_state&quot;: &quot;powered_on&quot;,     &quot;created&quot;: &quot;2018-02-01T08:00:00.000000Z:00&quot;,     &quot;healthy&quot;: true    },    &quot;name&quot;: &quot;foobar&quot;,    &quot;ip_address&quot;: &quot;192.168.2.1&quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string) * `host_filter`: Regex where only matching hosts will be imported into Tower. (string) * `overwrite`: Overwrite local groups and hosts from remote inventory source. (boolean) * `overwrite_vars`: Overwrite local variables from remote inventory source. (boolean) * `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string) * `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer) * `verbosity`:  (choice)     - `0`: 0 (WARNING)     - `1`: 1 (INFO)     - `2`: 2 (DEBUG) * `last_job_run`:  (datetime) * `last_job_failed`:  (boolean) * `next_job_run`:  (datetime) * `status`:  (choice)     - `new`: New     - `pending`: Pending     - `waiting`: Waiting     - `running`: Running     - `successful`: Successful     - `failed`: Failed     - `error`: Error     - `canceled`: Canceled     - `never updated`: Never Updated     - `none`: No External Source * `inventory`:  (id) * `update_on_launch`:  (boolean) * `update_cache_timeout`:  (integer) * `source_project`: Project containing inventory file used as source. (id) * `update_on_project_update`:  (boolean) * `last_update_failed`:  (boolean) * `last_updated`:  (datetime)    ## Sorting  To specify that inventory sources are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesInventorySourcesList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesInventorySourcesList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesInventorySourcesListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesInventorySourcesListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesInventorySourcesListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1182,59 +770,32 @@ No authorization required
 
 ## InventoriesInventoriesJobTemplatesList
 
-> InventoriesInventoriesJobTemplatesList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> InventoriesInventoriesJobTemplatesList(ctx, id, optional)
 
  List Job Templates for an Inventory
 
+ Make a GET request to this resource to retrieve a list of job templates associated with the selected inventory.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of job templates found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more job template records.    ## Results  Each job template data structure includes the following fields:  * `id`: Database ID for this job template. (integer) * `type`: Data type for this job template. (choice) * `url`: URL for this job template. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this job template was created. (datetime) * `modified`: Timestamp when this job template was last modified. (datetime) * `name`: Name of this job template. (string) * `description`: Optional description of this job template. (string) * `job_type`:  (choice)     - `run`: Run     - `check`: Check * `inventory`:  (id) * `project`:  (id) * `playbook`:  (string) * `scm_branch`: Branch to use in job run. Project default used if blank. Only allowed if project allow_override field is set to true. (string) * `forks`:  (integer) * `limit`:  (string) * `verbosity`:  (choice)     - `0`: 0 (Normal)     - `1`: 1 (Verbose)     - `2`: 2 (More Verbose)     - `3`: 3 (Debug)     - `4`: 4 (Connection Debug)     - `5`: 5 (WinRM Debug) * `extra_vars`:  (json) * `job_tags`:  (string) * `force_handlers`:  (boolean) * `skip_tags`:  (string) * `start_at_task`:  (string) * `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer) * `use_fact_cache`: If enabled, Tower will act as an Ansible Fact Cache Plugin; persisting facts at the end of a playbook run to the database and caching facts for use by Ansible. (boolean) * `organization`: The organization used to determine access to this template. (id) * `last_job_run`:  (datetime) * `last_job_failed`:  (boolean) * `next_job_run`:  (datetime) * `status`:  (choice)     - `new`: New     - `pending`: Pending     - `waiting`: Waiting     - `running`: Running     - `successful`: Successful     - `failed`: Failed     - `error`: Error     - `canceled`: Canceled     - `never updated`: Never Updated * `host_config_key`:  (string) * `ask_scm_branch_on_launch`:  (boolean) * `ask_diff_mode_on_launch`:  (boolean) * `ask_variables_on_launch`:  (boolean) * `ask_limit_on_launch`:  (boolean) * `ask_tags_on_launch`:  (boolean) * `ask_skip_tags_on_launch`:  (boolean) * `ask_job_type_on_launch`:  (boolean) * `ask_verbosity_on_launch`:  (boolean) * `ask_inventory_on_launch`:  (boolean) * `ask_credential_on_launch`:  (boolean) * `survey_enabled`:  (boolean) * `become_enabled`:  (boolean) * `diff_mode`: If enabled, textual changes made to any templated files on the host are shown in the standard output (boolean) * `allow_simultaneous`:  (boolean) * `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string) * `job_slice_count`: The number of jobs to slice into at runtime. Will cause the Job Template to launch a workflow if value is greater than 1. (integer) * `webhook_service`: Service that webhook requests will be accepted from (choice)     - `\"\"`: ---------     - `github`: GitHub     - `gitlab`: GitLab * `webhook_credential`: Personal Access Token for posting back the status to the service API (id)    ## Sorting  To specify that job templates are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesJobTemplatesList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesJobTemplatesList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesJobTemplatesListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesJobTemplatesListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesJobTemplatesListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1256,53 +817,30 @@ No authorization required
 
 ## InventoriesInventoriesList
 
-> InventoriesInventoriesList(ctx).Page(page).PageSize(pageSize).Search(search).Execute()
+> InventoriesInventoriesList(ctx, optional)
 
  List Inventories
 
+ Make a GET request to this resource to retrieve the list of inventories.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of inventories found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more inventory records.    ## Results  Each inventory data structure includes the following fields:  * `id`: Database ID for this inventory. (integer) * `type`: Data type for this inventory. (choice) * `url`: URL for this inventory. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this inventory was created. (datetime) * `modified`: Timestamp when this inventory was last modified. (datetime) * `name`: Name of this inventory. (string) * `description`: Optional description of this inventory. (string) * `organization`: Organization containing this inventory. (id) * `kind`: Kind of inventory being represented. (choice)     - `\"\"`: Hosts have a direct link to this inventory.     - `smart`: Hosts for inventory generated using the host_filter property. * `host_filter`: Filter that will be applied to the hosts of this inventory. (string) * `variables`: Inventory variables in JSON or YAML format. (json) * `has_active_failures`: This field is deprecated and will be removed in a future release. Flag indicating whether any hosts in this inventory have failed. (boolean) * `total_hosts`: This field is deprecated and will be removed in a future release. Total number of hosts in this inventory. (integer) * `hosts_with_active_failures`: This field is deprecated and will be removed in a future release. Number of hosts in this inventory with active failures. (integer) * `total_groups`: This field is deprecated and will be removed in a future release. Total number of groups in this inventory. (integer) * `has_inventory_sources`: This field is deprecated and will be removed in a future release. Flag indicating whether this inventory has any external inventory sources. (boolean) * `total_inventory_sources`: Total number of external inventory sources configured within this inventory. (integer) * `inventory_sources_with_failures`: Number of external inventory sources in this inventory with failures. (integer) * `insights_credential`: Credentials to be used by hosts belonging to this inventory when accessing Red Hat Insights API. (id) * `pending_deletion`: Flag indicating the inventory is being deleted. (boolean)    ## Sorting  To specify that inventories are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiInventoriesInventoriesListRequest struct via the builder pattern
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***InventoriesInventoriesListOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a InventoriesInventoriesListOpts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1324,59 +862,32 @@ No authorization required
 
 ## InventoriesInventoriesObjectRolesList
 
-> InventoriesInventoriesObjectRolesList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> InventoriesInventoriesObjectRolesList(ctx, id, optional)
 
  List Roles for an Inventory
 
+ Make a GET request to this resource to retrieve a list of roles associated with the selected inventory.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of roles found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more role records.    ## Results  Each role data structure includes the following fields:  * `id`: Database ID for this role. (integer) * `type`: Data type for this role. (choice) * `url`: URL for this role. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `name`: Name of this role. (field) * `description`: Optional description of this role. (field)    ## Sorting  To specify that roles are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesObjectRolesList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesObjectRolesList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesObjectRolesListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesObjectRolesListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesObjectRolesListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1398,57 +909,31 @@ No authorization required
 
 ## InventoriesInventoriesPartialUpdate
 
-> InventoriesInventoriesPartialUpdate(ctx, id).Search(search).Data(data).Execute()
+> InventoriesInventoriesPartialUpdate(ctx, id, optional)
 
  Update an Inventory
 
+ Make a PUT or PATCH request to this resource to update this inventory.  The following fields may be modified:          * `name`: Name of this inventory. (string, required) * `description`: Optional description of this inventory. (string, default=`\"\"`) * `organization`: Organization containing this inventory. (id, required) * `kind`: Kind of inventory being represented. (choice)     - `\"\"`: Hosts have a direct link to this inventory. (default)     - `smart`: Hosts for inventory generated using the host_filter property. * `host_filter`: Filter that will be applied to the hosts of this inventory. (string, default=`\"\"`) * `variables`: Inventory variables in JSON or YAML format. (json, default=``)        * `insights_credential`: Credentials to be used by hosts belonging to this inventory when accessing Red Hat Insights API. (id, default=``)          For a PATCH request, include only the fields that are being modified.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesPartialUpdate(context.Background(), id).Search(search).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesPartialUpdate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesPartialUpdateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesPartialUpdateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesPartialUpdateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
- **data** | **map[string]interface{}** |  | 
+ **search** | **optional.String**| A search term. | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -1470,55 +955,30 @@ No authorization required
 
 ## InventoriesInventoriesRead
 
-> InventoriesInventoriesRead(ctx, id).Search(search).Execute()
+> InventoriesInventoriesRead(ctx, id, optional)
 
  Retrieve an Inventory
 
+ Make GET request to this resource to retrieve a single inventory record containing the following fields:  * `id`: Database ID for this inventory. (integer) * `type`: Data type for this inventory. (choice) * `url`: URL for this inventory. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this inventory was created. (datetime) * `modified`: Timestamp when this inventory was last modified. (datetime) * `name`: Name of this inventory. (string) * `description`: Optional description of this inventory. (string) * `organization`: Organization containing this inventory. (id) * `kind`: Kind of inventory being represented. (choice)     - `\"\"`: Hosts have a direct link to this inventory.     - `smart`: Hosts for inventory generated using the host_filter property. * `host_filter`: Filter that will be applied to the hosts of this inventory. (string) * `variables`: Inventory variables in JSON or YAML format. (json) * `has_active_failures`: This field is deprecated and will be removed in a future release. Flag indicating whether any hosts in this inventory have failed. (boolean) * `total_hosts`: This field is deprecated and will be removed in a future release. Total number of hosts in this inventory. (integer) * `hosts_with_active_failures`: This field is deprecated and will be removed in a future release. Number of hosts in this inventory with active failures. (integer) * `total_groups`: This field is deprecated and will be removed in a future release. Total number of groups in this inventory. (integer) * `has_inventory_sources`: This field is deprecated and will be removed in a future release. Flag indicating whether this inventory has any external inventory sources. (boolean) * `total_inventory_sources`: Total number of external inventory sources configured within this inventory. (integer) * `inventory_sources_with_failures`: Number of external inventory sources in this inventory with failures. (integer) * `insights_credential`: Credentials to be used by hosts belonging to this inventory when accessing Red Hat Insights API. (id) * `pending_deletion`: Flag indicating the inventory is being deleted. (boolean)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesRead(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesRead``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesReadOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesReadRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesReadOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1540,53 +1000,28 @@ No authorization required
 
 ## InventoriesInventoriesRootGroupsCreate
 
-> InventoriesInventoriesRootGroupsCreate(ctx, id).Data(data).Execute()
+> InventoriesInventoriesRootGroupsCreate(ctx, id, optional)
 
 
 
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := openapiclient.inline_object_22{Description: "Description_example", Inventory: 123, Name: "Name_example", Variables: "Variables_example"} // InlineObject22 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesRootGroupsCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesRootGroupsCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesRootGroupsCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesRootGroupsCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesRootGroupsCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**InlineObject22**](InlineObject22.md) |  | 
+ **data** | [**optional.Interface of InlineObject22**](InlineObject22.md)|  | 
 
 ### Return type
 
@@ -1608,59 +1043,32 @@ No authorization required
 
 ## InventoriesInventoriesRootGroupsList
 
-> InventoriesInventoriesRootGroupsList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> InventoriesInventoriesRootGroupsList(ctx, id, optional)
 
  List Root Groups for an Inventory
 
+ Make a GET request to this resource to retrieve a list of root (top-level) groups associated with this inventory.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of groups found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more group records.    ## Results  Each group data structure includes the following fields:  * `id`: Database ID for this group. (integer) * `type`: Data type for this group. (choice) * `url`: URL for this group. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this group was created. (datetime) * `modified`: Timestamp when this group was last modified. (datetime) * `name`: Name of this group. (string) * `description`: Optional description of this group. (string) * `inventory`:  (id) * `variables`: Group variables in JSON or YAML format. (json)    ## Sorting  To specify that groups are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesRootGroupsList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesRootGroupsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesRootGroupsListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesRootGroupsListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesRootGroupsListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1682,53 +1090,19 @@ No authorization required
 
 ## InventoriesInventoriesScriptRead
 
-> InventoriesInventoriesScriptRead(ctx, id).Execute()
+> InventoriesInventoriesScriptRead(ctx, id)
 
 Generate inventory group and host data as needed for an inventory script.
 
+ Refer to [Dynamic Inventory](http://docs.ansible.com/intro_dynamic_inventory.html) for more information on inventory scripts.  ## List Response  Make a GET request to this resource without query parameters to retrieve a JSON object containing groups, including the hosts, children and variables for each group.  The response data is equivalent to that returned by passing the `--list` argument to an inventory script.  Specify a query string of `?hostvars=1` to retrieve the JSON object above including all host variables.  The `['_meta']['hostvars']` object in the response contains an entry for each host with its variables.  This response format can be used with Ansible 1.3 and later to avoid making a separate API request for each host.  Refer to [Tuning the External Inventory Script](http://docs.ansible.com/developing_inventory.html#tuning-the-external-inventory-script) for more information on this feature.  By default, the inventory script will only return hosts that are enabled in the inventory.  This feature allows disabled hosts to be skipped when running jobs without removing them from the inventory.  Specify a query string of `?all=1` to return all hosts, including disabled ones.  Specify a query string of `?towervars=1` to add variables to the hostvars of each host that specifies its enabled state and database ID.  Specify a query string of `?subset=slice2of5` to produce an inventory that has a restricted number of hosts according to the rules of job slicing.  To apply multiple query strings, join them with the `&` character, like `?hostvars=1&all=1`.  ## Host Response  Make a GET request to this resource with a query string similar to `?host=HOSTNAME` to retrieve a JSON object containing host variables for the specified host.  The response data is equivalent to that returned by passing the `--host HOSTNAME` argument to an inventory script.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesScriptRead(context.Background(), id).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesScriptRead``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiInventoriesInventoriesScriptReadRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
+**id** | **string**|  | 
 
 ### Return type
 
@@ -1750,53 +1124,19 @@ No authorization required
 
 ## InventoriesInventoriesTreeRead
 
-> InventoriesInventoriesTreeRead(ctx, id).Execute()
+> InventoriesInventoriesTreeRead(ctx, id)
 
  Group Tree for an Inventory
 
+ Make a GET request to this resource to retrieve a hierarchical view of groups associated with the selected inventory.  The resulting data structure contains a list of root groups, with each group also containing a list of its children.  ## Results  Each group data structure includes the following fields:  * `id`: Database ID for this group. (integer) * `type`: Data type for this group. (choice) * `url`: URL for this group. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this group was created. (datetime) * `modified`: Timestamp when this group was last modified. (datetime) * `name`: Name of this group. (string) * `description`: Optional description of this group. (string) * `inventory`:  (id) * `variables`: Group variables in JSON or YAML format. (json) * `children`:  (field)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesTreeRead(context.Background(), id).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesTreeRead``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiInventoriesInventoriesTreeReadRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
+**id** | **string**|  | 
 
 ### Return type
 
@@ -1818,57 +1158,31 @@ No authorization required
 
 ## InventoriesInventoriesUpdate
 
-> InventoriesInventoriesUpdate(ctx, id).Search(search).Data(data).Execute()
+> InventoriesInventoriesUpdate(ctx, id, optional)
 
  Update an Inventory
 
+ Make a PUT or PATCH request to this resource to update this inventory.  The following fields may be modified:          * `name`: Name of this inventory. (string, required) * `description`: Optional description of this inventory. (string, default=`\"\"`) * `organization`: Organization containing this inventory. (id, required) * `kind`: Kind of inventory being represented. (choice)     - `\"\"`: Hosts have a direct link to this inventory. (default)     - `smart`: Hosts for inventory generated using the host_filter property. * `host_filter`: Filter that will be applied to the hosts of this inventory. (string, default=`\"\"`) * `variables`: Inventory variables in JSON or YAML format. (json, default=``)        * `insights_credential`: Credentials to be used by hosts belonging to this inventory when accessing Red Hat Insights API. (id, default=``)        For a PUT request, include **all** fields in the request.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesUpdate(context.Background(), id).Search(search).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesUpdate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesUpdateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesUpdateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesUpdateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
- **data** | **map[string]interface{}** |  | 
+ **search** | **optional.String**| A search term. | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -1890,53 +1204,19 @@ No authorization required
 
 ## InventoriesInventoriesUpdateInventorySourcesCreate
 
-> InventoriesInventoriesUpdateInventorySourcesCreate(ctx, id).Execute()
+> InventoriesInventoriesUpdateInventorySourcesCreate(ctx, id)
 
  Update Inventory Sources
 
+ Make a GET request to this resource to determine if any of the inventory sources for this inventory can be updated. The response will include the following fields for each inventory source:  * `inventory_source`: ID of the inventory_source   (integer, read-only) * `can_update`: Flag indicating if this inventory source can be updated   (boolean, read-only)  Make a POST request to this resource to update the inventory sources. The response status code will be a 202. The response will contain the follow fields for each of the individual inventory sources:  * `status`: `started` or message why the update could not be started.   (string, read-only) * `inventory_update`: ID of the inventory update job that was started.   (integer, read-only) * `project_update`: ID of the project update job that was started if this inventory source is an SCM source.   (interger, read-only, optional)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesUpdateInventorySourcesCreate(context.Background(), id).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesUpdateInventorySourcesCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiInventoriesInventoriesUpdateInventorySourcesCreateRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
+**id** | **string**|  | 
 
 ### Return type
 
@@ -1958,55 +1238,30 @@ No authorization required
 
 ## InventoriesInventoriesUpdateInventorySourcesRead
 
-> InventoriesInventoriesUpdateInventorySourcesRead(ctx, id).Search(search).Execute()
+> InventoriesInventoriesUpdateInventorySourcesRead(ctx, id, optional)
 
  Update Inventory Sources
 
+ Make a GET request to this resource to determine if any of the inventory sources for this inventory can be updated. The response will include the following fields for each inventory source:  * `inventory_source`: ID of the inventory_source   (integer, read-only) * `can_update`: Flag indicating if this inventory source can be updated   (boolean, read-only)  Make a POST request to this resource to update the inventory sources. The response status code will be a 202. The response will contain the follow fields for each of the individual inventory sources:  * `status`: `started` or message why the update could not be started.   (string, read-only) * `inventory_update`: ID of the inventory update job that was started.   (integer, read-only) * `project_update`: ID of the project update job that was started if this inventory source is an SCM source.   (interger, read-only, optional)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesUpdateInventorySourcesRead(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesUpdateInventorySourcesRead``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesUpdateInventorySourcesReadOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesUpdateInventorySourcesReadRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesUpdateInventorySourcesReadOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -2028,57 +1283,31 @@ No authorization required
 
 ## InventoriesInventoriesVariableDataPartialUpdate
 
-> InventoriesInventoriesVariableDataPartialUpdate(ctx, id).Search(search).Data(data).Execute()
+> InventoriesInventoriesVariableDataPartialUpdate(ctx, id, optional)
 
  Update Inventory Variable Data
 
+ Make a PUT or PATCH request to this resource to update variables defined for a inventory.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesVariableDataPartialUpdate(context.Background(), id).Search(search).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesVariableDataPartialUpdate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesVariableDataPartialUpdateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesVariableDataPartialUpdateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesVariableDataPartialUpdateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
- **data** | **map[string]interface{}** |  | 
+ **search** | **optional.String**| A search term. | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -2100,55 +1329,30 @@ No authorization required
 
 ## InventoriesInventoriesVariableDataRead
 
-> InventoriesInventoriesVariableDataRead(ctx, id).Search(search).Execute()
+> InventoriesInventoriesVariableDataRead(ctx, id, optional)
 
  Retrieve Inventory Variable Data
 
+ Make a GET request to this resource to retrieve all variables defined for a inventory.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesVariableDataRead(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesVariableDataRead``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesVariableDataReadOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesVariableDataReadRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesVariableDataReadOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -2170,57 +1374,31 @@ No authorization required
 
 ## InventoriesInventoriesVariableDataUpdate
 
-> InventoriesInventoriesVariableDataUpdate(ctx, id).Search(search).Data(data).Execute()
+> InventoriesInventoriesVariableDataUpdate(ctx, id, optional)
 
  Update Inventory Variable Data
 
+ Make a PUT or PATCH request to this resource to update variables defined for a inventory.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.InventoriesApi.InventoriesInventoriesVariableDataUpdate(context.Background(), id).Search(search).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `InventoriesApi.InventoriesInventoriesVariableDataUpdate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***InventoriesInventoriesVariableDataUpdateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiInventoriesInventoriesVariableDataUpdateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a InventoriesInventoriesVariableDataUpdateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
- **data** | **map[string]interface{}** |  | 
+ **search** | **optional.String**| A search term. | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 

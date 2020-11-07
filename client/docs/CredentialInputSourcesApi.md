@@ -15,49 +15,28 @@ Method | HTTP request | Description
 
 ## CredentialInputSourcesCredentialInputSourcesCreate
 
-> CredentialInputSourcesCredentialInputSourcesCreate(ctx).Data(data).Execute()
+> CredentialInputSourcesCredentialInputSourcesCreate(ctx, optional)
 
  Create a Credential Input Source
 
+ Make a POST request to this resource with the following credential input source fields to create a new credential input source:          * `description`: Optional description of this credential input source. (string, default=`\"\"`) * `input_field_name`:  (string, required) * `metadata`:  (json, default=`{}`) * `target_credential`:  (id, required) * `source_credential`:  (id, required)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CredentialInputSourcesApi.CredentialInputSourcesCredentialInputSourcesCreate(context.Background(), ).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CredentialInputSourcesApi.CredentialInputSourcesCredentialInputSourcesCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiCredentialInputSourcesCredentialInputSourcesCreateRequest struct via the builder pattern
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **data** | **map[string]interface{}** |  | 
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***CredentialInputSourcesCredentialInputSourcesCreateOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a CredentialInputSourcesCredentialInputSourcesCreateOpts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -79,55 +58,30 @@ No authorization required
 
 ## CredentialInputSourcesCredentialInputSourcesDelete
 
-> CredentialInputSourcesCredentialInputSourcesDelete(ctx, id).Search(search).Execute()
+> CredentialInputSourcesCredentialInputSourcesDelete(ctx, id, optional)
 
  Delete a Credential Input Source
 
+ Make a DELETE request to this resource to delete this credential input source.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CredentialInputSourcesApi.CredentialInputSourcesCredentialInputSourcesDelete(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CredentialInputSourcesApi.CredentialInputSourcesCredentialInputSourcesDelete``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***CredentialInputSourcesCredentialInputSourcesDeleteOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiCredentialInputSourcesCredentialInputSourcesDeleteRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a CredentialInputSourcesCredentialInputSourcesDeleteOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -149,53 +103,30 @@ No authorization required
 
 ## CredentialInputSourcesCredentialInputSourcesList
 
-> CredentialInputSourcesCredentialInputSourcesList(ctx).Page(page).PageSize(pageSize).Search(search).Execute()
+> CredentialInputSourcesCredentialInputSourcesList(ctx, optional)
 
  List Credential Input Sources
 
+ Make a GET request to this resource to retrieve the list of credential input sources.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of credential input sources found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more credential input source records.    ## Results  Each credential input source data structure includes the following fields:  * `id`: Database ID for this credential input source. (integer) * `type`: Data type for this credential input source. (choice) * `url`: URL for this credential input source. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this credential input source was created. (datetime) * `modified`: Timestamp when this credential input source was last modified. (datetime) * `description`: Optional description of this credential input source. (string) * `input_field_name`:  (string) * `metadata`:  (json) * `target_credential`:  (id) * `source_credential`:  (id)    ## Sorting  To specify that credential input sources are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CredentialInputSourcesApi.CredentialInputSourcesCredentialInputSourcesList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CredentialInputSourcesApi.CredentialInputSourcesCredentialInputSourcesList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiCredentialInputSourcesCredentialInputSourcesListRequest struct via the builder pattern
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***CredentialInputSourcesCredentialInputSourcesListOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a CredentialInputSourcesCredentialInputSourcesListOpts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -217,57 +148,31 @@ No authorization required
 
 ## CredentialInputSourcesCredentialInputSourcesPartialUpdate
 
-> CredentialInputSourcesCredentialInputSourcesPartialUpdate(ctx, id).Search(search).Data(data).Execute()
+> CredentialInputSourcesCredentialInputSourcesPartialUpdate(ctx, id, optional)
 
  Update a Credential Input Source
 
+ Make a PUT or PATCH request to this resource to update this credential input source.  The following fields may be modified:          * `description`: Optional description of this credential input source. (string, default=`\"\"`) * `input_field_name`:  (string, required) * `metadata`:  (json, default=`{}`) * `target_credential`:  (id, required) * `source_credential`:  (id, required)         For a PATCH request, include only the fields that are being modified.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CredentialInputSourcesApi.CredentialInputSourcesCredentialInputSourcesPartialUpdate(context.Background(), id).Search(search).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CredentialInputSourcesApi.CredentialInputSourcesCredentialInputSourcesPartialUpdate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***CredentialInputSourcesCredentialInputSourcesPartialUpdateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiCredentialInputSourcesCredentialInputSourcesPartialUpdateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a CredentialInputSourcesCredentialInputSourcesPartialUpdateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
- **data** | **map[string]interface{}** |  | 
+ **search** | **optional.String**| A search term. | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -289,55 +194,30 @@ No authorization required
 
 ## CredentialInputSourcesCredentialInputSourcesRead
 
-> CredentialInputSourcesCredentialInputSourcesRead(ctx, id).Search(search).Execute()
+> CredentialInputSourcesCredentialInputSourcesRead(ctx, id, optional)
 
  Retrieve a Credential Input Source
 
+ Make GET request to this resource to retrieve a single credential input source record containing the following fields:  * `id`: Database ID for this credential input source. (integer) * `type`: Data type for this credential input source. (choice) * `url`: URL for this credential input source. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this credential input source was created. (datetime) * `modified`: Timestamp when this credential input source was last modified. (datetime) * `description`: Optional description of this credential input source. (string) * `input_field_name`:  (string) * `metadata`:  (json) * `target_credential`:  (id) * `source_credential`:  (id)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CredentialInputSourcesApi.CredentialInputSourcesCredentialInputSourcesRead(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CredentialInputSourcesApi.CredentialInputSourcesCredentialInputSourcesRead``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***CredentialInputSourcesCredentialInputSourcesReadOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiCredentialInputSourcesCredentialInputSourcesReadRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a CredentialInputSourcesCredentialInputSourcesReadOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -359,57 +239,31 @@ No authorization required
 
 ## CredentialInputSourcesCredentialInputSourcesUpdate
 
-> CredentialInputSourcesCredentialInputSourcesUpdate(ctx, id).Search(search).Data(data).Execute()
+> CredentialInputSourcesCredentialInputSourcesUpdate(ctx, id, optional)
 
  Update a Credential Input Source
 
+ Make a PUT or PATCH request to this resource to update this credential input source.  The following fields may be modified:          * `description`: Optional description of this credential input source. (string, default=`\"\"`) * `input_field_name`:  (string, required) * `metadata`:  (json, default=`{}`) * `target_credential`:  (id, required) * `source_credential`:  (id, required)       For a PUT request, include **all** fields in the request.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-    data := openapiclient.inline_object_1{Description: "Description_example", InputFieldName: "InputFieldName_example", Metadata: 123, SourceCredential: 123, TargetCredential: 123} // InlineObject1 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CredentialInputSourcesApi.CredentialInputSourcesCredentialInputSourcesUpdate(context.Background(), id).Search(search).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CredentialInputSourcesApi.CredentialInputSourcesCredentialInputSourcesUpdate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***CredentialInputSourcesCredentialInputSourcesUpdateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiCredentialInputSourcesCredentialInputSourcesUpdateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a CredentialInputSourcesCredentialInputSourcesUpdateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
- **data** | [**InlineObject1**](InlineObject1.md) |  | 
+ **search** | **optional.String**| A search term. | 
+ **data** | [**optional.Interface of InlineObject1**](InlineObject1.md)|  | 
 
 ### Return type
 

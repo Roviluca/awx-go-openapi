@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,98 +26,20 @@ var (
 // WorkflowJobTemplateNodesApiService WorkflowJobTemplateNodesApi service
 type WorkflowJobTemplateNodesApiService service
 
-type ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesCreateRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobTemplateNodesApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesCreateRequest) Data(data map[string]interface{}) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesCreateExecute(r)
+// WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesCreateOpts Optional parameters for the method 'WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesCreate'
+type WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesCreate  Create a Workflow Job Template Node for a Workflow Job Template Node
- * 
-Make a POST request to this resource with the following workflow job template node
-fields to create a new workflow job template node associated with this
-workflow job template node.
-
-
-
-
-
-
-
-
-
-* `extra_data`:  (json, default=`{}`)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id, default=``)
-* `scm_branch`:  (string, default=`""`)
-* `job_type`:  (choice)
-    - `None`: --------- (default)
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string, default=`""`)
-* `skip_tags`:  (string, default=`""`)
-* `limit`:  (string, default=`""`)
-* `diff_mode`:  (boolean, default=`None`)
-* `verbosity`:  (choice)
-    - `None`: --------- (default)
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `workflow_job_template`:  (id, required)
-* `unified_job_template`:  (id, default=``)
-
-
-
-* `all_parents_must_converge`: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean, default=`False`)
-* `identifier`: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string, default=`"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"`)
-
-
-
-
-
-
-
-
-# Add Workflow Job Template Nodes for a Workflow Job Template Node:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing workflow job template node with this workflow job template node.
-
-# Remove Workflow Job Template Nodes from this Workflow Job Template Node:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the workflow job template node from this workflow job template node
- without deleting the workflow job template node.
+WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesCreate  Create a Workflow Job Template Node for a Workflow Job Template Node
+ Make a POST request to this resource with the following workflow job template node fields to create a new workflow job template node associated with this workflow job template node.          * &#x60;extra_data&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id, default&#x3D;&#x60;&#x60;) * &#x60;scm_branch&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: --------- (default)     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;skip_tags&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;limit&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;diff_mode&#x60;:  (boolean, default&#x3D;&#x60;None&#x60;) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: --------- (default)     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;workflow_job_template&#x60;:  (id, required) * &#x60;unified_job_template&#x60;:  (id, default&#x3D;&#x60;&#x60;)    * &#x60;all_parents_must_converge&#x60;: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;identifier&#x60;: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string, default&#x3D;&#x60;\&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\&quot;&#x60;)         # Add Workflow Job Template Nodes for a Workflow Job Template Node:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing workflow job template node with this workflow job template node.  # Remove Workflow Job Template Nodes from this Workflow Job Template Node:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the workflow job template node from this workflow job template node  without deleting the workflow job template node.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesCreateRequest
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesCreate(ctx _context.Context, id string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesCreateRequest {
-	return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesCreateExecute(r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesCreate(ctx _context.Context, id string, localVarOptionals *WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -125,13 +48,9 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobTemplateNodesApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_template_nodes/{id}/always_nodes/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_template_nodes/{id}/always_nodes/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -155,13 +74,16 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -183,149 +105,24 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesListRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobTemplateNodesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesListRequest) Page(page int32) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesListRequest) PageSize(pageSize int32) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesListRequest) Search(search string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesListExecute(r)
+// WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesListOpts Optional parameters for the method 'WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesList'
+type WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesList  List Workflow Job Template Nodes for a Workflow Job Template Node
- * 
-Make a GET request to this resource to retrieve a list of
-workflow job template nodes associated with the selected
-workflow job template node.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of workflow job template nodes
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more workflow job template node records.  
-
-## Results
-
-Each workflow job template node data structure includes the following fields:
-
-* `id`: Database ID for this workflow job template node. (integer)
-* `type`: Data type for this workflow job template node. (choice)
-* `url`: URL for this workflow job template node. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this workflow job template node was created. (datetime)
-* `modified`: Timestamp when this workflow job template node was last modified. (datetime)
-* `extra_data`:  (json)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id)
-* `scm_branch`:  (string)
-* `job_type`:  (choice)
-    - `None`: ---------
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string)
-* `skip_tags`:  (string)
-* `limit`:  (string)
-* `diff_mode`:  (boolean)
-* `verbosity`:  (choice)
-    - `None`: ---------
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `workflow_job_template`:  (id)
-* `unified_job_template`:  (id)
-* `success_nodes`:  (field)
-* `failure_nodes`:  (field)
-* `always_nodes`:  (field)
-* `all_parents_must_converge`: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean)
-* `identifier`: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string)
-
-
-
-## Sorting
-
-To specify that workflow job template nodes are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesList  List Workflow Job Template Nodes for a Workflow Job Template Node
+ Make a GET request to this resource to retrieve a list of workflow job template nodes associated with the selected workflow job template node.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of workflow job template nodes found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more workflow job template node records.    ## Results  Each workflow job template node data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this workflow job template node. (integer) * &#x60;type&#x60;: Data type for this workflow job template node. (choice) * &#x60;url&#x60;: URL for this workflow job template node. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this workflow job template node was created. (datetime) * &#x60;modified&#x60;: Timestamp when this workflow job template node was last modified. (datetime) * &#x60;extra_data&#x60;:  (json) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id) * &#x60;scm_branch&#x60;:  (string) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string) * &#x60;skip_tags&#x60;:  (string) * &#x60;limit&#x60;:  (string) * &#x60;diff_mode&#x60;:  (boolean) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;workflow_job_template&#x60;:  (id) * &#x60;unified_job_template&#x60;:  (id) * &#x60;success_nodes&#x60;:  (field) * &#x60;failure_nodes&#x60;:  (field) * &#x60;always_nodes&#x60;:  (field) * &#x60;all_parents_must_converge&#x60;: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean) * &#x60;identifier&#x60;: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string)    ## Sorting  To specify that workflow job template nodes are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesListRequest
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesList(ctx _context.Context, id string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesListRequest {
-	return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesListExecute(r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesList(ctx _context.Context, id string, localVarOptionals *WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -334,26 +131,22 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobTemplateNodesApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesAlwaysNodesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_template_nodes/{id}/always_nodes/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_template_nodes/{id}/always_nodes/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -372,12 +165,12 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -399,76 +192,19 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobTemplateNodesApiService
-	data *InlineObject75
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateRequest) Data(data InlineObject75) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateExecute(r)
+// WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateOpts Optional parameters for the method 'WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreate'
+type WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreate  Create a Workflow Job Template Node
- * 
-Make a POST request to this resource with the following workflow job template node
-fields to create a new workflow job template node:
-
-
-
-
-
-
-
-
-
-* `extra_data`:  (json, default=`{}`)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id, default=``)
-* `scm_branch`:  (string, default=`""`)
-* `job_type`:  (choice)
-    - `None`: --------- (default)
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string, default=`""`)
-* `skip_tags`:  (string, default=`""`)
-* `limit`:  (string, default=`""`)
-* `diff_mode`:  (boolean, default=`None`)
-* `verbosity`:  (choice)
-    - `None`: --------- (default)
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `workflow_job_template`:  (id, required)
-* `unified_job_template`:  (id, default=``)
-
-
-
-* `all_parents_must_converge`: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean, default=`False`)
-* `identifier`: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string, default=`"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"`)
+WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreate  Create a Workflow Job Template Node
+ Make a POST request to this resource with the following workflow job template node fields to create a new workflow job template node:          * &#x60;extra_data&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id, default&#x3D;&#x60;&#x60;) * &#x60;scm_branch&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: --------- (default)     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;skip_tags&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;limit&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;diff_mode&#x60;:  (boolean, default&#x3D;&#x60;None&#x60;) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: --------- (default)     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;workflow_job_template&#x60;:  (id, required) * &#x60;unified_job_template&#x60;:  (id, default&#x3D;&#x60;&#x60;)    * &#x60;all_parents_must_converge&#x60;: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;identifier&#x60;: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string, default&#x3D;&#x60;\&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\&quot;&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateRequest
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreate(ctx _context.Context) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateRequest {
-	return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateExecute(r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject75) - 
+*/
+func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreate(ctx _context.Context, localVarOptionals *WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -477,13 +213,8 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobTemplateNodesApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_template_nodes/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_template_nodes/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -506,13 +237,20 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject75)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject75")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -534,47 +272,20 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateCreateRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobTemplateNodesApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateCreateRequest) Data(data map[string]interface{}) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateCreateExecute(r)
+// WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateCreateOpts Optional parameters for the method 'WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateCreate'
+type WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateCreate  Retrieve a Workflow Job Template Node
- * 
-Make GET request to this resource to retrieve a single workflow job template node
-record containing the following fields:
-
-* `timeout`: The amount of time (in seconds) before the approval node expires and fails. (integer)
-* `name`: Name of this workflow approval template. (string)
-* `description`: Optional description of this workflow approval template. (string)
+WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateCreate  Retrieve a Workflow Job Template Node
+ Make GET request to this resource to retrieve a single workflow job template node record containing the following fields:  * &#x60;timeout&#x60;: The amount of time (in seconds) before the approval node expires and fails. (integer) * &#x60;name&#x60;: Name of this workflow approval template. (string) * &#x60;description&#x60;: Optional description of this workflow approval template. (string)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateCreateRequest
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateCreate(ctx _context.Context, id string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateCreateRequest {
-	return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateCreateExecute(r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateCreate(ctx _context.Context, id string, localVarOptionals *WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -583,13 +294,9 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobTemplateNodesApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_template_nodes/{id}/create_approval_template/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_template_nodes/{id}/create_approval_template/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -613,13 +320,16 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -641,47 +351,20 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateReadRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobTemplateNodesApiService
-	id string
-	search *string
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateReadRequest) Search(search string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateReadExecute(r)
+// WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateReadOpts Optional parameters for the method 'WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateRead'
+type WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateReadOpts struct {
+    Search optional.String
 }
 
 /*
- * WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateRead  Retrieve a Workflow Job Template Node
- * 
-Make GET request to this resource to retrieve a single workflow job template node
-record containing the following fields:
-
-* `timeout`: The amount of time (in seconds) before the approval node expires and fails. (integer)
-* `name`: Name of this workflow approval template. (string)
-* `description`: Optional description of this workflow approval template. (string)
+WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateRead  Retrieve a Workflow Job Template Node
+ Make GET request to this resource to retrieve a single workflow job template node record containing the following fields:  * &#x60;timeout&#x60;: The amount of time (in seconds) before the approval node expires and fails. (integer) * &#x60;name&#x60;: Name of this workflow approval template. (string) * &#x60;description&#x60;: Optional description of this workflow approval template. (string)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateReadRequest
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateRead(ctx _context.Context, id string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateReadRequest {
-	return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateReadExecute(r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateRead(ctx _context.Context, id string, localVarOptionals *WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -690,20 +373,16 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobTemplateNodesApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesCreateApprovalTemplateRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_template_nodes/{id}/create_approval_template/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_template_nodes/{id}/create_approval_template/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -722,12 +401,12 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -749,80 +428,20 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsCreateRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobTemplateNodesApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsCreateRequest) Data(data map[string]interface{}) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsCreateExecute(r)
+// WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsCreateOpts Optional parameters for the method 'WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsCreate'
+type WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsCreate  Create a Credential for a Workflow Job Template Node
- * 
-Make a POST request to this resource with the following credential
-fields to create a new credential associated with this
-workflow job template node.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this credential. (string, required)
-* `description`: Optional description of this credential. (string, default=`""`)
-* `organization`:  (id, default=`None`)
-* `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id, required)
-
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)
-
-
-
-
-
-
-
-
-
-
-
-# Add Credentials for a Workflow Job Template Node:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing credential with this workflow job template node.
-
-# Remove Credentials from this Workflow Job Template Node:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the credential from this workflow job template node
- without deleting the credential.
+WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsCreate  Create a Credential for a Workflow Job Template Node
+ Make a POST request to this resource with the following credential fields to create a new credential associated with this workflow job template node.          * &#x60;name&#x60;: Name of this credential. (string, required) * &#x60;description&#x60;: Optional description of this credential. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;:  (id, default&#x3D;&#x60;None&#x60;) * &#x60;credential_type&#x60;: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id, required)  * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default&#x3D;&#x60;{}&#x60;)            # Add Credentials for a Workflow Job Template Node:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing credential with this workflow job template node.  # Remove Credentials from this Workflow Job Template Node:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the credential from this workflow job template node  without deleting the credential.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsCreateRequest
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsCreate(ctx _context.Context, id string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsCreateRequest {
-	return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsCreateExecute(r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsCreate(ctx _context.Context, id string, localVarOptionals *WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -831,13 +450,9 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobTemplateNodesApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_template_nodes/{id}/credentials/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_template_nodes/{id}/credentials/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -861,13 +476,16 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -889,131 +507,24 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsListRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobTemplateNodesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsListRequest) Page(page int32) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsListRequest) PageSize(pageSize int32) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsListRequest) Search(search string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsListExecute(r)
+// WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsListOpts Optional parameters for the method 'WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsList'
+type WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsList  List Credentials for a Workflow Job Template Node
- * 
-Make a GET request to this resource to retrieve a list of
-credentials associated with the selected
-workflow job template node.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of credentials
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more credential records.  
-
-## Results
-
-Each credential data structure includes the following fields:
-
-* `id`: Database ID for this credential. (integer)
-* `type`: Data type for this credential. (choice)
-* `url`: URL for this credential. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this credential was created. (datetime)
-* `modified`: Timestamp when this credential was last modified. (datetime)
-* `name`: Name of this credential. (string)
-* `description`: Optional description of this credential. (string)
-* `organization`:  (id)
-* `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id)
-* `managed_by_tower`:  (boolean)
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json)
-* `kind`:  (field)
-* `cloud`:  (field)
-* `kubernetes`:  (field)
-
-
-
-## Sorting
-
-To specify that credentials are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsList  List Credentials for a Workflow Job Template Node
+ Make a GET request to this resource to retrieve a list of credentials associated with the selected workflow job template node.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of credentials found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more credential records.    ## Results  Each credential data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this credential. (integer) * &#x60;type&#x60;: Data type for this credential. (choice) * &#x60;url&#x60;: URL for this credential. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this credential was created. (datetime) * &#x60;modified&#x60;: Timestamp when this credential was last modified. (datetime) * &#x60;name&#x60;: Name of this credential. (string) * &#x60;description&#x60;: Optional description of this credential. (string) * &#x60;organization&#x60;:  (id) * &#x60;credential_type&#x60;: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id) * &#x60;managed_by_tower&#x60;:  (boolean) * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json) * &#x60;kind&#x60;:  (field) * &#x60;cloud&#x60;:  (field) * &#x60;kubernetes&#x60;:  (field)    ## Sorting  To specify that credentials are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsListRequest
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsList(ctx _context.Context, id string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsListRequest {
-	return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsListExecute(r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsList(ctx _context.Context, id string, localVarOptionals *WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1022,26 +533,22 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobTemplateNodesApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesCredentialsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_template_nodes/{id}/credentials/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_template_nodes/{id}/credentials/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1060,12 +567,12 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1087,42 +594,20 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesDeleteRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobTemplateNodesApiService
-	id string
-	search *string
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesDeleteRequest) Search(search string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesDeleteRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesDeleteExecute(r)
+// WorkflowJobTemplateNodesWorkflowJobTemplateNodesDeleteOpts Optional parameters for the method 'WorkflowJobTemplateNodesWorkflowJobTemplateNodesDelete'
+type WorkflowJobTemplateNodesWorkflowJobTemplateNodesDeleteOpts struct {
+    Search optional.String
 }
 
 /*
- * WorkflowJobTemplateNodesWorkflowJobTemplateNodesDelete  Delete a Workflow Job Template Node
- * 
-Make a DELETE request to this resource to delete this workflow job template node.
+WorkflowJobTemplateNodesWorkflowJobTemplateNodesDelete  Delete a Workflow Job Template Node
+ Make a DELETE request to this resource to delete this workflow job template node.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesDeleteRequest
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesDelete(ctx _context.Context, id string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesDeleteRequest {
-	return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesDeleteExecute(r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesDeleteRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobTemplateNodesWorkflowJobTemplateNodesDeleteOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesDelete(ctx _context.Context, id string, localVarOptionals *WorkflowJobTemplateNodesWorkflowJobTemplateNodesDeleteOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -1131,20 +616,16 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobTemplateNodesApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_template_nodes/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_template_nodes/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1163,12 +644,12 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1190,98 +671,20 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesCreateRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobTemplateNodesApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesCreateRequest) Data(data map[string]interface{}) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesCreateExecute(r)
+// WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesCreateOpts Optional parameters for the method 'WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesCreate'
+type WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesCreate  Create a Workflow Job Template Node for a Workflow Job Template Node
- * 
-Make a POST request to this resource with the following workflow job template node
-fields to create a new workflow job template node associated with this
-workflow job template node.
-
-
-
-
-
-
-
-
-
-* `extra_data`:  (json, default=`{}`)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id, default=``)
-* `scm_branch`:  (string, default=`""`)
-* `job_type`:  (choice)
-    - `None`: --------- (default)
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string, default=`""`)
-* `skip_tags`:  (string, default=`""`)
-* `limit`:  (string, default=`""`)
-* `diff_mode`:  (boolean, default=`None`)
-* `verbosity`:  (choice)
-    - `None`: --------- (default)
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `workflow_job_template`:  (id, required)
-* `unified_job_template`:  (id, default=``)
-
-
-
-* `all_parents_must_converge`: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean, default=`False`)
-* `identifier`: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string, default=`"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"`)
-
-
-
-
-
-
-
-
-# Add Workflow Job Template Nodes for a Workflow Job Template Node:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing workflow job template node with this workflow job template node.
-
-# Remove Workflow Job Template Nodes from this Workflow Job Template Node:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the workflow job template node from this workflow job template node
- without deleting the workflow job template node.
+WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesCreate  Create a Workflow Job Template Node for a Workflow Job Template Node
+ Make a POST request to this resource with the following workflow job template node fields to create a new workflow job template node associated with this workflow job template node.          * &#x60;extra_data&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id, default&#x3D;&#x60;&#x60;) * &#x60;scm_branch&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: --------- (default)     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;skip_tags&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;limit&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;diff_mode&#x60;:  (boolean, default&#x3D;&#x60;None&#x60;) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: --------- (default)     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;workflow_job_template&#x60;:  (id, required) * &#x60;unified_job_template&#x60;:  (id, default&#x3D;&#x60;&#x60;)    * &#x60;all_parents_must_converge&#x60;: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;identifier&#x60;: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string, default&#x3D;&#x60;\&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\&quot;&#x60;)         # Add Workflow Job Template Nodes for a Workflow Job Template Node:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing workflow job template node with this workflow job template node.  # Remove Workflow Job Template Nodes from this Workflow Job Template Node:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the workflow job template node from this workflow job template node  without deleting the workflow job template node.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesCreateRequest
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesCreate(ctx _context.Context, id string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesCreateRequest {
-	return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesCreateExecute(r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesCreate(ctx _context.Context, id string, localVarOptionals *WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -1290,13 +693,9 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobTemplateNodesApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_template_nodes/{id}/failure_nodes/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_template_nodes/{id}/failure_nodes/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1320,13 +719,16 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1348,149 +750,24 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesListRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobTemplateNodesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesListRequest) Page(page int32) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesListRequest) PageSize(pageSize int32) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesListRequest) Search(search string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesListExecute(r)
+// WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesListOpts Optional parameters for the method 'WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesList'
+type WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesList  List Workflow Job Template Nodes for a Workflow Job Template Node
- * 
-Make a GET request to this resource to retrieve a list of
-workflow job template nodes associated with the selected
-workflow job template node.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of workflow job template nodes
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more workflow job template node records.  
-
-## Results
-
-Each workflow job template node data structure includes the following fields:
-
-* `id`: Database ID for this workflow job template node. (integer)
-* `type`: Data type for this workflow job template node. (choice)
-* `url`: URL for this workflow job template node. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this workflow job template node was created. (datetime)
-* `modified`: Timestamp when this workflow job template node was last modified. (datetime)
-* `extra_data`:  (json)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id)
-* `scm_branch`:  (string)
-* `job_type`:  (choice)
-    - `None`: ---------
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string)
-* `skip_tags`:  (string)
-* `limit`:  (string)
-* `diff_mode`:  (boolean)
-* `verbosity`:  (choice)
-    - `None`: ---------
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `workflow_job_template`:  (id)
-* `unified_job_template`:  (id)
-* `success_nodes`:  (field)
-* `failure_nodes`:  (field)
-* `always_nodes`:  (field)
-* `all_parents_must_converge`: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean)
-* `identifier`: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string)
-
-
-
-## Sorting
-
-To specify that workflow job template nodes are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesList  List Workflow Job Template Nodes for a Workflow Job Template Node
+ Make a GET request to this resource to retrieve a list of workflow job template nodes associated with the selected workflow job template node.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of workflow job template nodes found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more workflow job template node records.    ## Results  Each workflow job template node data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this workflow job template node. (integer) * &#x60;type&#x60;: Data type for this workflow job template node. (choice) * &#x60;url&#x60;: URL for this workflow job template node. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this workflow job template node was created. (datetime) * &#x60;modified&#x60;: Timestamp when this workflow job template node was last modified. (datetime) * &#x60;extra_data&#x60;:  (json) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id) * &#x60;scm_branch&#x60;:  (string) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string) * &#x60;skip_tags&#x60;:  (string) * &#x60;limit&#x60;:  (string) * &#x60;diff_mode&#x60;:  (boolean) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;workflow_job_template&#x60;:  (id) * &#x60;unified_job_template&#x60;:  (id) * &#x60;success_nodes&#x60;:  (field) * &#x60;failure_nodes&#x60;:  (field) * &#x60;always_nodes&#x60;:  (field) * &#x60;all_parents_must_converge&#x60;: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean) * &#x60;identifier&#x60;: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string)    ## Sorting  To specify that workflow job template nodes are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesListRequest
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesList(ctx _context.Context, id string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesListRequest {
-	return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesListExecute(r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesList(ctx _context.Context, id string, localVarOptionals *WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1499,26 +776,22 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobTemplateNodesApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesFailureNodesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_template_nodes/{id}/failure_nodes/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_template_nodes/{id}/failure_nodes/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1537,12 +810,12 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1564,145 +837,23 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesListRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobTemplateNodesApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesListRequest) Page(page int32) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesListRequest) PageSize(pageSize int32) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesListRequest) Search(search string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesListExecute(r)
+// WorkflowJobTemplateNodesWorkflowJobTemplateNodesListOpts Optional parameters for the method 'WorkflowJobTemplateNodesWorkflowJobTemplateNodesList'
+type WorkflowJobTemplateNodesWorkflowJobTemplateNodesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * WorkflowJobTemplateNodesWorkflowJobTemplateNodesList  List Workflow Job Template Nodes
- * 
-Make a GET request to this resource to retrieve the list of
-workflow job template nodes.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of workflow job template nodes
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more workflow job template node records.  
-
-## Results
-
-Each workflow job template node data structure includes the following fields:
-
-* `id`: Database ID for this workflow job template node. (integer)
-* `type`: Data type for this workflow job template node. (choice)
-* `url`: URL for this workflow job template node. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this workflow job template node was created. (datetime)
-* `modified`: Timestamp when this workflow job template node was last modified. (datetime)
-* `extra_data`:  (json)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id)
-* `scm_branch`:  (string)
-* `job_type`:  (choice)
-    - `None`: ---------
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string)
-* `skip_tags`:  (string)
-* `limit`:  (string)
-* `diff_mode`:  (boolean)
-* `verbosity`:  (choice)
-    - `None`: ---------
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `workflow_job_template`:  (id)
-* `unified_job_template`:  (id)
-* `success_nodes`:  (field)
-* `failure_nodes`:  (field)
-* `always_nodes`:  (field)
-* `all_parents_must_converge`: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean)
-* `identifier`: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string)
-
-
-
-## Sorting
-
-To specify that workflow job template nodes are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+WorkflowJobTemplateNodesWorkflowJobTemplateNodesList  List Workflow Job Template Nodes
+ Make a GET request to this resource to retrieve the list of workflow job template nodes.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of workflow job template nodes found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more workflow job template node records.    ## Results  Each workflow job template node data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this workflow job template node. (integer) * &#x60;type&#x60;: Data type for this workflow job template node. (choice) * &#x60;url&#x60;: URL for this workflow job template node. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this workflow job template node was created. (datetime) * &#x60;modified&#x60;: Timestamp when this workflow job template node was last modified. (datetime) * &#x60;extra_data&#x60;:  (json) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id) * &#x60;scm_branch&#x60;:  (string) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string) * &#x60;skip_tags&#x60;:  (string) * &#x60;limit&#x60;:  (string) * &#x60;diff_mode&#x60;:  (boolean) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;workflow_job_template&#x60;:  (id) * &#x60;unified_job_template&#x60;:  (id) * &#x60;success_nodes&#x60;:  (field) * &#x60;failure_nodes&#x60;:  (field) * &#x60;always_nodes&#x60;:  (field) * &#x60;all_parents_must_converge&#x60;: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean) * &#x60;identifier&#x60;: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string)    ## Sorting  To specify that workflow job template nodes are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesListRequest
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesList(ctx _context.Context) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesListRequest {
-	return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesListExecute(r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobTemplateNodesWorkflowJobTemplateNodesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesList(ctx _context.Context, localVarOptionals *WorkflowJobTemplateNodesWorkflowJobTemplateNodesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1711,25 +862,20 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobTemplateNodesApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_template_nodes/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_template_nodes/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1748,12 +894,12 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1775,93 +921,22 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdateRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobTemplateNodesApiService
-	id string
-	search *string
-	data *InlineObject77
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdateRequest) Search(search string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdateRequest) Data(data InlineObject77) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdateExecute(r)
+// WorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdateOpts Optional parameters for the method 'WorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdate'
+type WorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdateOpts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * WorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdate  Update a Workflow Job Template Node
- * 
-Make a PUT or PATCH request to this resource to update this
-workflow job template node.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `extra_data`:  (json, default=`{}`)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id, default=``)
-* `scm_branch`:  (string, default=`""`)
-* `job_type`:  (choice)
-    - `None`: --------- (default)
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string, default=`""`)
-* `skip_tags`:  (string, default=`""`)
-* `limit`:  (string, default=`""`)
-* `diff_mode`:  (boolean, default=`None`)
-* `verbosity`:  (choice)
-    - `None`: --------- (default)
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `workflow_job_template`:  (id, required)
-* `unified_job_template`:  (id, default=``)
-
-
-
-* `all_parents_must_converge`: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean, default=`False`)
-* `identifier`: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string, default=`"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"`)
-
-
-
-
-
-
-
-
-For a PATCH request, include only the fields that are being modified.
+WorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdate  Update a Workflow Job Template Node
+ Make a PUT or PATCH request to this resource to update this workflow job template node.  The following fields may be modified:          * &#x60;extra_data&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id, default&#x3D;&#x60;&#x60;) * &#x60;scm_branch&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: --------- (default)     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;skip_tags&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;limit&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;diff_mode&#x60;:  (boolean, default&#x3D;&#x60;None&#x60;) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: --------- (default)     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;workflow_job_template&#x60;:  (id, required) * &#x60;unified_job_template&#x60;:  (id, default&#x3D;&#x60;&#x60;)    * &#x60;all_parents_must_converge&#x60;: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;identifier&#x60;: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string, default&#x3D;&#x60;\&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\&quot;&#x60;)         For a PATCH request, include only the fields that are being modified.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdateRequest
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdate(ctx _context.Context, id string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdateRequest {
-	return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdateExecute(r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject77) - 
+*/
+func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdate(ctx _context.Context, id string, localVarOptionals *WorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPatch
 		localVarPostBody     interface{}
@@ -1870,20 +945,16 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobTemplateNodesApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesPartialUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_template_nodes/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_template_nodes/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -1903,13 +974,20 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject77)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject77")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1931,78 +1009,20 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesReadRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobTemplateNodesApiService
-	id string
-	search *string
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesReadRequest) Search(search string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesReadExecute(r)
+// WorkflowJobTemplateNodesWorkflowJobTemplateNodesReadOpts Optional parameters for the method 'WorkflowJobTemplateNodesWorkflowJobTemplateNodesRead'
+type WorkflowJobTemplateNodesWorkflowJobTemplateNodesReadOpts struct {
+    Search optional.String
 }
 
 /*
- * WorkflowJobTemplateNodesWorkflowJobTemplateNodesRead  Retrieve a Workflow Job Template Node
- * 
-Make GET request to this resource to retrieve a single workflow job template node
-record containing the following fields:
-
-* `id`: Database ID for this workflow job template node. (integer)
-* `type`: Data type for this workflow job template node. (choice)
-* `url`: URL for this workflow job template node. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this workflow job template node was created. (datetime)
-* `modified`: Timestamp when this workflow job template node was last modified. (datetime)
-* `extra_data`:  (json)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id)
-* `scm_branch`:  (string)
-* `job_type`:  (choice)
-    - `None`: ---------
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string)
-* `skip_tags`:  (string)
-* `limit`:  (string)
-* `diff_mode`:  (boolean)
-* `verbosity`:  (choice)
-    - `None`: ---------
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `workflow_job_template`:  (id)
-* `unified_job_template`:  (id)
-* `success_nodes`:  (field)
-* `failure_nodes`:  (field)
-* `always_nodes`:  (field)
-* `all_parents_must_converge`: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean)
-* `identifier`: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string)
+WorkflowJobTemplateNodesWorkflowJobTemplateNodesRead  Retrieve a Workflow Job Template Node
+ Make GET request to this resource to retrieve a single workflow job template node record containing the following fields:  * &#x60;id&#x60;: Database ID for this workflow job template node. (integer) * &#x60;type&#x60;: Data type for this workflow job template node. (choice) * &#x60;url&#x60;: URL for this workflow job template node. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this workflow job template node was created. (datetime) * &#x60;modified&#x60;: Timestamp when this workflow job template node was last modified. (datetime) * &#x60;extra_data&#x60;:  (json) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id) * &#x60;scm_branch&#x60;:  (string) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string) * &#x60;skip_tags&#x60;:  (string) * &#x60;limit&#x60;:  (string) * &#x60;diff_mode&#x60;:  (boolean) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;workflow_job_template&#x60;:  (id) * &#x60;unified_job_template&#x60;:  (id) * &#x60;success_nodes&#x60;:  (field) * &#x60;failure_nodes&#x60;:  (field) * &#x60;always_nodes&#x60;:  (field) * &#x60;all_parents_must_converge&#x60;: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean) * &#x60;identifier&#x60;: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesReadRequest
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesRead(ctx _context.Context, id string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesReadRequest {
-	return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesReadExecute(r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobTemplateNodesWorkflowJobTemplateNodesReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesRead(ctx _context.Context, id string, localVarOptionals *WorkflowJobTemplateNodesWorkflowJobTemplateNodesReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2011,20 +1031,16 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobTemplateNodesApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_template_nodes/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_template_nodes/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2043,12 +1059,12 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2070,98 +1086,20 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesCreateRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobTemplateNodesApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesCreateRequest) Data(data map[string]interface{}) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesCreateExecute(r)
+// WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesCreateOpts Optional parameters for the method 'WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesCreate'
+type WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesCreate  Create a Workflow Job Template Node for a Workflow Job Template Node
- * 
-Make a POST request to this resource with the following workflow job template node
-fields to create a new workflow job template node associated with this
-workflow job template node.
-
-
-
-
-
-
-
-
-
-* `extra_data`:  (json, default=`{}`)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id, default=``)
-* `scm_branch`:  (string, default=`""`)
-* `job_type`:  (choice)
-    - `None`: --------- (default)
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string, default=`""`)
-* `skip_tags`:  (string, default=`""`)
-* `limit`:  (string, default=`""`)
-* `diff_mode`:  (boolean, default=`None`)
-* `verbosity`:  (choice)
-    - `None`: --------- (default)
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `workflow_job_template`:  (id, required)
-* `unified_job_template`:  (id, default=``)
-
-
-
-* `all_parents_must_converge`: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean, default=`False`)
-* `identifier`: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string, default=`"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"`)
-
-
-
-
-
-
-
-
-# Add Workflow Job Template Nodes for a Workflow Job Template Node:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing workflow job template node with this workflow job template node.
-
-# Remove Workflow Job Template Nodes from this Workflow Job Template Node:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the workflow job template node from this workflow job template node
- without deleting the workflow job template node.
+WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesCreate  Create a Workflow Job Template Node for a Workflow Job Template Node
+ Make a POST request to this resource with the following workflow job template node fields to create a new workflow job template node associated with this workflow job template node.          * &#x60;extra_data&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id, default&#x3D;&#x60;&#x60;) * &#x60;scm_branch&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: --------- (default)     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;skip_tags&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;limit&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;diff_mode&#x60;:  (boolean, default&#x3D;&#x60;None&#x60;) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: --------- (default)     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;workflow_job_template&#x60;:  (id, required) * &#x60;unified_job_template&#x60;:  (id, default&#x3D;&#x60;&#x60;)    * &#x60;all_parents_must_converge&#x60;: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;identifier&#x60;: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string, default&#x3D;&#x60;\&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\&quot;&#x60;)         # Add Workflow Job Template Nodes for a Workflow Job Template Node:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing workflow job template node with this workflow job template node.  # Remove Workflow Job Template Nodes from this Workflow Job Template Node:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the workflow job template node from this workflow job template node  without deleting the workflow job template node.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesCreateRequest
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesCreate(ctx _context.Context, id string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesCreateRequest {
-	return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesCreateExecute(r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesCreate(ctx _context.Context, id string, localVarOptionals *WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -2170,13 +1108,9 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobTemplateNodesApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_template_nodes/{id}/success_nodes/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_template_nodes/{id}/success_nodes/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -2200,13 +1134,16 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2228,149 +1165,24 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesListRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobTemplateNodesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesListRequest) Page(page int32) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesListRequest) PageSize(pageSize int32) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesListRequest) Search(search string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesListExecute(r)
+// WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesListOpts Optional parameters for the method 'WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesList'
+type WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesList  List Workflow Job Template Nodes for a Workflow Job Template Node
- * 
-Make a GET request to this resource to retrieve a list of
-workflow job template nodes associated with the selected
-workflow job template node.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of workflow job template nodes
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more workflow job template node records.  
-
-## Results
-
-Each workflow job template node data structure includes the following fields:
-
-* `id`: Database ID for this workflow job template node. (integer)
-* `type`: Data type for this workflow job template node. (choice)
-* `url`: URL for this workflow job template node. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this workflow job template node was created. (datetime)
-* `modified`: Timestamp when this workflow job template node was last modified. (datetime)
-* `extra_data`:  (json)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id)
-* `scm_branch`:  (string)
-* `job_type`:  (choice)
-    - `None`: ---------
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string)
-* `skip_tags`:  (string)
-* `limit`:  (string)
-* `diff_mode`:  (boolean)
-* `verbosity`:  (choice)
-    - `None`: ---------
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `workflow_job_template`:  (id)
-* `unified_job_template`:  (id)
-* `success_nodes`:  (field)
-* `failure_nodes`:  (field)
-* `always_nodes`:  (field)
-* `all_parents_must_converge`: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean)
-* `identifier`: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string)
-
-
-
-## Sorting
-
-To specify that workflow job template nodes are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesList  List Workflow Job Template Nodes for a Workflow Job Template Node
+ Make a GET request to this resource to retrieve a list of workflow job template nodes associated with the selected workflow job template node.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of workflow job template nodes found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more workflow job template node records.    ## Results  Each workflow job template node data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this workflow job template node. (integer) * &#x60;type&#x60;: Data type for this workflow job template node. (choice) * &#x60;url&#x60;: URL for this workflow job template node. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this workflow job template node was created. (datetime) * &#x60;modified&#x60;: Timestamp when this workflow job template node was last modified. (datetime) * &#x60;extra_data&#x60;:  (json) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id) * &#x60;scm_branch&#x60;:  (string) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string) * &#x60;skip_tags&#x60;:  (string) * &#x60;limit&#x60;:  (string) * &#x60;diff_mode&#x60;:  (boolean) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;workflow_job_template&#x60;:  (id) * &#x60;unified_job_template&#x60;:  (id) * &#x60;success_nodes&#x60;:  (field) * &#x60;failure_nodes&#x60;:  (field) * &#x60;always_nodes&#x60;:  (field) * &#x60;all_parents_must_converge&#x60;: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean) * &#x60;identifier&#x60;: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string)    ## Sorting  To specify that workflow job template nodes are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesListRequest
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesList(ctx _context.Context, id string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesListRequest {
-	return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesListExecute(r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesList(ctx _context.Context, id string, localVarOptionals *WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2379,26 +1191,22 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobTemplateNodesApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesSuccessNodesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_template_nodes/{id}/success_nodes/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_template_nodes/{id}/success_nodes/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2417,12 +1225,12 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2444,91 +1252,22 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdateRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobTemplateNodesApiService
-	id string
-	search *string
-	data *InlineObject76
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdateRequest) Search(search string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdateRequest) Data(data InlineObject76) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdateExecute(r)
+// WorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdateOpts Optional parameters for the method 'WorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdate'
+type WorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdateOpts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * WorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdate  Update a Workflow Job Template Node
- * 
-Make a PUT or PATCH request to this resource to update this
-workflow job template node.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `extra_data`:  (json, default=`{}`)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id, default=``)
-* `scm_branch`:  (string, default=`""`)
-* `job_type`:  (choice)
-    - `None`: --------- (default)
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string, default=`""`)
-* `skip_tags`:  (string, default=`""`)
-* `limit`:  (string, default=`""`)
-* `diff_mode`:  (boolean, default=`None`)
-* `verbosity`:  (choice)
-    - `None`: --------- (default)
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `workflow_job_template`:  (id, required)
-* `unified_job_template`:  (id, default=``)
-
-
-
-* `all_parents_must_converge`: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean, default=`False`)
-* `identifier`: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string, default=`"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"`)
-
-
-
-
-
-
-For a PUT request, include **all** fields in the request.
+WorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdate  Update a Workflow Job Template Node
+ Make a PUT or PATCH request to this resource to update this workflow job template node.  The following fields may be modified:          * &#x60;extra_data&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id, default&#x3D;&#x60;&#x60;) * &#x60;scm_branch&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: --------- (default)     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;skip_tags&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;limit&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;diff_mode&#x60;:  (boolean, default&#x3D;&#x60;None&#x60;) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: --------- (default)     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;workflow_job_template&#x60;:  (id, required) * &#x60;unified_job_template&#x60;:  (id, default&#x3D;&#x60;&#x60;)    * &#x60;all_parents_must_converge&#x60;: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;identifier&#x60;: An identifier for this node that is unique within its workflow. It is copied to workflow job nodes corresponding to this node. (string, default&#x3D;&#x60;\&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\&quot;&#x60;)       For a PUT request, include **all** fields in the request.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdateRequest
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdate(ctx _context.Context, id string) ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdateRequest {
-	return ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdateExecute(r ApiWorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject76) - 
+*/
+func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdate(ctx _context.Context, id string, localVarOptionals *WorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -2537,20 +1276,16 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobTemplateNodesApiService.WorkflowJobTemplateNodesWorkflowJobTemplateNodesUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_template_nodes/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_template_nodes/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -2570,13 +1305,20 @@ func (a *WorkflowJobTemplateNodesApiService) WorkflowJobTemplateNodesWorkflowJob
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject76)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject76")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

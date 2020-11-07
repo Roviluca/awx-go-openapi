@@ -14,6 +14,7 @@ import (
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -24,137 +25,23 @@ var (
 // UnifiedJobTemplatesApiService UnifiedJobTemplatesApi service
 type UnifiedJobTemplatesApiService service
 
-type ApiUnifiedJobTemplatesUnifiedJobTemplatesListRequest struct {
-	ctx _context.Context
-	ApiService *UnifiedJobTemplatesApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiUnifiedJobTemplatesUnifiedJobTemplatesListRequest) Page(page int32) ApiUnifiedJobTemplatesUnifiedJobTemplatesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiUnifiedJobTemplatesUnifiedJobTemplatesListRequest) PageSize(pageSize int32) ApiUnifiedJobTemplatesUnifiedJobTemplatesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiUnifiedJobTemplatesUnifiedJobTemplatesListRequest) Search(search string) ApiUnifiedJobTemplatesUnifiedJobTemplatesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiUnifiedJobTemplatesUnifiedJobTemplatesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UnifiedJobTemplatesUnifiedJobTemplatesListExecute(r)
+// UnifiedJobTemplatesUnifiedJobTemplatesListOpts Optional parameters for the method 'UnifiedJobTemplatesUnifiedJobTemplatesList'
+type UnifiedJobTemplatesUnifiedJobTemplatesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * UnifiedJobTemplatesUnifiedJobTemplatesList  List Unified Job Templates
- * 
-Make a GET request to this resource to retrieve the list of
-unified job templates.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of unified job templates
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more unified job template records.  
-
-## Results
-
-Each unified job template data structure includes the following fields:
-
-* `id`: Database ID for this unified job template. (integer)
-* `type`: Data type for this unified job template. (choice)
-* `url`: URL for this unified job template. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this unified job template was created. (datetime)
-* `modified`: Timestamp when this unified job template was last modified. (datetime)
-* `name`: Name of this unified job template. (string)
-* `description`: Optional description of this unified job template. (string)
-* `last_job_run`:  (datetime)
-* `last_job_failed`:  (boolean)
-* `next_job_run`:  (datetime)
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-    - `never updated`: Never Updated
-    - `ok`: OK
-    - `missing`: Missing
-    - `none`: No External Source
-    - `updating`: Updating
-
-
-
-## Sorting
-
-To specify that unified job templates are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+UnifiedJobTemplatesUnifiedJobTemplatesList  List Unified Job Templates
+ Make a GET request to this resource to retrieve the list of unified job templates.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of unified job templates found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more unified job template records.    ## Results  Each unified job template data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this unified job template. (integer) * &#x60;type&#x60;: Data type for this unified job template. (choice) * &#x60;url&#x60;: URL for this unified job template. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this unified job template was created. (datetime) * &#x60;modified&#x60;: Timestamp when this unified job template was last modified. (datetime) * &#x60;name&#x60;: Name of this unified job template. (string) * &#x60;description&#x60;: Optional description of this unified job template. (string) * &#x60;last_job_run&#x60;:  (datetime) * &#x60;last_job_failed&#x60;:  (boolean) * &#x60;next_job_run&#x60;:  (datetime) * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled     - &#x60;never updated&#x60;: Never Updated     - &#x60;ok&#x60;: OK     - &#x60;missing&#x60;: Missing     - &#x60;none&#x60;: No External Source     - &#x60;updating&#x60;: Updating    ## Sorting  To specify that unified job templates are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiUnifiedJobTemplatesUnifiedJobTemplatesListRequest
- */
-func (a *UnifiedJobTemplatesApiService) UnifiedJobTemplatesUnifiedJobTemplatesList(ctx _context.Context) ApiUnifiedJobTemplatesUnifiedJobTemplatesListRequest {
-	return ApiUnifiedJobTemplatesUnifiedJobTemplatesListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UnifiedJobTemplatesApiService) UnifiedJobTemplatesUnifiedJobTemplatesListExecute(r ApiUnifiedJobTemplatesUnifiedJobTemplatesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UnifiedJobTemplatesUnifiedJobTemplatesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *UnifiedJobTemplatesApiService) UnifiedJobTemplatesUnifiedJobTemplatesList(ctx _context.Context, localVarOptionals *UnifiedJobTemplatesUnifiedJobTemplatesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -163,25 +50,20 @@ func (a *UnifiedJobTemplatesApiService) UnifiedJobTemplatesUnifiedJobTemplatesLi
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UnifiedJobTemplatesApiService.UnifiedJobTemplatesUnifiedJobTemplatesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/unified_job_templates/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/unified_job_templates/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -200,12 +82,12 @@ func (a *UnifiedJobTemplatesApiService) UnifiedJobTemplatesUnifiedJobTemplatesLi
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

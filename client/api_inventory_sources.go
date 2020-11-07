@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,133 +26,24 @@ var (
 // InventorySourcesApiService InventorySourcesApi service
 type InventorySourcesApiService service
 
-type ApiInventorySourcesInventorySourcesActivityStreamListRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventorySourcesInventorySourcesActivityStreamListRequest) Page(page int32) ApiInventorySourcesInventorySourcesActivityStreamListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesActivityStreamListRequest) PageSize(pageSize int32) ApiInventorySourcesInventorySourcesActivityStreamListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesActivityStreamListRequest) Search(search string) ApiInventorySourcesInventorySourcesActivityStreamListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesActivityStreamListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesActivityStreamListExecute(r)
+// InventorySourcesInventorySourcesActivityStreamListOpts Optional parameters for the method 'InventorySourcesInventorySourcesActivityStreamList'
+type InventorySourcesInventorySourcesActivityStreamListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventorySourcesInventorySourcesActivityStreamList  List Activity Streams for an Inventory Source
- * 
-Make a GET request to this resource to retrieve a list of
-activity streams associated with the selected
-inventory source.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of activity streams
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more activity stream records.  
-
-## Results
-
-Each activity stream data structure includes the following fields:
-
-* `id`: Database ID for this activity stream. (integer)
-* `type`: Data type for this activity stream. (choice)
-* `url`: URL for this activity stream. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `timestamp`:  (datetime)
-* `operation`: The action taken with respect to the given object(s). (choice)
-    - `create`: Entity Created
-    - `update`: Entity Updated
-    - `delete`: Entity Deleted
-    - `associate`: Entity Associated with another Entity
-    - `disassociate`: Entity was Disassociated with another Entity
-* `changes`: A summary of the new and changed values when an object is created, updated, or deleted (json)
-* `object1`: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string)
-* `object2`: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string)
-* `object_association`: When present, shows the field name of the role or relationship that changed. (field)
-* `action_node`: The cluster node the activity took place on. (string)
-* `object_type`: When present, shows the model on which the role or relationship was defined. (field)
-
-
-
-## Sorting
-
-To specify that activity streams are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InventorySourcesInventorySourcesActivityStreamList  List Activity Streams for an Inventory Source
+ Make a GET request to this resource to retrieve a list of activity streams associated with the selected inventory source.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of activity streams found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more activity stream records.    ## Results  Each activity stream data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this activity stream. (integer) * &#x60;type&#x60;: Data type for this activity stream. (choice) * &#x60;url&#x60;: URL for this activity stream. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;timestamp&#x60;:  (datetime) * &#x60;operation&#x60;: The action taken with respect to the given object(s). (choice)     - &#x60;create&#x60;: Entity Created     - &#x60;update&#x60;: Entity Updated     - &#x60;delete&#x60;: Entity Deleted     - &#x60;associate&#x60;: Entity Associated with another Entity     - &#x60;disassociate&#x60;: Entity was Disassociated with another Entity * &#x60;changes&#x60;: A summary of the new and changed values when an object is created, updated, or deleted (json) * &#x60;object1&#x60;: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string) * &#x60;object2&#x60;: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string) * &#x60;object_association&#x60;: When present, shows the field name of the role or relationship that changed. (field) * &#x60;action_node&#x60;: The cluster node the activity took place on. (string) * &#x60;object_type&#x60;: When present, shows the model on which the role or relationship was defined. (field)    ## Sorting  To specify that activity streams are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesActivityStreamListRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesActivityStreamList(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesActivityStreamListRequest {
-	return ApiInventorySourcesInventorySourcesActivityStreamListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesActivityStreamListExecute(r ApiInventorySourcesInventorySourcesActivityStreamListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesActivityStreamListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesActivityStreamList(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesActivityStreamListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -160,26 +52,22 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesActivityStr
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesActivityStreamList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/activity_stream/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/activity_stream/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -198,12 +86,12 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesActivityStr
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -225,87 +113,19 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesActivityStr
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesCreateRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	data *map[string]interface{}
-}
-
-func (r ApiInventorySourcesInventorySourcesCreateRequest) Data(data map[string]interface{}) ApiInventorySourcesInventorySourcesCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesCreateExecute(r)
+// InventorySourcesInventorySourcesCreateOpts Optional parameters for the method 'InventorySourcesInventorySourcesCreate'
+type InventorySourcesInventorySourcesCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * InventorySourcesInventorySourcesCreate  Create an Inventory Source
- * 
-Make a POST request to this resource with the following inventory source
-fields to create a new inventory source:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this inventory source. (string, required)
-* `description`: Optional description of this inventory source. (string, default=`""`)
-* `source`:  (choice)
-    - `file`: File, Directory or Script
-    - `scm`: Sourced from a Project
-    - `ec2`: Amazon EC2
-    - `gce`: Google Compute Engine
-    - `azure_rm`: Microsoft Azure Resource Manager
-    - `vmware`: VMware vCenter
-    - `satellite6`: Red Hat Satellite 6
-    - `openstack`: OpenStack
-    - `rhv`: Red Hat Virtualization
-    - `tower`: Ansible Tower
-    - `custom`: Custom Script
-* `source_path`:  (string, default=`""`)
-* `source_script`:  (id, default=``)
-* `source_vars`: Inventory source variables in YAML or JSON format. (string, default=`""`)
-* `credential`: Cloud credential to use for inventory updates. (integer, default=`None`)
-* `enabled_var`: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &quot;foo.bar&quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&quot;foo&quot;, {}).get(&quot;bar&quot;, default) (string, default=`""`)
-* `enabled_value`: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var=&quot;status.power_state&quot;and enabled_value=&quot;powered_on&quot; with host variables:{   &quot;status&quot;: {     &quot;power_state&quot;: &quot;powered_on&quot;,     &quot;created&quot;: &quot;2018-02-01T08:00:00.000000Z:00&quot;,     &quot;healthy&quot;: true    },    &quot;name&quot;: &quot;foobar&quot;,    &quot;ip_address&quot;: &quot;192.168.2.1&quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string, default=`""`)
-* `host_filter`: Regex where only matching hosts will be imported into Tower. (string, default=`""`)
-* `overwrite`: Overwrite local groups and hosts from remote inventory source. (boolean, default=`False`)
-* `overwrite_vars`: Overwrite local variables from remote inventory source. (boolean, default=`False`)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string, default=`""`)
-* `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer, default=`0`)
-* `verbosity`:  (choice)
-    - `0`: 0 (WARNING)
-    - `1`: 1 (INFO) (default)
-    - `2`: 2 (DEBUG)
-
-
-
-
-* `inventory`:  (id, required)
-* `update_on_launch`:  (boolean, default=`False`)
-* `update_cache_timeout`:  (integer, default=`0`)
-* `source_project`: Project containing inventory file used as source. (id, default=``)
-* `update_on_project_update`:  (boolean, default=`False`)
+InventorySourcesInventorySourcesCreate  Create an Inventory Source
+ Make a POST request to this resource with the following inventory source fields to create a new inventory source:          * &#x60;name&#x60;: Name of this inventory source. (string, required) * &#x60;description&#x60;: Optional description of this inventory source. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;source&#x60;:  (choice)     - &#x60;file&#x60;: File, Directory or Script     - &#x60;scm&#x60;: Sourced from a Project     - &#x60;ec2&#x60;: Amazon EC2     - &#x60;gce&#x60;: Google Compute Engine     - &#x60;azure_rm&#x60;: Microsoft Azure Resource Manager     - &#x60;vmware&#x60;: VMware vCenter     - &#x60;satellite6&#x60;: Red Hat Satellite 6     - &#x60;openstack&#x60;: OpenStack     - &#x60;rhv&#x60;: Red Hat Virtualization     - &#x60;tower&#x60;: Ansible Tower     - &#x60;custom&#x60;: Custom Script * &#x60;source_path&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;source_script&#x60;:  (id, default&#x3D;&#x60;&#x60;) * &#x60;source_vars&#x60;: Inventory source variables in YAML or JSON format. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;credential&#x60;: Cloud credential to use for inventory updates. (integer, default&#x3D;&#x60;None&#x60;) * &#x60;enabled_var&#x60;: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &amp;quot;foo.bar&amp;quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&amp;quot;foo&amp;quot;, {}).get(&amp;quot;bar&amp;quot;, default) (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;enabled_value&#x60;: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var&#x3D;&amp;quot;status.power_state&amp;quot;and enabled_value&#x3D;&amp;quot;powered_on&amp;quot; with host variables:{   &amp;quot;status&amp;quot;: {     &amp;quot;power_state&amp;quot;: &amp;quot;powered_on&amp;quot;,     &amp;quot;created&amp;quot;: &amp;quot;2018-02-01T08:00:00.000000Z:00&amp;quot;,     &amp;quot;healthy&amp;quot;: true    },    &amp;quot;name&amp;quot;: &amp;quot;foobar&amp;quot;,    &amp;quot;ip_address&amp;quot;: &amp;quot;192.168.2.1&amp;quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;host_filter&#x60;: Regex where only matching hosts will be imported into Tower. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;overwrite&#x60;: Overwrite local groups and hosts from remote inventory source. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;overwrite_vars&#x60;: Overwrite local variables from remote inventory source. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;timeout&#x60;: The amount of time (in seconds) to run before the task is canceled. (integer, default&#x3D;&#x60;0&#x60;) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (WARNING)     - &#x60;1&#x60;: 1 (INFO) (default)     - &#x60;2&#x60;: 2 (DEBUG)     * &#x60;inventory&#x60;:  (id, required) * &#x60;update_on_launch&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;update_cache_timeout&#x60;:  (integer, default&#x3D;&#x60;0&#x60;) * &#x60;source_project&#x60;: Project containing inventory file used as source. (id, default&#x3D;&#x60;&#x60;) * &#x60;update_on_project_update&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiInventorySourcesInventorySourcesCreateRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesCreate(ctx _context.Context) ApiInventorySourcesInventorySourcesCreateRequest {
-	return ApiInventorySourcesInventorySourcesCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesCreateExecute(r ApiInventorySourcesInventorySourcesCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesCreate(ctx _context.Context, localVarOptionals *InventorySourcesInventorySourcesCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -314,12 +134,86 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesCreateExecu
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/"
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
 	}
 
-	localVarPath := localBasePath + "/api/v2/inventory_sources/"
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(r)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
+// InventorySourcesInventorySourcesCredentialsCreateOpts Optional parameters for the method 'InventorySourcesInventorySourcesCredentialsCreate'
+type InventorySourcesInventorySourcesCredentialsCreateOpts struct {
+    Data optional.Interface
+}
+
+/*
+InventorySourcesInventorySourcesCredentialsCreate  Create a Credential for an Inventory Source
+ Make a POST request to this resource with the following credential fields to create a new credential associated with this inventory source.          * &#x60;name&#x60;: Name of this credential. (string, required) * &#x60;description&#x60;: Optional description of this credential. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;:  (id, default&#x3D;&#x60;None&#x60;) * &#x60;credential_type&#x60;: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id, required)  * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default&#x3D;&#x60;{}&#x60;)            # Add Credentials for an Inventory Source:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing credential with this inventory source.  # Remove Credentials from this Inventory Source:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the credential from this inventory source  without deleting the credential.
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param id
+ * @param optional nil or *InventorySourcesInventorySourcesCredentialsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject28) - 
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesCredentialsCreate(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesCredentialsCreateOpts) (*_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodPost
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+	)
+
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/credentials/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -343,13 +237,20 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesCreateExecu
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject28)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject28")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -371,271 +272,24 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesCreateExecu
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesCredentialsCreateRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	data *InlineObject28
-}
-
-func (r ApiInventorySourcesInventorySourcesCredentialsCreateRequest) Data(data InlineObject28) ApiInventorySourcesInventorySourcesCredentialsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesCredentialsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesCredentialsCreateExecute(r)
+// InventorySourcesInventorySourcesCredentialsListOpts Optional parameters for the method 'InventorySourcesInventorySourcesCredentialsList'
+type InventorySourcesInventorySourcesCredentialsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventorySourcesInventorySourcesCredentialsCreate  Create a Credential for an Inventory Source
- * 
-Make a POST request to this resource with the following credential
-fields to create a new credential associated with this
-inventory source.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this credential. (string, required)
-* `description`: Optional description of this credential. (string, default=`""`)
-* `organization`:  (id, default=`None`)
-* `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id, required)
-
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)
-
-
-
-
-
-
-
-
-
-
-
-# Add Credentials for an Inventory Source:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing credential with this inventory source.
-
-# Remove Credentials from this Inventory Source:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the credential from this inventory source
- without deleting the credential.
+InventorySourcesInventorySourcesCredentialsList  List Credentials for an Inventory Source
+ Make a GET request to this resource to retrieve a list of credentials associated with the selected inventory source.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of credentials found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more credential records.    ## Results  Each credential data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this credential. (integer) * &#x60;type&#x60;: Data type for this credential. (choice) * &#x60;url&#x60;: URL for this credential. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this credential was created. (datetime) * &#x60;modified&#x60;: Timestamp when this credential was last modified. (datetime) * &#x60;name&#x60;: Name of this credential. (string) * &#x60;description&#x60;: Optional description of this credential. (string) * &#x60;organization&#x60;:  (id) * &#x60;credential_type&#x60;: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id) * &#x60;managed_by_tower&#x60;:  (boolean) * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json) * &#x60;kind&#x60;:  (field) * &#x60;cloud&#x60;:  (field) * &#x60;kubernetes&#x60;:  (field)    ## Sorting  To specify that credentials are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesCredentialsCreateRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesCredentialsCreate(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesCredentialsCreateRequest {
-	return ApiInventorySourcesInventorySourcesCredentialsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesCredentialsCreateExecute(r ApiInventorySourcesInventorySourcesCredentialsCreateRequest) (*_nethttp.Response, error) {
-	var (
-		localVarHTTPMethod   = _nethttp.MethodPost
-		localVarPostBody     interface{}
-		localVarFormFileName string
-		localVarFileName     string
-		localVarFileBytes    []byte
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesCredentialsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/credentials/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := _neturl.Values{}
-	localVarFormParams := _neturl.Values{}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"application/json"}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
-	if err != nil {
-		return nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarHTTPResponse, err
-	}
-
-	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	if err != nil {
-		return localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		return localVarHTTPResponse, newErr
-	}
-
-	return localVarHTTPResponse, nil
-}
-
-type ApiInventorySourcesInventorySourcesCredentialsListRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventorySourcesInventorySourcesCredentialsListRequest) Page(page int32) ApiInventorySourcesInventorySourcesCredentialsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesCredentialsListRequest) PageSize(pageSize int32) ApiInventorySourcesInventorySourcesCredentialsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesCredentialsListRequest) Search(search string) ApiInventorySourcesInventorySourcesCredentialsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesCredentialsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesCredentialsListExecute(r)
-}
-
-/*
- * InventorySourcesInventorySourcesCredentialsList  List Credentials for an Inventory Source
- * 
-Make a GET request to this resource to retrieve a list of
-credentials associated with the selected
-inventory source.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of credentials
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more credential records.  
-
-## Results
-
-Each credential data structure includes the following fields:
-
-* `id`: Database ID for this credential. (integer)
-* `type`: Data type for this credential. (choice)
-* `url`: URL for this credential. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this credential was created. (datetime)
-* `modified`: Timestamp when this credential was last modified. (datetime)
-* `name`: Name of this credential. (string)
-* `description`: Optional description of this credential. (string)
-* `organization`:  (id)
-* `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id)
-* `managed_by_tower`:  (boolean)
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json)
-* `kind`:  (field)
-* `cloud`:  (field)
-* `kubernetes`:  (field)
-
-
-
-## Sorting
-
-To specify that credentials are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param id
- * @return ApiInventorySourcesInventorySourcesCredentialsListRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesCredentialsList(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesCredentialsListRequest {
-	return ApiInventorySourcesInventorySourcesCredentialsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesCredentialsListExecute(r ApiInventorySourcesInventorySourcesCredentialsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesCredentialsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesCredentialsList(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesCredentialsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -644,26 +298,22 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesCredentials
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesCredentialsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/credentials/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/credentials/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -682,12 +332,12 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesCredentials
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -709,42 +359,20 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesCredentials
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesDeleteRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	search *string
-}
-
-func (r ApiInventorySourcesInventorySourcesDeleteRequest) Search(search string) ApiInventorySourcesInventorySourcesDeleteRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesDeleteExecute(r)
+// InventorySourcesInventorySourcesDeleteOpts Optional parameters for the method 'InventorySourcesInventorySourcesDelete'
+type InventorySourcesInventorySourcesDeleteOpts struct {
+    Search optional.String
 }
 
 /*
- * InventorySourcesInventorySourcesDelete  Delete an Inventory Source
- * 
-Make a DELETE request to this resource to delete this inventory source.
+InventorySourcesInventorySourcesDelete  Delete an Inventory Source
+ Make a DELETE request to this resource to delete this inventory source.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesDeleteRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesDelete(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesDeleteRequest {
-	return ApiInventorySourcesInventorySourcesDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesDeleteExecute(r ApiInventorySourcesInventorySourcesDeleteRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesDeleteOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesDelete(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesDeleteOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -753,20 +381,16 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesDeleteExecu
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -785,12 +409,12 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesDeleteExecu
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -812,70 +436,20 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesDeleteExecu
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesGroupsDeleteRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	search *string
-}
-
-func (r ApiInventorySourcesInventorySourcesGroupsDeleteRequest) Search(search string) ApiInventorySourcesInventorySourcesGroupsDeleteRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesGroupsDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesGroupsDeleteExecute(r)
+// InventorySourcesInventorySourcesGroupsDeleteOpts Optional parameters for the method 'InventorySourcesInventorySourcesGroupsDelete'
+type InventorySourcesInventorySourcesGroupsDeleteOpts struct {
+    Search optional.String
 }
 
 /*
- * InventorySourcesInventorySourcesGroupsDelete  Create a Group for an Inventory Source
- * 
-Make a POST request to this resource with the following group
-fields to create a new group associated with this
-inventory source.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this group. (string, required)
-* `description`: Optional description of this group. (string, default=`""`)
-* `inventory`:  (id, required)
-* `variables`: Group variables in JSON or YAML format. (json, default=``)
-
-
-
-
-
-
-
-
-
-# Delete all groups of this Inventory Source:
-
-Make a DELETE request to this resource to delete all groups show in the list.
-The Inventory Source will not be deleted by this request.
+InventorySourcesInventorySourcesGroupsDelete  Create a Group for an Inventory Source
+ Make a POST request to this resource with the following group fields to create a new group associated with this inventory source.          * &#x60;name&#x60;: Name of this group. (string, required) * &#x60;description&#x60;: Optional description of this group. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;inventory&#x60;:  (id, required) * &#x60;variables&#x60;: Group variables in JSON or YAML format. (json, default&#x3D;&#x60;&#x60;)          # Delete all groups of this Inventory Source:  Make a DELETE request to this resource to delete all groups show in the list. The Inventory Source will not be deleted by this request.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesGroupsDeleteRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesGroupsDelete(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesGroupsDeleteRequest {
-	return ApiInventorySourcesInventorySourcesGroupsDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesGroupsDeleteExecute(r ApiInventorySourcesInventorySourcesGroupsDeleteRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesGroupsDeleteOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesGroupsDelete(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesGroupsDeleteOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -884,20 +458,16 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesGroupsDelet
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesGroupsDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/groups/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/groups/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -916,12 +486,12 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesGroupsDelet
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -943,126 +513,24 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesGroupsDelet
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesGroupsListRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventorySourcesInventorySourcesGroupsListRequest) Page(page int32) ApiInventorySourcesInventorySourcesGroupsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesGroupsListRequest) PageSize(pageSize int32) ApiInventorySourcesInventorySourcesGroupsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesGroupsListRequest) Search(search string) ApiInventorySourcesInventorySourcesGroupsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesGroupsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesGroupsListExecute(r)
+// InventorySourcesInventorySourcesGroupsListOpts Optional parameters for the method 'InventorySourcesInventorySourcesGroupsList'
+type InventorySourcesInventorySourcesGroupsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventorySourcesInventorySourcesGroupsList  List Groups for an Inventory Source
- * 
-Make a GET request to this resource to retrieve a list of
-groups associated with the selected
-inventory source.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of groups
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more group records.  
-
-## Results
-
-Each group data structure includes the following fields:
-
-* `id`: Database ID for this group. (integer)
-* `type`: Data type for this group. (choice)
-* `url`: URL for this group. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this group was created. (datetime)
-* `modified`: Timestamp when this group was last modified. (datetime)
-* `name`: Name of this group. (string)
-* `description`: Optional description of this group. (string)
-* `inventory`:  (id)
-* `variables`: Group variables in JSON or YAML format. (json)
-
-
-
-## Sorting
-
-To specify that groups are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InventorySourcesInventorySourcesGroupsList  List Groups for an Inventory Source
+ Make a GET request to this resource to retrieve a list of groups associated with the selected inventory source.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of groups found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more group records.    ## Results  Each group data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this group. (integer) * &#x60;type&#x60;: Data type for this group. (choice) * &#x60;url&#x60;: URL for this group. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this group was created. (datetime) * &#x60;modified&#x60;: Timestamp when this group was last modified. (datetime) * &#x60;name&#x60;: Name of this group. (string) * &#x60;description&#x60;: Optional description of this group. (string) * &#x60;inventory&#x60;:  (id) * &#x60;variables&#x60;: Group variables in JSON or YAML format. (json)    ## Sorting  To specify that groups are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesGroupsListRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesGroupsList(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesGroupsListRequest {
-	return ApiInventorySourcesInventorySourcesGroupsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesGroupsListExecute(r ApiInventorySourcesInventorySourcesGroupsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesGroupsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesGroupsList(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesGroupsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1071,26 +539,22 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesGroupsListE
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesGroupsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/groups/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/groups/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1109,12 +573,12 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesGroupsListE
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1136,78 +600,20 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesGroupsListE
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesHostsDeleteRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	search *string
-}
-
-func (r ApiInventorySourcesInventorySourcesHostsDeleteRequest) Search(search string) ApiInventorySourcesInventorySourcesHostsDeleteRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesHostsDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesHostsDeleteExecute(r)
+// InventorySourcesInventorySourcesHostsDeleteOpts Optional parameters for the method 'InventorySourcesInventorySourcesHostsDelete'
+type InventorySourcesInventorySourcesHostsDeleteOpts struct {
+    Search optional.String
 }
 
 /*
- * InventorySourcesInventorySourcesHostsDelete  Create a Host for an Inventory Source
- * 
-Make a POST request to this resource with the following host
-fields to create a new host associated with this
-inventory source.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this host. (string, required)
-* `description`: Optional description of this host. (string, default=`""`)
-* `inventory`:  (id, required)
-* `enabled`: Is this host online and available for running jobs? (boolean, default=`True`)
-* `instance_id`: The value used by the remote inventory source to uniquely identify the host (string, default=`""`)
-* `variables`: Host variables in JSON or YAML format. (json, default=``)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Delete all hosts of this Inventory Source:
-
-Make a DELETE request to this resource to delete all hosts show in the list.
-The Inventory Source will not be deleted by this request.
+InventorySourcesInventorySourcesHostsDelete  Create a Host for an Inventory Source
+ Make a POST request to this resource with the following host fields to create a new host associated with this inventory source.          * &#x60;name&#x60;: Name of this host. (string, required) * &#x60;description&#x60;: Optional description of this host. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;inventory&#x60;:  (id, required) * &#x60;enabled&#x60;: Is this host online and available for running jobs? (boolean, default&#x3D;&#x60;True&#x60;) * &#x60;instance_id&#x60;: The value used by the remote inventory source to uniquely identify the host (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;variables&#x60;: Host variables in JSON or YAML format. (json, default&#x3D;&#x60;&#x60;)                # Delete all hosts of this Inventory Source:  Make a DELETE request to this resource to delete all hosts show in the list. The Inventory Source will not be deleted by this request.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesHostsDeleteRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesHostsDelete(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesHostsDeleteRequest {
-	return ApiInventorySourcesInventorySourcesHostsDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesHostsDeleteExecute(r ApiInventorySourcesInventorySourcesHostsDeleteRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesHostsDeleteOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesHostsDelete(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesHostsDeleteOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -1216,20 +622,16 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesHostsDelete
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesHostsDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/hosts/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/hosts/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1248,12 +650,12 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesHostsDelete
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1275,134 +677,24 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesHostsDelete
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesHostsListRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventorySourcesInventorySourcesHostsListRequest) Page(page int32) ApiInventorySourcesInventorySourcesHostsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesHostsListRequest) PageSize(pageSize int32) ApiInventorySourcesInventorySourcesHostsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesHostsListRequest) Search(search string) ApiInventorySourcesInventorySourcesHostsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesHostsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesHostsListExecute(r)
+// InventorySourcesInventorySourcesHostsListOpts Optional parameters for the method 'InventorySourcesInventorySourcesHostsList'
+type InventorySourcesInventorySourcesHostsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventorySourcesInventorySourcesHostsList  List Hosts for an Inventory Source
- * 
-Make a GET request to this resource to retrieve a list of
-hosts associated with the selected
-inventory source.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of hosts
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more host records.  
-
-## Results
-
-Each host data structure includes the following fields:
-
-* `id`: Database ID for this host. (integer)
-* `type`: Data type for this host. (choice)
-* `url`: URL for this host. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this host was created. (datetime)
-* `modified`: Timestamp when this host was last modified. (datetime)
-* `name`: Name of this host. (string)
-* `description`: Optional description of this host. (string)
-* `inventory`:  (id)
-* `enabled`: Is this host online and available for running jobs? (boolean)
-* `instance_id`: The value used by the remote inventory source to uniquely identify the host (string)
-* `variables`: Host variables in JSON or YAML format. (json)
-* `has_active_failures`:  (field)
-* `has_inventory_sources`:  (field)
-* `last_job`:  (id)
-* `last_job_host_summary`:  (id)
-* `insights_system_id`: Red Hat Insights host unique identifier. (string)
-* `ansible_facts_modified`: The date and time ansible_facts was last modified. (datetime)
-
-
-
-## Sorting
-
-To specify that hosts are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InventorySourcesInventorySourcesHostsList  List Hosts for an Inventory Source
+ Make a GET request to this resource to retrieve a list of hosts associated with the selected inventory source.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of hosts found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more host records.    ## Results  Each host data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this host. (integer) * &#x60;type&#x60;: Data type for this host. (choice) * &#x60;url&#x60;: URL for this host. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this host was created. (datetime) * &#x60;modified&#x60;: Timestamp when this host was last modified. (datetime) * &#x60;name&#x60;: Name of this host. (string) * &#x60;description&#x60;: Optional description of this host. (string) * &#x60;inventory&#x60;:  (id) * &#x60;enabled&#x60;: Is this host online and available for running jobs? (boolean) * &#x60;instance_id&#x60;: The value used by the remote inventory source to uniquely identify the host (string) * &#x60;variables&#x60;: Host variables in JSON or YAML format. (json) * &#x60;has_active_failures&#x60;:  (field) * &#x60;has_inventory_sources&#x60;:  (field) * &#x60;last_job&#x60;:  (id) * &#x60;last_job_host_summary&#x60;:  (id) * &#x60;insights_system_id&#x60;: Red Hat Insights host unique identifier. (string) * &#x60;ansible_facts_modified&#x60;: The date and time ansible_facts was last modified. (datetime)    ## Sorting  To specify that hosts are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesHostsListRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesHostsList(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesHostsListRequest {
-	return ApiInventorySourcesInventorySourcesHostsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesHostsListExecute(r ApiInventorySourcesInventorySourcesHostsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesHostsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesHostsList(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesHostsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1411,26 +703,22 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesHostsListEx
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesHostsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/hosts/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/hosts/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1449,12 +737,12 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesHostsListEx
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1476,183 +764,24 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesHostsListEx
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesInventoryUpdatesListRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventorySourcesInventorySourcesInventoryUpdatesListRequest) Page(page int32) ApiInventorySourcesInventorySourcesInventoryUpdatesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesInventoryUpdatesListRequest) PageSize(pageSize int32) ApiInventorySourcesInventorySourcesInventoryUpdatesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesInventoryUpdatesListRequest) Search(search string) ApiInventorySourcesInventorySourcesInventoryUpdatesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesInventoryUpdatesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesInventoryUpdatesListExecute(r)
+// InventorySourcesInventorySourcesInventoryUpdatesListOpts Optional parameters for the method 'InventorySourcesInventorySourcesInventoryUpdatesList'
+type InventorySourcesInventorySourcesInventoryUpdatesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventorySourcesInventorySourcesInventoryUpdatesList  List Inventory Updates for an Inventory Source
- * 
-Make a GET request to this resource to retrieve a list of
-inventory updates associated with the selected
-inventory source.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of inventory updates
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more inventory update records.  
-
-## Results
-
-Each inventory update data structure includes the following fields:
-
-* `id`: Database ID for this inventory update. (integer)
-* `type`: Data type for this inventory update. (choice)
-* `url`: URL for this inventory update. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this inventory update was created. (datetime)
-* `modified`: Timestamp when this inventory update was last modified. (datetime)
-* `name`: Name of this inventory update. (string)
-* `description`: Optional description of this inventory update. (string)
-* `unified_job_template`:  (id)
-* `launch_type`:  (choice)
-    - `manual`: Manual
-    - `relaunch`: Relaunch
-    - `callback`: Callback
-    - `scheduled`: Scheduled
-    - `dependency`: Dependency
-    - `workflow`: Workflow
-    - `webhook`: Webhook
-    - `sync`: Sync
-    - `scm`: SCM Update
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-* `failed`:  (boolean)
-* `started`: The date and time the job was queued for starting. (datetime)
-* `finished`: The date and time the job finished execution. (datetime)
-* `canceled_on`: The date and time when the cancel request was sent. (datetime)
-* `elapsed`: Elapsed time in seconds that the job ran. (decimal)
-* `job_explanation`: A status field to indicate the state of the job if it wasn&#39;t able to run and capture stdout (string)
-* `execution_node`: The node the job executed on. (string)
-* `source`:  (choice)
-    - `file`: File, Directory or Script
-    - `scm`: Sourced from a Project
-    - `ec2`: Amazon EC2
-    - `gce`: Google Compute Engine
-    - `azure_rm`: Microsoft Azure Resource Manager
-    - `vmware`: VMware vCenter
-    - `satellite6`: Red Hat Satellite 6
-    - `openstack`: OpenStack
-    - `rhv`: Red Hat Virtualization
-    - `tower`: Ansible Tower
-    - `custom`: Custom Script
-* `source_path`:  (string)
-* `source_script`:  (id)
-* `source_vars`: Inventory source variables in YAML or JSON format. (string)
-* `credential`: Cloud credential to use for inventory updates. (integer)
-* `enabled_var`: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &quot;foo.bar&quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&quot;foo&quot;, {}).get(&quot;bar&quot;, default) (string)
-* `enabled_value`: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var=&quot;status.power_state&quot;and enabled_value=&quot;powered_on&quot; with host variables:{   &quot;status&quot;: {     &quot;power_state&quot;: &quot;powered_on&quot;,     &quot;created&quot;: &quot;2018-02-01T08:00:00.000000Z:00&quot;,     &quot;healthy&quot;: true    },    &quot;name&quot;: &quot;foobar&quot;,    &quot;ip_address&quot;: &quot;192.168.2.1&quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string)
-* `host_filter`: Regex where only matching hosts will be imported into Tower. (string)
-* `overwrite`: Overwrite local groups and hosts from remote inventory source. (boolean)
-* `overwrite_vars`: Overwrite local variables from remote inventory source. (boolean)
-* `custom_virtualenv`:  (string)
-* `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer)
-* `verbosity`:  (choice)
-    - `0`: 0 (WARNING)
-    - `1`: 1 (INFO)
-    - `2`: 2 (DEBUG)
-* `inventory`:  (id)
-* `inventory_source`:  (id)
-* `license_error`:  (boolean)
-* `org_host_limit_error`:  (boolean)
-* `source_project_update`: Inventory files from this Project Update were used for the inventory update. (id)
-
-
-
-## Sorting
-
-To specify that inventory updates are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InventorySourcesInventorySourcesInventoryUpdatesList  List Inventory Updates for an Inventory Source
+ Make a GET request to this resource to retrieve a list of inventory updates associated with the selected inventory source.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of inventory updates found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more inventory update records.    ## Results  Each inventory update data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this inventory update. (integer) * &#x60;type&#x60;: Data type for this inventory update. (choice) * &#x60;url&#x60;: URL for this inventory update. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this inventory update was created. (datetime) * &#x60;modified&#x60;: Timestamp when this inventory update was last modified. (datetime) * &#x60;name&#x60;: Name of this inventory update. (string) * &#x60;description&#x60;: Optional description of this inventory update. (string) * &#x60;unified_job_template&#x60;:  (id) * &#x60;launch_type&#x60;:  (choice)     - &#x60;manual&#x60;: Manual     - &#x60;relaunch&#x60;: Relaunch     - &#x60;callback&#x60;: Callback     - &#x60;scheduled&#x60;: Scheduled     - &#x60;dependency&#x60;: Dependency     - &#x60;workflow&#x60;: Workflow     - &#x60;webhook&#x60;: Webhook     - &#x60;sync&#x60;: Sync     - &#x60;scm&#x60;: SCM Update * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled * &#x60;failed&#x60;:  (boolean) * &#x60;started&#x60;: The date and time the job was queued for starting. (datetime) * &#x60;finished&#x60;: The date and time the job finished execution. (datetime) * &#x60;canceled_on&#x60;: The date and time when the cancel request was sent. (datetime) * &#x60;elapsed&#x60;: Elapsed time in seconds that the job ran. (decimal) * &#x60;job_explanation&#x60;: A status field to indicate the state of the job if it wasn&amp;#39;t able to run and capture stdout (string) * &#x60;execution_node&#x60;: The node the job executed on. (string) * &#x60;source&#x60;:  (choice)     - &#x60;file&#x60;: File, Directory or Script     - &#x60;scm&#x60;: Sourced from a Project     - &#x60;ec2&#x60;: Amazon EC2     - &#x60;gce&#x60;: Google Compute Engine     - &#x60;azure_rm&#x60;: Microsoft Azure Resource Manager     - &#x60;vmware&#x60;: VMware vCenter     - &#x60;satellite6&#x60;: Red Hat Satellite 6     - &#x60;openstack&#x60;: OpenStack     - &#x60;rhv&#x60;: Red Hat Virtualization     - &#x60;tower&#x60;: Ansible Tower     - &#x60;custom&#x60;: Custom Script * &#x60;source_path&#x60;:  (string) * &#x60;source_script&#x60;:  (id) * &#x60;source_vars&#x60;: Inventory source variables in YAML or JSON format. (string) * &#x60;credential&#x60;: Cloud credential to use for inventory updates. (integer) * &#x60;enabled_var&#x60;: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &amp;quot;foo.bar&amp;quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&amp;quot;foo&amp;quot;, {}).get(&amp;quot;bar&amp;quot;, default) (string) * &#x60;enabled_value&#x60;: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var&#x3D;&amp;quot;status.power_state&amp;quot;and enabled_value&#x3D;&amp;quot;powered_on&amp;quot; with host variables:{   &amp;quot;status&amp;quot;: {     &amp;quot;power_state&amp;quot;: &amp;quot;powered_on&amp;quot;,     &amp;quot;created&amp;quot;: &amp;quot;2018-02-01T08:00:00.000000Z:00&amp;quot;,     &amp;quot;healthy&amp;quot;: true    },    &amp;quot;name&amp;quot;: &amp;quot;foobar&amp;quot;,    &amp;quot;ip_address&amp;quot;: &amp;quot;192.168.2.1&amp;quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string) * &#x60;host_filter&#x60;: Regex where only matching hosts will be imported into Tower. (string) * &#x60;overwrite&#x60;: Overwrite local groups and hosts from remote inventory source. (boolean) * &#x60;overwrite_vars&#x60;: Overwrite local variables from remote inventory source. (boolean) * &#x60;custom_virtualenv&#x60;:  (string) * &#x60;timeout&#x60;: The amount of time (in seconds) to run before the task is canceled. (integer) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (WARNING)     - &#x60;1&#x60;: 1 (INFO)     - &#x60;2&#x60;: 2 (DEBUG) * &#x60;inventory&#x60;:  (id) * &#x60;inventory_source&#x60;:  (id) * &#x60;license_error&#x60;:  (boolean) * &#x60;org_host_limit_error&#x60;:  (boolean) * &#x60;source_project_update&#x60;: Inventory files from this Project Update were used for the inventory update. (id)    ## Sorting  To specify that inventory updates are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesInventoryUpdatesListRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesInventoryUpdatesList(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesInventoryUpdatesListRequest {
-	return ApiInventorySourcesInventorySourcesInventoryUpdatesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesInventoryUpdatesListExecute(r ApiInventorySourcesInventorySourcesInventoryUpdatesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesInventoryUpdatesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesInventoryUpdatesList(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesInventoryUpdatesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1661,26 +790,22 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesInventoryUp
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesInventoryUpdatesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/inventory_updates/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/inventory_updates/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1699,12 +824,12 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesInventoryUp
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1726,168 +851,23 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesInventoryUp
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesListRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventorySourcesInventorySourcesListRequest) Page(page int32) ApiInventorySourcesInventorySourcesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesListRequest) PageSize(pageSize int32) ApiInventorySourcesInventorySourcesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesListRequest) Search(search string) ApiInventorySourcesInventorySourcesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesListExecute(r)
+// InventorySourcesInventorySourcesListOpts Optional parameters for the method 'InventorySourcesInventorySourcesList'
+type InventorySourcesInventorySourcesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventorySourcesInventorySourcesList  List Inventory Sources
- * 
-Make a GET request to this resource to retrieve the list of
-inventory sources.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of inventory sources
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more inventory source records.  
-
-## Results
-
-Each inventory source data structure includes the following fields:
-
-* `id`: Database ID for this inventory source. (integer)
-* `type`: Data type for this inventory source. (choice)
-* `url`: URL for this inventory source. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this inventory source was created. (datetime)
-* `modified`: Timestamp when this inventory source was last modified. (datetime)
-* `name`: Name of this inventory source. (string)
-* `description`: Optional description of this inventory source. (string)
-* `source`:  (choice)
-    - `file`: File, Directory or Script
-    - `scm`: Sourced from a Project
-    - `ec2`: Amazon EC2
-    - `gce`: Google Compute Engine
-    - `azure_rm`: Microsoft Azure Resource Manager
-    - `vmware`: VMware vCenter
-    - `satellite6`: Red Hat Satellite 6
-    - `openstack`: OpenStack
-    - `rhv`: Red Hat Virtualization
-    - `tower`: Ansible Tower
-    - `custom`: Custom Script
-* `source_path`:  (string)
-* `source_script`:  (id)
-* `source_vars`: Inventory source variables in YAML or JSON format. (string)
-* `credential`: Cloud credential to use for inventory updates. (integer)
-* `enabled_var`: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &quot;foo.bar&quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&quot;foo&quot;, {}).get(&quot;bar&quot;, default) (string)
-* `enabled_value`: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var=&quot;status.power_state&quot;and enabled_value=&quot;powered_on&quot; with host variables:{   &quot;status&quot;: {     &quot;power_state&quot;: &quot;powered_on&quot;,     &quot;created&quot;: &quot;2018-02-01T08:00:00.000000Z:00&quot;,     &quot;healthy&quot;: true    },    &quot;name&quot;: &quot;foobar&quot;,    &quot;ip_address&quot;: &quot;192.168.2.1&quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string)
-* `host_filter`: Regex where only matching hosts will be imported into Tower. (string)
-* `overwrite`: Overwrite local groups and hosts from remote inventory source. (boolean)
-* `overwrite_vars`: Overwrite local variables from remote inventory source. (boolean)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string)
-* `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer)
-* `verbosity`:  (choice)
-    - `0`: 0 (WARNING)
-    - `1`: 1 (INFO)
-    - `2`: 2 (DEBUG)
-* `last_job_run`:  (datetime)
-* `last_job_failed`:  (boolean)
-* `next_job_run`:  (datetime)
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-    - `never updated`: Never Updated
-    - `none`: No External Source
-* `inventory`:  (id)
-* `update_on_launch`:  (boolean)
-* `update_cache_timeout`:  (integer)
-* `source_project`: Project containing inventory file used as source. (id)
-* `update_on_project_update`:  (boolean)
-* `last_update_failed`:  (boolean)
-* `last_updated`:  (datetime)
-
-
-
-## Sorting
-
-To specify that inventory sources are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InventorySourcesInventorySourcesList  List Inventory Sources
+ Make a GET request to this resource to retrieve the list of inventory sources.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of inventory sources found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more inventory source records.    ## Results  Each inventory source data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this inventory source. (integer) * &#x60;type&#x60;: Data type for this inventory source. (choice) * &#x60;url&#x60;: URL for this inventory source. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this inventory source was created. (datetime) * &#x60;modified&#x60;: Timestamp when this inventory source was last modified. (datetime) * &#x60;name&#x60;: Name of this inventory source. (string) * &#x60;description&#x60;: Optional description of this inventory source. (string) * &#x60;source&#x60;:  (choice)     - &#x60;file&#x60;: File, Directory or Script     - &#x60;scm&#x60;: Sourced from a Project     - &#x60;ec2&#x60;: Amazon EC2     - &#x60;gce&#x60;: Google Compute Engine     - &#x60;azure_rm&#x60;: Microsoft Azure Resource Manager     - &#x60;vmware&#x60;: VMware vCenter     - &#x60;satellite6&#x60;: Red Hat Satellite 6     - &#x60;openstack&#x60;: OpenStack     - &#x60;rhv&#x60;: Red Hat Virtualization     - &#x60;tower&#x60;: Ansible Tower     - &#x60;custom&#x60;: Custom Script * &#x60;source_path&#x60;:  (string) * &#x60;source_script&#x60;:  (id) * &#x60;source_vars&#x60;: Inventory source variables in YAML or JSON format. (string) * &#x60;credential&#x60;: Cloud credential to use for inventory updates. (integer) * &#x60;enabled_var&#x60;: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &amp;quot;foo.bar&amp;quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&amp;quot;foo&amp;quot;, {}).get(&amp;quot;bar&amp;quot;, default) (string) * &#x60;enabled_value&#x60;: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var&#x3D;&amp;quot;status.power_state&amp;quot;and enabled_value&#x3D;&amp;quot;powered_on&amp;quot; with host variables:{   &amp;quot;status&amp;quot;: {     &amp;quot;power_state&amp;quot;: &amp;quot;powered_on&amp;quot;,     &amp;quot;created&amp;quot;: &amp;quot;2018-02-01T08:00:00.000000Z:00&amp;quot;,     &amp;quot;healthy&amp;quot;: true    },    &amp;quot;name&amp;quot;: &amp;quot;foobar&amp;quot;,    &amp;quot;ip_address&amp;quot;: &amp;quot;192.168.2.1&amp;quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string) * &#x60;host_filter&#x60;: Regex where only matching hosts will be imported into Tower. (string) * &#x60;overwrite&#x60;: Overwrite local groups and hosts from remote inventory source. (boolean) * &#x60;overwrite_vars&#x60;: Overwrite local variables from remote inventory source. (boolean) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string) * &#x60;timeout&#x60;: The amount of time (in seconds) to run before the task is canceled. (integer) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (WARNING)     - &#x60;1&#x60;: 1 (INFO)     - &#x60;2&#x60;: 2 (DEBUG) * &#x60;last_job_run&#x60;:  (datetime) * &#x60;last_job_failed&#x60;:  (boolean) * &#x60;next_job_run&#x60;:  (datetime) * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled     - &#x60;never updated&#x60;: Never Updated     - &#x60;none&#x60;: No External Source * &#x60;inventory&#x60;:  (id) * &#x60;update_on_launch&#x60;:  (boolean) * &#x60;update_cache_timeout&#x60;:  (integer) * &#x60;source_project&#x60;: Project containing inventory file used as source. (id) * &#x60;update_on_project_update&#x60;:  (boolean) * &#x60;last_update_failed&#x60;:  (boolean) * &#x60;last_updated&#x60;:  (datetime)    ## Sorting  To specify that inventory sources are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiInventorySourcesInventorySourcesListRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesList(ctx _context.Context) ApiInventorySourcesInventorySourcesListRequest {
-	return ApiInventorySourcesInventorySourcesListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesListExecute(r ApiInventorySourcesInventorySourcesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesList(ctx _context.Context, localVarOptionals *InventorySourcesInventorySourcesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1896,25 +876,20 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesListExecute
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1933,12 +908,12 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesListExecute
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1960,86 +935,20 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesListExecute
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesNotificationTemplatesErrorCreateRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	data *InlineObject29
-}
-
-func (r ApiInventorySourcesInventorySourcesNotificationTemplatesErrorCreateRequest) Data(data InlineObject29) ApiInventorySourcesInventorySourcesNotificationTemplatesErrorCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesNotificationTemplatesErrorCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesNotificationTemplatesErrorCreateExecute(r)
+// InventorySourcesInventorySourcesNotificationTemplatesErrorCreateOpts Optional parameters for the method 'InventorySourcesInventorySourcesNotificationTemplatesErrorCreate'
+type InventorySourcesInventorySourcesNotificationTemplatesErrorCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * InventorySourcesInventorySourcesNotificationTemplatesErrorCreate  Create a Notification Template for an Inventory Source
- * 
-Make a POST request to this resource with the following notification template
-fields to create a new notification template associated with this
-inventory source.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this notification template. (string, required)
-* `description`: Optional description of this notification template. (string, default=`""`)
-* `organization`:  (id, required)
-* `notification_type`:  (choice, required)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json, default=`{}`)
-* `messages`: Optional custom messages for notification template. (json, default=`{&#39;started&#39;: None, &#39;success&#39;: None, &#39;error&#39;: None, &#39;workflow_approval&#39;: None}`)
-
-
-
-
-
-
-
-
-# Add Notification Templates for an Inventory Source:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing notification template with this inventory source.
-
-# Remove Notification Templates from this Inventory Source:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the notification template from this inventory source
- without deleting the notification template.
+InventorySourcesInventorySourcesNotificationTemplatesErrorCreate  Create a Notification Template for an Inventory Source
+ Make a POST request to this resource with the following notification template fields to create a new notification template associated with this inventory source.          * &#x60;name&#x60;: Name of this notification template. (string, required) * &#x60;description&#x60;: Optional description of this notification template. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;:  (id, required) * &#x60;notification_type&#x60;:  (choice, required)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;messages&#x60;: Optional custom messages for notification template. (json, default&#x3D;&#x60;{&amp;#39;started&amp;#39;: None, &amp;#39;success&amp;#39;: None, &amp;#39;error&amp;#39;: None, &amp;#39;workflow_approval&amp;#39;: None}&#x60;)         # Add Notification Templates for an Inventory Source:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing notification template with this inventory source.  # Remove Notification Templates from this Inventory Source:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the notification template from this inventory source  without deleting the notification template.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesNotificationTemplatesErrorCreateRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificationTemplatesErrorCreate(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesNotificationTemplatesErrorCreateRequest {
-	return ApiInventorySourcesInventorySourcesNotificationTemplatesErrorCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificationTemplatesErrorCreateExecute(r ApiInventorySourcesInventorySourcesNotificationTemplatesErrorCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesNotificationTemplatesErrorCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject29) - 
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificationTemplatesErrorCreate(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesNotificationTemplatesErrorCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -2048,13 +957,9 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificatio
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesNotificationTemplatesErrorCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/notification_templates_error/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/notification_templates_error/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -2078,13 +983,20 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificatio
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject29)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject29")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2106,137 +1018,24 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificatio
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesNotificationTemplatesErrorListRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventorySourcesInventorySourcesNotificationTemplatesErrorListRequest) Page(page int32) ApiInventorySourcesInventorySourcesNotificationTemplatesErrorListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesNotificationTemplatesErrorListRequest) PageSize(pageSize int32) ApiInventorySourcesInventorySourcesNotificationTemplatesErrorListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesNotificationTemplatesErrorListRequest) Search(search string) ApiInventorySourcesInventorySourcesNotificationTemplatesErrorListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesNotificationTemplatesErrorListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesNotificationTemplatesErrorListExecute(r)
+// InventorySourcesInventorySourcesNotificationTemplatesErrorListOpts Optional parameters for the method 'InventorySourcesInventorySourcesNotificationTemplatesErrorList'
+type InventorySourcesInventorySourcesNotificationTemplatesErrorListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventorySourcesInventorySourcesNotificationTemplatesErrorList  List Notification Templates for an Inventory Source
- * 
-Make a GET request to this resource to retrieve a list of
-notification templates associated with the selected
-inventory source.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of notification templates
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more notification template records.  
-
-## Results
-
-Each notification template data structure includes the following fields:
-
-* `id`: Database ID for this notification template. (integer)
-* `type`: Data type for this notification template. (choice)
-* `url`: URL for this notification template. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this notification template was created. (datetime)
-* `modified`: Timestamp when this notification template was last modified. (datetime)
-* `name`: Name of this notification template. (string)
-* `description`: Optional description of this notification template. (string)
-* `organization`:  (id)
-* `notification_type`:  (choice)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json)
-* `messages`: Optional custom messages for notification template. (json)
-
-
-
-## Sorting
-
-To specify that notification templates are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InventorySourcesInventorySourcesNotificationTemplatesErrorList  List Notification Templates for an Inventory Source
+ Make a GET request to this resource to retrieve a list of notification templates associated with the selected inventory source.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of notification templates found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more notification template records.    ## Results  Each notification template data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this notification template. (integer) * &#x60;type&#x60;: Data type for this notification template. (choice) * &#x60;url&#x60;: URL for this notification template. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this notification template was created. (datetime) * &#x60;modified&#x60;: Timestamp when this notification template was last modified. (datetime) * &#x60;name&#x60;: Name of this notification template. (string) * &#x60;description&#x60;: Optional description of this notification template. (string) * &#x60;organization&#x60;:  (id) * &#x60;notification_type&#x60;:  (choice)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json) * &#x60;messages&#x60;: Optional custom messages for notification template. (json)    ## Sorting  To specify that notification templates are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesNotificationTemplatesErrorListRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificationTemplatesErrorList(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesNotificationTemplatesErrorListRequest {
-	return ApiInventorySourcesInventorySourcesNotificationTemplatesErrorListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificationTemplatesErrorListExecute(r ApiInventorySourcesInventorySourcesNotificationTemplatesErrorListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesNotificationTemplatesErrorListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificationTemplatesErrorList(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesNotificationTemplatesErrorListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2245,26 +1044,22 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificatio
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesNotificationTemplatesErrorList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/notification_templates_error/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/notification_templates_error/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2283,12 +1078,12 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificatio
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2310,86 +1105,20 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificatio
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesNotificationTemplatesStartedCreateRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiInventorySourcesInventorySourcesNotificationTemplatesStartedCreateRequest) Data(data map[string]interface{}) ApiInventorySourcesInventorySourcesNotificationTemplatesStartedCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesNotificationTemplatesStartedCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesNotificationTemplatesStartedCreateExecute(r)
+// InventorySourcesInventorySourcesNotificationTemplatesStartedCreateOpts Optional parameters for the method 'InventorySourcesInventorySourcesNotificationTemplatesStartedCreate'
+type InventorySourcesInventorySourcesNotificationTemplatesStartedCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * InventorySourcesInventorySourcesNotificationTemplatesStartedCreate  Create a Notification Template for an Inventory Source
- * 
-Make a POST request to this resource with the following notification template
-fields to create a new notification template associated with this
-inventory source.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this notification template. (string, required)
-* `description`: Optional description of this notification template. (string, default=`""`)
-* `organization`:  (id, required)
-* `notification_type`:  (choice, required)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json, default=`{}`)
-* `messages`: Optional custom messages for notification template. (json, default=`{&#39;started&#39;: None, &#39;success&#39;: None, &#39;error&#39;: None, &#39;workflow_approval&#39;: None}`)
-
-
-
-
-
-
-
-
-# Add Notification Templates for an Inventory Source:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing notification template with this inventory source.
-
-# Remove Notification Templates from this Inventory Source:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the notification template from this inventory source
- without deleting the notification template.
+InventorySourcesInventorySourcesNotificationTemplatesStartedCreate  Create a Notification Template for an Inventory Source
+ Make a POST request to this resource with the following notification template fields to create a new notification template associated with this inventory source.          * &#x60;name&#x60;: Name of this notification template. (string, required) * &#x60;description&#x60;: Optional description of this notification template. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;:  (id, required) * &#x60;notification_type&#x60;:  (choice, required)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;messages&#x60;: Optional custom messages for notification template. (json, default&#x3D;&#x60;{&amp;#39;started&amp;#39;: None, &amp;#39;success&amp;#39;: None, &amp;#39;error&amp;#39;: None, &amp;#39;workflow_approval&amp;#39;: None}&#x60;)         # Add Notification Templates for an Inventory Source:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing notification template with this inventory source.  # Remove Notification Templates from this Inventory Source:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the notification template from this inventory source  without deleting the notification template.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesNotificationTemplatesStartedCreateRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificationTemplatesStartedCreate(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesNotificationTemplatesStartedCreateRequest {
-	return ApiInventorySourcesInventorySourcesNotificationTemplatesStartedCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificationTemplatesStartedCreateExecute(r ApiInventorySourcesInventorySourcesNotificationTemplatesStartedCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesNotificationTemplatesStartedCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificationTemplatesStartedCreate(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesNotificationTemplatesStartedCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -2398,13 +1127,9 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificatio
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesNotificationTemplatesStartedCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/notification_templates_started/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/notification_templates_started/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -2428,13 +1153,16 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificatio
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2456,137 +1184,24 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificatio
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesNotificationTemplatesStartedListRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventorySourcesInventorySourcesNotificationTemplatesStartedListRequest) Page(page int32) ApiInventorySourcesInventorySourcesNotificationTemplatesStartedListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesNotificationTemplatesStartedListRequest) PageSize(pageSize int32) ApiInventorySourcesInventorySourcesNotificationTemplatesStartedListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesNotificationTemplatesStartedListRequest) Search(search string) ApiInventorySourcesInventorySourcesNotificationTemplatesStartedListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesNotificationTemplatesStartedListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesNotificationTemplatesStartedListExecute(r)
+// InventorySourcesInventorySourcesNotificationTemplatesStartedListOpts Optional parameters for the method 'InventorySourcesInventorySourcesNotificationTemplatesStartedList'
+type InventorySourcesInventorySourcesNotificationTemplatesStartedListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventorySourcesInventorySourcesNotificationTemplatesStartedList  List Notification Templates for an Inventory Source
- * 
-Make a GET request to this resource to retrieve a list of
-notification templates associated with the selected
-inventory source.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of notification templates
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more notification template records.  
-
-## Results
-
-Each notification template data structure includes the following fields:
-
-* `id`: Database ID for this notification template. (integer)
-* `type`: Data type for this notification template. (choice)
-* `url`: URL for this notification template. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this notification template was created. (datetime)
-* `modified`: Timestamp when this notification template was last modified. (datetime)
-* `name`: Name of this notification template. (string)
-* `description`: Optional description of this notification template. (string)
-* `organization`:  (id)
-* `notification_type`:  (choice)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json)
-* `messages`: Optional custom messages for notification template. (json)
-
-
-
-## Sorting
-
-To specify that notification templates are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InventorySourcesInventorySourcesNotificationTemplatesStartedList  List Notification Templates for an Inventory Source
+ Make a GET request to this resource to retrieve a list of notification templates associated with the selected inventory source.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of notification templates found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more notification template records.    ## Results  Each notification template data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this notification template. (integer) * &#x60;type&#x60;: Data type for this notification template. (choice) * &#x60;url&#x60;: URL for this notification template. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this notification template was created. (datetime) * &#x60;modified&#x60;: Timestamp when this notification template was last modified. (datetime) * &#x60;name&#x60;: Name of this notification template. (string) * &#x60;description&#x60;: Optional description of this notification template. (string) * &#x60;organization&#x60;:  (id) * &#x60;notification_type&#x60;:  (choice)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json) * &#x60;messages&#x60;: Optional custom messages for notification template. (json)    ## Sorting  To specify that notification templates are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesNotificationTemplatesStartedListRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificationTemplatesStartedList(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesNotificationTemplatesStartedListRequest {
-	return ApiInventorySourcesInventorySourcesNotificationTemplatesStartedListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificationTemplatesStartedListExecute(r ApiInventorySourcesInventorySourcesNotificationTemplatesStartedListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesNotificationTemplatesStartedListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificationTemplatesStartedList(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesNotificationTemplatesStartedListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2595,26 +1210,22 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificatio
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesNotificationTemplatesStartedList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/notification_templates_started/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/notification_templates_started/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2633,12 +1244,12 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificatio
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2660,86 +1271,20 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificatio
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesNotificationTemplatesSuccessCreateRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	data *InlineObject30
-}
-
-func (r ApiInventorySourcesInventorySourcesNotificationTemplatesSuccessCreateRequest) Data(data InlineObject30) ApiInventorySourcesInventorySourcesNotificationTemplatesSuccessCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesNotificationTemplatesSuccessCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesNotificationTemplatesSuccessCreateExecute(r)
+// InventorySourcesInventorySourcesNotificationTemplatesSuccessCreateOpts Optional parameters for the method 'InventorySourcesInventorySourcesNotificationTemplatesSuccessCreate'
+type InventorySourcesInventorySourcesNotificationTemplatesSuccessCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * InventorySourcesInventorySourcesNotificationTemplatesSuccessCreate  Create a Notification Template for an Inventory Source
- * 
-Make a POST request to this resource with the following notification template
-fields to create a new notification template associated with this
-inventory source.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this notification template. (string, required)
-* `description`: Optional description of this notification template. (string, default=`""`)
-* `organization`:  (id, required)
-* `notification_type`:  (choice, required)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json, default=`{}`)
-* `messages`: Optional custom messages for notification template. (json, default=`{&#39;started&#39;: None, &#39;success&#39;: None, &#39;error&#39;: None, &#39;workflow_approval&#39;: None}`)
-
-
-
-
-
-
-
-
-# Add Notification Templates for an Inventory Source:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing notification template with this inventory source.
-
-# Remove Notification Templates from this Inventory Source:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the notification template from this inventory source
- without deleting the notification template.
+InventorySourcesInventorySourcesNotificationTemplatesSuccessCreate  Create a Notification Template for an Inventory Source
+ Make a POST request to this resource with the following notification template fields to create a new notification template associated with this inventory source.          * &#x60;name&#x60;: Name of this notification template. (string, required) * &#x60;description&#x60;: Optional description of this notification template. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;:  (id, required) * &#x60;notification_type&#x60;:  (choice, required)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;messages&#x60;: Optional custom messages for notification template. (json, default&#x3D;&#x60;{&amp;#39;started&amp;#39;: None, &amp;#39;success&amp;#39;: None, &amp;#39;error&amp;#39;: None, &amp;#39;workflow_approval&amp;#39;: None}&#x60;)         # Add Notification Templates for an Inventory Source:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing notification template with this inventory source.  # Remove Notification Templates from this Inventory Source:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the notification template from this inventory source  without deleting the notification template.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesNotificationTemplatesSuccessCreateRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificationTemplatesSuccessCreate(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesNotificationTemplatesSuccessCreateRequest {
-	return ApiInventorySourcesInventorySourcesNotificationTemplatesSuccessCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificationTemplatesSuccessCreateExecute(r ApiInventorySourcesInventorySourcesNotificationTemplatesSuccessCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesNotificationTemplatesSuccessCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject30) - 
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificationTemplatesSuccessCreate(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesNotificationTemplatesSuccessCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -2748,13 +1293,9 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificatio
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesNotificationTemplatesSuccessCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/notification_templates_success/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/notification_templates_success/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -2778,13 +1319,20 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificatio
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject30)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject30")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2806,137 +1354,24 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificatio
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesNotificationTemplatesSuccessListRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventorySourcesInventorySourcesNotificationTemplatesSuccessListRequest) Page(page int32) ApiInventorySourcesInventorySourcesNotificationTemplatesSuccessListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesNotificationTemplatesSuccessListRequest) PageSize(pageSize int32) ApiInventorySourcesInventorySourcesNotificationTemplatesSuccessListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesNotificationTemplatesSuccessListRequest) Search(search string) ApiInventorySourcesInventorySourcesNotificationTemplatesSuccessListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesNotificationTemplatesSuccessListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesNotificationTemplatesSuccessListExecute(r)
+// InventorySourcesInventorySourcesNotificationTemplatesSuccessListOpts Optional parameters for the method 'InventorySourcesInventorySourcesNotificationTemplatesSuccessList'
+type InventorySourcesInventorySourcesNotificationTemplatesSuccessListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventorySourcesInventorySourcesNotificationTemplatesSuccessList  List Notification Templates for an Inventory Source
- * 
-Make a GET request to this resource to retrieve a list of
-notification templates associated with the selected
-inventory source.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of notification templates
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more notification template records.  
-
-## Results
-
-Each notification template data structure includes the following fields:
-
-* `id`: Database ID for this notification template. (integer)
-* `type`: Data type for this notification template. (choice)
-* `url`: URL for this notification template. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this notification template was created. (datetime)
-* `modified`: Timestamp when this notification template was last modified. (datetime)
-* `name`: Name of this notification template. (string)
-* `description`: Optional description of this notification template. (string)
-* `organization`:  (id)
-* `notification_type`:  (choice)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json)
-* `messages`: Optional custom messages for notification template. (json)
-
-
-
-## Sorting
-
-To specify that notification templates are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InventorySourcesInventorySourcesNotificationTemplatesSuccessList  List Notification Templates for an Inventory Source
+ Make a GET request to this resource to retrieve a list of notification templates associated with the selected inventory source.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of notification templates found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more notification template records.    ## Results  Each notification template data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this notification template. (integer) * &#x60;type&#x60;: Data type for this notification template. (choice) * &#x60;url&#x60;: URL for this notification template. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this notification template was created. (datetime) * &#x60;modified&#x60;: Timestamp when this notification template was last modified. (datetime) * &#x60;name&#x60;: Name of this notification template. (string) * &#x60;description&#x60;: Optional description of this notification template. (string) * &#x60;organization&#x60;:  (id) * &#x60;notification_type&#x60;:  (choice)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json) * &#x60;messages&#x60;: Optional custom messages for notification template. (json)    ## Sorting  To specify that notification templates are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesNotificationTemplatesSuccessListRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificationTemplatesSuccessList(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesNotificationTemplatesSuccessListRequest {
-	return ApiInventorySourcesInventorySourcesNotificationTemplatesSuccessListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificationTemplatesSuccessListExecute(r ApiInventorySourcesInventorySourcesNotificationTemplatesSuccessListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesNotificationTemplatesSuccessListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificationTemplatesSuccessList(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesNotificationTemplatesSuccessListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2945,26 +1380,22 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificatio
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesNotificationTemplatesSuccessList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/notification_templates_success/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/notification_templates_success/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2983,12 +1414,12 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificatio
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3010,106 +1441,22 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesNotificatio
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesPartialUpdateRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	search *string
-	data *map[string]interface{}
-}
-
-func (r ApiInventorySourcesInventorySourcesPartialUpdateRequest) Search(search string) ApiInventorySourcesInventorySourcesPartialUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesPartialUpdateRequest) Data(data map[string]interface{}) ApiInventorySourcesInventorySourcesPartialUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesPartialUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesPartialUpdateExecute(r)
+// InventorySourcesInventorySourcesPartialUpdateOpts Optional parameters for the method 'InventorySourcesInventorySourcesPartialUpdate'
+type InventorySourcesInventorySourcesPartialUpdateOpts struct {
+    Search optional.String
+    Data optional.Map[string]interface{}
 }
 
 /*
- * InventorySourcesInventorySourcesPartialUpdate  Update an Inventory Source
- * 
-Make a PUT or PATCH request to this resource to update this
-inventory source.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this inventory source. (string, required)
-* `description`: Optional description of this inventory source. (string, default=`""`)
-* `source`:  (choice)
-    - `file`: File, Directory or Script
-    - `scm`: Sourced from a Project
-    - `ec2`: Amazon EC2
-    - `gce`: Google Compute Engine
-    - `azure_rm`: Microsoft Azure Resource Manager
-    - `vmware`: VMware vCenter
-    - `satellite6`: Red Hat Satellite 6
-    - `openstack`: OpenStack
-    - `rhv`: Red Hat Virtualization
-    - `tower`: Ansible Tower
-    - `custom`: Custom Script
-* `source_path`:  (string, default=`""`)
-* `source_script`:  (id, default=``)
-* `source_vars`: Inventory source variables in YAML or JSON format. (string, default=`""`)
-* `credential`: Cloud credential to use for inventory updates. (integer, default=`None`)
-* `enabled_var`: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &quot;foo.bar&quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&quot;foo&quot;, {}).get(&quot;bar&quot;, default) (string, default=`""`)
-* `enabled_value`: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var=&quot;status.power_state&quot;and enabled_value=&quot;powered_on&quot; with host variables:{   &quot;status&quot;: {     &quot;power_state&quot;: &quot;powered_on&quot;,     &quot;created&quot;: &quot;2018-02-01T08:00:00.000000Z:00&quot;,     &quot;healthy&quot;: true    },    &quot;name&quot;: &quot;foobar&quot;,    &quot;ip_address&quot;: &quot;192.168.2.1&quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string, default=`""`)
-* `host_filter`: Regex where only matching hosts will be imported into Tower. (string, default=`""`)
-* `overwrite`: Overwrite local groups and hosts from remote inventory source. (boolean, default=`False`)
-* `overwrite_vars`: Overwrite local variables from remote inventory source. (boolean, default=`False`)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string, default=`""`)
-* `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer, default=`0`)
-* `verbosity`:  (choice)
-    - `0`: 0 (WARNING)
-    - `1`: 1 (INFO) (default)
-    - `2`: 2 (DEBUG)
-
-
-
-
-* `inventory`:  (id, required)
-* `update_on_launch`:  (boolean, default=`False`)
-* `update_cache_timeout`:  (integer, default=`0`)
-* `source_project`: Project containing inventory file used as source. (id, default=``)
-* `update_on_project_update`:  (boolean, default=`False`)
-
-
-
-
-
-
-
-
-
-
-For a PATCH request, include only the fields that are being modified.
+InventorySourcesInventorySourcesPartialUpdate  Update an Inventory Source
+ Make a PUT or PATCH request to this resource to update this inventory source.  The following fields may be modified:          * &#x60;name&#x60;: Name of this inventory source. (string, required) * &#x60;description&#x60;: Optional description of this inventory source. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;source&#x60;:  (choice)     - &#x60;file&#x60;: File, Directory or Script     - &#x60;scm&#x60;: Sourced from a Project     - &#x60;ec2&#x60;: Amazon EC2     - &#x60;gce&#x60;: Google Compute Engine     - &#x60;azure_rm&#x60;: Microsoft Azure Resource Manager     - &#x60;vmware&#x60;: VMware vCenter     - &#x60;satellite6&#x60;: Red Hat Satellite 6     - &#x60;openstack&#x60;: OpenStack     - &#x60;rhv&#x60;: Red Hat Virtualization     - &#x60;tower&#x60;: Ansible Tower     - &#x60;custom&#x60;: Custom Script * &#x60;source_path&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;source_script&#x60;:  (id, default&#x3D;&#x60;&#x60;) * &#x60;source_vars&#x60;: Inventory source variables in YAML or JSON format. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;credential&#x60;: Cloud credential to use for inventory updates. (integer, default&#x3D;&#x60;None&#x60;) * &#x60;enabled_var&#x60;: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &amp;quot;foo.bar&amp;quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&amp;quot;foo&amp;quot;, {}).get(&amp;quot;bar&amp;quot;, default) (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;enabled_value&#x60;: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var&#x3D;&amp;quot;status.power_state&amp;quot;and enabled_value&#x3D;&amp;quot;powered_on&amp;quot; with host variables:{   &amp;quot;status&amp;quot;: {     &amp;quot;power_state&amp;quot;: &amp;quot;powered_on&amp;quot;,     &amp;quot;created&amp;quot;: &amp;quot;2018-02-01T08:00:00.000000Z:00&amp;quot;,     &amp;quot;healthy&amp;quot;: true    },    &amp;quot;name&amp;quot;: &amp;quot;foobar&amp;quot;,    &amp;quot;ip_address&amp;quot;: &amp;quot;192.168.2.1&amp;quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;host_filter&#x60;: Regex where only matching hosts will be imported into Tower. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;overwrite&#x60;: Overwrite local groups and hosts from remote inventory source. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;overwrite_vars&#x60;: Overwrite local variables from remote inventory source. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;timeout&#x60;: The amount of time (in seconds) to run before the task is canceled. (integer, default&#x3D;&#x60;0&#x60;) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (WARNING)     - &#x60;1&#x60;: 1 (INFO) (default)     - &#x60;2&#x60;: 2 (DEBUG)     * &#x60;inventory&#x60;:  (id, required) * &#x60;update_on_launch&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;update_cache_timeout&#x60;:  (integer, default&#x3D;&#x60;0&#x60;) * &#x60;source_project&#x60;: Project containing inventory file used as source. (id, default&#x3D;&#x60;&#x60;) * &#x60;update_on_project_update&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;)           For a PATCH request, include only the fields that are being modified.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesPartialUpdateRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesPartialUpdate(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesPartialUpdateRequest {
-	return ApiInventorySourcesInventorySourcesPartialUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesPartialUpdateExecute(r ApiInventorySourcesInventorySourcesPartialUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesPartialUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesPartialUpdate(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesPartialUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPatch
 		localVarPostBody     interface{}
@@ -3118,20 +1465,16 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesPartialUpda
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesPartialUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -3151,13 +1494,16 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesPartialUpda
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3179,101 +1525,20 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesPartialUpda
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesReadRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	search *string
-}
-
-func (r ApiInventorySourcesInventorySourcesReadRequest) Search(search string) ApiInventorySourcesInventorySourcesReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesReadExecute(r)
+// InventorySourcesInventorySourcesReadOpts Optional parameters for the method 'InventorySourcesInventorySourcesRead'
+type InventorySourcesInventorySourcesReadOpts struct {
+    Search optional.String
 }
 
 /*
- * InventorySourcesInventorySourcesRead  Retrieve an Inventory Source
- * 
-Make GET request to this resource to retrieve a single inventory source
-record containing the following fields:
-
-* `id`: Database ID for this inventory source. (integer)
-* `type`: Data type for this inventory source. (choice)
-* `url`: URL for this inventory source. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this inventory source was created. (datetime)
-* `modified`: Timestamp when this inventory source was last modified. (datetime)
-* `name`: Name of this inventory source. (string)
-* `description`: Optional description of this inventory source. (string)
-* `source`:  (choice)
-    - `file`: File, Directory or Script
-    - `scm`: Sourced from a Project
-    - `ec2`: Amazon EC2
-    - `gce`: Google Compute Engine
-    - `azure_rm`: Microsoft Azure Resource Manager
-    - `vmware`: VMware vCenter
-    - `satellite6`: Red Hat Satellite 6
-    - `openstack`: OpenStack
-    - `rhv`: Red Hat Virtualization
-    - `tower`: Ansible Tower
-    - `custom`: Custom Script
-* `source_path`:  (string)
-* `source_script`:  (id)
-* `source_vars`: Inventory source variables in YAML or JSON format. (string)
-* `credential`: Cloud credential to use for inventory updates. (integer)
-* `enabled_var`: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &quot;foo.bar&quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&quot;foo&quot;, {}).get(&quot;bar&quot;, default) (string)
-* `enabled_value`: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var=&quot;status.power_state&quot;and enabled_value=&quot;powered_on&quot; with host variables:{   &quot;status&quot;: {     &quot;power_state&quot;: &quot;powered_on&quot;,     &quot;created&quot;: &quot;2018-02-01T08:00:00.000000Z:00&quot;,     &quot;healthy&quot;: true    },    &quot;name&quot;: &quot;foobar&quot;,    &quot;ip_address&quot;: &quot;192.168.2.1&quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string)
-* `host_filter`: Regex where only matching hosts will be imported into Tower. (string)
-* `overwrite`: Overwrite local groups and hosts from remote inventory source. (boolean)
-* `overwrite_vars`: Overwrite local variables from remote inventory source. (boolean)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string)
-* `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer)
-* `verbosity`:  (choice)
-    - `0`: 0 (WARNING)
-    - `1`: 1 (INFO)
-    - `2`: 2 (DEBUG)
-* `last_job_run`:  (datetime)
-* `last_job_failed`:  (boolean)
-* `next_job_run`:  (datetime)
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-    - `never updated`: Never Updated
-    - `none`: No External Source
-* `inventory`:  (id)
-* `update_on_launch`:  (boolean)
-* `update_cache_timeout`:  (integer)
-* `source_project`: Project containing inventory file used as source. (id)
-* `update_on_project_update`:  (boolean)
-* `last_update_failed`:  (boolean)
-* `last_updated`:  (datetime)
+InventorySourcesInventorySourcesRead  Retrieve an Inventory Source
+ Make GET request to this resource to retrieve a single inventory source record containing the following fields:  * &#x60;id&#x60;: Database ID for this inventory source. (integer) * &#x60;type&#x60;: Data type for this inventory source. (choice) * &#x60;url&#x60;: URL for this inventory source. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this inventory source was created. (datetime) * &#x60;modified&#x60;: Timestamp when this inventory source was last modified. (datetime) * &#x60;name&#x60;: Name of this inventory source. (string) * &#x60;description&#x60;: Optional description of this inventory source. (string) * &#x60;source&#x60;:  (choice)     - &#x60;file&#x60;: File, Directory or Script     - &#x60;scm&#x60;: Sourced from a Project     - &#x60;ec2&#x60;: Amazon EC2     - &#x60;gce&#x60;: Google Compute Engine     - &#x60;azure_rm&#x60;: Microsoft Azure Resource Manager     - &#x60;vmware&#x60;: VMware vCenter     - &#x60;satellite6&#x60;: Red Hat Satellite 6     - &#x60;openstack&#x60;: OpenStack     - &#x60;rhv&#x60;: Red Hat Virtualization     - &#x60;tower&#x60;: Ansible Tower     - &#x60;custom&#x60;: Custom Script * &#x60;source_path&#x60;:  (string) * &#x60;source_script&#x60;:  (id) * &#x60;source_vars&#x60;: Inventory source variables in YAML or JSON format. (string) * &#x60;credential&#x60;: Cloud credential to use for inventory updates. (integer) * &#x60;enabled_var&#x60;: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &amp;quot;foo.bar&amp;quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&amp;quot;foo&amp;quot;, {}).get(&amp;quot;bar&amp;quot;, default) (string) * &#x60;enabled_value&#x60;: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var&#x3D;&amp;quot;status.power_state&amp;quot;and enabled_value&#x3D;&amp;quot;powered_on&amp;quot; with host variables:{   &amp;quot;status&amp;quot;: {     &amp;quot;power_state&amp;quot;: &amp;quot;powered_on&amp;quot;,     &amp;quot;created&amp;quot;: &amp;quot;2018-02-01T08:00:00.000000Z:00&amp;quot;,     &amp;quot;healthy&amp;quot;: true    },    &amp;quot;name&amp;quot;: &amp;quot;foobar&amp;quot;,    &amp;quot;ip_address&amp;quot;: &amp;quot;192.168.2.1&amp;quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string) * &#x60;host_filter&#x60;: Regex where only matching hosts will be imported into Tower. (string) * &#x60;overwrite&#x60;: Overwrite local groups and hosts from remote inventory source. (boolean) * &#x60;overwrite_vars&#x60;: Overwrite local variables from remote inventory source. (boolean) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string) * &#x60;timeout&#x60;: The amount of time (in seconds) to run before the task is canceled. (integer) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (WARNING)     - &#x60;1&#x60;: 1 (INFO)     - &#x60;2&#x60;: 2 (DEBUG) * &#x60;last_job_run&#x60;:  (datetime) * &#x60;last_job_failed&#x60;:  (boolean) * &#x60;next_job_run&#x60;:  (datetime) * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled     - &#x60;never updated&#x60;: Never Updated     - &#x60;none&#x60;: No External Source * &#x60;inventory&#x60;:  (id) * &#x60;update_on_launch&#x60;:  (boolean) * &#x60;update_cache_timeout&#x60;:  (integer) * &#x60;source_project&#x60;: Project containing inventory file used as source. (id) * &#x60;update_on_project_update&#x60;:  (boolean) * &#x60;last_update_failed&#x60;:  (boolean) * &#x60;last_updated&#x60;:  (datetime)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesReadRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesRead(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesReadRequest {
-	return ApiInventorySourcesInventorySourcesReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesReadExecute(r ApiInventorySourcesInventorySourcesReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesRead(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -3282,20 +1547,16 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesReadExecute
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -3314,12 +1575,12 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesReadExecute
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3341,120 +1602,20 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesReadExecute
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesSchedulesCreateRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	data *InlineObject31
-}
-
-func (r ApiInventorySourcesInventorySourcesSchedulesCreateRequest) Data(data InlineObject31) ApiInventorySourcesInventorySourcesSchedulesCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesSchedulesCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesSchedulesCreateExecute(r)
+// InventorySourcesInventorySourcesSchedulesCreateOpts Optional parameters for the method 'InventorySourcesInventorySourcesSchedulesCreate'
+type InventorySourcesInventorySourcesSchedulesCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * InventorySourcesInventorySourcesSchedulesCreate  Create a Schedule for an Inventory Source
- * 
-Make a POST request to this resource with the following schedule
-fields to create a new schedule associated with this
-inventory source.
-
-
-* `rrule`: A value representing the schedules iCal recurrence rule. (string, required)
-
-
-
-
-
-
-
-* `name`: Name of this schedule. (string, required)
-* `description`: Optional description of this schedule. (string, default=`""`)
-* `extra_data`:  (json, default=`{}`)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id, default=``)
-* `scm_branch`:  (string, default=`""`)
-* `job_type`:  (choice)
-    - `None`: --------- (default)
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string, default=`""`)
-* `skip_tags`:  (string, default=`""`)
-* `limit`:  (string, default=`""`)
-* `diff_mode`:  (boolean, default=`None`)
-* `verbosity`:  (choice)
-    - `None`: --------- (default)
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-
-* `enabled`: Enables processing of this schedule. (boolean, default=`True`)
-
-
-
-
-
-
-
-
-
-
-
-POST requests to this resource must include a proper `rrule` value following
-a particular format and conforming to subset of allowed rules.
-
-The following lists the expected format and details of our rrules:
-
-* DTSTART is required and must follow the following format: DTSTART:YYYYMMDDTHHMMSSZ
-* DTSTART is expected to be in UTC
-* INTERVAL is required
-* SECONDLY is not supported
-* TZID is not supported
-* RRULE must precede the rule statements
-* BYDAY is supported but not BYDAY with a numerical prefix
-* BYYEARDAY and BYWEEKNO are not supported
-* Only one rrule statement per schedule is supported
-* COUNT must be < 1000
-
-Here are some example rrules:
-
-    "DTSTART:20500331T055000Z RRULE:FREQ=MINUTELY;INTERVAL=10;COUNT=5"
-    "DTSTART:20240331T075000Z RRULE:FREQ=DAILY;INTERVAL=1;COUNT=1"
-    "DTSTART:20140331T075000Z RRULE:FREQ=MINUTELY;INTERVAL=1;UNTIL=20230401T075000Z"
-    "DTSTART:20140331T075000Z RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,WE,FR"
-    "DTSTART:20140331T075000Z RRULE:FREQ=WEEKLY;INTERVAL=5;BYDAY=MO"
-    "DTSTART:20140331T075000Z RRULE:FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=6"
-    "DTSTART:20140331T075000Z RRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=4;BYDAY=SU"
-    "DTSTART:20140331T075000Z RRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=-1;BYDAY=MO,TU,WE,TH,FR"
-    "DTSTART:20140331T075000Z RRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=-1;BYDAY=MO,TU,WE,TH,FR,SA,SU"
-    "DTSTART:20140331T075000Z RRULE:FREQ=YEARLY;INTERVAL=1;BYMONTH=4;BYMONTHDAY=1"
-    "DTSTART:20140331T075000Z RRULE:FREQ=YEARLY;INTERVAL=1;BYSETPOS=-1;BYMONTH=8;BYDAY=SU"
-    "DTSTART:20140331T075000Z RRULE:FREQ=WEEKLY;INTERVAL=1;UNTIL=20230401T075000Z;BYDAY=MO,WE,FR"
-    "DTSTART:20140331T075000Z RRULE:FREQ=HOURLY;INTERVAL=1;UNTIL=20230610T075000Z"
+InventorySourcesInventorySourcesSchedulesCreate  Create a Schedule for an Inventory Source
+ Make a POST request to this resource with the following schedule fields to create a new schedule associated with this inventory source.   * &#x60;rrule&#x60;: A value representing the schedules iCal recurrence rule. (string, required)        * &#x60;name&#x60;: Name of this schedule. (string, required) * &#x60;description&#x60;: Optional description of this schedule. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;extra_data&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id, default&#x3D;&#x60;&#x60;) * &#x60;scm_branch&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: --------- (default)     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;skip_tags&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;limit&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;diff_mode&#x60;:  (boolean, default&#x3D;&#x60;None&#x60;) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: --------- (default)     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug)  * &#x60;enabled&#x60;: Enables processing of this schedule. (boolean, default&#x3D;&#x60;True&#x60;)            POST requests to this resource must include a proper &#x60;rrule&#x60; value following a particular format and conforming to subset of allowed rules.  The following lists the expected format and details of our rrules:  * DTSTART is required and must follow the following format: DTSTART:YYYYMMDDTHHMMSSZ * DTSTART is expected to be in UTC * INTERVAL is required * SECONDLY is not supported * TZID is not supported * RRULE must precede the rule statements * BYDAY is supported but not BYDAY with a numerical prefix * BYYEARDAY and BYWEEKNO are not supported * Only one rrule statement per schedule is supported * COUNT must be &lt; 1000  Here are some example rrules:      \&quot;DTSTART:20500331T055000Z RRULE:FREQ&#x3D;MINUTELY;INTERVAL&#x3D;10;COUNT&#x3D;5\&quot;     \&quot;DTSTART:20240331T075000Z RRULE:FREQ&#x3D;DAILY;INTERVAL&#x3D;1;COUNT&#x3D;1\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;MINUTELY;INTERVAL&#x3D;1;UNTIL&#x3D;20230401T075000Z\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;WEEKLY;INTERVAL&#x3D;1;BYDAY&#x3D;MO,WE,FR\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;WEEKLY;INTERVAL&#x3D;5;BYDAY&#x3D;MO\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;MONTHLY;INTERVAL&#x3D;1;BYMONTHDAY&#x3D;6\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;MONTHLY;INTERVAL&#x3D;1;BYSETPOS&#x3D;4;BYDAY&#x3D;SU\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;MONTHLY;INTERVAL&#x3D;1;BYSETPOS&#x3D;-1;BYDAY&#x3D;MO,TU,WE,TH,FR\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;MONTHLY;INTERVAL&#x3D;1;BYSETPOS&#x3D;-1;BYDAY&#x3D;MO,TU,WE,TH,FR,SA,SU\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;YEARLY;INTERVAL&#x3D;1;BYMONTH&#x3D;4;BYMONTHDAY&#x3D;1\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;YEARLY;INTERVAL&#x3D;1;BYSETPOS&#x3D;-1;BYMONTH&#x3D;8;BYDAY&#x3D;SU\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;WEEKLY;INTERVAL&#x3D;1;UNTIL&#x3D;20230401T075000Z;BYDAY&#x3D;MO,WE,FR\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;HOURLY;INTERVAL&#x3D;1;UNTIL&#x3D;20230610T075000Z\&quot;
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesSchedulesCreateRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesSchedulesCreate(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesSchedulesCreateRequest {
-	return ApiInventorySourcesInventorySourcesSchedulesCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesSchedulesCreateExecute(r ApiInventorySourcesInventorySourcesSchedulesCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesSchedulesCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject31) - 
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesSchedulesCreate(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesSchedulesCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -3463,13 +1624,9 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesSchedulesCr
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesSchedulesCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/schedules/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/schedules/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -3493,13 +1650,20 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesSchedulesCr
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject31)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject31")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3521,152 +1685,24 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesSchedulesCr
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesSchedulesListRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventorySourcesInventorySourcesSchedulesListRequest) Page(page int32) ApiInventorySourcesInventorySourcesSchedulesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesSchedulesListRequest) PageSize(pageSize int32) ApiInventorySourcesInventorySourcesSchedulesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesSchedulesListRequest) Search(search string) ApiInventorySourcesInventorySourcesSchedulesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesSchedulesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesSchedulesListExecute(r)
+// InventorySourcesInventorySourcesSchedulesListOpts Optional parameters for the method 'InventorySourcesInventorySourcesSchedulesList'
+type InventorySourcesInventorySourcesSchedulesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventorySourcesInventorySourcesSchedulesList  List Schedules for an Inventory Source
- * 
-Make a GET request to this resource to retrieve a list of
-schedules associated with the selected
-inventory source.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of schedules
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more schedule records.  
-
-## Results
-
-Each schedule data structure includes the following fields:
-
-* `rrule`: A value representing the schedules iCal recurrence rule. (string)
-* `id`: Database ID for this schedule. (integer)
-* `type`: Data type for this schedule. (choice)
-* `url`: URL for this schedule. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this schedule was created. (datetime)
-* `modified`: Timestamp when this schedule was last modified. (datetime)
-* `name`: Name of this schedule. (string)
-* `description`: Optional description of this schedule. (string)
-* `extra_data`:  (json)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id)
-* `scm_branch`:  (string)
-* `job_type`:  (choice)
-    - `None`: ---------
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string)
-* `skip_tags`:  (string)
-* `limit`:  (string)
-* `diff_mode`:  (boolean)
-* `verbosity`:  (choice)
-    - `None`: ---------
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `unified_job_template`:  (id)
-* `enabled`: Enables processing of this schedule. (boolean)
-* `dtstart`: The first occurrence of the schedule occurs on or after this time. (datetime)
-* `dtend`: The last occurrence of the schedule occurs before this time, aftewards the schedule expires. (datetime)
-* `next_run`: The next time that the scheduled action will run. (datetime)
-* `timezone`:  (field)
-* `until`:  (field)
-
-
-
-## Sorting
-
-To specify that schedules are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InventorySourcesInventorySourcesSchedulesList  List Schedules for an Inventory Source
+ Make a GET request to this resource to retrieve a list of schedules associated with the selected inventory source.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of schedules found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more schedule records.    ## Results  Each schedule data structure includes the following fields:  * &#x60;rrule&#x60;: A value representing the schedules iCal recurrence rule. (string) * &#x60;id&#x60;: Database ID for this schedule. (integer) * &#x60;type&#x60;: Data type for this schedule. (choice) * &#x60;url&#x60;: URL for this schedule. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this schedule was created. (datetime) * &#x60;modified&#x60;: Timestamp when this schedule was last modified. (datetime) * &#x60;name&#x60;: Name of this schedule. (string) * &#x60;description&#x60;: Optional description of this schedule. (string) * &#x60;extra_data&#x60;:  (json) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id) * &#x60;scm_branch&#x60;:  (string) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string) * &#x60;skip_tags&#x60;:  (string) * &#x60;limit&#x60;:  (string) * &#x60;diff_mode&#x60;:  (boolean) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;unified_job_template&#x60;:  (id) * &#x60;enabled&#x60;: Enables processing of this schedule. (boolean) * &#x60;dtstart&#x60;: The first occurrence of the schedule occurs on or after this time. (datetime) * &#x60;dtend&#x60;: The last occurrence of the schedule occurs before this time, aftewards the schedule expires. (datetime) * &#x60;next_run&#x60;: The next time that the scheduled action will run. (datetime) * &#x60;timezone&#x60;:  (field) * &#x60;until&#x60;:  (field)    ## Sorting  To specify that schedules are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesSchedulesListRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesSchedulesList(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesSchedulesListRequest {
-	return ApiInventorySourcesInventorySourcesSchedulesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesSchedulesListExecute(r ApiInventorySourcesInventorySourcesSchedulesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesSchedulesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesSchedulesList(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesSchedulesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -3675,26 +1711,22 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesSchedulesLi
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesSchedulesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/schedules/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/schedules/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -3713,12 +1745,12 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesSchedulesLi
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3740,104 +1772,22 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesSchedulesLi
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesUpdate0Request struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	search *string
-	data *InlineObject27
-}
-
-func (r ApiInventorySourcesInventorySourcesUpdate0Request) Search(search string) ApiInventorySourcesInventorySourcesUpdate0Request {
-	r.search = &search
-	return r
-}
-func (r ApiInventorySourcesInventorySourcesUpdate0Request) Data(data InlineObject27) ApiInventorySourcesInventorySourcesUpdate0Request {
-	r.data = &data
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesUpdate0Request) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesUpdate0Execute(r)
+// InventorySourcesInventorySourcesUpdate0Opts Optional parameters for the method 'InventorySourcesInventorySourcesUpdate0'
+type InventorySourcesInventorySourcesUpdate0Opts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * InventorySourcesInventorySourcesUpdate0  Update an Inventory Source
- * 
-Make a PUT or PATCH request to this resource to update this
-inventory source.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this inventory source. (string, required)
-* `description`: Optional description of this inventory source. (string, default=`""`)
-* `source`:  (choice)
-    - `file`: File, Directory or Script
-    - `scm`: Sourced from a Project
-    - `ec2`: Amazon EC2
-    - `gce`: Google Compute Engine
-    - `azure_rm`: Microsoft Azure Resource Manager
-    - `vmware`: VMware vCenter
-    - `satellite6`: Red Hat Satellite 6
-    - `openstack`: OpenStack
-    - `rhv`: Red Hat Virtualization
-    - `tower`: Ansible Tower
-    - `custom`: Custom Script
-* `source_path`:  (string, default=`""`)
-* `source_script`:  (id, default=``)
-* `source_vars`: Inventory source variables in YAML or JSON format. (string, default=`""`)
-* `credential`: Cloud credential to use for inventory updates. (integer, default=`None`)
-* `enabled_var`: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &quot;foo.bar&quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&quot;foo&quot;, {}).get(&quot;bar&quot;, default) (string, default=`""`)
-* `enabled_value`: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var=&quot;status.power_state&quot;and enabled_value=&quot;powered_on&quot; with host variables:{   &quot;status&quot;: {     &quot;power_state&quot;: &quot;powered_on&quot;,     &quot;created&quot;: &quot;2018-02-01T08:00:00.000000Z:00&quot;,     &quot;healthy&quot;: true    },    &quot;name&quot;: &quot;foobar&quot;,    &quot;ip_address&quot;: &quot;192.168.2.1&quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string, default=`""`)
-* `host_filter`: Regex where only matching hosts will be imported into Tower. (string, default=`""`)
-* `overwrite`: Overwrite local groups and hosts from remote inventory source. (boolean, default=`False`)
-* `overwrite_vars`: Overwrite local variables from remote inventory source. (boolean, default=`False`)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string, default=`""`)
-* `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer, default=`0`)
-* `verbosity`:  (choice)
-    - `0`: 0 (WARNING)
-    - `1`: 1 (INFO) (default)
-    - `2`: 2 (DEBUG)
-
-
-
-
-* `inventory`:  (id, required)
-* `update_on_launch`:  (boolean, default=`False`)
-* `update_cache_timeout`:  (integer, default=`0`)
-* `source_project`: Project containing inventory file used as source. (id, default=``)
-* `update_on_project_update`:  (boolean, default=`False`)
-
-
-
-
-
-
-
-
-For a PUT request, include **all** fields in the request.
+InventorySourcesInventorySourcesUpdate0  Update an Inventory Source
+ Make a PUT or PATCH request to this resource to update this inventory source.  The following fields may be modified:          * &#x60;name&#x60;: Name of this inventory source. (string, required) * &#x60;description&#x60;: Optional description of this inventory source. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;source&#x60;:  (choice)     - &#x60;file&#x60;: File, Directory or Script     - &#x60;scm&#x60;: Sourced from a Project     - &#x60;ec2&#x60;: Amazon EC2     - &#x60;gce&#x60;: Google Compute Engine     - &#x60;azure_rm&#x60;: Microsoft Azure Resource Manager     - &#x60;vmware&#x60;: VMware vCenter     - &#x60;satellite6&#x60;: Red Hat Satellite 6     - &#x60;openstack&#x60;: OpenStack     - &#x60;rhv&#x60;: Red Hat Virtualization     - &#x60;tower&#x60;: Ansible Tower     - &#x60;custom&#x60;: Custom Script * &#x60;source_path&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;source_script&#x60;:  (id, default&#x3D;&#x60;&#x60;) * &#x60;source_vars&#x60;: Inventory source variables in YAML or JSON format. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;credential&#x60;: Cloud credential to use for inventory updates. (integer, default&#x3D;&#x60;None&#x60;) * &#x60;enabled_var&#x60;: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &amp;quot;foo.bar&amp;quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&amp;quot;foo&amp;quot;, {}).get(&amp;quot;bar&amp;quot;, default) (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;enabled_value&#x60;: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var&#x3D;&amp;quot;status.power_state&amp;quot;and enabled_value&#x3D;&amp;quot;powered_on&amp;quot; with host variables:{   &amp;quot;status&amp;quot;: {     &amp;quot;power_state&amp;quot;: &amp;quot;powered_on&amp;quot;,     &amp;quot;created&amp;quot;: &amp;quot;2018-02-01T08:00:00.000000Z:00&amp;quot;,     &amp;quot;healthy&amp;quot;: true    },    &amp;quot;name&amp;quot;: &amp;quot;foobar&amp;quot;,    &amp;quot;ip_address&amp;quot;: &amp;quot;192.168.2.1&amp;quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;host_filter&#x60;: Regex where only matching hosts will be imported into Tower. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;overwrite&#x60;: Overwrite local groups and hosts from remote inventory source. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;overwrite_vars&#x60;: Overwrite local variables from remote inventory source. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;timeout&#x60;: The amount of time (in seconds) to run before the task is canceled. (integer, default&#x3D;&#x60;0&#x60;) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (WARNING)     - &#x60;1&#x60;: 1 (INFO) (default)     - &#x60;2&#x60;: 2 (DEBUG)     * &#x60;inventory&#x60;:  (id, required) * &#x60;update_on_launch&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;update_cache_timeout&#x60;:  (integer, default&#x3D;&#x60;0&#x60;) * &#x60;source_project&#x60;: Project containing inventory file used as source. (id, default&#x3D;&#x60;&#x60;) * &#x60;update_on_project_update&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;)         For a PUT request, include **all** fields in the request.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesUpdate0Request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesUpdate0(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesUpdate0Request {
-	return ApiInventorySourcesInventorySourcesUpdate0Request{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesUpdate0Execute(r ApiInventorySourcesInventorySourcesUpdate0Request) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesUpdate0Opts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject27) - 
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesUpdate0(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesUpdate0Opts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -3846,20 +1796,16 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesUpdate0Exec
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesUpdate0")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -3879,13 +1825,20 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesUpdate0Exec
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject27)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject27")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3907,45 +1860,13 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesUpdate0Exec
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesUpdateCreateRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-}
-
-
-func (r ApiInventorySourcesInventorySourcesUpdateCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesUpdateCreateExecute(r)
-}
-
 /*
- * InventorySourcesInventorySourcesUpdateCreate  Update Inventory Source
- * 
-Make a GET request to this resource to determine if the group can be updated
-from its inventory source.  The response will include the following field:
-
-* `can_update`: Flag indicating if this inventory source can be updated
-  (boolean, read-only)
-
-Make a POST request to this resource to update the inventory source.  If
-successful, the response status code will be 202.  If the inventory source is
-not defined or cannot be updated, a 405 status code will be returned.
+InventorySourcesInventorySourcesUpdateCreate  Update Inventory Source
+ Make a GET request to this resource to determine if the group can be updated from its inventory source.  The response will include the following field:  * &#x60;can_update&#x60;: Flag indicating if this inventory source can be updated   (boolean, read-only)  Make a POST request to this resource to update the inventory source.  If successful, the response status code will be 202.  If the inventory source is not defined or cannot be updated, a 405 status code will be returned.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesUpdateCreateRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesUpdateCreate(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesUpdateCreateRequest {
-	return ApiInventorySourcesInventorySourcesUpdateCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesUpdateCreateExecute(r ApiInventorySourcesInventorySourcesUpdateCreateRequest) (*_nethttp.Response, error) {
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesUpdateCreate(ctx _context.Context, id string) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -3954,13 +1875,9 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesUpdateCreat
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesUpdateCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/update/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/update/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -3983,12 +1900,12 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesUpdateCreat
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -4010,50 +1927,20 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesUpdateCreat
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventorySourcesInventorySourcesUpdateReadRequest struct {
-	ctx _context.Context
-	ApiService *InventorySourcesApiService
-	id string
-	search *string
-}
-
-func (r ApiInventorySourcesInventorySourcesUpdateReadRequest) Search(search string) ApiInventorySourcesInventorySourcesUpdateReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventorySourcesInventorySourcesUpdateReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventorySourcesInventorySourcesUpdateReadExecute(r)
+// InventorySourcesInventorySourcesUpdateReadOpts Optional parameters for the method 'InventorySourcesInventorySourcesUpdateRead'
+type InventorySourcesInventorySourcesUpdateReadOpts struct {
+    Search optional.String
 }
 
 /*
- * InventorySourcesInventorySourcesUpdateRead  Update Inventory Source
- * 
-Make a GET request to this resource to determine if the group can be updated
-from its inventory source.  The response will include the following field:
-
-* `can_update`: Flag indicating if this inventory source can be updated
-  (boolean, read-only)
-
-Make a POST request to this resource to update the inventory source.  If
-successful, the response status code will be 202.  If the inventory source is
-not defined or cannot be updated, a 405 status code will be returned.
+InventorySourcesInventorySourcesUpdateRead  Update Inventory Source
+ Make a GET request to this resource to determine if the group can be updated from its inventory source.  The response will include the following field:  * &#x60;can_update&#x60;: Flag indicating if this inventory source can be updated   (boolean, read-only)  Make a POST request to this resource to update the inventory source.  If successful, the response status code will be 202.  If the inventory source is not defined or cannot be updated, a 405 status code will be returned.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventorySourcesInventorySourcesUpdateReadRequest
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesUpdateRead(ctx _context.Context, id string) ApiInventorySourcesInventorySourcesUpdateReadRequest {
-	return ApiInventorySourcesInventorySourcesUpdateReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventorySourcesApiService) InventorySourcesInventorySourcesUpdateReadExecute(r ApiInventorySourcesInventorySourcesUpdateReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventorySourcesInventorySourcesUpdateReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventorySourcesApiService) InventorySourcesInventorySourcesUpdateRead(ctx _context.Context, id string, localVarOptionals *InventorySourcesInventorySourcesUpdateReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -4062,20 +1949,16 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesUpdateReadE
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventorySourcesApiService.InventorySourcesInventorySourcesUpdateRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_sources/{id}/update/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_sources/{id}/update/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -4094,12 +1977,12 @@ func (a *InventorySourcesApiService) InventorySourcesInventorySourcesUpdateReadE
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

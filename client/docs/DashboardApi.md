@@ -11,44 +11,15 @@ Method | HTTP request | Description
 
 ## DashboardDashboardGraphsJobsList
 
-> DashboardDashboardGraphsJobsList(ctx).Execute()
+> DashboardDashboardGraphsJobsList(ctx, )
 
  View Statistics for Job Runs
 
+ Make a GET request to this resource to retrieve aggregate statistics about job runs suitable for graphing.  ## Parmeters and Filtering  The `period` of the data can be adjusted with:      ?period=month  Where `month` can be replaced with `week`, `two_weeks`, or `day`.  `month` is the default.  The type of job can be filtered with:      ?job_type=all  Where `all` can be replaced with `inv_sync`, `playbook_run` or `scm_update`.  `all` is the default.  ## Results  Data will be returned in the following format:      \"jobs\": {             \"successful\": [                 [                     1402808400.0,                      9                 ], ... ],             \"failed\": [              [                     1402808400.0,                      3                 ], ... ]     }  Each element contains an epoch timestamp represented in seconds and a numerical value indicating the number of events during that time period
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.DashboardApi.DashboardDashboardGraphsJobsList(context.Background(), ).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `DashboardApi.DashboardDashboardGraphsJobsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 This endpoint does not need any parameter.
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiDashboardDashboardGraphsJobsListRequest struct via the builder pattern
-
 
 ### Return type
 
@@ -70,42 +41,13 @@ No authorization required
 
 ## DashboardDashboardList
 
-> DashboardDashboardList(ctx).Execute()
+> DashboardDashboardList(ctx, )
 
 Show Dashboard Details
 
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.DashboardApi.DashboardDashboardList(context.Background(), ).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `DashboardApi.DashboardDashboardList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 This endpoint does not need any parameter.
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiDashboardDashboardListRequest struct via the builder pattern
-
 
 ### Return type
 

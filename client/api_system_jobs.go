@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,40 +26,13 @@ var (
 // SystemJobsApiService SystemJobsApi service
 type SystemJobsApiService service
 
-type ApiSystemJobsSystemJobsCancelCreateRequest struct {
-	ctx _context.Context
-	ApiService *SystemJobsApiService
-	id string
-}
-
-
-func (r ApiSystemJobsSystemJobsCancelCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SystemJobsSystemJobsCancelCreateExecute(r)
-}
-
 /*
- * SystemJobsSystemJobsCancelCreate  Retrieve a System Job
- * 
-Make GET request to this resource to retrieve a single system job
-record containing the following fields:
-
-* `can_cancel`:  (boolean)
+SystemJobsSystemJobsCancelCreate  Retrieve a System Job
+ Make GET request to this resource to retrieve a single system job record containing the following fields:  * &#x60;can_cancel&#x60;:  (boolean)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiSystemJobsSystemJobsCancelCreateRequest
- */
-func (a *SystemJobsApiService) SystemJobsSystemJobsCancelCreate(ctx _context.Context, id string) ApiSystemJobsSystemJobsCancelCreateRequest {
-	return ApiSystemJobsSystemJobsCancelCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SystemJobsApiService) SystemJobsSystemJobsCancelCreateExecute(r ApiSystemJobsSystemJobsCancelCreateRequest) (*_nethttp.Response, error) {
+*/
+func (a *SystemJobsApiService) SystemJobsSystemJobsCancelCreate(ctx _context.Context, id string) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -67,13 +41,9 @@ func (a *SystemJobsApiService) SystemJobsSystemJobsCancelCreateExecute(r ApiSyst
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SystemJobsApiService.SystemJobsSystemJobsCancelCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/system_jobs/{id}/cancel/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/system_jobs/{id}/cancel/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -96,12 +66,12 @@ func (a *SystemJobsApiService) SystemJobsSystemJobsCancelCreateExecute(r ApiSyst
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -123,45 +93,20 @@ func (a *SystemJobsApiService) SystemJobsSystemJobsCancelCreateExecute(r ApiSyst
 	return localVarHTTPResponse, nil
 }
 
-type ApiSystemJobsSystemJobsCancelReadRequest struct {
-	ctx _context.Context
-	ApiService *SystemJobsApiService
-	id string
-	search *string
-}
-
-func (r ApiSystemJobsSystemJobsCancelReadRequest) Search(search string) ApiSystemJobsSystemJobsCancelReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiSystemJobsSystemJobsCancelReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SystemJobsSystemJobsCancelReadExecute(r)
+// SystemJobsSystemJobsCancelReadOpts Optional parameters for the method 'SystemJobsSystemJobsCancelRead'
+type SystemJobsSystemJobsCancelReadOpts struct {
+    Search optional.String
 }
 
 /*
- * SystemJobsSystemJobsCancelRead  Retrieve a System Job
- * 
-Make GET request to this resource to retrieve a single system job
-record containing the following fields:
-
-* `can_cancel`:  (boolean)
+SystemJobsSystemJobsCancelRead  Retrieve a System Job
+ Make GET request to this resource to retrieve a single system job record containing the following fields:  * &#x60;can_cancel&#x60;:  (boolean)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiSystemJobsSystemJobsCancelReadRequest
- */
-func (a *SystemJobsApiService) SystemJobsSystemJobsCancelRead(ctx _context.Context, id string) ApiSystemJobsSystemJobsCancelReadRequest {
-	return ApiSystemJobsSystemJobsCancelReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SystemJobsApiService) SystemJobsSystemJobsCancelReadExecute(r ApiSystemJobsSystemJobsCancelReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *SystemJobsSystemJobsCancelReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *SystemJobsApiService) SystemJobsSystemJobsCancelRead(ctx _context.Context, id string, localVarOptionals *SystemJobsSystemJobsCancelReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -170,20 +115,16 @@ func (a *SystemJobsApiService) SystemJobsSystemJobsCancelReadExecute(r ApiSystem
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SystemJobsApiService.SystemJobsSystemJobsCancelRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/system_jobs/{id}/cancel/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/system_jobs/{id}/cancel/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -202,12 +143,12 @@ func (a *SystemJobsApiService) SystemJobsSystemJobsCancelReadExecute(r ApiSystem
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -229,42 +170,20 @@ func (a *SystemJobsApiService) SystemJobsSystemJobsCancelReadExecute(r ApiSystem
 	return localVarHTTPResponse, nil
 }
 
-type ApiSystemJobsSystemJobsDeleteRequest struct {
-	ctx _context.Context
-	ApiService *SystemJobsApiService
-	id string
-	search *string
-}
-
-func (r ApiSystemJobsSystemJobsDeleteRequest) Search(search string) ApiSystemJobsSystemJobsDeleteRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiSystemJobsSystemJobsDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SystemJobsSystemJobsDeleteExecute(r)
+// SystemJobsSystemJobsDeleteOpts Optional parameters for the method 'SystemJobsSystemJobsDelete'
+type SystemJobsSystemJobsDeleteOpts struct {
+    Search optional.String
 }
 
 /*
- * SystemJobsSystemJobsDelete  Delete a System Job
- * 
-Make a DELETE request to this resource to delete this system job.
+SystemJobsSystemJobsDelete  Delete a System Job
+ Make a DELETE request to this resource to delete this system job.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiSystemJobsSystemJobsDeleteRequest
- */
-func (a *SystemJobsApiService) SystemJobsSystemJobsDelete(ctx _context.Context, id string) ApiSystemJobsSystemJobsDeleteRequest {
-	return ApiSystemJobsSystemJobsDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SystemJobsApiService) SystemJobsSystemJobsDeleteExecute(r ApiSystemJobsSystemJobsDeleteRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *SystemJobsSystemJobsDeleteOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *SystemJobsApiService) SystemJobsSystemJobsDelete(ctx _context.Context, id string, localVarOptionals *SystemJobsSystemJobsDeleteOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -273,20 +192,16 @@ func (a *SystemJobsApiService) SystemJobsSystemJobsDeleteExecute(r ApiSystemJobs
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SystemJobsApiService.SystemJobsSystemJobsDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/system_jobs/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/system_jobs/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -305,12 +220,12 @@ func (a *SystemJobsApiService) SystemJobsSystemJobsDeleteExecute(r ApiSystemJobs
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -332,134 +247,24 @@ func (a *SystemJobsApiService) SystemJobsSystemJobsDeleteExecute(r ApiSystemJobs
 	return localVarHTTPResponse, nil
 }
 
-type ApiSystemJobsSystemJobsEventsListRequest struct {
-	ctx _context.Context
-	ApiService *SystemJobsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiSystemJobsSystemJobsEventsListRequest) Page(page int32) ApiSystemJobsSystemJobsEventsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiSystemJobsSystemJobsEventsListRequest) PageSize(pageSize int32) ApiSystemJobsSystemJobsEventsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiSystemJobsSystemJobsEventsListRequest) Search(search string) ApiSystemJobsSystemJobsEventsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiSystemJobsSystemJobsEventsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SystemJobsSystemJobsEventsListExecute(r)
+// SystemJobsSystemJobsEventsListOpts Optional parameters for the method 'SystemJobsSystemJobsEventsList'
+type SystemJobsSystemJobsEventsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * SystemJobsSystemJobsEventsList  List System Job Events for a System Job
- * 
-Make a GET request to this resource to retrieve a list of
-system job events associated with the selected
-system job.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of system job events
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more system job event records.  
-
-## Results
-
-Each system job event data structure includes the following fields:
-
-* `id`: Database ID for this system job event. (integer)
-* `type`: Data type for this system job event. (choice)
-* `url`: URL for this system job event. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this system job event was created. (datetime)
-* `modified`: Timestamp when this system job event was last modified. (datetime)
-* `event`:  (field)
-* `counter`:  (integer)
-* `event_display`:  (string)
-* `event_data`:  (json)
-* `failed`:  (field)
-* `changed`:  (field)
-* `uuid`:  (string)
-* `stdout`:  (string)
-* `start_line`:  (integer)
-* `end_line`:  (integer)
-* `verbosity`:  (integer)
-* `system_job`:  (id)
-
-
-
-## Sorting
-
-To specify that system job events are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+SystemJobsSystemJobsEventsList  List System Job Events for a System Job
+ Make a GET request to this resource to retrieve a list of system job events associated with the selected system job.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of system job events found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more system job event records.    ## Results  Each system job event data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this system job event. (integer) * &#x60;type&#x60;: Data type for this system job event. (choice) * &#x60;url&#x60;: URL for this system job event. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this system job event was created. (datetime) * &#x60;modified&#x60;: Timestamp when this system job event was last modified. (datetime) * &#x60;event&#x60;:  (field) * &#x60;counter&#x60;:  (integer) * &#x60;event_display&#x60;:  (string) * &#x60;event_data&#x60;:  (json) * &#x60;failed&#x60;:  (field) * &#x60;changed&#x60;:  (field) * &#x60;uuid&#x60;:  (string) * &#x60;stdout&#x60;:  (string) * &#x60;start_line&#x60;:  (integer) * &#x60;end_line&#x60;:  (integer) * &#x60;verbosity&#x60;:  (integer) * &#x60;system_job&#x60;:  (id)    ## Sorting  To specify that system job events are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiSystemJobsSystemJobsEventsListRequest
- */
-func (a *SystemJobsApiService) SystemJobsSystemJobsEventsList(ctx _context.Context, id string) ApiSystemJobsSystemJobsEventsListRequest {
-	return ApiSystemJobsSystemJobsEventsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SystemJobsApiService) SystemJobsSystemJobsEventsListExecute(r ApiSystemJobsSystemJobsEventsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *SystemJobsSystemJobsEventsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *SystemJobsApiService) SystemJobsSystemJobsEventsList(ctx _context.Context, id string, localVarOptionals *SystemJobsSystemJobsEventsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -468,26 +273,22 @@ func (a *SystemJobsApiService) SystemJobsSystemJobsEventsListExecute(r ApiSystem
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SystemJobsApiService.SystemJobsSystemJobsEventsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/system_jobs/{id}/events/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/system_jobs/{id}/events/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -506,12 +307,12 @@ func (a *SystemJobsApiService) SystemJobsSystemJobsEventsListExecute(r ApiSystem
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -533,156 +334,23 @@ func (a *SystemJobsApiService) SystemJobsSystemJobsEventsListExecute(r ApiSystem
 	return localVarHTTPResponse, nil
 }
 
-type ApiSystemJobsSystemJobsListRequest struct {
-	ctx _context.Context
-	ApiService *SystemJobsApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiSystemJobsSystemJobsListRequest) Page(page int32) ApiSystemJobsSystemJobsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiSystemJobsSystemJobsListRequest) PageSize(pageSize int32) ApiSystemJobsSystemJobsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiSystemJobsSystemJobsListRequest) Search(search string) ApiSystemJobsSystemJobsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiSystemJobsSystemJobsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SystemJobsSystemJobsListExecute(r)
+// SystemJobsSystemJobsListOpts Optional parameters for the method 'SystemJobsSystemJobsList'
+type SystemJobsSystemJobsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * SystemJobsSystemJobsList  List System Jobs
- * 
-Make a GET request to this resource to retrieve the list of
-system jobs.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of system jobs
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more system job records.  
-
-## Results
-
-Each system job data structure includes the following fields:
-
-* `id`: Database ID for this system job. (integer)
-* `type`: Data type for this system job. (choice)
-* `url`: URL for this system job. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this system job was created. (datetime)
-* `modified`: Timestamp when this system job was last modified. (datetime)
-* `name`: Name of this system job. (string)
-* `description`: Optional description of this system job. (string)
-* `unified_job_template`:  (id)
-* `launch_type`:  (choice)
-    - `manual`: Manual
-    - `relaunch`: Relaunch
-    - `callback`: Callback
-    - `scheduled`: Scheduled
-    - `dependency`: Dependency
-    - `workflow`: Workflow
-    - `webhook`: Webhook
-    - `sync`: Sync
-    - `scm`: SCM Update
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-* `failed`:  (boolean)
-* `started`: The date and time the job was queued for starting. (datetime)
-* `finished`: The date and time the job finished execution. (datetime)
-* `canceled_on`: The date and time when the cancel request was sent. (datetime)
-* `elapsed`: Elapsed time in seconds that the job ran. (decimal)
-* `job_explanation`: A status field to indicate the state of the job if it wasn&#39;t able to run and capture stdout (string)
-* `execution_node`: The node the job executed on. (string)
-* `system_job_template`:  (id)
-* `job_type`:  (choice)
-    - `""`: ---------
-    - `cleanup_jobs`: Remove jobs older than a certain number of days
-    - `cleanup_activitystream`: Remove activity stream entries older than a certain number of days
-    - `cleanup_sessions`: Removes expired browser sessions from the database
-    - `cleanup_tokens`: Removes expired OAuth 2 access tokens and refresh tokens
-* `extra_vars`:  (string)
-* `result_stdout`:  (field)
-
-
-
-## Sorting
-
-To specify that system jobs are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+SystemJobsSystemJobsList  List System Jobs
+ Make a GET request to this resource to retrieve the list of system jobs.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of system jobs found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more system job records.    ## Results  Each system job data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this system job. (integer) * &#x60;type&#x60;: Data type for this system job. (choice) * &#x60;url&#x60;: URL for this system job. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this system job was created. (datetime) * &#x60;modified&#x60;: Timestamp when this system job was last modified. (datetime) * &#x60;name&#x60;: Name of this system job. (string) * &#x60;description&#x60;: Optional description of this system job. (string) * &#x60;unified_job_template&#x60;:  (id) * &#x60;launch_type&#x60;:  (choice)     - &#x60;manual&#x60;: Manual     - &#x60;relaunch&#x60;: Relaunch     - &#x60;callback&#x60;: Callback     - &#x60;scheduled&#x60;: Scheduled     - &#x60;dependency&#x60;: Dependency     - &#x60;workflow&#x60;: Workflow     - &#x60;webhook&#x60;: Webhook     - &#x60;sync&#x60;: Sync     - &#x60;scm&#x60;: SCM Update * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled * &#x60;failed&#x60;:  (boolean) * &#x60;started&#x60;: The date and time the job was queued for starting. (datetime) * &#x60;finished&#x60;: The date and time the job finished execution. (datetime) * &#x60;canceled_on&#x60;: The date and time when the cancel request was sent. (datetime) * &#x60;elapsed&#x60;: Elapsed time in seconds that the job ran. (decimal) * &#x60;job_explanation&#x60;: A status field to indicate the state of the job if it wasn&amp;#39;t able to run and capture stdout (string) * &#x60;execution_node&#x60;: The node the job executed on. (string) * &#x60;system_job_template&#x60;:  (id) * &#x60;job_type&#x60;:  (choice)     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;cleanup_jobs&#x60;: Remove jobs older than a certain number of days     - &#x60;cleanup_activitystream&#x60;: Remove activity stream entries older than a certain number of days     - &#x60;cleanup_sessions&#x60;: Removes expired browser sessions from the database     - &#x60;cleanup_tokens&#x60;: Removes expired OAuth 2 access tokens and refresh tokens * &#x60;extra_vars&#x60;:  (string) * &#x60;result_stdout&#x60;:  (field)    ## Sorting  To specify that system jobs are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiSystemJobsSystemJobsListRequest
- */
-func (a *SystemJobsApiService) SystemJobsSystemJobsList(ctx _context.Context) ApiSystemJobsSystemJobsListRequest {
-	return ApiSystemJobsSystemJobsListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SystemJobsApiService) SystemJobsSystemJobsListExecute(r ApiSystemJobsSystemJobsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *SystemJobsSystemJobsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *SystemJobsApiService) SystemJobsSystemJobsList(ctx _context.Context, localVarOptionals *SystemJobsSystemJobsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -691,25 +359,20 @@ func (a *SystemJobsApiService) SystemJobsSystemJobsListExecute(r ApiSystemJobsSy
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SystemJobsApiService.SystemJobsSystemJobsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/system_jobs/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/system_jobs/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -728,12 +391,12 @@ func (a *SystemJobsApiService) SystemJobsSystemJobsListExecute(r ApiSystemJobsSy
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -755,142 +418,24 @@ func (a *SystemJobsApiService) SystemJobsSystemJobsListExecute(r ApiSystemJobsSy
 	return localVarHTTPResponse, nil
 }
 
-type ApiSystemJobsSystemJobsNotificationsListRequest struct {
-	ctx _context.Context
-	ApiService *SystemJobsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiSystemJobsSystemJobsNotificationsListRequest) Page(page int32) ApiSystemJobsSystemJobsNotificationsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiSystemJobsSystemJobsNotificationsListRequest) PageSize(pageSize int32) ApiSystemJobsSystemJobsNotificationsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiSystemJobsSystemJobsNotificationsListRequest) Search(search string) ApiSystemJobsSystemJobsNotificationsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiSystemJobsSystemJobsNotificationsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SystemJobsSystemJobsNotificationsListExecute(r)
+// SystemJobsSystemJobsNotificationsListOpts Optional parameters for the method 'SystemJobsSystemJobsNotificationsList'
+type SystemJobsSystemJobsNotificationsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * SystemJobsSystemJobsNotificationsList  List Notifications for a System Job
- * 
-Make a GET request to this resource to retrieve a list of
-notifications associated with the selected
-system job.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of notifications
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more notification records.  
-
-## Results
-
-Each notification data structure includes the following fields:
-
-* `id`: Database ID for this notification. (integer)
-* `type`: Data type for this notification. (choice)
-* `url`: URL for this notification. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this notification was created. (datetime)
-* `modified`: Timestamp when this notification was last modified. (datetime)
-* `notification_template`:  (id)
-* `error`:  (string)
-* `status`:  (choice)
-    - `pending`: Pending
-    - `successful`: Successful
-    - `failed`: Failed
-* `notifications_sent`:  (integer)
-* `notification_type`:  (choice)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `recipients`:  (string)
-* `subject`:  (string)
-* `body`: Notification body (json)
-
-
-
-## Sorting
-
-To specify that notifications are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+SystemJobsSystemJobsNotificationsList  List Notifications for a System Job
+ Make a GET request to this resource to retrieve a list of notifications associated with the selected system job.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of notifications found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more notification records.    ## Results  Each notification data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this notification. (integer) * &#x60;type&#x60;: Data type for this notification. (choice) * &#x60;url&#x60;: URL for this notification. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this notification was created. (datetime) * &#x60;modified&#x60;: Timestamp when this notification was last modified. (datetime) * &#x60;notification_template&#x60;:  (id) * &#x60;error&#x60;:  (string) * &#x60;status&#x60;:  (choice)     - &#x60;pending&#x60;: Pending     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed * &#x60;notifications_sent&#x60;:  (integer) * &#x60;notification_type&#x60;:  (choice)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;recipients&#x60;:  (string) * &#x60;subject&#x60;:  (string) * &#x60;body&#x60;: Notification body (json)    ## Sorting  To specify that notifications are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiSystemJobsSystemJobsNotificationsListRequest
- */
-func (a *SystemJobsApiService) SystemJobsSystemJobsNotificationsList(ctx _context.Context, id string) ApiSystemJobsSystemJobsNotificationsListRequest {
-	return ApiSystemJobsSystemJobsNotificationsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SystemJobsApiService) SystemJobsSystemJobsNotificationsListExecute(r ApiSystemJobsSystemJobsNotificationsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *SystemJobsSystemJobsNotificationsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *SystemJobsApiService) SystemJobsSystemJobsNotificationsList(ctx _context.Context, id string, localVarOptionals *SystemJobsSystemJobsNotificationsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -899,26 +444,22 @@ func (a *SystemJobsApiService) SystemJobsSystemJobsNotificationsListExecute(r Ap
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SystemJobsApiService.SystemJobsSystemJobsNotificationsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/system_jobs/{id}/notifications/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/system_jobs/{id}/notifications/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -937,12 +478,12 @@ func (a *SystemJobsApiService) SystemJobsSystemJobsNotificationsListExecute(r Ap
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -964,94 +505,20 @@ func (a *SystemJobsApiService) SystemJobsSystemJobsNotificationsListExecute(r Ap
 	return localVarHTTPResponse, nil
 }
 
-type ApiSystemJobsSystemJobsReadRequest struct {
-	ctx _context.Context
-	ApiService *SystemJobsApiService
-	id string
-	search *string
-}
-
-func (r ApiSystemJobsSystemJobsReadRequest) Search(search string) ApiSystemJobsSystemJobsReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiSystemJobsSystemJobsReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SystemJobsSystemJobsReadExecute(r)
+// SystemJobsSystemJobsReadOpts Optional parameters for the method 'SystemJobsSystemJobsRead'
+type SystemJobsSystemJobsReadOpts struct {
+    Search optional.String
 }
 
 /*
- * SystemJobsSystemJobsRead  Retrieve a System Job
- * 
-Make GET request to this resource to retrieve a single system job
-record containing the following fields:
-
-* `id`: Database ID for this system job. (integer)
-* `type`: Data type for this system job. (choice)
-* `url`: URL for this system job. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this system job was created. (datetime)
-* `modified`: Timestamp when this system job was last modified. (datetime)
-* `name`: Name of this system job. (string)
-* `description`: Optional description of this system job. (string)
-* `unified_job_template`:  (id)
-* `launch_type`:  (choice)
-    - `manual`: Manual
-    - `relaunch`: Relaunch
-    - `callback`: Callback
-    - `scheduled`: Scheduled
-    - `dependency`: Dependency
-    - `workflow`: Workflow
-    - `webhook`: Webhook
-    - `sync`: Sync
-    - `scm`: SCM Update
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-* `failed`:  (boolean)
-* `started`: The date and time the job was queued for starting. (datetime)
-* `finished`: The date and time the job finished execution. (datetime)
-* `canceled_on`: The date and time when the cancel request was sent. (datetime)
-* `elapsed`: Elapsed time in seconds that the job ran. (decimal)
-* `job_args`:  (string)
-* `job_cwd`:  (string)
-* `job_env`:  (json)
-* `job_explanation`: A status field to indicate the state of the job if it wasn&#39;t able to run and capture stdout (string)
-* `execution_node`: The node the job executed on. (string)
-* `result_traceback`:  (string)
-* `event_processing_finished`: Indicates whether all of the events generated by this unified job have been saved to the database. (boolean)
-* `system_job_template`:  (id)
-* `job_type`:  (choice)
-    - `""`: ---------
-    - `cleanup_jobs`: Remove jobs older than a certain number of days
-    - `cleanup_activitystream`: Remove activity stream entries older than a certain number of days
-    - `cleanup_sessions`: Removes expired browser sessions from the database
-    - `cleanup_tokens`: Removes expired OAuth 2 access tokens and refresh tokens
-* `extra_vars`:  (string)
-* `result_stdout`:  (field)
+SystemJobsSystemJobsRead  Retrieve a System Job
+ Make GET request to this resource to retrieve a single system job record containing the following fields:  * &#x60;id&#x60;: Database ID for this system job. (integer) * &#x60;type&#x60;: Data type for this system job. (choice) * &#x60;url&#x60;: URL for this system job. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this system job was created. (datetime) * &#x60;modified&#x60;: Timestamp when this system job was last modified. (datetime) * &#x60;name&#x60;: Name of this system job. (string) * &#x60;description&#x60;: Optional description of this system job. (string) * &#x60;unified_job_template&#x60;:  (id) * &#x60;launch_type&#x60;:  (choice)     - &#x60;manual&#x60;: Manual     - &#x60;relaunch&#x60;: Relaunch     - &#x60;callback&#x60;: Callback     - &#x60;scheduled&#x60;: Scheduled     - &#x60;dependency&#x60;: Dependency     - &#x60;workflow&#x60;: Workflow     - &#x60;webhook&#x60;: Webhook     - &#x60;sync&#x60;: Sync     - &#x60;scm&#x60;: SCM Update * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled * &#x60;failed&#x60;:  (boolean) * &#x60;started&#x60;: The date and time the job was queued for starting. (datetime) * &#x60;finished&#x60;: The date and time the job finished execution. (datetime) * &#x60;canceled_on&#x60;: The date and time when the cancel request was sent. (datetime) * &#x60;elapsed&#x60;: Elapsed time in seconds that the job ran. (decimal) * &#x60;job_args&#x60;:  (string) * &#x60;job_cwd&#x60;:  (string) * &#x60;job_env&#x60;:  (json) * &#x60;job_explanation&#x60;: A status field to indicate the state of the job if it wasn&amp;#39;t able to run and capture stdout (string) * &#x60;execution_node&#x60;: The node the job executed on. (string) * &#x60;result_traceback&#x60;:  (string) * &#x60;event_processing_finished&#x60;: Indicates whether all of the events generated by this unified job have been saved to the database. (boolean) * &#x60;system_job_template&#x60;:  (id) * &#x60;job_type&#x60;:  (choice)     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;cleanup_jobs&#x60;: Remove jobs older than a certain number of days     - &#x60;cleanup_activitystream&#x60;: Remove activity stream entries older than a certain number of days     - &#x60;cleanup_sessions&#x60;: Removes expired browser sessions from the database     - &#x60;cleanup_tokens&#x60;: Removes expired OAuth 2 access tokens and refresh tokens * &#x60;extra_vars&#x60;:  (string) * &#x60;result_stdout&#x60;:  (field)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiSystemJobsSystemJobsReadRequest
- */
-func (a *SystemJobsApiService) SystemJobsSystemJobsRead(ctx _context.Context, id string) ApiSystemJobsSystemJobsReadRequest {
-	return ApiSystemJobsSystemJobsReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SystemJobsApiService) SystemJobsSystemJobsReadExecute(r ApiSystemJobsSystemJobsReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *SystemJobsSystemJobsReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *SystemJobsApiService) SystemJobsSystemJobsRead(ctx _context.Context, id string, localVarOptionals *SystemJobsSystemJobsReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1060,20 +527,16 @@ func (a *SystemJobsApiService) SystemJobsSystemJobsReadExecute(r ApiSystemJobsSy
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SystemJobsApiService.SystemJobsSystemJobsRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/system_jobs/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/system_jobs/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1092,12 +555,12 @@ func (a *SystemJobsApiService) SystemJobsSystemJobsReadExecute(r ApiSystemJobsSy
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

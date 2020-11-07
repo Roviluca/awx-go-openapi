@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,130 +26,24 @@ var (
 // TeamsApiService TeamsApi service
 type TeamsApiService service
 
-type ApiTeamsTeamsAccessListListRequest struct {
-	ctx _context.Context
-	ApiService *TeamsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiTeamsTeamsAccessListListRequest) Page(page int32) ApiTeamsTeamsAccessListListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiTeamsTeamsAccessListListRequest) PageSize(pageSize int32) ApiTeamsTeamsAccessListListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiTeamsTeamsAccessListListRequest) Search(search string) ApiTeamsTeamsAccessListListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiTeamsTeamsAccessListListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.TeamsTeamsAccessListListExecute(r)
+// TeamsTeamsAccessListListOpts Optional parameters for the method 'TeamsTeamsAccessListList'
+type TeamsTeamsAccessListListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * TeamsTeamsAccessListList  List Users
- * 
-Make a GET request to this resource to retrieve the list of
-users.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of users
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more user records.  
-
-## Results
-
-Each user data structure includes the following fields:
-
-* `id`: Database ID for this user. (integer)
-* `type`: Data type for this user. (choice)
-* `url`: URL for this user. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this user was created. (datetime)
-* `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string)
-* `first_name`:  (string)
-* `last_name`:  (string)
-* `email`:  (string)
-* `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean)
-* `is_system_auditor`:  (boolean)
-
-* `ldap_dn`:  (string)
-* `last_login`:  (datetime)
-* `external_account`: Set if the account is managed by an external service (field)
-
-
-
-## Sorting
-
-To specify that users are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=username
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-username
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=username,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+TeamsTeamsAccessListList  List Users
+ Make a GET request to this resource to retrieve the list of users.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of users found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more user records.    ## Results  Each user data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this user. (integer) * &#x60;type&#x60;: Data type for this user. (choice) * &#x60;url&#x60;: URL for this user. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this user was created. (datetime) * &#x60;username&#x60;: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string) * &#x60;first_name&#x60;:  (string) * &#x60;last_name&#x60;:  (string) * &#x60;email&#x60;:  (string) * &#x60;is_superuser&#x60;: Designates that this user has all permissions without explicitly assigning them. (boolean) * &#x60;is_system_auditor&#x60;:  (boolean)  * &#x60;ldap_dn&#x60;:  (string) * &#x60;last_login&#x60;:  (datetime) * &#x60;external_account&#x60;: Set if the account is managed by an external service (field)    ## Sorting  To specify that users are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;username  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-username  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;username,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiTeamsTeamsAccessListListRequest
- */
-func (a *TeamsApiService) TeamsTeamsAccessListList(ctx _context.Context, id string) ApiTeamsTeamsAccessListListRequest {
-	return ApiTeamsTeamsAccessListListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *TeamsApiService) TeamsTeamsAccessListListExecute(r ApiTeamsTeamsAccessListListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *TeamsTeamsAccessListListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *TeamsApiService) TeamsTeamsAccessListList(ctx _context.Context, id string, localVarOptionals *TeamsTeamsAccessListListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -157,26 +52,22 @@ func (a *TeamsApiService) TeamsTeamsAccessListListExecute(r ApiTeamsTeamsAccessL
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TeamsApiService.TeamsTeamsAccessListList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/teams/{id}/access_list/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/teams/{id}/access_list/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -195,12 +86,12 @@ func (a *TeamsApiService) TeamsTeamsAccessListListExecute(r ApiTeamsTeamsAccessL
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -222,133 +113,24 @@ func (a *TeamsApiService) TeamsTeamsAccessListListExecute(r ApiTeamsTeamsAccessL
 	return localVarHTTPResponse, nil
 }
 
-type ApiTeamsTeamsActivityStreamListRequest struct {
-	ctx _context.Context
-	ApiService *TeamsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiTeamsTeamsActivityStreamListRequest) Page(page int32) ApiTeamsTeamsActivityStreamListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiTeamsTeamsActivityStreamListRequest) PageSize(pageSize int32) ApiTeamsTeamsActivityStreamListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiTeamsTeamsActivityStreamListRequest) Search(search string) ApiTeamsTeamsActivityStreamListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiTeamsTeamsActivityStreamListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.TeamsTeamsActivityStreamListExecute(r)
+// TeamsTeamsActivityStreamListOpts Optional parameters for the method 'TeamsTeamsActivityStreamList'
+type TeamsTeamsActivityStreamListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * TeamsTeamsActivityStreamList  List Activity Streams for a Team
- * 
-Make a GET request to this resource to retrieve a list of
-activity streams associated with the selected
-team.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of activity streams
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more activity stream records.  
-
-## Results
-
-Each activity stream data structure includes the following fields:
-
-* `id`: Database ID for this activity stream. (integer)
-* `type`: Data type for this activity stream. (choice)
-* `url`: URL for this activity stream. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `timestamp`:  (datetime)
-* `operation`: The action taken with respect to the given object(s). (choice)
-    - `create`: Entity Created
-    - `update`: Entity Updated
-    - `delete`: Entity Deleted
-    - `associate`: Entity Associated with another Entity
-    - `disassociate`: Entity was Disassociated with another Entity
-* `changes`: A summary of the new and changed values when an object is created, updated, or deleted (json)
-* `object1`: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string)
-* `object2`: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string)
-* `object_association`: When present, shows the field name of the role or relationship that changed. (field)
-* `action_node`: The cluster node the activity took place on. (string)
-* `object_type`: When present, shows the model on which the role or relationship was defined. (field)
-
-
-
-## Sorting
-
-To specify that activity streams are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+TeamsTeamsActivityStreamList  List Activity Streams for a Team
+ Make a GET request to this resource to retrieve a list of activity streams associated with the selected team.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of activity streams found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more activity stream records.    ## Results  Each activity stream data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this activity stream. (integer) * &#x60;type&#x60;: Data type for this activity stream. (choice) * &#x60;url&#x60;: URL for this activity stream. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;timestamp&#x60;:  (datetime) * &#x60;operation&#x60;: The action taken with respect to the given object(s). (choice)     - &#x60;create&#x60;: Entity Created     - &#x60;update&#x60;: Entity Updated     - &#x60;delete&#x60;: Entity Deleted     - &#x60;associate&#x60;: Entity Associated with another Entity     - &#x60;disassociate&#x60;: Entity was Disassociated with another Entity * &#x60;changes&#x60;: A summary of the new and changed values when an object is created, updated, or deleted (json) * &#x60;object1&#x60;: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string) * &#x60;object2&#x60;: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string) * &#x60;object_association&#x60;: When present, shows the field name of the role or relationship that changed. (field) * &#x60;action_node&#x60;: The cluster node the activity took place on. (string) * &#x60;object_type&#x60;: When present, shows the model on which the role or relationship was defined. (field)    ## Sorting  To specify that activity streams are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiTeamsTeamsActivityStreamListRequest
- */
-func (a *TeamsApiService) TeamsTeamsActivityStreamList(ctx _context.Context, id string) ApiTeamsTeamsActivityStreamListRequest {
-	return ApiTeamsTeamsActivityStreamListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *TeamsApiService) TeamsTeamsActivityStreamListExecute(r ApiTeamsTeamsActivityStreamListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *TeamsTeamsActivityStreamListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *TeamsApiService) TeamsTeamsActivityStreamList(ctx _context.Context, id string, localVarOptionals *TeamsTeamsActivityStreamListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -357,26 +139,22 @@ func (a *TeamsApiService) TeamsTeamsActivityStreamListExecute(r ApiTeamsTeamsAct
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TeamsApiService.TeamsTeamsActivityStreamList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/teams/{id}/activity_stream/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/teams/{id}/activity_stream/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -395,12 +173,12 @@ func (a *TeamsApiService) TeamsTeamsActivityStreamListExecute(r ApiTeamsTeamsAct
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -422,52 +200,19 @@ func (a *TeamsApiService) TeamsTeamsActivityStreamListExecute(r ApiTeamsTeamsAct
 	return localVarHTTPResponse, nil
 }
 
-type ApiTeamsTeamsCreateRequest struct {
-	ctx _context.Context
-	ApiService *TeamsApiService
-	data *InlineObject64
-}
-
-func (r ApiTeamsTeamsCreateRequest) Data(data InlineObject64) ApiTeamsTeamsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiTeamsTeamsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.TeamsTeamsCreateExecute(r)
+// TeamsTeamsCreateOpts Optional parameters for the method 'TeamsTeamsCreate'
+type TeamsTeamsCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * TeamsTeamsCreate  Create a Team
- * 
-Make a POST request to this resource with the following team
-fields to create a new team:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this team. (string, required)
-* `description`: Optional description of this team. (string, default=`""`)
-* `organization`:  (id, required)
+TeamsTeamsCreate  Create a Team
+ Make a POST request to this resource with the following team fields to create a new team:          * &#x60;name&#x60;: Name of this team. (string, required) * &#x60;description&#x60;: Optional description of this team. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;:  (id, required)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiTeamsTeamsCreateRequest
- */
-func (a *TeamsApiService) TeamsTeamsCreate(ctx _context.Context) ApiTeamsTeamsCreateRequest {
-	return ApiTeamsTeamsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *TeamsApiService) TeamsTeamsCreateExecute(r ApiTeamsTeamsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *TeamsTeamsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject64) - 
+*/
+func (a *TeamsApiService) TeamsTeamsCreate(ctx _context.Context, localVarOptionals *TeamsTeamsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -476,13 +221,8 @@ func (a *TeamsApiService) TeamsTeamsCreateExecute(r ApiTeamsTeamsCreateRequest) 
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TeamsApiService.TeamsTeamsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/teams/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/teams/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -505,13 +245,20 @@ func (a *TeamsApiService) TeamsTeamsCreateExecute(r ApiTeamsTeamsCreateRequest) 
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject64)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject64")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -533,58 +280,20 @@ func (a *TeamsApiService) TeamsTeamsCreateExecute(r ApiTeamsTeamsCreateRequest) 
 	return localVarHTTPResponse, nil
 }
 
-type ApiTeamsTeamsCredentialsCreateRequest struct {
-	ctx _context.Context
-	ApiService *TeamsApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiTeamsTeamsCredentialsCreateRequest) Data(data map[string]interface{}) ApiTeamsTeamsCredentialsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiTeamsTeamsCredentialsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.TeamsTeamsCredentialsCreateExecute(r)
+// TeamsTeamsCredentialsCreateOpts Optional parameters for the method 'TeamsTeamsCredentialsCreate'
+type TeamsTeamsCredentialsCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * TeamsTeamsCredentialsCreate  Create a Credential for a Team
- * 
-Make a POST request to this resource with the following credential
-fields to create a new credential associated with this
-team.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this credential. (string, required)
-* `description`: Optional description of this credential. (string, default=`""`)
-* `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id, required)
-
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)
+TeamsTeamsCredentialsCreate  Create a Credential for a Team
+ Make a POST request to this resource with the following credential fields to create a new credential associated with this team.          * &#x60;name&#x60;: Name of this credential. (string, required) * &#x60;description&#x60;: Optional description of this credential. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;credential_type&#x60;: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id, required)  * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default&#x3D;&#x60;{}&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiTeamsTeamsCredentialsCreateRequest
- */
-func (a *TeamsApiService) TeamsTeamsCredentialsCreate(ctx _context.Context, id string) ApiTeamsTeamsCredentialsCreateRequest {
-	return ApiTeamsTeamsCredentialsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *TeamsApiService) TeamsTeamsCredentialsCreateExecute(r ApiTeamsTeamsCredentialsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *TeamsTeamsCredentialsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *TeamsApiService) TeamsTeamsCredentialsCreate(ctx _context.Context, id string, localVarOptionals *TeamsTeamsCredentialsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -593,13 +302,9 @@ func (a *TeamsApiService) TeamsTeamsCredentialsCreateExecute(r ApiTeamsTeamsCred
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TeamsApiService.TeamsTeamsCredentialsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/teams/{id}/credentials/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/teams/{id}/credentials/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -623,13 +328,16 @@ func (a *TeamsApiService) TeamsTeamsCredentialsCreateExecute(r ApiTeamsTeamsCred
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -651,131 +359,24 @@ func (a *TeamsApiService) TeamsTeamsCredentialsCreateExecute(r ApiTeamsTeamsCred
 	return localVarHTTPResponse, nil
 }
 
-type ApiTeamsTeamsCredentialsListRequest struct {
-	ctx _context.Context
-	ApiService *TeamsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiTeamsTeamsCredentialsListRequest) Page(page int32) ApiTeamsTeamsCredentialsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiTeamsTeamsCredentialsListRequest) PageSize(pageSize int32) ApiTeamsTeamsCredentialsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiTeamsTeamsCredentialsListRequest) Search(search string) ApiTeamsTeamsCredentialsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiTeamsTeamsCredentialsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.TeamsTeamsCredentialsListExecute(r)
+// TeamsTeamsCredentialsListOpts Optional parameters for the method 'TeamsTeamsCredentialsList'
+type TeamsTeamsCredentialsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * TeamsTeamsCredentialsList  List Credentials for a Team
- * 
-Make a GET request to this resource to retrieve a list of
-credentials associated with the selected
-team.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of credentials
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more credential records.  
-
-## Results
-
-Each credential data structure includes the following fields:
-
-* `id`: Database ID for this credential. (integer)
-* `type`: Data type for this credential. (choice)
-* `url`: URL for this credential. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this credential was created. (datetime)
-* `modified`: Timestamp when this credential was last modified. (datetime)
-* `name`: Name of this credential. (string)
-* `description`: Optional description of this credential. (string)
-* `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id)
-* `managed_by_tower`:  (boolean)
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json)
-* `kind`:  (field)
-* `cloud`:  (field)
-* `kubernetes`:  (field)
-
-
-
-
-## Sorting
-
-To specify that credentials are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+TeamsTeamsCredentialsList  List Credentials for a Team
+ Make a GET request to this resource to retrieve a list of credentials associated with the selected team.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of credentials found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more credential records.    ## Results  Each credential data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this credential. (integer) * &#x60;type&#x60;: Data type for this credential. (choice) * &#x60;url&#x60;: URL for this credential. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this credential was created. (datetime) * &#x60;modified&#x60;: Timestamp when this credential was last modified. (datetime) * &#x60;name&#x60;: Name of this credential. (string) * &#x60;description&#x60;: Optional description of this credential. (string) * &#x60;credential_type&#x60;: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id) * &#x60;managed_by_tower&#x60;:  (boolean) * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json) * &#x60;kind&#x60;:  (field) * &#x60;cloud&#x60;:  (field) * &#x60;kubernetes&#x60;:  (field)     ## Sorting  To specify that credentials are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiTeamsTeamsCredentialsListRequest
- */
-func (a *TeamsApiService) TeamsTeamsCredentialsList(ctx _context.Context, id string) ApiTeamsTeamsCredentialsListRequest {
-	return ApiTeamsTeamsCredentialsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *TeamsApiService) TeamsTeamsCredentialsListExecute(r ApiTeamsTeamsCredentialsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *TeamsTeamsCredentialsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *TeamsApiService) TeamsTeamsCredentialsList(ctx _context.Context, id string, localVarOptionals *TeamsTeamsCredentialsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -784,26 +385,22 @@ func (a *TeamsApiService) TeamsTeamsCredentialsListExecute(r ApiTeamsTeamsCreden
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TeamsApiService.TeamsTeamsCredentialsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/teams/{id}/credentials/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/teams/{id}/credentials/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -822,12 +419,12 @@ func (a *TeamsApiService) TeamsTeamsCredentialsListExecute(r ApiTeamsTeamsCreden
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -849,42 +446,20 @@ func (a *TeamsApiService) TeamsTeamsCredentialsListExecute(r ApiTeamsTeamsCreden
 	return localVarHTTPResponse, nil
 }
 
-type ApiTeamsTeamsDeleteRequest struct {
-	ctx _context.Context
-	ApiService *TeamsApiService
-	id string
-	search *string
-}
-
-func (r ApiTeamsTeamsDeleteRequest) Search(search string) ApiTeamsTeamsDeleteRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiTeamsTeamsDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.TeamsTeamsDeleteExecute(r)
+// TeamsTeamsDeleteOpts Optional parameters for the method 'TeamsTeamsDelete'
+type TeamsTeamsDeleteOpts struct {
+    Search optional.String
 }
 
 /*
- * TeamsTeamsDelete  Delete a Team
- * 
-Make a DELETE request to this resource to delete this team.
+TeamsTeamsDelete  Delete a Team
+ Make a DELETE request to this resource to delete this team.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiTeamsTeamsDeleteRequest
- */
-func (a *TeamsApiService) TeamsTeamsDelete(ctx _context.Context, id string) ApiTeamsTeamsDeleteRequest {
-	return ApiTeamsTeamsDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *TeamsApiService) TeamsTeamsDeleteExecute(r ApiTeamsTeamsDeleteRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *TeamsTeamsDeleteOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *TeamsApiService) TeamsTeamsDelete(ctx _context.Context, id string, localVarOptionals *TeamsTeamsDeleteOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -893,20 +468,16 @@ func (a *TeamsApiService) TeamsTeamsDeleteExecute(r ApiTeamsTeamsDeleteRequest) 
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TeamsApiService.TeamsTeamsDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/teams/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/teams/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -925,12 +496,12 @@ func (a *TeamsApiService) TeamsTeamsDeleteExecute(r ApiTeamsTeamsDeleteRequest) 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -952,121 +523,23 @@ func (a *TeamsApiService) TeamsTeamsDeleteExecute(r ApiTeamsTeamsDeleteRequest) 
 	return localVarHTTPResponse, nil
 }
 
-type ApiTeamsTeamsListRequest struct {
-	ctx _context.Context
-	ApiService *TeamsApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiTeamsTeamsListRequest) Page(page int32) ApiTeamsTeamsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiTeamsTeamsListRequest) PageSize(pageSize int32) ApiTeamsTeamsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiTeamsTeamsListRequest) Search(search string) ApiTeamsTeamsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiTeamsTeamsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.TeamsTeamsListExecute(r)
+// TeamsTeamsListOpts Optional parameters for the method 'TeamsTeamsList'
+type TeamsTeamsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * TeamsTeamsList  List Teams
- * 
-Make a GET request to this resource to retrieve the list of
-teams.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of teams
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more team records.  
-
-## Results
-
-Each team data structure includes the following fields:
-
-* `id`: Database ID for this team. (integer)
-* `type`: Data type for this team. (choice)
-* `url`: URL for this team. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this team was created. (datetime)
-* `modified`: Timestamp when this team was last modified. (datetime)
-* `name`: Name of this team. (string)
-* `description`: Optional description of this team. (string)
-* `organization`:  (id)
-
-
-
-## Sorting
-
-To specify that teams are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+TeamsTeamsList  List Teams
+ Make a GET request to this resource to retrieve the list of teams.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of teams found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more team records.    ## Results  Each team data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this team. (integer) * &#x60;type&#x60;: Data type for this team. (choice) * &#x60;url&#x60;: URL for this team. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this team was created. (datetime) * &#x60;modified&#x60;: Timestamp when this team was last modified. (datetime) * &#x60;name&#x60;: Name of this team. (string) * &#x60;description&#x60;: Optional description of this team. (string) * &#x60;organization&#x60;:  (id)    ## Sorting  To specify that teams are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiTeamsTeamsListRequest
- */
-func (a *TeamsApiService) TeamsTeamsList(ctx _context.Context) ApiTeamsTeamsListRequest {
-	return ApiTeamsTeamsListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *TeamsApiService) TeamsTeamsListExecute(r ApiTeamsTeamsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *TeamsTeamsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *TeamsApiService) TeamsTeamsList(ctx _context.Context, localVarOptionals *TeamsTeamsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1075,25 +548,20 @@ func (a *TeamsApiService) TeamsTeamsListExecute(r ApiTeamsTeamsListRequest) (*_n
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TeamsApiService.TeamsTeamsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/teams/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/teams/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1112,12 +580,12 @@ func (a *TeamsApiService) TeamsTeamsListExecute(r ApiTeamsTeamsListRequest) (*_n
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1139,122 +607,24 @@ func (a *TeamsApiService) TeamsTeamsListExecute(r ApiTeamsTeamsListRequest) (*_n
 	return localVarHTTPResponse, nil
 }
 
-type ApiTeamsTeamsObjectRolesListRequest struct {
-	ctx _context.Context
-	ApiService *TeamsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiTeamsTeamsObjectRolesListRequest) Page(page int32) ApiTeamsTeamsObjectRolesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiTeamsTeamsObjectRolesListRequest) PageSize(pageSize int32) ApiTeamsTeamsObjectRolesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiTeamsTeamsObjectRolesListRequest) Search(search string) ApiTeamsTeamsObjectRolesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiTeamsTeamsObjectRolesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.TeamsTeamsObjectRolesListExecute(r)
+// TeamsTeamsObjectRolesListOpts Optional parameters for the method 'TeamsTeamsObjectRolesList'
+type TeamsTeamsObjectRolesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * TeamsTeamsObjectRolesList  List Roles for a Team
- * 
-Make a GET request to this resource to retrieve a list of
-roles associated with the selected
-team.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of roles
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more role records.  
-
-## Results
-
-Each role data structure includes the following fields:
-
-* `id`: Database ID for this role. (integer)
-* `type`: Data type for this role. (choice)
-* `url`: URL for this role. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `name`: Name of this role. (field)
-* `description`: Optional description of this role. (field)
-
-
-
-## Sorting
-
-To specify that roles are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+TeamsTeamsObjectRolesList  List Roles for a Team
+ Make a GET request to this resource to retrieve a list of roles associated with the selected team.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of roles found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more role records.    ## Results  Each role data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this role. (integer) * &#x60;type&#x60;: Data type for this role. (choice) * &#x60;url&#x60;: URL for this role. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;name&#x60;: Name of this role. (field) * &#x60;description&#x60;: Optional description of this role. (field)    ## Sorting  To specify that roles are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiTeamsTeamsObjectRolesListRequest
- */
-func (a *TeamsApiService) TeamsTeamsObjectRolesList(ctx _context.Context, id string) ApiTeamsTeamsObjectRolesListRequest {
-	return ApiTeamsTeamsObjectRolesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *TeamsApiService) TeamsTeamsObjectRolesListExecute(r ApiTeamsTeamsObjectRolesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *TeamsTeamsObjectRolesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *TeamsApiService) TeamsTeamsObjectRolesList(ctx _context.Context, id string, localVarOptionals *TeamsTeamsObjectRolesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1263,26 +633,22 @@ func (a *TeamsApiService) TeamsTeamsObjectRolesListExecute(r ApiTeamsTeamsObject
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TeamsApiService.TeamsTeamsObjectRolesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/teams/{id}/object_roles/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/teams/{id}/object_roles/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1301,12 +667,12 @@ func (a *TeamsApiService) TeamsTeamsObjectRolesListExecute(r ApiTeamsTeamsObject
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1328,69 +694,22 @@ func (a *TeamsApiService) TeamsTeamsObjectRolesListExecute(r ApiTeamsTeamsObject
 	return localVarHTTPResponse, nil
 }
 
-type ApiTeamsTeamsPartialUpdateRequest struct {
-	ctx _context.Context
-	ApiService *TeamsApiService
-	id string
-	search *string
-	data *InlineObject66
-}
-
-func (r ApiTeamsTeamsPartialUpdateRequest) Search(search string) ApiTeamsTeamsPartialUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiTeamsTeamsPartialUpdateRequest) Data(data InlineObject66) ApiTeamsTeamsPartialUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiTeamsTeamsPartialUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.TeamsTeamsPartialUpdateExecute(r)
+// TeamsTeamsPartialUpdateOpts Optional parameters for the method 'TeamsTeamsPartialUpdate'
+type TeamsTeamsPartialUpdateOpts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * TeamsTeamsPartialUpdate  Update a Team
- * 
-Make a PUT or PATCH request to this resource to update this
-team.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this team. (string, required)
-* `description`: Optional description of this team. (string, default=`""`)
-* `organization`:  (id, required)
-
-
-
-
-
-
-
-
-For a PATCH request, include only the fields that are being modified.
+TeamsTeamsPartialUpdate  Update a Team
+ Make a PUT or PATCH request to this resource to update this team.  The following fields may be modified:          * &#x60;name&#x60;: Name of this team. (string, required) * &#x60;description&#x60;: Optional description of this team. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;:  (id, required)         For a PATCH request, include only the fields that are being modified.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiTeamsTeamsPartialUpdateRequest
- */
-func (a *TeamsApiService) TeamsTeamsPartialUpdate(ctx _context.Context, id string) ApiTeamsTeamsPartialUpdateRequest {
-	return ApiTeamsTeamsPartialUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *TeamsApiService) TeamsTeamsPartialUpdateExecute(r ApiTeamsTeamsPartialUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *TeamsTeamsPartialUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject66) - 
+*/
+func (a *TeamsApiService) TeamsTeamsPartialUpdate(ctx _context.Context, id string, localVarOptionals *TeamsTeamsPartialUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPatch
 		localVarPostBody     interface{}
@@ -1399,20 +718,16 @@ func (a *TeamsApiService) TeamsTeamsPartialUpdateExecute(r ApiTeamsTeamsPartialU
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TeamsApiService.TeamsTeamsPartialUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/teams/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/teams/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -1432,13 +747,20 @@ func (a *TeamsApiService) TeamsTeamsPartialUpdateExecute(r ApiTeamsTeamsPartialU
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject66)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject66")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1460,162 +782,24 @@ func (a *TeamsApiService) TeamsTeamsPartialUpdateExecute(r ApiTeamsTeamsPartialU
 	return localVarHTTPResponse, nil
 }
 
-type ApiTeamsTeamsProjectsListRequest struct {
-	ctx _context.Context
-	ApiService *TeamsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiTeamsTeamsProjectsListRequest) Page(page int32) ApiTeamsTeamsProjectsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiTeamsTeamsProjectsListRequest) PageSize(pageSize int32) ApiTeamsTeamsProjectsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiTeamsTeamsProjectsListRequest) Search(search string) ApiTeamsTeamsProjectsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiTeamsTeamsProjectsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.TeamsTeamsProjectsListExecute(r)
+// TeamsTeamsProjectsListOpts Optional parameters for the method 'TeamsTeamsProjectsList'
+type TeamsTeamsProjectsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * TeamsTeamsProjectsList  List Projects for a Team
- * 
-Make a GET request to this resource to retrieve a list of
-projects associated with the selected
-team.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of projects
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more project records.  
-
-## Results
-
-Each project data structure includes the following fields:
-
-* `id`: Database ID for this project. (integer)
-* `type`: Data type for this project. (choice)
-* `url`: URL for this project. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this project was created. (datetime)
-* `modified`: Timestamp when this project was last modified. (datetime)
-* `name`: Name of this project. (string)
-* `description`: Optional description of this project. (string)
-* `local_path`: Local path (relative to PROJECTS_ROOT) containing playbooks and related files for this project. (string)
-* `scm_type`: Specifies the source control system used to store the project. (choice)
-    - `""`: Manual
-    - `git`: Git
-    - `hg`: Mercurial
-    - `svn`: Subversion
-    - `insights`: Red Hat Insights
-    - `archive`: Remote Archive
-* `scm_url`: The location where the project is stored. (string)
-* `scm_branch`: Specific branch, tag or commit to checkout. (string)
-* `scm_refspec`: For git projects, an additional refspec to fetch. (string)
-* `scm_clean`: Discard any local changes before syncing the project. (boolean)
-* `scm_delete_on_update`: Delete the project before syncing. (boolean)
-* `credential`:  (id)
-* `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer)
-* `scm_revision`: The last revision fetched by a project update (string)
-* `last_job_run`:  (datetime)
-* `last_job_failed`:  (boolean)
-* `next_job_run`:  (datetime)
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-    - `never updated`: Never Updated
-    - `ok`: OK
-    - `missing`: Missing
-* `organization`: The organization used to determine access to this template. (id)
-* `scm_update_on_launch`: Update the project when a job is launched that uses the project. (boolean)
-* `scm_update_cache_timeout`: The number of seconds after the last project update ran that a new project update will be launched as a job dependency. (integer)
-* `allow_override`: Allow changing the SCM branch or revision in a job template that uses this project. (boolean)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string)
-* `last_update_failed`:  (boolean)
-* `last_updated`:  (datetime)
-
-
-
-## Sorting
-
-To specify that projects are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+TeamsTeamsProjectsList  List Projects for a Team
+ Make a GET request to this resource to retrieve a list of projects associated with the selected team.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of projects found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more project records.    ## Results  Each project data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this project. (integer) * &#x60;type&#x60;: Data type for this project. (choice) * &#x60;url&#x60;: URL for this project. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this project was created. (datetime) * &#x60;modified&#x60;: Timestamp when this project was last modified. (datetime) * &#x60;name&#x60;: Name of this project. (string) * &#x60;description&#x60;: Optional description of this project. (string) * &#x60;local_path&#x60;: Local path (relative to PROJECTS_ROOT) containing playbooks and related files for this project. (string) * &#x60;scm_type&#x60;: Specifies the source control system used to store the project. (choice)     - &#x60;\&quot;\&quot;&#x60;: Manual     - &#x60;git&#x60;: Git     - &#x60;hg&#x60;: Mercurial     - &#x60;svn&#x60;: Subversion     - &#x60;insights&#x60;: Red Hat Insights     - &#x60;archive&#x60;: Remote Archive * &#x60;scm_url&#x60;: The location where the project is stored. (string) * &#x60;scm_branch&#x60;: Specific branch, tag or commit to checkout. (string) * &#x60;scm_refspec&#x60;: For git projects, an additional refspec to fetch. (string) * &#x60;scm_clean&#x60;: Discard any local changes before syncing the project. (boolean) * &#x60;scm_delete_on_update&#x60;: Delete the project before syncing. (boolean) * &#x60;credential&#x60;:  (id) * &#x60;timeout&#x60;: The amount of time (in seconds) to run before the task is canceled. (integer) * &#x60;scm_revision&#x60;: The last revision fetched by a project update (string) * &#x60;last_job_run&#x60;:  (datetime) * &#x60;last_job_failed&#x60;:  (boolean) * &#x60;next_job_run&#x60;:  (datetime) * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled     - &#x60;never updated&#x60;: Never Updated     - &#x60;ok&#x60;: OK     - &#x60;missing&#x60;: Missing * &#x60;organization&#x60;: The organization used to determine access to this template. (id) * &#x60;scm_update_on_launch&#x60;: Update the project when a job is launched that uses the project. (boolean) * &#x60;scm_update_cache_timeout&#x60;: The number of seconds after the last project update ran that a new project update will be launched as a job dependency. (integer) * &#x60;allow_override&#x60;: Allow changing the SCM branch or revision in a job template that uses this project. (boolean) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string) * &#x60;last_update_failed&#x60;:  (boolean) * &#x60;last_updated&#x60;:  (datetime)    ## Sorting  To specify that projects are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiTeamsTeamsProjectsListRequest
- */
-func (a *TeamsApiService) TeamsTeamsProjectsList(ctx _context.Context, id string) ApiTeamsTeamsProjectsListRequest {
-	return ApiTeamsTeamsProjectsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *TeamsApiService) TeamsTeamsProjectsListExecute(r ApiTeamsTeamsProjectsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *TeamsTeamsProjectsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *TeamsApiService) TeamsTeamsProjectsList(ctx _context.Context, id string, localVarOptionals *TeamsTeamsProjectsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1624,26 +808,22 @@ func (a *TeamsApiService) TeamsTeamsProjectsListExecute(r ApiTeamsTeamsProjectsL
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TeamsApiService.TeamsTeamsProjectsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/teams/{id}/projects/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/teams/{id}/projects/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1662,12 +842,12 @@ func (a *TeamsApiService) TeamsTeamsProjectsListExecute(r ApiTeamsTeamsProjectsL
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1689,54 +869,20 @@ func (a *TeamsApiService) TeamsTeamsProjectsListExecute(r ApiTeamsTeamsProjectsL
 	return localVarHTTPResponse, nil
 }
 
-type ApiTeamsTeamsReadRequest struct {
-	ctx _context.Context
-	ApiService *TeamsApiService
-	id string
-	search *string
-}
-
-func (r ApiTeamsTeamsReadRequest) Search(search string) ApiTeamsTeamsReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiTeamsTeamsReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.TeamsTeamsReadExecute(r)
+// TeamsTeamsReadOpts Optional parameters for the method 'TeamsTeamsRead'
+type TeamsTeamsReadOpts struct {
+    Search optional.String
 }
 
 /*
- * TeamsTeamsRead  Retrieve a Team
- * 
-Make GET request to this resource to retrieve a single team
-record containing the following fields:
-
-* `id`: Database ID for this team. (integer)
-* `type`: Data type for this team. (choice)
-* `url`: URL for this team. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this team was created. (datetime)
-* `modified`: Timestamp when this team was last modified. (datetime)
-* `name`: Name of this team. (string)
-* `description`: Optional description of this team. (string)
-* `organization`:  (id)
+TeamsTeamsRead  Retrieve a Team
+ Make GET request to this resource to retrieve a single team record containing the following fields:  * &#x60;id&#x60;: Database ID for this team. (integer) * &#x60;type&#x60;: Data type for this team. (choice) * &#x60;url&#x60;: URL for this team. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this team was created. (datetime) * &#x60;modified&#x60;: Timestamp when this team was last modified. (datetime) * &#x60;name&#x60;: Name of this team. (string) * &#x60;description&#x60;: Optional description of this team. (string) * &#x60;organization&#x60;:  (id)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiTeamsTeamsReadRequest
- */
-func (a *TeamsApiService) TeamsTeamsRead(ctx _context.Context, id string) ApiTeamsTeamsReadRequest {
-	return ApiTeamsTeamsReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *TeamsApiService) TeamsTeamsReadExecute(r ApiTeamsTeamsReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *TeamsTeamsReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *TeamsApiService) TeamsTeamsRead(ctx _context.Context, id string, localVarOptionals *TeamsTeamsReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1745,20 +891,16 @@ func (a *TeamsApiService) TeamsTeamsReadExecute(r ApiTeamsTeamsReadRequest) (*_n
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TeamsApiService.TeamsTeamsRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/teams/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/teams/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1777,12 +919,12 @@ func (a *TeamsApiService) TeamsTeamsReadExecute(r ApiTeamsTeamsReadRequest) (*_n
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1804,45 +946,20 @@ func (a *TeamsApiService) TeamsTeamsReadExecute(r ApiTeamsTeamsReadRequest) (*_n
 	return localVarHTTPResponse, nil
 }
 
-type ApiTeamsTeamsRolesCreateRequest struct {
-	ctx _context.Context
-	ApiService *TeamsApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiTeamsTeamsRolesCreateRequest) Data(data map[string]interface{}) ApiTeamsTeamsRolesCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiTeamsTeamsRolesCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.TeamsTeamsRolesCreateExecute(r)
+// TeamsTeamsRolesCreateOpts Optional parameters for the method 'TeamsTeamsRolesCreate'
+type TeamsTeamsRolesCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * TeamsTeamsRolesCreate  Associate Roles with this Team
- * 
-Make a POST request to this resource to add or remove a role from this team. The following fields may be modified:
-
-   * `id`: The Role ID to add to the team. (int, required)
-   * `disassociate`: Provide if you want to remove the role. (any value, optional)
+TeamsTeamsRolesCreate  Associate Roles with this Team
+ Make a POST request to this resource to add or remove a role from this team. The following fields may be modified:     * &#x60;id&#x60;: The Role ID to add to the team. (int, required)    * &#x60;disassociate&#x60;: Provide if you want to remove the role. (any value, optional)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiTeamsTeamsRolesCreateRequest
- */
-func (a *TeamsApiService) TeamsTeamsRolesCreate(ctx _context.Context, id string) ApiTeamsTeamsRolesCreateRequest {
-	return ApiTeamsTeamsRolesCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *TeamsApiService) TeamsTeamsRolesCreateExecute(r ApiTeamsTeamsRolesCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *TeamsTeamsRolesCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *TeamsApiService) TeamsTeamsRolesCreate(ctx _context.Context, id string, localVarOptionals *TeamsTeamsRolesCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -1851,13 +968,9 @@ func (a *TeamsApiService) TeamsTeamsRolesCreateExecute(r ApiTeamsTeamsRolesCreat
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TeamsApiService.TeamsTeamsRolesCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/teams/{id}/roles/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/teams/{id}/roles/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1881,13 +994,16 @@ func (a *TeamsApiService) TeamsTeamsRolesCreateExecute(r ApiTeamsTeamsRolesCreat
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1909,120 +1025,24 @@ func (a *TeamsApiService) TeamsTeamsRolesCreateExecute(r ApiTeamsTeamsRolesCreat
 	return localVarHTTPResponse, nil
 }
 
-type ApiTeamsTeamsRolesListRequest struct {
-	ctx _context.Context
-	ApiService *TeamsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiTeamsTeamsRolesListRequest) Page(page int32) ApiTeamsTeamsRolesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiTeamsTeamsRolesListRequest) PageSize(pageSize int32) ApiTeamsTeamsRolesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiTeamsTeamsRolesListRequest) Search(search string) ApiTeamsTeamsRolesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiTeamsTeamsRolesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.TeamsTeamsRolesListExecute(r)
+// TeamsTeamsRolesListOpts Optional parameters for the method 'TeamsTeamsRolesList'
+type TeamsTeamsRolesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * TeamsTeamsRolesList  List Roles for a Team
- * 
-Make a GET request to this resource to retrieve a list of roles associated with the selected team.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of roles
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more role records.  
-
-## Results
-
-Each role data structure includes the following fields:
-
-* `id`: Database ID for this role. (integer)
-* `type`: Data type for this role. (choice)
-* `url`: URL for this role. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `name`: Name of this role. (field)
-* `description`: Optional description of this role. (field)
-
-
-
-## Sorting
-
-To specify that roles are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+TeamsTeamsRolesList  List Roles for a Team
+ Make a GET request to this resource to retrieve a list of roles associated with the selected team.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of roles found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more role records.    ## Results  Each role data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this role. (integer) * &#x60;type&#x60;: Data type for this role. (choice) * &#x60;url&#x60;: URL for this role. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;name&#x60;: Name of this role. (field) * &#x60;description&#x60;: Optional description of this role. (field)    ## Sorting  To specify that roles are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiTeamsTeamsRolesListRequest
- */
-func (a *TeamsApiService) TeamsTeamsRolesList(ctx _context.Context, id string) ApiTeamsTeamsRolesListRequest {
-	return ApiTeamsTeamsRolesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *TeamsApiService) TeamsTeamsRolesListExecute(r ApiTeamsTeamsRolesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *TeamsTeamsRolesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *TeamsApiService) TeamsTeamsRolesList(ctx _context.Context, id string, localVarOptionals *TeamsTeamsRolesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2031,26 +1051,22 @@ func (a *TeamsApiService) TeamsTeamsRolesListExecute(r ApiTeamsTeamsRolesListReq
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TeamsApiService.TeamsTeamsRolesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/teams/{id}/roles/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/teams/{id}/roles/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2069,12 +1085,12 @@ func (a *TeamsApiService) TeamsTeamsRolesListExecute(r ApiTeamsTeamsRolesListReq
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2096,67 +1112,22 @@ func (a *TeamsApiService) TeamsTeamsRolesListExecute(r ApiTeamsTeamsRolesListReq
 	return localVarHTTPResponse, nil
 }
 
-type ApiTeamsTeamsUpdateRequest struct {
-	ctx _context.Context
-	ApiService *TeamsApiService
-	id string
-	search *string
-	data *InlineObject65
-}
-
-func (r ApiTeamsTeamsUpdateRequest) Search(search string) ApiTeamsTeamsUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiTeamsTeamsUpdateRequest) Data(data InlineObject65) ApiTeamsTeamsUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiTeamsTeamsUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.TeamsTeamsUpdateExecute(r)
+// TeamsTeamsUpdateOpts Optional parameters for the method 'TeamsTeamsUpdate'
+type TeamsTeamsUpdateOpts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * TeamsTeamsUpdate  Update a Team
- * 
-Make a PUT or PATCH request to this resource to update this
-team.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this team. (string, required)
-* `description`: Optional description of this team. (string, default=`""`)
-* `organization`:  (id, required)
-
-
-
-
-
-
-For a PUT request, include **all** fields in the request.
+TeamsTeamsUpdate  Update a Team
+ Make a PUT or PATCH request to this resource to update this team.  The following fields may be modified:          * &#x60;name&#x60;: Name of this team. (string, required) * &#x60;description&#x60;: Optional description of this team. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;:  (id, required)       For a PUT request, include **all** fields in the request.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiTeamsTeamsUpdateRequest
- */
-func (a *TeamsApiService) TeamsTeamsUpdate(ctx _context.Context, id string) ApiTeamsTeamsUpdateRequest {
-	return ApiTeamsTeamsUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *TeamsApiService) TeamsTeamsUpdateExecute(r ApiTeamsTeamsUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *TeamsTeamsUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject65) - 
+*/
+func (a *TeamsApiService) TeamsTeamsUpdate(ctx _context.Context, id string, localVarOptionals *TeamsTeamsUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -2165,20 +1136,16 @@ func (a *TeamsApiService) TeamsTeamsUpdateExecute(r ApiTeamsTeamsUpdateRequest) 
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TeamsApiService.TeamsTeamsUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/teams/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/teams/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -2198,13 +1165,20 @@ func (a *TeamsApiService) TeamsTeamsUpdateExecute(r ApiTeamsTeamsUpdateRequest) 
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject65)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject65")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2226,80 +1200,20 @@ func (a *TeamsApiService) TeamsTeamsUpdateExecute(r ApiTeamsTeamsUpdateRequest) 
 	return localVarHTTPResponse, nil
 }
 
-type ApiTeamsTeamsUsersCreateRequest struct {
-	ctx _context.Context
-	ApiService *TeamsApiService
-	id string
-	data *InlineObject67
-}
-
-func (r ApiTeamsTeamsUsersCreateRequest) Data(data InlineObject67) ApiTeamsTeamsUsersCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiTeamsTeamsUsersCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.TeamsTeamsUsersCreateExecute(r)
+// TeamsTeamsUsersCreateOpts Optional parameters for the method 'TeamsTeamsUsersCreate'
+type TeamsTeamsUsersCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * TeamsTeamsUsersCreate  Create a User for a Team
- * 
-Make a POST request to this resource with the following user
-fields to create a new user associated with this
-team.
-
-
-
-
-
-
-
-
-* `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string, required)
-* `first_name`:  (string, default=`""`)
-* `last_name`:  (string, default=`""`)
-* `email`:  (string, default=`""`)
-* `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean, default=`False`)
-* `is_system_auditor`:  (boolean, default=`False`)
-* `password`: Write-only field used to change the password. (string, default=`""`)
-
-
-
-
-
-
-
-
-
-
-
-# Add Users for a Team:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing user with this team.
-
-# Remove Users from this Team:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the user from this team
- without deleting the user.
+TeamsTeamsUsersCreate  Create a User for a Team
+ Make a POST request to this resource with the following user fields to create a new user associated with this team.         * &#x60;username&#x60;: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string, required) * &#x60;first_name&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;last_name&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;email&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;is_superuser&#x60;: Designates that this user has all permissions without explicitly assigning them. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;is_system_auditor&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;password&#x60;: Write-only field used to change the password. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)            # Add Users for a Team:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing user with this team.  # Remove Users from this Team:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the user from this team  without deleting the user.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiTeamsTeamsUsersCreateRequest
- */
-func (a *TeamsApiService) TeamsTeamsUsersCreate(ctx _context.Context, id string) ApiTeamsTeamsUsersCreateRequest {
-	return ApiTeamsTeamsUsersCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *TeamsApiService) TeamsTeamsUsersCreateExecute(r ApiTeamsTeamsUsersCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *TeamsTeamsUsersCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject67) - 
+*/
+func (a *TeamsApiService) TeamsTeamsUsersCreate(ctx _context.Context, id string, localVarOptionals *TeamsTeamsUsersCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -2308,13 +1222,9 @@ func (a *TeamsApiService) TeamsTeamsUsersCreateExecute(r ApiTeamsTeamsUsersCreat
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TeamsApiService.TeamsTeamsUsersCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/teams/{id}/users/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/teams/{id}/users/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -2338,13 +1248,20 @@ func (a *TeamsApiService) TeamsTeamsUsersCreateExecute(r ApiTeamsTeamsUsersCreat
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject67)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject67")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2366,131 +1283,24 @@ func (a *TeamsApiService) TeamsTeamsUsersCreateExecute(r ApiTeamsTeamsUsersCreat
 	return localVarHTTPResponse, nil
 }
 
-type ApiTeamsTeamsUsersListRequest struct {
-	ctx _context.Context
-	ApiService *TeamsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiTeamsTeamsUsersListRequest) Page(page int32) ApiTeamsTeamsUsersListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiTeamsTeamsUsersListRequest) PageSize(pageSize int32) ApiTeamsTeamsUsersListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiTeamsTeamsUsersListRequest) Search(search string) ApiTeamsTeamsUsersListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiTeamsTeamsUsersListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.TeamsTeamsUsersListExecute(r)
+// TeamsTeamsUsersListOpts Optional parameters for the method 'TeamsTeamsUsersList'
+type TeamsTeamsUsersListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * TeamsTeamsUsersList  List Users for a Team
- * 
-Make a GET request to this resource to retrieve a list of
-users associated with the selected
-team.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of users
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more user records.  
-
-## Results
-
-Each user data structure includes the following fields:
-
-* `id`: Database ID for this user. (integer)
-* `type`: Data type for this user. (choice)
-* `url`: URL for this user. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this user was created. (datetime)
-* `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string)
-* `first_name`:  (string)
-* `last_name`:  (string)
-* `email`:  (string)
-* `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean)
-* `is_system_auditor`:  (boolean)
-
-* `ldap_dn`:  (string)
-* `last_login`:  (datetime)
-* `external_account`: Set if the account is managed by an external service (field)
-
-
-
-## Sorting
-
-To specify that users are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=username
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-username
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=username,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+TeamsTeamsUsersList  List Users for a Team
+ Make a GET request to this resource to retrieve a list of users associated with the selected team.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of users found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more user records.    ## Results  Each user data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this user. (integer) * &#x60;type&#x60;: Data type for this user. (choice) * &#x60;url&#x60;: URL for this user. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this user was created. (datetime) * &#x60;username&#x60;: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string) * &#x60;first_name&#x60;:  (string) * &#x60;last_name&#x60;:  (string) * &#x60;email&#x60;:  (string) * &#x60;is_superuser&#x60;: Designates that this user has all permissions without explicitly assigning them. (boolean) * &#x60;is_system_auditor&#x60;:  (boolean)  * &#x60;ldap_dn&#x60;:  (string) * &#x60;last_login&#x60;:  (datetime) * &#x60;external_account&#x60;: Set if the account is managed by an external service (field)    ## Sorting  To specify that users are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;username  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-username  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;username,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiTeamsTeamsUsersListRequest
- */
-func (a *TeamsApiService) TeamsTeamsUsersList(ctx _context.Context, id string) ApiTeamsTeamsUsersListRequest {
-	return ApiTeamsTeamsUsersListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *TeamsApiService) TeamsTeamsUsersListExecute(r ApiTeamsTeamsUsersListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *TeamsTeamsUsersListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *TeamsApiService) TeamsTeamsUsersList(ctx _context.Context, id string, localVarOptionals *TeamsTeamsUsersListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2499,26 +1309,22 @@ func (a *TeamsApiService) TeamsTeamsUsersListExecute(r ApiTeamsTeamsUsersListReq
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TeamsApiService.TeamsTeamsUsersList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/teams/{id}/users/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/teams/{id}/users/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2537,12 +1343,12 @@ func (a *TeamsApiService) TeamsTeamsUsersListExecute(r ApiTeamsTeamsUsersListReq
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,40 +26,19 @@ var (
 // NotificationTemplatesApiService NotificationTemplatesApi service
 type NotificationTemplatesApiService service
 
-type ApiNotificationTemplatesNotificationTemplatesCopyCreateRequest struct {
-	ctx _context.Context
-	ApiService *NotificationTemplatesApiService
-	id string
-	data *InlineObject43
-}
-
-func (r ApiNotificationTemplatesNotificationTemplatesCopyCreateRequest) Data(data InlineObject43) ApiNotificationTemplatesNotificationTemplatesCopyCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiNotificationTemplatesNotificationTemplatesCopyCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.NotificationTemplatesNotificationTemplatesCopyCreateExecute(r)
+// NotificationTemplatesNotificationTemplatesCopyCreateOpts Optional parameters for the method 'NotificationTemplatesNotificationTemplatesCopyCreate'
+type NotificationTemplatesNotificationTemplatesCopyCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * NotificationTemplatesNotificationTemplatesCopyCreate Method for NotificationTemplatesNotificationTemplatesCopyCreate
+NotificationTemplatesNotificationTemplatesCopyCreate Method for NotificationTemplatesNotificationTemplatesCopyCreate
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiNotificationTemplatesNotificationTemplatesCopyCreateRequest
- */
-func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesCopyCreate(ctx _context.Context, id string) ApiNotificationTemplatesNotificationTemplatesCopyCreateRequest {
-	return ApiNotificationTemplatesNotificationTemplatesCopyCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesCopyCreateExecute(r ApiNotificationTemplatesNotificationTemplatesCopyCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *NotificationTemplatesNotificationTemplatesCopyCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject43) - 
+*/
+func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesCopyCreate(ctx _context.Context, id string, localVarOptionals *NotificationTemplatesNotificationTemplatesCopyCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -67,13 +47,9 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "NotificationTemplatesApiService.NotificationTemplatesNotificationTemplatesCopyCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/notification_templates/{id}/copy/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/notification_templates/{id}/copy/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -97,13 +73,20 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject43)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject43")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -125,50 +108,23 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 	return localVarHTTPResponse, nil
 }
 
-type ApiNotificationTemplatesNotificationTemplatesCopyListRequest struct {
-	ctx _context.Context
-	ApiService *NotificationTemplatesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiNotificationTemplatesNotificationTemplatesCopyListRequest) Page(page int32) ApiNotificationTemplatesNotificationTemplatesCopyListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiNotificationTemplatesNotificationTemplatesCopyListRequest) PageSize(pageSize int32) ApiNotificationTemplatesNotificationTemplatesCopyListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiNotificationTemplatesNotificationTemplatesCopyListRequest) Search(search string) ApiNotificationTemplatesNotificationTemplatesCopyListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiNotificationTemplatesNotificationTemplatesCopyListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.NotificationTemplatesNotificationTemplatesCopyListExecute(r)
+// NotificationTemplatesNotificationTemplatesCopyListOpts Optional parameters for the method 'NotificationTemplatesNotificationTemplatesCopyList'
+type NotificationTemplatesNotificationTemplatesCopyListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * NotificationTemplatesNotificationTemplatesCopyList Method for NotificationTemplatesNotificationTemplatesCopyList
+NotificationTemplatesNotificationTemplatesCopyList Method for NotificationTemplatesNotificationTemplatesCopyList
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiNotificationTemplatesNotificationTemplatesCopyListRequest
- */
-func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesCopyList(ctx _context.Context, id string) ApiNotificationTemplatesNotificationTemplatesCopyListRequest {
-	return ApiNotificationTemplatesNotificationTemplatesCopyListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesCopyListExecute(r ApiNotificationTemplatesNotificationTemplatesCopyListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *NotificationTemplatesNotificationTemplatesCopyListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesCopyList(ctx _context.Context, id string, localVarOptionals *NotificationTemplatesNotificationTemplatesCopyListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -177,26 +133,22 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "NotificationTemplatesApiService.NotificationTemplatesNotificationTemplatesCopyList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/notification_templates/{id}/copy/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/notification_templates/{id}/copy/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -215,12 +167,12 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -242,64 +194,19 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 	return localVarHTTPResponse, nil
 }
 
-type ApiNotificationTemplatesNotificationTemplatesCreateRequest struct {
-	ctx _context.Context
-	ApiService *NotificationTemplatesApiService
-	data *InlineObject40
-}
-
-func (r ApiNotificationTemplatesNotificationTemplatesCreateRequest) Data(data InlineObject40) ApiNotificationTemplatesNotificationTemplatesCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiNotificationTemplatesNotificationTemplatesCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.NotificationTemplatesNotificationTemplatesCreateExecute(r)
+// NotificationTemplatesNotificationTemplatesCreateOpts Optional parameters for the method 'NotificationTemplatesNotificationTemplatesCreate'
+type NotificationTemplatesNotificationTemplatesCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * NotificationTemplatesNotificationTemplatesCreate  Create a Notification Template
- * 
-Make a POST request to this resource with the following notification template
-fields to create a new notification template:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this notification template. (string, required)
-* `description`: Optional description of this notification template. (string, default=`""`)
-* `organization`:  (id, required)
-* `notification_type`:  (choice, required)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json, default=`{}`)
-* `messages`: Optional custom messages for notification template. (json, default=`{&#39;started&#39;: None, &#39;success&#39;: None, &#39;error&#39;: None, &#39;workflow_approval&#39;: None}`)
+NotificationTemplatesNotificationTemplatesCreate  Create a Notification Template
+ Make a POST request to this resource with the following notification template fields to create a new notification template:          * &#x60;name&#x60;: Name of this notification template. (string, required) * &#x60;description&#x60;: Optional description of this notification template. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;:  (id, required) * &#x60;notification_type&#x60;:  (choice, required)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;messages&#x60;: Optional custom messages for notification template. (json, default&#x3D;&#x60;{&amp;#39;started&amp;#39;: None, &amp;#39;success&amp;#39;: None, &amp;#39;error&amp;#39;: None, &amp;#39;workflow_approval&amp;#39;: None}&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiNotificationTemplatesNotificationTemplatesCreateRequest
- */
-func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesCreate(ctx _context.Context) ApiNotificationTemplatesNotificationTemplatesCreateRequest {
-	return ApiNotificationTemplatesNotificationTemplatesCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesCreateExecute(r ApiNotificationTemplatesNotificationTemplatesCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *NotificationTemplatesNotificationTemplatesCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject40) - 
+*/
+func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesCreate(ctx _context.Context, localVarOptionals *NotificationTemplatesNotificationTemplatesCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -308,13 +215,8 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "NotificationTemplatesApiService.NotificationTemplatesNotificationTemplatesCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/notification_templates/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/notification_templates/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -337,13 +239,20 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject40)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject40")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -365,42 +274,20 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 	return localVarHTTPResponse, nil
 }
 
-type ApiNotificationTemplatesNotificationTemplatesDeleteRequest struct {
-	ctx _context.Context
-	ApiService *NotificationTemplatesApiService
-	id string
-	search *string
-}
-
-func (r ApiNotificationTemplatesNotificationTemplatesDeleteRequest) Search(search string) ApiNotificationTemplatesNotificationTemplatesDeleteRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiNotificationTemplatesNotificationTemplatesDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.NotificationTemplatesNotificationTemplatesDeleteExecute(r)
+// NotificationTemplatesNotificationTemplatesDeleteOpts Optional parameters for the method 'NotificationTemplatesNotificationTemplatesDelete'
+type NotificationTemplatesNotificationTemplatesDeleteOpts struct {
+    Search optional.String
 }
 
 /*
- * NotificationTemplatesNotificationTemplatesDelete  Delete a Notification Template
- * 
-Make a DELETE request to this resource to delete this notification template.
+NotificationTemplatesNotificationTemplatesDelete  Delete a Notification Template
+ Make a DELETE request to this resource to delete this notification template.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiNotificationTemplatesNotificationTemplatesDeleteRequest
- */
-func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesDelete(ctx _context.Context, id string) ApiNotificationTemplatesNotificationTemplatesDeleteRequest {
-	return ApiNotificationTemplatesNotificationTemplatesDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesDeleteExecute(r ApiNotificationTemplatesNotificationTemplatesDeleteRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *NotificationTemplatesNotificationTemplatesDeleteOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesDelete(ctx _context.Context, id string, localVarOptionals *NotificationTemplatesNotificationTemplatesDeleteOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -409,20 +296,16 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "NotificationTemplatesApiService.NotificationTemplatesNotificationTemplatesDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/notification_templates/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/notification_templates/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -441,12 +324,12 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -468,133 +351,23 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 	return localVarHTTPResponse, nil
 }
 
-type ApiNotificationTemplatesNotificationTemplatesListRequest struct {
-	ctx _context.Context
-	ApiService *NotificationTemplatesApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiNotificationTemplatesNotificationTemplatesListRequest) Page(page int32) ApiNotificationTemplatesNotificationTemplatesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiNotificationTemplatesNotificationTemplatesListRequest) PageSize(pageSize int32) ApiNotificationTemplatesNotificationTemplatesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiNotificationTemplatesNotificationTemplatesListRequest) Search(search string) ApiNotificationTemplatesNotificationTemplatesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiNotificationTemplatesNotificationTemplatesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.NotificationTemplatesNotificationTemplatesListExecute(r)
+// NotificationTemplatesNotificationTemplatesListOpts Optional parameters for the method 'NotificationTemplatesNotificationTemplatesList'
+type NotificationTemplatesNotificationTemplatesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * NotificationTemplatesNotificationTemplatesList  List Notification Templates
- * 
-Make a GET request to this resource to retrieve the list of
-notification templates.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of notification templates
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more notification template records.  
-
-## Results
-
-Each notification template data structure includes the following fields:
-
-* `id`: Database ID for this notification template. (integer)
-* `type`: Data type for this notification template. (choice)
-* `url`: URL for this notification template. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this notification template was created. (datetime)
-* `modified`: Timestamp when this notification template was last modified. (datetime)
-* `name`: Name of this notification template. (string)
-* `description`: Optional description of this notification template. (string)
-* `organization`:  (id)
-* `notification_type`:  (choice)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json)
-* `messages`: Optional custom messages for notification template. (json)
-
-
-
-## Sorting
-
-To specify that notification templates are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+NotificationTemplatesNotificationTemplatesList  List Notification Templates
+ Make a GET request to this resource to retrieve the list of notification templates.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of notification templates found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more notification template records.    ## Results  Each notification template data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this notification template. (integer) * &#x60;type&#x60;: Data type for this notification template. (choice) * &#x60;url&#x60;: URL for this notification template. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this notification template was created. (datetime) * &#x60;modified&#x60;: Timestamp when this notification template was last modified. (datetime) * &#x60;name&#x60;: Name of this notification template. (string) * &#x60;description&#x60;: Optional description of this notification template. (string) * &#x60;organization&#x60;:  (id) * &#x60;notification_type&#x60;:  (choice)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json) * &#x60;messages&#x60;: Optional custom messages for notification template. (json)    ## Sorting  To specify that notification templates are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiNotificationTemplatesNotificationTemplatesListRequest
- */
-func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesList(ctx _context.Context) ApiNotificationTemplatesNotificationTemplatesListRequest {
-	return ApiNotificationTemplatesNotificationTemplatesListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesListExecute(r ApiNotificationTemplatesNotificationTemplatesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *NotificationTemplatesNotificationTemplatesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesList(ctx _context.Context, localVarOptionals *NotificationTemplatesNotificationTemplatesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -603,25 +376,20 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "NotificationTemplatesApiService.NotificationTemplatesNotificationTemplatesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/notification_templates/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/notification_templates/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -640,12 +408,12 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -667,142 +435,24 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 	return localVarHTTPResponse, nil
 }
 
-type ApiNotificationTemplatesNotificationTemplatesNotificationsListRequest struct {
-	ctx _context.Context
-	ApiService *NotificationTemplatesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiNotificationTemplatesNotificationTemplatesNotificationsListRequest) Page(page int32) ApiNotificationTemplatesNotificationTemplatesNotificationsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiNotificationTemplatesNotificationTemplatesNotificationsListRequest) PageSize(pageSize int32) ApiNotificationTemplatesNotificationTemplatesNotificationsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiNotificationTemplatesNotificationTemplatesNotificationsListRequest) Search(search string) ApiNotificationTemplatesNotificationTemplatesNotificationsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiNotificationTemplatesNotificationTemplatesNotificationsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.NotificationTemplatesNotificationTemplatesNotificationsListExecute(r)
+// NotificationTemplatesNotificationTemplatesNotificationsListOpts Optional parameters for the method 'NotificationTemplatesNotificationTemplatesNotificationsList'
+type NotificationTemplatesNotificationTemplatesNotificationsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * NotificationTemplatesNotificationTemplatesNotificationsList  List Notifications for a Notification Template
- * 
-Make a GET request to this resource to retrieve a list of
-notifications associated with the selected
-notification template.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of notifications
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more notification records.  
-
-## Results
-
-Each notification data structure includes the following fields:
-
-* `id`: Database ID for this notification. (integer)
-* `type`: Data type for this notification. (choice)
-* `url`: URL for this notification. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this notification was created. (datetime)
-* `modified`: Timestamp when this notification was last modified. (datetime)
-* `notification_template`:  (id)
-* `error`:  (string)
-* `status`:  (choice)
-    - `pending`: Pending
-    - `successful`: Successful
-    - `failed`: Failed
-* `notifications_sent`:  (integer)
-* `notification_type`:  (choice)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `recipients`:  (string)
-* `subject`:  (string)
-* `body`: Notification body (json)
-
-
-
-## Sorting
-
-To specify that notifications are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+NotificationTemplatesNotificationTemplatesNotificationsList  List Notifications for a Notification Template
+ Make a GET request to this resource to retrieve a list of notifications associated with the selected notification template.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of notifications found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more notification records.    ## Results  Each notification data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this notification. (integer) * &#x60;type&#x60;: Data type for this notification. (choice) * &#x60;url&#x60;: URL for this notification. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this notification was created. (datetime) * &#x60;modified&#x60;: Timestamp when this notification was last modified. (datetime) * &#x60;notification_template&#x60;:  (id) * &#x60;error&#x60;:  (string) * &#x60;status&#x60;:  (choice)     - &#x60;pending&#x60;: Pending     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed * &#x60;notifications_sent&#x60;:  (integer) * &#x60;notification_type&#x60;:  (choice)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;recipients&#x60;:  (string) * &#x60;subject&#x60;:  (string) * &#x60;body&#x60;: Notification body (json)    ## Sorting  To specify that notifications are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiNotificationTemplatesNotificationTemplatesNotificationsListRequest
- */
-func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesNotificationsList(ctx _context.Context, id string) ApiNotificationTemplatesNotificationTemplatesNotificationsListRequest {
-	return ApiNotificationTemplatesNotificationTemplatesNotificationsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesNotificationsListExecute(r ApiNotificationTemplatesNotificationTemplatesNotificationsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *NotificationTemplatesNotificationTemplatesNotificationsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesNotificationsList(ctx _context.Context, id string, localVarOptionals *NotificationTemplatesNotificationTemplatesNotificationsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -811,26 +461,22 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "NotificationTemplatesApiService.NotificationTemplatesNotificationTemplatesNotificationsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/notification_templates/{id}/notifications/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/notification_templates/{id}/notifications/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -849,12 +495,12 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -876,81 +522,22 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 	return localVarHTTPResponse, nil
 }
 
-type ApiNotificationTemplatesNotificationTemplatesPartialUpdateRequest struct {
-	ctx _context.Context
-	ApiService *NotificationTemplatesApiService
-	id string
-	search *string
-	data *InlineObject42
-}
-
-func (r ApiNotificationTemplatesNotificationTemplatesPartialUpdateRequest) Search(search string) ApiNotificationTemplatesNotificationTemplatesPartialUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiNotificationTemplatesNotificationTemplatesPartialUpdateRequest) Data(data InlineObject42) ApiNotificationTemplatesNotificationTemplatesPartialUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiNotificationTemplatesNotificationTemplatesPartialUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.NotificationTemplatesNotificationTemplatesPartialUpdateExecute(r)
+// NotificationTemplatesNotificationTemplatesPartialUpdateOpts Optional parameters for the method 'NotificationTemplatesNotificationTemplatesPartialUpdate'
+type NotificationTemplatesNotificationTemplatesPartialUpdateOpts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * NotificationTemplatesNotificationTemplatesPartialUpdate  Update a Notification Template
- * 
-Make a PUT or PATCH request to this resource to update this
-notification template.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this notification template. (string, required)
-* `description`: Optional description of this notification template. (string, default=`""`)
-* `organization`:  (id, required)
-* `notification_type`:  (choice, required)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json, default=`{}`)
-* `messages`: Optional custom messages for notification template. (json, default=`{&#39;started&#39;: None, &#39;success&#39;: None, &#39;error&#39;: None, &#39;workflow_approval&#39;: None}`)
-
-
-
-
-
-
-
-
-For a PATCH request, include only the fields that are being modified.
+NotificationTemplatesNotificationTemplatesPartialUpdate  Update a Notification Template
+ Make a PUT or PATCH request to this resource to update this notification template.  The following fields may be modified:          * &#x60;name&#x60;: Name of this notification template. (string, required) * &#x60;description&#x60;: Optional description of this notification template. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;:  (id, required) * &#x60;notification_type&#x60;:  (choice, required)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;messages&#x60;: Optional custom messages for notification template. (json, default&#x3D;&#x60;{&amp;#39;started&amp;#39;: None, &amp;#39;success&amp;#39;: None, &amp;#39;error&amp;#39;: None, &amp;#39;workflow_approval&amp;#39;: None}&#x60;)         For a PATCH request, include only the fields that are being modified.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiNotificationTemplatesNotificationTemplatesPartialUpdateRequest
- */
-func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesPartialUpdate(ctx _context.Context, id string) ApiNotificationTemplatesNotificationTemplatesPartialUpdateRequest {
-	return ApiNotificationTemplatesNotificationTemplatesPartialUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesPartialUpdateExecute(r ApiNotificationTemplatesNotificationTemplatesPartialUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *NotificationTemplatesNotificationTemplatesPartialUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject42) - 
+*/
+func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesPartialUpdate(ctx _context.Context, id string, localVarOptionals *NotificationTemplatesNotificationTemplatesPartialUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPatch
 		localVarPostBody     interface{}
@@ -959,20 +546,16 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "NotificationTemplatesApiService.NotificationTemplatesNotificationTemplatesPartialUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/notification_templates/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/notification_templates/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -992,13 +575,20 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject42)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject42")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1020,66 +610,20 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 	return localVarHTTPResponse, nil
 }
 
-type ApiNotificationTemplatesNotificationTemplatesReadRequest struct {
-	ctx _context.Context
-	ApiService *NotificationTemplatesApiService
-	id string
-	search *string
-}
-
-func (r ApiNotificationTemplatesNotificationTemplatesReadRequest) Search(search string) ApiNotificationTemplatesNotificationTemplatesReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiNotificationTemplatesNotificationTemplatesReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.NotificationTemplatesNotificationTemplatesReadExecute(r)
+// NotificationTemplatesNotificationTemplatesReadOpts Optional parameters for the method 'NotificationTemplatesNotificationTemplatesRead'
+type NotificationTemplatesNotificationTemplatesReadOpts struct {
+    Search optional.String
 }
 
 /*
- * NotificationTemplatesNotificationTemplatesRead  Retrieve a Notification Template
- * 
-Make GET request to this resource to retrieve a single notification template
-record containing the following fields:
-
-* `id`: Database ID for this notification template. (integer)
-* `type`: Data type for this notification template. (choice)
-* `url`: URL for this notification template. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this notification template was created. (datetime)
-* `modified`: Timestamp when this notification template was last modified. (datetime)
-* `name`: Name of this notification template. (string)
-* `description`: Optional description of this notification template. (string)
-* `organization`:  (id)
-* `notification_type`:  (choice)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json)
-* `messages`: Optional custom messages for notification template. (json)
+NotificationTemplatesNotificationTemplatesRead  Retrieve a Notification Template
+ Make GET request to this resource to retrieve a single notification template record containing the following fields:  * &#x60;id&#x60;: Database ID for this notification template. (integer) * &#x60;type&#x60;: Data type for this notification template. (choice) * &#x60;url&#x60;: URL for this notification template. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this notification template was created. (datetime) * &#x60;modified&#x60;: Timestamp when this notification template was last modified. (datetime) * &#x60;name&#x60;: Name of this notification template. (string) * &#x60;description&#x60;: Optional description of this notification template. (string) * &#x60;organization&#x60;:  (id) * &#x60;notification_type&#x60;:  (choice)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json) * &#x60;messages&#x60;: Optional custom messages for notification template. (json)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiNotificationTemplatesNotificationTemplatesReadRequest
- */
-func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesRead(ctx _context.Context, id string) ApiNotificationTemplatesNotificationTemplatesReadRequest {
-	return ApiNotificationTemplatesNotificationTemplatesReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesReadExecute(r ApiNotificationTemplatesNotificationTemplatesReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *NotificationTemplatesNotificationTemplatesReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesRead(ctx _context.Context, id string, localVarOptionals *NotificationTemplatesNotificationTemplatesReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1088,20 +632,16 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "NotificationTemplatesApiService.NotificationTemplatesNotificationTemplatesRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/notification_templates/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/notification_templates/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1120,12 +660,12 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1147,35 +687,12 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 	return localVarHTTPResponse, nil
 }
 
-type ApiNotificationTemplatesNotificationTemplatesTestCreateRequest struct {
-	ctx _context.Context
-	ApiService *NotificationTemplatesApiService
-	id string
-}
-
-
-func (r ApiNotificationTemplatesNotificationTemplatesTestCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.NotificationTemplatesNotificationTemplatesTestCreateExecute(r)
-}
-
 /*
- * NotificationTemplatesNotificationTemplatesTestCreate Test a Notification Template
+NotificationTemplatesNotificationTemplatesTestCreate Test a Notification Template
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiNotificationTemplatesNotificationTemplatesTestCreateRequest
- */
-func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesTestCreate(ctx _context.Context, id string) ApiNotificationTemplatesNotificationTemplatesTestCreateRequest {
-	return ApiNotificationTemplatesNotificationTemplatesTestCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesTestCreateExecute(r ApiNotificationTemplatesNotificationTemplatesTestCreateRequest) (*_nethttp.Response, error) {
+*/
+func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesTestCreate(ctx _context.Context, id string) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -1184,13 +701,9 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "NotificationTemplatesApiService.NotificationTemplatesNotificationTemplatesTestCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/notification_templates/{id}/test/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/notification_templates/{id}/test/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1213,12 +726,12 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1240,79 +753,22 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 	return localVarHTTPResponse, nil
 }
 
-type ApiNotificationTemplatesNotificationTemplatesUpdateRequest struct {
-	ctx _context.Context
-	ApiService *NotificationTemplatesApiService
-	id string
-	search *string
-	data *InlineObject41
-}
-
-func (r ApiNotificationTemplatesNotificationTemplatesUpdateRequest) Search(search string) ApiNotificationTemplatesNotificationTemplatesUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiNotificationTemplatesNotificationTemplatesUpdateRequest) Data(data InlineObject41) ApiNotificationTemplatesNotificationTemplatesUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiNotificationTemplatesNotificationTemplatesUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.NotificationTemplatesNotificationTemplatesUpdateExecute(r)
+// NotificationTemplatesNotificationTemplatesUpdateOpts Optional parameters for the method 'NotificationTemplatesNotificationTemplatesUpdate'
+type NotificationTemplatesNotificationTemplatesUpdateOpts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * NotificationTemplatesNotificationTemplatesUpdate  Update a Notification Template
- * 
-Make a PUT or PATCH request to this resource to update this
-notification template.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this notification template. (string, required)
-* `description`: Optional description of this notification template. (string, default=`""`)
-* `organization`:  (id, required)
-* `notification_type`:  (choice, required)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json, default=`{}`)
-* `messages`: Optional custom messages for notification template. (json, default=`{&#39;started&#39;: None, &#39;success&#39;: None, &#39;error&#39;: None, &#39;workflow_approval&#39;: None}`)
-
-
-
-
-
-
-For a PUT request, include **all** fields in the request.
+NotificationTemplatesNotificationTemplatesUpdate  Update a Notification Template
+ Make a PUT or PATCH request to this resource to update this notification template.  The following fields may be modified:          * &#x60;name&#x60;: Name of this notification template. (string, required) * &#x60;description&#x60;: Optional description of this notification template. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;:  (id, required) * &#x60;notification_type&#x60;:  (choice, required)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;messages&#x60;: Optional custom messages for notification template. (json, default&#x3D;&#x60;{&amp;#39;started&amp;#39;: None, &amp;#39;success&amp;#39;: None, &amp;#39;error&amp;#39;: None, &amp;#39;workflow_approval&amp;#39;: None}&#x60;)       For a PUT request, include **all** fields in the request.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiNotificationTemplatesNotificationTemplatesUpdateRequest
- */
-func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesUpdate(ctx _context.Context, id string) ApiNotificationTemplatesNotificationTemplatesUpdateRequest {
-	return ApiNotificationTemplatesNotificationTemplatesUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesUpdateExecute(r ApiNotificationTemplatesNotificationTemplatesUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *NotificationTemplatesNotificationTemplatesUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject41) - 
+*/
+func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTemplatesUpdate(ctx _context.Context, id string, localVarOptionals *NotificationTemplatesNotificationTemplatesUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -1321,20 +777,16 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "NotificationTemplatesApiService.NotificationTemplatesNotificationTemplatesUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/notification_templates/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/notification_templates/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -1354,13 +806,20 @@ func (a *NotificationTemplatesApiService) NotificationTemplatesNotificationTempl
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject41)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject41")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

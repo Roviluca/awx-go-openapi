@@ -24,32 +24,11 @@ var (
 // MetricsApiService MetricsApi service
 type MetricsApiService service
 
-type ApiMetricsMetricsListRequest struct {
-	ctx _context.Context
-	ApiService *MetricsApiService
-}
-
-
-func (r ApiMetricsMetricsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.MetricsMetricsListExecute(r)
-}
-
 /*
- * MetricsMetricsList Show Metrics Details
+MetricsMetricsList Show Metrics Details
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiMetricsMetricsListRequest
- */
-func (a *MetricsApiService) MetricsMetricsList(ctx _context.Context) ApiMetricsMetricsListRequest {
-	return ApiMetricsMetricsListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *MetricsApiService) MetricsMetricsListExecute(r ApiMetricsMetricsListRequest) (*_nethttp.Response, error) {
+*/
+func (a *MetricsApiService) MetricsMetricsList(ctx _context.Context) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -58,13 +37,8 @@ func (a *MetricsApiService) MetricsMetricsListExecute(r ApiMetricsMetricsListReq
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MetricsApiService.MetricsMetricsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/metrics/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/metrics/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -86,12 +60,12 @@ func (a *MetricsApiService) MetricsMetricsListExecute(r ApiMetricsMetricsListReq
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

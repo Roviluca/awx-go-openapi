@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,88 +26,20 @@ var (
 // InstancesApiService InstancesApi service
 type InstancesApiService service
 
-type ApiInstancesInstancesInstanceGroupsCreateRequest struct {
-	ctx _context.Context
-	ApiService *InstancesApiService
-	id string
-	data *InlineObject20
-}
-
-func (r ApiInstancesInstancesInstanceGroupsCreateRequest) Data(data InlineObject20) ApiInstancesInstancesInstanceGroupsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInstancesInstancesInstanceGroupsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InstancesInstancesInstanceGroupsCreateExecute(r)
+// InstancesInstancesInstanceGroupsCreateOpts Optional parameters for the method 'InstancesInstancesInstanceGroupsCreate'
+type InstancesInstancesInstanceGroupsCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * InstancesInstancesInstanceGroupsCreate  Create an Instance Group for an Instance
- * 
-Make a POST request to this resource with the following instance group
-fields to create a new instance group associated with this
-instance.
-
-
-
-
-
-
-* `name`: Name of this instance group. (string, required)
-
-
-
-
-
-
-
-
-
-
-
-
-
-* `credential`:  (id, default=``)
-* `policy_instance_percentage`: Minimum percentage of all instances that will be automatically assigned to this group when new instances come online. (integer, default=`0`)
-* `policy_instance_minimum`: Static minimum number of Instances that will be automatically assign to this group when new instances come online. (integer, default=`0`)
-* `policy_instance_list`: List of exact-match Instances that will be assigned to this group (json, default=``)
-* `pod_spec_override`:  (string, default=`""`)
-
-
-
-
-
-
-
-
-
-# Add Instance Groups for an Instance:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing instance group with this instance.
-
-# Remove Instance Groups from this Instance:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the instance group from this instance
- without deleting the instance group.
+InstancesInstancesInstanceGroupsCreate  Create an Instance Group for an Instance
+ Make a POST request to this resource with the following instance group fields to create a new instance group associated with this instance.       * &#x60;name&#x60;: Name of this instance group. (string, required)              * &#x60;credential&#x60;:  (id, default&#x3D;&#x60;&#x60;) * &#x60;policy_instance_percentage&#x60;: Minimum percentage of all instances that will be automatically assigned to this group when new instances come online. (integer, default&#x3D;&#x60;0&#x60;) * &#x60;policy_instance_minimum&#x60;: Static minimum number of Instances that will be automatically assign to this group when new instances come online. (integer, default&#x3D;&#x60;0&#x60;) * &#x60;policy_instance_list&#x60;: List of exact-match Instances that will be assigned to this group (json, default&#x3D;&#x60;&#x60;) * &#x60;pod_spec_override&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)          # Add Instance Groups for an Instance:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing instance group with this instance.  # Remove Instance Groups from this Instance:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the instance group from this instance  without deleting the instance group.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInstancesInstancesInstanceGroupsCreateRequest
- */
-func (a *InstancesApiService) InstancesInstancesInstanceGroupsCreate(ctx _context.Context, id string) ApiInstancesInstancesInstanceGroupsCreateRequest {
-	return ApiInstancesInstancesInstanceGroupsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InstancesApiService) InstancesInstancesInstanceGroupsCreateExecute(r ApiInstancesInstancesInstanceGroupsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InstancesInstancesInstanceGroupsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject20) - 
+*/
+func (a *InstancesApiService) InstancesInstancesInstanceGroupsCreate(ctx _context.Context, id string, localVarOptionals *InstancesInstancesInstanceGroupsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -115,13 +48,9 @@ func (a *InstancesApiService) InstancesInstancesInstanceGroupsCreateExecute(r Ap
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InstancesApiService.InstancesInstancesInstanceGroupsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/instances/{id}/instance_groups/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/instances/{id}/instance_groups/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -145,13 +74,20 @@ func (a *InstancesApiService) InstancesInstancesInstanceGroupsCreateExecute(r Ap
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject20)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject20")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -173,139 +109,24 @@ func (a *InstancesApiService) InstancesInstancesInstanceGroupsCreateExecute(r Ap
 	return localVarHTTPResponse, nil
 }
 
-type ApiInstancesInstancesInstanceGroupsListRequest struct {
-	ctx _context.Context
-	ApiService *InstancesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInstancesInstancesInstanceGroupsListRequest) Page(page int32) ApiInstancesInstancesInstanceGroupsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInstancesInstancesInstanceGroupsListRequest) PageSize(pageSize int32) ApiInstancesInstancesInstanceGroupsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInstancesInstancesInstanceGroupsListRequest) Search(search string) ApiInstancesInstancesInstanceGroupsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInstancesInstancesInstanceGroupsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InstancesInstancesInstanceGroupsListExecute(r)
+// InstancesInstancesInstanceGroupsListOpts Optional parameters for the method 'InstancesInstancesInstanceGroupsList'
+type InstancesInstancesInstanceGroupsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InstancesInstancesInstanceGroupsList  List Instance Groups for an Instance
- * 
-Make a GET request to this resource to retrieve a list of
-instance groups associated with the selected
-instance.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of instance groups
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more instance group records.  
-
-## Results
-
-Each instance group data structure includes the following fields:
-
-* `id`: Database ID for this instance group. (integer)
-* `type`: Data type for this instance group. (choice)
-* `url`: URL for this instance group. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `name`: Name of this instance group. (string)
-* `created`: Timestamp when this instance group was created. (datetime)
-* `modified`: Timestamp when this instance group was last modified. (datetime)
-* `capacity`:  (field)
-* `committed_capacity`:  (field)
-* `consumed_capacity`:  (field)
-* `percent_capacity_remaining`:  (field)
-* `jobs_running`: Count of jobs in the running or waiting state that are targeted for this instance group (integer)
-* `jobs_total`: Count of all jobs that target this instance group (integer)
-* `instances`:  (field)
-* `controller`: Instance Group to remotely control this group. (id)
-* `is_controller`: Indicates whether instance group controls any other group (boolean)
-* `is_isolated`: Indicates whether instances in this group are isolated.Isolated groups have a designated controller group. (boolean)
-* `is_containerized`: Indicates whether instances in this group are containerized.Containerized groups have a designated Openshift or Kubernetes cluster. (boolean)
-* `credential`:  (id)
-* `policy_instance_percentage`: Minimum percentage of all instances that will be automatically assigned to this group when new instances come online. (integer)
-* `policy_instance_minimum`: Static minimum number of Instances that will be automatically assign to this group when new instances come online. (integer)
-* `policy_instance_list`: List of exact-match Instances that will be assigned to this group (json)
-* `pod_spec_override`:  (string)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-
-
-
-## Sorting
-
-To specify that instance groups are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InstancesInstancesInstanceGroupsList  List Instance Groups for an Instance
+ Make a GET request to this resource to retrieve a list of instance groups associated with the selected instance.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of instance groups found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more instance group records.    ## Results  Each instance group data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this instance group. (integer) * &#x60;type&#x60;: Data type for this instance group. (choice) * &#x60;url&#x60;: URL for this instance group. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;name&#x60;: Name of this instance group. (string) * &#x60;created&#x60;: Timestamp when this instance group was created. (datetime) * &#x60;modified&#x60;: Timestamp when this instance group was last modified. (datetime) * &#x60;capacity&#x60;:  (field) * &#x60;committed_capacity&#x60;:  (field) * &#x60;consumed_capacity&#x60;:  (field) * &#x60;percent_capacity_remaining&#x60;:  (field) * &#x60;jobs_running&#x60;: Count of jobs in the running or waiting state that are targeted for this instance group (integer) * &#x60;jobs_total&#x60;: Count of all jobs that target this instance group (integer) * &#x60;instances&#x60;:  (field) * &#x60;controller&#x60;: Instance Group to remotely control this group. (id) * &#x60;is_controller&#x60;: Indicates whether instance group controls any other group (boolean) * &#x60;is_isolated&#x60;: Indicates whether instances in this group are isolated.Isolated groups have a designated controller group. (boolean) * &#x60;is_containerized&#x60;: Indicates whether instances in this group are containerized.Containerized groups have a designated Openshift or Kubernetes cluster. (boolean) * &#x60;credential&#x60;:  (id) * &#x60;policy_instance_percentage&#x60;: Minimum percentage of all instances that will be automatically assigned to this group when new instances come online. (integer) * &#x60;policy_instance_minimum&#x60;: Static minimum number of Instances that will be automatically assign to this group when new instances come online. (integer) * &#x60;policy_instance_list&#x60;: List of exact-match Instances that will be assigned to this group (json) * &#x60;pod_spec_override&#x60;:  (string) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)    ## Sorting  To specify that instance groups are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInstancesInstancesInstanceGroupsListRequest
- */
-func (a *InstancesApiService) InstancesInstancesInstanceGroupsList(ctx _context.Context, id string) ApiInstancesInstancesInstanceGroupsListRequest {
-	return ApiInstancesInstancesInstanceGroupsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InstancesApiService) InstancesInstancesInstanceGroupsListExecute(r ApiInstancesInstancesInstanceGroupsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InstancesInstancesInstanceGroupsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InstancesApiService) InstancesInstancesInstanceGroupsList(ctx _context.Context, id string, localVarOptionals *InstancesInstancesInstanceGroupsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -314,26 +135,22 @@ func (a *InstancesApiService) InstancesInstancesInstanceGroupsListExecute(r ApiI
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InstancesApiService.InstancesInstancesInstanceGroupsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/instances/{id}/instance_groups/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/instances/{id}/instance_groups/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -352,12 +169,12 @@ func (a *InstancesApiService) InstancesInstancesInstanceGroupsListExecute(r ApiI
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -379,152 +196,24 @@ func (a *InstancesApiService) InstancesInstancesInstanceGroupsListExecute(r ApiI
 	return localVarHTTPResponse, nil
 }
 
-type ApiInstancesInstancesJobsListRequest struct {
-	ctx _context.Context
-	ApiService *InstancesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInstancesInstancesJobsListRequest) Page(page int32) ApiInstancesInstancesJobsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInstancesInstancesJobsListRequest) PageSize(pageSize int32) ApiInstancesInstancesJobsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInstancesInstancesJobsListRequest) Search(search string) ApiInstancesInstancesJobsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInstancesInstancesJobsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InstancesInstancesJobsListExecute(r)
+// InstancesInstancesJobsListOpts Optional parameters for the method 'InstancesInstancesJobsList'
+type InstancesInstancesJobsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InstancesInstancesJobsList  List Unified Jobs for an Instance
- * 
-Make a GET request to this resource to retrieve a list of
-unified jobs associated with the selected
-instance.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of unified jobs
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more unified job records.  
-
-## Results
-
-Each unified job data structure includes the following fields:
-
-* `id`: Database ID for this unified job. (integer)
-* `type`: Data type for this unified job. (choice)
-* `url`: URL for this unified job. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this unified job was created. (datetime)
-* `modified`: Timestamp when this unified job was last modified. (datetime)
-* `name`: Name of this unified job. (string)
-* `description`: Optional description of this unified job. (string)
-* `unified_job_template`:  (id)
-* `launch_type`:  (choice)
-    - `manual`: Manual
-    - `relaunch`: Relaunch
-    - `callback`: Callback
-    - `scheduled`: Scheduled
-    - `dependency`: Dependency
-    - `workflow`: Workflow
-    - `webhook`: Webhook
-    - `sync`: Sync
-    - `scm`: SCM Update
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-* `failed`:  (boolean)
-* `started`: The date and time the job was queued for starting. (datetime)
-* `finished`: The date and time the job finished execution. (datetime)
-* `canceled_on`: The date and time when the cancel request was sent. (datetime)
-* `elapsed`: Elapsed time in seconds that the job ran. (decimal)
-* `job_explanation`: A status field to indicate the state of the job if it wasn&#39;t able to run and capture stdout (string)
-* `execution_node`: The node the job executed on. (string)
-* `controller_node`: The instance that managed the isolated execution environment. (string)
-
-
-
-## Sorting
-
-To specify that unified jobs are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InstancesInstancesJobsList  List Unified Jobs for an Instance
+ Make a GET request to this resource to retrieve a list of unified jobs associated with the selected instance.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of unified jobs found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more unified job records.    ## Results  Each unified job data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this unified job. (integer) * &#x60;type&#x60;: Data type for this unified job. (choice) * &#x60;url&#x60;: URL for this unified job. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this unified job was created. (datetime) * &#x60;modified&#x60;: Timestamp when this unified job was last modified. (datetime) * &#x60;name&#x60;: Name of this unified job. (string) * &#x60;description&#x60;: Optional description of this unified job. (string) * &#x60;unified_job_template&#x60;:  (id) * &#x60;launch_type&#x60;:  (choice)     - &#x60;manual&#x60;: Manual     - &#x60;relaunch&#x60;: Relaunch     - &#x60;callback&#x60;: Callback     - &#x60;scheduled&#x60;: Scheduled     - &#x60;dependency&#x60;: Dependency     - &#x60;workflow&#x60;: Workflow     - &#x60;webhook&#x60;: Webhook     - &#x60;sync&#x60;: Sync     - &#x60;scm&#x60;: SCM Update * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled * &#x60;failed&#x60;:  (boolean) * &#x60;started&#x60;: The date and time the job was queued for starting. (datetime) * &#x60;finished&#x60;: The date and time the job finished execution. (datetime) * &#x60;canceled_on&#x60;: The date and time when the cancel request was sent. (datetime) * &#x60;elapsed&#x60;: Elapsed time in seconds that the job ran. (decimal) * &#x60;job_explanation&#x60;: A status field to indicate the state of the job if it wasn&amp;#39;t able to run and capture stdout (string) * &#x60;execution_node&#x60;: The node the job executed on. (string) * &#x60;controller_node&#x60;: The instance that managed the isolated execution environment. (string)    ## Sorting  To specify that unified jobs are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInstancesInstancesJobsListRequest
- */
-func (a *InstancesApiService) InstancesInstancesJobsList(ctx _context.Context, id string) ApiInstancesInstancesJobsListRequest {
-	return ApiInstancesInstancesJobsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InstancesApiService) InstancesInstancesJobsListExecute(r ApiInstancesInstancesJobsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InstancesInstancesJobsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InstancesApiService) InstancesInstancesJobsList(ctx _context.Context, id string, localVarOptionals *InstancesInstancesJobsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -533,26 +222,22 @@ func (a *InstancesApiService) InstancesInstancesJobsListExecute(r ApiInstancesIn
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InstancesApiService.InstancesInstancesJobsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/instances/{id}/jobs/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/instances/{id}/jobs/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -571,12 +256,12 @@ func (a *InstancesApiService) InstancesInstancesJobsListExecute(r ApiInstancesIn
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -598,132 +283,23 @@ func (a *InstancesApiService) InstancesInstancesJobsListExecute(r ApiInstancesIn
 	return localVarHTTPResponse, nil
 }
 
-type ApiInstancesInstancesListRequest struct {
-	ctx _context.Context
-	ApiService *InstancesApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInstancesInstancesListRequest) Page(page int32) ApiInstancesInstancesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInstancesInstancesListRequest) PageSize(pageSize int32) ApiInstancesInstancesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInstancesInstancesListRequest) Search(search string) ApiInstancesInstancesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInstancesInstancesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InstancesInstancesListExecute(r)
+// InstancesInstancesListOpts Optional parameters for the method 'InstancesInstancesList'
+type InstancesInstancesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InstancesInstancesList  List Instances
- * 
-Make a GET request to this resource to retrieve the list of
-instances.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of instances
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more instance records.  
-
-## Results
-
-Each instance data structure includes the following fields:
-
-* `id`: Database ID for this instance. (integer)
-* `type`: Data type for this instance. (choice)
-* `url`: URL for this instance. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `uuid`:  (string)
-* `hostname`:  (string)
-* `created`: Timestamp when this instance was created. (datetime)
-* `modified`: Timestamp when this instance was last modified. (datetime)
-* `capacity_adjustment`:  (decimal)
-* `version`:  (string)
-* `capacity`:  (integer)
-* `consumed_capacity`:  (field)
-* `percent_capacity_remaining`:  (field)
-* `jobs_running`: Count of jobs in the running or waiting state that are targeted for this instance (integer)
-* `jobs_total`: Count of all jobs that target this instance (integer)
-* `cpu`:  (integer)
-* `memory`:  (integer)
-* `cpu_capacity`:  (integer)
-* `mem_capacity`:  (integer)
-* `enabled`:  (boolean)
-* `managed_by_policy`:  (boolean)
-
-
-
-## Sorting
-
-To specify that instances are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InstancesInstancesList  List Instances
+ Make a GET request to this resource to retrieve the list of instances.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of instances found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more instance records.    ## Results  Each instance data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this instance. (integer) * &#x60;type&#x60;: Data type for this instance. (choice) * &#x60;url&#x60;: URL for this instance. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;uuid&#x60;:  (string) * &#x60;hostname&#x60;:  (string) * &#x60;created&#x60;: Timestamp when this instance was created. (datetime) * &#x60;modified&#x60;: Timestamp when this instance was last modified. (datetime) * &#x60;capacity_adjustment&#x60;:  (decimal) * &#x60;version&#x60;:  (string) * &#x60;capacity&#x60;:  (integer) * &#x60;consumed_capacity&#x60;:  (field) * &#x60;percent_capacity_remaining&#x60;:  (field) * &#x60;jobs_running&#x60;: Count of jobs in the running or waiting state that are targeted for this instance (integer) * &#x60;jobs_total&#x60;: Count of all jobs that target this instance (integer) * &#x60;cpu&#x60;:  (integer) * &#x60;memory&#x60;:  (integer) * &#x60;cpu_capacity&#x60;:  (integer) * &#x60;mem_capacity&#x60;:  (integer) * &#x60;enabled&#x60;:  (boolean) * &#x60;managed_by_policy&#x60;:  (boolean)    ## Sorting  To specify that instances are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiInstancesInstancesListRequest
- */
-func (a *InstancesApiService) InstancesInstancesList(ctx _context.Context) ApiInstancesInstancesListRequest {
-	return ApiInstancesInstancesListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InstancesApiService) InstancesInstancesListExecute(r ApiInstancesInstancesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InstancesInstancesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InstancesApiService) InstancesInstancesList(ctx _context.Context, localVarOptionals *InstancesInstancesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -732,25 +308,20 @@ func (a *InstancesApiService) InstancesInstancesListExecute(r ApiInstancesInstan
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InstancesApiService.InstancesInstancesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/instances/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/instances/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -769,12 +340,12 @@ func (a *InstancesApiService) InstancesInstancesListExecute(r ApiInstancesInstan
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -796,80 +367,22 @@ func (a *InstancesApiService) InstancesInstancesListExecute(r ApiInstancesInstan
 	return localVarHTTPResponse, nil
 }
 
-type ApiInstancesInstancesPartialUpdateRequest struct {
-	ctx _context.Context
-	ApiService *InstancesApiService
-	id string
-	search *string
-	data *InlineObject19
-}
-
-func (r ApiInstancesInstancesPartialUpdateRequest) Search(search string) ApiInstancesInstancesPartialUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiInstancesInstancesPartialUpdateRequest) Data(data InlineObject19) ApiInstancesInstancesPartialUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInstancesInstancesPartialUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InstancesInstancesPartialUpdateExecute(r)
+// InstancesInstancesPartialUpdateOpts Optional parameters for the method 'InstancesInstancesPartialUpdate'
+type InstancesInstancesPartialUpdateOpts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * InstancesInstancesPartialUpdate  Update an Instance
- * 
-Make a PUT or PATCH request to this resource to update this
-instance.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-
-* `capacity_adjustment`:  (decimal, default=`1`)
-
-
-
-
-
-
-
-
-
-
-* `enabled`:  (boolean, default=`True`)
-* `managed_by_policy`:  (boolean, default=`True`)
-
-
-
-
-
-
-
-
-For a PATCH request, include only the fields that are being modified.
+InstancesInstancesPartialUpdate  Update an Instance
+ Make a PUT or PATCH request to this resource to update this instance.  The following fields may be modified:           * &#x60;capacity_adjustment&#x60;:  (decimal, default&#x3D;&#x60;1&#x60;)           * &#x60;enabled&#x60;:  (boolean, default&#x3D;&#x60;True&#x60;) * &#x60;managed_by_policy&#x60;:  (boolean, default&#x3D;&#x60;True&#x60;)         For a PATCH request, include only the fields that are being modified.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInstancesInstancesPartialUpdateRequest
- */
-func (a *InstancesApiService) InstancesInstancesPartialUpdate(ctx _context.Context, id string) ApiInstancesInstancesPartialUpdateRequest {
-	return ApiInstancesInstancesPartialUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InstancesApiService) InstancesInstancesPartialUpdateExecute(r ApiInstancesInstancesPartialUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InstancesInstancesPartialUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject19) - 
+*/
+func (a *InstancesApiService) InstancesInstancesPartialUpdate(ctx _context.Context, id string, localVarOptionals *InstancesInstancesPartialUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPatch
 		localVarPostBody     interface{}
@@ -878,20 +391,16 @@ func (a *InstancesApiService) InstancesInstancesPartialUpdateExecute(r ApiInstan
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InstancesApiService.InstancesInstancesPartialUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/instances/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/instances/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -911,13 +420,20 @@ func (a *InstancesApiService) InstancesInstancesPartialUpdateExecute(r ApiInstan
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject19)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject19")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -939,65 +455,20 @@ func (a *InstancesApiService) InstancesInstancesPartialUpdateExecute(r ApiInstan
 	return localVarHTTPResponse, nil
 }
 
-type ApiInstancesInstancesReadRequest struct {
-	ctx _context.Context
-	ApiService *InstancesApiService
-	id string
-	search *string
-}
-
-func (r ApiInstancesInstancesReadRequest) Search(search string) ApiInstancesInstancesReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInstancesInstancesReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InstancesInstancesReadExecute(r)
+// InstancesInstancesReadOpts Optional parameters for the method 'InstancesInstancesRead'
+type InstancesInstancesReadOpts struct {
+    Search optional.String
 }
 
 /*
- * InstancesInstancesRead  Retrieve an Instance
- * 
-Make GET request to this resource to retrieve a single instance
-record containing the following fields:
-
-* `id`: Database ID for this instance. (integer)
-* `type`: Data type for this instance. (choice)
-* `url`: URL for this instance. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `uuid`:  (string)
-* `hostname`:  (string)
-* `created`: Timestamp when this instance was created. (datetime)
-* `modified`: Timestamp when this instance was last modified. (datetime)
-* `capacity_adjustment`:  (decimal)
-* `version`:  (string)
-* `capacity`:  (integer)
-* `consumed_capacity`:  (field)
-* `percent_capacity_remaining`:  (field)
-* `jobs_running`: Count of jobs in the running or waiting state that are targeted for this instance (integer)
-* `jobs_total`: Count of all jobs that target this instance (integer)
-* `cpu`:  (integer)
-* `memory`:  (integer)
-* `cpu_capacity`:  (integer)
-* `mem_capacity`:  (integer)
-* `enabled`:  (boolean)
-* `managed_by_policy`:  (boolean)
+InstancesInstancesRead  Retrieve an Instance
+ Make GET request to this resource to retrieve a single instance record containing the following fields:  * &#x60;id&#x60;: Database ID for this instance. (integer) * &#x60;type&#x60;: Data type for this instance. (choice) * &#x60;url&#x60;: URL for this instance. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;uuid&#x60;:  (string) * &#x60;hostname&#x60;:  (string) * &#x60;created&#x60;: Timestamp when this instance was created. (datetime) * &#x60;modified&#x60;: Timestamp when this instance was last modified. (datetime) * &#x60;capacity_adjustment&#x60;:  (decimal) * &#x60;version&#x60;:  (string) * &#x60;capacity&#x60;:  (integer) * &#x60;consumed_capacity&#x60;:  (field) * &#x60;percent_capacity_remaining&#x60;:  (field) * &#x60;jobs_running&#x60;: Count of jobs in the running or waiting state that are targeted for this instance (integer) * &#x60;jobs_total&#x60;: Count of all jobs that target this instance (integer) * &#x60;cpu&#x60;:  (integer) * &#x60;memory&#x60;:  (integer) * &#x60;cpu_capacity&#x60;:  (integer) * &#x60;mem_capacity&#x60;:  (integer) * &#x60;enabled&#x60;:  (boolean) * &#x60;managed_by_policy&#x60;:  (boolean)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInstancesInstancesReadRequest
- */
-func (a *InstancesApiService) InstancesInstancesRead(ctx _context.Context, id string) ApiInstancesInstancesReadRequest {
-	return ApiInstancesInstancesReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InstancesApiService) InstancesInstancesReadExecute(r ApiInstancesInstancesReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InstancesInstancesReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InstancesApiService) InstancesInstancesRead(ctx _context.Context, id string, localVarOptionals *InstancesInstancesReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1006,20 +477,16 @@ func (a *InstancesApiService) InstancesInstancesReadExecute(r ApiInstancesInstan
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InstancesApiService.InstancesInstancesRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/instances/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/instances/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1038,12 +505,12 @@ func (a *InstancesApiService) InstancesInstancesReadExecute(r ApiInstancesInstan
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1065,78 +532,22 @@ func (a *InstancesApiService) InstancesInstancesReadExecute(r ApiInstancesInstan
 	return localVarHTTPResponse, nil
 }
 
-type ApiInstancesInstancesUpdateRequest struct {
-	ctx _context.Context
-	ApiService *InstancesApiService
-	id string
-	search *string
-	data *InlineObject18
-}
-
-func (r ApiInstancesInstancesUpdateRequest) Search(search string) ApiInstancesInstancesUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiInstancesInstancesUpdateRequest) Data(data InlineObject18) ApiInstancesInstancesUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInstancesInstancesUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InstancesInstancesUpdateExecute(r)
+// InstancesInstancesUpdateOpts Optional parameters for the method 'InstancesInstancesUpdate'
+type InstancesInstancesUpdateOpts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * InstancesInstancesUpdate  Update an Instance
- * 
-Make a PUT or PATCH request to this resource to update this
-instance.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-
-* `capacity_adjustment`:  (decimal, default=`1`)
-
-
-
-
-
-
-
-
-
-
-* `enabled`:  (boolean, default=`True`)
-* `managed_by_policy`:  (boolean, default=`True`)
-
-
-
-
-
-
-For a PUT request, include **all** fields in the request.
+InstancesInstancesUpdate  Update an Instance
+ Make a PUT or PATCH request to this resource to update this instance.  The following fields may be modified:           * &#x60;capacity_adjustment&#x60;:  (decimal, default&#x3D;&#x60;1&#x60;)           * &#x60;enabled&#x60;:  (boolean, default&#x3D;&#x60;True&#x60;) * &#x60;managed_by_policy&#x60;:  (boolean, default&#x3D;&#x60;True&#x60;)       For a PUT request, include **all** fields in the request.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInstancesInstancesUpdateRequest
- */
-func (a *InstancesApiService) InstancesInstancesUpdate(ctx _context.Context, id string) ApiInstancesInstancesUpdateRequest {
-	return ApiInstancesInstancesUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InstancesApiService) InstancesInstancesUpdateExecute(r ApiInstancesInstancesUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InstancesInstancesUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject18) - 
+*/
+func (a *InstancesApiService) InstancesInstancesUpdate(ctx _context.Context, id string, localVarOptionals *InstancesInstancesUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -1145,20 +556,16 @@ func (a *InstancesApiService) InstancesInstancesUpdateExecute(r ApiInstancesInst
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InstancesApiService.InstancesInstancesUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/instances/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/instances/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -1178,13 +585,20 @@ func (a *InstancesApiService) InstancesInstancesUpdateExecute(r ApiInstancesInst
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject18)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject18")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,51 +26,19 @@ var (
 // LabelsApiService LabelsApi service
 type LabelsApiService service
 
-type ApiLabelsLabelsCreateRequest struct {
-	ctx _context.Context
-	ApiService *LabelsApiService
-	data *InlineObject37
-}
-
-func (r ApiLabelsLabelsCreateRequest) Data(data InlineObject37) ApiLabelsLabelsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiLabelsLabelsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.LabelsLabelsCreateExecute(r)
+// LabelsLabelsCreateOpts Optional parameters for the method 'LabelsLabelsCreate'
+type LabelsLabelsCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * LabelsLabelsCreate  Create a Label
- * 
-Make a POST request to this resource with the following label
-fields to create a new label:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this label. (string, required)
-* `organization`: Organization this label belongs to. (id, required)
+LabelsLabelsCreate  Create a Label
+ Make a POST request to this resource with the following label fields to create a new label:          * &#x60;name&#x60;: Name of this label. (string, required) * &#x60;organization&#x60;: Organization this label belongs to. (id, required)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiLabelsLabelsCreateRequest
- */
-func (a *LabelsApiService) LabelsLabelsCreate(ctx _context.Context) ApiLabelsLabelsCreateRequest {
-	return ApiLabelsLabelsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *LabelsApiService) LabelsLabelsCreateExecute(r ApiLabelsLabelsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *LabelsLabelsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject37) - 
+*/
+func (a *LabelsApiService) LabelsLabelsCreate(ctx _context.Context, localVarOptionals *LabelsLabelsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -78,13 +47,8 @@ func (a *LabelsApiService) LabelsLabelsCreateExecute(r ApiLabelsLabelsCreateRequ
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "LabelsApiService.LabelsLabelsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/labels/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/labels/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -107,13 +71,20 @@ func (a *LabelsApiService) LabelsLabelsCreateExecute(r ApiLabelsLabelsCreateRequ
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject37)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject37")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -135,120 +106,23 @@ func (a *LabelsApiService) LabelsLabelsCreateExecute(r ApiLabelsLabelsCreateRequ
 	return localVarHTTPResponse, nil
 }
 
-type ApiLabelsLabelsListRequest struct {
-	ctx _context.Context
-	ApiService *LabelsApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiLabelsLabelsListRequest) Page(page int32) ApiLabelsLabelsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiLabelsLabelsListRequest) PageSize(pageSize int32) ApiLabelsLabelsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiLabelsLabelsListRequest) Search(search string) ApiLabelsLabelsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiLabelsLabelsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.LabelsLabelsListExecute(r)
+// LabelsLabelsListOpts Optional parameters for the method 'LabelsLabelsList'
+type LabelsLabelsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * LabelsLabelsList  List Labels
- * 
-Make a GET request to this resource to retrieve the list of
-labels.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of labels
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more label records.  
-
-## Results
-
-Each label data structure includes the following fields:
-
-* `id`: Database ID for this label. (integer)
-* `type`: Data type for this label. (choice)
-* `url`: URL for this label. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this label was created. (datetime)
-* `modified`: Timestamp when this label was last modified. (datetime)
-* `name`: Name of this label. (string)
-* `organization`: Organization this label belongs to. (id)
-
-
-
-## Sorting
-
-To specify that labels are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+LabelsLabelsList  List Labels
+ Make a GET request to this resource to retrieve the list of labels.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of labels found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more label records.    ## Results  Each label data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this label. (integer) * &#x60;type&#x60;: Data type for this label. (choice) * &#x60;url&#x60;: URL for this label. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this label was created. (datetime) * &#x60;modified&#x60;: Timestamp when this label was last modified. (datetime) * &#x60;name&#x60;: Name of this label. (string) * &#x60;organization&#x60;: Organization this label belongs to. (id)    ## Sorting  To specify that labels are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiLabelsLabelsListRequest
- */
-func (a *LabelsApiService) LabelsLabelsList(ctx _context.Context) ApiLabelsLabelsListRequest {
-	return ApiLabelsLabelsListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *LabelsApiService) LabelsLabelsListExecute(r ApiLabelsLabelsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *LabelsLabelsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *LabelsApiService) LabelsLabelsList(ctx _context.Context, localVarOptionals *LabelsLabelsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -257,25 +131,20 @@ func (a *LabelsApiService) LabelsLabelsListExecute(r ApiLabelsLabelsListRequest)
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "LabelsApiService.LabelsLabelsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/labels/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/labels/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -294,12 +163,12 @@ func (a *LabelsApiService) LabelsLabelsListExecute(r ApiLabelsLabelsListRequest)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -321,68 +190,22 @@ func (a *LabelsApiService) LabelsLabelsListExecute(r ApiLabelsLabelsListRequest)
 	return localVarHTTPResponse, nil
 }
 
-type ApiLabelsLabelsPartialUpdateRequest struct {
-	ctx _context.Context
-	ApiService *LabelsApiService
-	id string
-	search *string
-	data *InlineObject39
-}
-
-func (r ApiLabelsLabelsPartialUpdateRequest) Search(search string) ApiLabelsLabelsPartialUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiLabelsLabelsPartialUpdateRequest) Data(data InlineObject39) ApiLabelsLabelsPartialUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiLabelsLabelsPartialUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.LabelsLabelsPartialUpdateExecute(r)
+// LabelsLabelsPartialUpdateOpts Optional parameters for the method 'LabelsLabelsPartialUpdate'
+type LabelsLabelsPartialUpdateOpts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * LabelsLabelsPartialUpdate  Update a Label
- * 
-Make a PUT or PATCH request to this resource to update this
-label.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this label. (string, required)
-* `organization`: Organization this label belongs to. (id, required)
-
-
-
-
-
-
-
-
-For a PATCH request, include only the fields that are being modified.
+LabelsLabelsPartialUpdate  Update a Label
+ Make a PUT or PATCH request to this resource to update this label.  The following fields may be modified:          * &#x60;name&#x60;: Name of this label. (string, required) * &#x60;organization&#x60;: Organization this label belongs to. (id, required)         For a PATCH request, include only the fields that are being modified.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiLabelsLabelsPartialUpdateRequest
- */
-func (a *LabelsApiService) LabelsLabelsPartialUpdate(ctx _context.Context, id string) ApiLabelsLabelsPartialUpdateRequest {
-	return ApiLabelsLabelsPartialUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *LabelsApiService) LabelsLabelsPartialUpdateExecute(r ApiLabelsLabelsPartialUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *LabelsLabelsPartialUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject39) - 
+*/
+func (a *LabelsApiService) LabelsLabelsPartialUpdate(ctx _context.Context, id string, localVarOptionals *LabelsLabelsPartialUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPatch
 		localVarPostBody     interface{}
@@ -391,20 +214,16 @@ func (a *LabelsApiService) LabelsLabelsPartialUpdateExecute(r ApiLabelsLabelsPar
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "LabelsApiService.LabelsLabelsPartialUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/labels/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/labels/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -424,13 +243,20 @@ func (a *LabelsApiService) LabelsLabelsPartialUpdateExecute(r ApiLabelsLabelsPar
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject39)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject39")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -452,53 +278,20 @@ func (a *LabelsApiService) LabelsLabelsPartialUpdateExecute(r ApiLabelsLabelsPar
 	return localVarHTTPResponse, nil
 }
 
-type ApiLabelsLabelsReadRequest struct {
-	ctx _context.Context
-	ApiService *LabelsApiService
-	id string
-	search *string
-}
-
-func (r ApiLabelsLabelsReadRequest) Search(search string) ApiLabelsLabelsReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiLabelsLabelsReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.LabelsLabelsReadExecute(r)
+// LabelsLabelsReadOpts Optional parameters for the method 'LabelsLabelsRead'
+type LabelsLabelsReadOpts struct {
+    Search optional.String
 }
 
 /*
- * LabelsLabelsRead  Retrieve a Label
- * 
-Make GET request to this resource to retrieve a single label
-record containing the following fields:
-
-* `id`: Database ID for this label. (integer)
-* `type`: Data type for this label. (choice)
-* `url`: URL for this label. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this label was created. (datetime)
-* `modified`: Timestamp when this label was last modified. (datetime)
-* `name`: Name of this label. (string)
-* `organization`: Organization this label belongs to. (id)
+LabelsLabelsRead  Retrieve a Label
+ Make GET request to this resource to retrieve a single label record containing the following fields:  * &#x60;id&#x60;: Database ID for this label. (integer) * &#x60;type&#x60;: Data type for this label. (choice) * &#x60;url&#x60;: URL for this label. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this label was created. (datetime) * &#x60;modified&#x60;: Timestamp when this label was last modified. (datetime) * &#x60;name&#x60;: Name of this label. (string) * &#x60;organization&#x60;: Organization this label belongs to. (id)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiLabelsLabelsReadRequest
- */
-func (a *LabelsApiService) LabelsLabelsRead(ctx _context.Context, id string) ApiLabelsLabelsReadRequest {
-	return ApiLabelsLabelsReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *LabelsApiService) LabelsLabelsReadExecute(r ApiLabelsLabelsReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *LabelsLabelsReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *LabelsApiService) LabelsLabelsRead(ctx _context.Context, id string, localVarOptionals *LabelsLabelsReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -507,20 +300,16 @@ func (a *LabelsApiService) LabelsLabelsReadExecute(r ApiLabelsLabelsReadRequest)
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "LabelsApiService.LabelsLabelsRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/labels/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/labels/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -539,12 +328,12 @@ func (a *LabelsApiService) LabelsLabelsReadExecute(r ApiLabelsLabelsReadRequest)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -566,66 +355,22 @@ func (a *LabelsApiService) LabelsLabelsReadExecute(r ApiLabelsLabelsReadRequest)
 	return localVarHTTPResponse, nil
 }
 
-type ApiLabelsLabelsUpdateRequest struct {
-	ctx _context.Context
-	ApiService *LabelsApiService
-	id string
-	search *string
-	data *InlineObject38
-}
-
-func (r ApiLabelsLabelsUpdateRequest) Search(search string) ApiLabelsLabelsUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiLabelsLabelsUpdateRequest) Data(data InlineObject38) ApiLabelsLabelsUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiLabelsLabelsUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.LabelsLabelsUpdateExecute(r)
+// LabelsLabelsUpdateOpts Optional parameters for the method 'LabelsLabelsUpdate'
+type LabelsLabelsUpdateOpts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * LabelsLabelsUpdate  Update a Label
- * 
-Make a PUT or PATCH request to this resource to update this
-label.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this label. (string, required)
-* `organization`: Organization this label belongs to. (id, required)
-
-
-
-
-
-
-For a PUT request, include **all** fields in the request.
+LabelsLabelsUpdate  Update a Label
+ Make a PUT or PATCH request to this resource to update this label.  The following fields may be modified:          * &#x60;name&#x60;: Name of this label. (string, required) * &#x60;organization&#x60;: Organization this label belongs to. (id, required)       For a PUT request, include **all** fields in the request.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiLabelsLabelsUpdateRequest
- */
-func (a *LabelsApiService) LabelsLabelsUpdate(ctx _context.Context, id string) ApiLabelsLabelsUpdateRequest {
-	return ApiLabelsLabelsUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *LabelsApiService) LabelsLabelsUpdateExecute(r ApiLabelsLabelsUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *LabelsLabelsUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject38) - 
+*/
+func (a *LabelsApiService) LabelsLabelsUpdate(ctx _context.Context, id string, localVarOptionals *LabelsLabelsUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -634,20 +379,16 @@ func (a *LabelsApiService) LabelsLabelsUpdateExecute(r ApiLabelsLabelsUpdateRequ
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "LabelsApiService.LabelsLabelsUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/labels/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/labels/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -667,13 +408,20 @@ func (a *LabelsApiService) LabelsLabelsUpdateExecute(r ApiLabelsLabelsUpdateRequ
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject38)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject38")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

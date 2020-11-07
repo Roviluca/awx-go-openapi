@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,133 +26,24 @@ var (
 // WorkflowJobsApiService WorkflowJobsApi service
 type WorkflowJobsApiService service
 
-type ApiWorkflowJobsWorkflowJobsActivityStreamListRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiWorkflowJobsWorkflowJobsActivityStreamListRequest) Page(page int32) ApiWorkflowJobsWorkflowJobsActivityStreamListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiWorkflowJobsWorkflowJobsActivityStreamListRequest) PageSize(pageSize int32) ApiWorkflowJobsWorkflowJobsActivityStreamListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiWorkflowJobsWorkflowJobsActivityStreamListRequest) Search(search string) ApiWorkflowJobsWorkflowJobsActivityStreamListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobsWorkflowJobsActivityStreamListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobsWorkflowJobsActivityStreamListExecute(r)
+// WorkflowJobsWorkflowJobsActivityStreamListOpts Optional parameters for the method 'WorkflowJobsWorkflowJobsActivityStreamList'
+type WorkflowJobsWorkflowJobsActivityStreamListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * WorkflowJobsWorkflowJobsActivityStreamList  List Activity Streams for a Workflow Job
- * 
-Make a GET request to this resource to retrieve a list of
-activity streams associated with the selected
-workflow job.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of activity streams
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more activity stream records.  
-
-## Results
-
-Each activity stream data structure includes the following fields:
-
-* `id`: Database ID for this activity stream. (integer)
-* `type`: Data type for this activity stream. (choice)
-* `url`: URL for this activity stream. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `timestamp`:  (datetime)
-* `operation`: The action taken with respect to the given object(s). (choice)
-    - `create`: Entity Created
-    - `update`: Entity Updated
-    - `delete`: Entity Deleted
-    - `associate`: Entity Associated with another Entity
-    - `disassociate`: Entity was Disassociated with another Entity
-* `changes`: A summary of the new and changed values when an object is created, updated, or deleted (json)
-* `object1`: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string)
-* `object2`: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string)
-* `object_association`: When present, shows the field name of the role or relationship that changed. (field)
-* `action_node`: The cluster node the activity took place on. (string)
-* `object_type`: When present, shows the model on which the role or relationship was defined. (field)
-
-
-
-## Sorting
-
-To specify that activity streams are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+WorkflowJobsWorkflowJobsActivityStreamList  List Activity Streams for a Workflow Job
+ Make a GET request to this resource to retrieve a list of activity streams associated with the selected workflow job.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of activity streams found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more activity stream records.    ## Results  Each activity stream data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this activity stream. (integer) * &#x60;type&#x60;: Data type for this activity stream. (choice) * &#x60;url&#x60;: URL for this activity stream. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;timestamp&#x60;:  (datetime) * &#x60;operation&#x60;: The action taken with respect to the given object(s). (choice)     - &#x60;create&#x60;: Entity Created     - &#x60;update&#x60;: Entity Updated     - &#x60;delete&#x60;: Entity Deleted     - &#x60;associate&#x60;: Entity Associated with another Entity     - &#x60;disassociate&#x60;: Entity was Disassociated with another Entity * &#x60;changes&#x60;: A summary of the new and changed values when an object is created, updated, or deleted (json) * &#x60;object1&#x60;: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string) * &#x60;object2&#x60;: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string) * &#x60;object_association&#x60;: When present, shows the field name of the role or relationship that changed. (field) * &#x60;action_node&#x60;: The cluster node the activity took place on. (string) * &#x60;object_type&#x60;: When present, shows the model on which the role or relationship was defined. (field)    ## Sorting  To specify that activity streams are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobsWorkflowJobsActivityStreamListRequest
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsActivityStreamList(ctx _context.Context, id string) ApiWorkflowJobsWorkflowJobsActivityStreamListRequest {
-	return ApiWorkflowJobsWorkflowJobsActivityStreamListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsActivityStreamListExecute(r ApiWorkflowJobsWorkflowJobsActivityStreamListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobsWorkflowJobsActivityStreamListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsActivityStreamList(ctx _context.Context, id string, localVarOptionals *WorkflowJobsWorkflowJobsActivityStreamListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -160,26 +52,22 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsActivityStreamListExecu
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobsApiService.WorkflowJobsWorkflowJobsActivityStreamList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_jobs/{id}/activity_stream/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_jobs/{id}/activity_stream/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -198,12 +86,12 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsActivityStreamListExecu
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -225,46 +113,13 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsActivityStreamListExecu
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobsWorkflowJobsCancelCreateRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobsApiService
-	id string
-}
-
-
-func (r ApiWorkflowJobsWorkflowJobsCancelCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobsWorkflowJobsCancelCreateExecute(r)
-}
-
 /*
- * WorkflowJobsWorkflowJobsCancelCreate  Cancel Workflow Job
- * 
-Make a GET request to this resource to determine if the workflow job can be
-canceled. The response will include the following field:
-
-* `can_cancel`: Indicates whether this workflow job is in a state that can
-  be canceled (boolean, read-only)
-
-Make a POST request to this endpoint to submit a request to cancel a pending
-or running workflow job.  The response status code will be 202 if the
-request to cancel was successfully submitted, or 405 if the workflow job
-cannot be canceled.
+WorkflowJobsWorkflowJobsCancelCreate  Cancel Workflow Job
+ Make a GET request to this resource to determine if the workflow job can be canceled. The response will include the following field:  * &#x60;can_cancel&#x60;: Indicates whether this workflow job is in a state that can   be canceled (boolean, read-only)  Make a POST request to this endpoint to submit a request to cancel a pending or running workflow job.  The response status code will be 202 if the request to cancel was successfully submitted, or 405 if the workflow job cannot be canceled.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobsWorkflowJobsCancelCreateRequest
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsCancelCreate(ctx _context.Context, id string) ApiWorkflowJobsWorkflowJobsCancelCreateRequest {
-	return ApiWorkflowJobsWorkflowJobsCancelCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsCancelCreateExecute(r ApiWorkflowJobsWorkflowJobsCancelCreateRequest) (*_nethttp.Response, error) {
+*/
+func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsCancelCreate(ctx _context.Context, id string) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -273,13 +128,9 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsCancelCreateExecute(r A
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobsApiService.WorkflowJobsWorkflowJobsCancelCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_jobs/{id}/cancel/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_jobs/{id}/cancel/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -302,12 +153,12 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsCancelCreateExecute(r A
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -329,51 +180,20 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsCancelCreateExecute(r A
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobsWorkflowJobsCancelReadRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobsApiService
-	id string
-	search *string
-}
-
-func (r ApiWorkflowJobsWorkflowJobsCancelReadRequest) Search(search string) ApiWorkflowJobsWorkflowJobsCancelReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobsWorkflowJobsCancelReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobsWorkflowJobsCancelReadExecute(r)
+// WorkflowJobsWorkflowJobsCancelReadOpts Optional parameters for the method 'WorkflowJobsWorkflowJobsCancelRead'
+type WorkflowJobsWorkflowJobsCancelReadOpts struct {
+    Search optional.String
 }
 
 /*
- * WorkflowJobsWorkflowJobsCancelRead  Cancel Workflow Job
- * 
-Make a GET request to this resource to determine if the workflow job can be
-canceled. The response will include the following field:
-
-* `can_cancel`: Indicates whether this workflow job is in a state that can
-  be canceled (boolean, read-only)
-
-Make a POST request to this endpoint to submit a request to cancel a pending
-or running workflow job.  The response status code will be 202 if the
-request to cancel was successfully submitted, or 405 if the workflow job
-cannot be canceled.
+WorkflowJobsWorkflowJobsCancelRead  Cancel Workflow Job
+ Make a GET request to this resource to determine if the workflow job can be canceled. The response will include the following field:  * &#x60;can_cancel&#x60;: Indicates whether this workflow job is in a state that can   be canceled (boolean, read-only)  Make a POST request to this endpoint to submit a request to cancel a pending or running workflow job.  The response status code will be 202 if the request to cancel was successfully submitted, or 405 if the workflow job cannot be canceled.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobsWorkflowJobsCancelReadRequest
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsCancelRead(ctx _context.Context, id string) ApiWorkflowJobsWorkflowJobsCancelReadRequest {
-	return ApiWorkflowJobsWorkflowJobsCancelReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsCancelReadExecute(r ApiWorkflowJobsWorkflowJobsCancelReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobsWorkflowJobsCancelReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsCancelRead(ctx _context.Context, id string, localVarOptionals *WorkflowJobsWorkflowJobsCancelReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -382,20 +202,16 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsCancelReadExecute(r Api
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobsApiService.WorkflowJobsWorkflowJobsCancelRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_jobs/{id}/cancel/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_jobs/{id}/cancel/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -414,12 +230,12 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsCancelReadExecute(r Api
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -441,42 +257,20 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsCancelReadExecute(r Api
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobsWorkflowJobsDeleteRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobsApiService
-	id string
-	search *string
-}
-
-func (r ApiWorkflowJobsWorkflowJobsDeleteRequest) Search(search string) ApiWorkflowJobsWorkflowJobsDeleteRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobsWorkflowJobsDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobsWorkflowJobsDeleteExecute(r)
+// WorkflowJobsWorkflowJobsDeleteOpts Optional parameters for the method 'WorkflowJobsWorkflowJobsDelete'
+type WorkflowJobsWorkflowJobsDeleteOpts struct {
+    Search optional.String
 }
 
 /*
- * WorkflowJobsWorkflowJobsDelete  Delete a Workflow Job
- * 
-Make a DELETE request to this resource to delete this workflow job.
+WorkflowJobsWorkflowJobsDelete  Delete a Workflow Job
+ Make a DELETE request to this resource to delete this workflow job.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobsWorkflowJobsDeleteRequest
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsDelete(ctx _context.Context, id string) ApiWorkflowJobsWorkflowJobsDeleteRequest {
-	return ApiWorkflowJobsWorkflowJobsDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsDeleteExecute(r ApiWorkflowJobsWorkflowJobsDeleteRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobsWorkflowJobsDeleteOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsDelete(ctx _context.Context, id string, localVarOptionals *WorkflowJobsWorkflowJobsDeleteOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -485,20 +279,16 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsDeleteExecute(r ApiWork
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobsApiService.WorkflowJobsWorkflowJobsDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_jobs/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_jobs/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -517,12 +307,12 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsDeleteExecute(r ApiWork
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -544,124 +334,24 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsDeleteExecute(r ApiWork
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobsWorkflowJobsLabelsListRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiWorkflowJobsWorkflowJobsLabelsListRequest) Page(page int32) ApiWorkflowJobsWorkflowJobsLabelsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiWorkflowJobsWorkflowJobsLabelsListRequest) PageSize(pageSize int32) ApiWorkflowJobsWorkflowJobsLabelsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiWorkflowJobsWorkflowJobsLabelsListRequest) Search(search string) ApiWorkflowJobsWorkflowJobsLabelsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobsWorkflowJobsLabelsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobsWorkflowJobsLabelsListExecute(r)
+// WorkflowJobsWorkflowJobsLabelsListOpts Optional parameters for the method 'WorkflowJobsWorkflowJobsLabelsList'
+type WorkflowJobsWorkflowJobsLabelsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * WorkflowJobsWorkflowJobsLabelsList  List Labels for a Workflow Job
- * 
-Make a GET request to this resource to retrieve a list of
-labels associated with the selected
-workflow job.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of labels
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more label records.  
-
-## Results
-
-Each label data structure includes the following fields:
-
-* `id`: Database ID for this label. (integer)
-* `type`: Data type for this label. (choice)
-* `url`: URL for this label. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this label was created. (datetime)
-* `modified`: Timestamp when this label was last modified. (datetime)
-* `name`: Name of this label. (string)
-* `organization`: Organization this label belongs to. (id)
-
-
-
-## Sorting
-
-To specify that labels are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+WorkflowJobsWorkflowJobsLabelsList  List Labels for a Workflow Job
+ Make a GET request to this resource to retrieve a list of labels associated with the selected workflow job.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of labels found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more label records.    ## Results  Each label data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this label. (integer) * &#x60;type&#x60;: Data type for this label. (choice) * &#x60;url&#x60;: URL for this label. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this label was created. (datetime) * &#x60;modified&#x60;: Timestamp when this label was last modified. (datetime) * &#x60;name&#x60;: Name of this label. (string) * &#x60;organization&#x60;: Organization this label belongs to. (id)    ## Sorting  To specify that labels are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobsWorkflowJobsLabelsListRequest
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsLabelsList(ctx _context.Context, id string) ApiWorkflowJobsWorkflowJobsLabelsListRequest {
-	return ApiWorkflowJobsWorkflowJobsLabelsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsLabelsListExecute(r ApiWorkflowJobsWorkflowJobsLabelsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobsWorkflowJobsLabelsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsLabelsList(ctx _context.Context, id string, localVarOptionals *WorkflowJobsWorkflowJobsLabelsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -670,26 +360,22 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsLabelsListExecute(r Api
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobsApiService.WorkflowJobsWorkflowJobsLabelsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_jobs/{id}/labels/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_jobs/{id}/labels/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -708,12 +394,12 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsLabelsListExecute(r Api
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -735,160 +421,23 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsLabelsListExecute(r Api
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobsWorkflowJobsListRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobsApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiWorkflowJobsWorkflowJobsListRequest) Page(page int32) ApiWorkflowJobsWorkflowJobsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiWorkflowJobsWorkflowJobsListRequest) PageSize(pageSize int32) ApiWorkflowJobsWorkflowJobsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiWorkflowJobsWorkflowJobsListRequest) Search(search string) ApiWorkflowJobsWorkflowJobsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobsWorkflowJobsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobsWorkflowJobsListExecute(r)
+// WorkflowJobsWorkflowJobsListOpts Optional parameters for the method 'WorkflowJobsWorkflowJobsList'
+type WorkflowJobsWorkflowJobsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * WorkflowJobsWorkflowJobsList  List Workflow Jobs
- * 
-Make a GET request to this resource to retrieve the list of
-workflow jobs.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of workflow jobs
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more workflow job records.  
-
-## Results
-
-Each workflow job data structure includes the following fields:
-
-* `id`: Database ID for this workflow job. (integer)
-* `type`: Data type for this workflow job. (choice)
-* `url`: URL for this workflow job. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this workflow job was created. (datetime)
-* `modified`: Timestamp when this workflow job was last modified. (datetime)
-* `name`: Name of this workflow job. (string)
-* `description`: Optional description of this workflow job. (string)
-* `unified_job_template`:  (id)
-* `launch_type`:  (choice)
-    - `manual`: Manual
-    - `relaunch`: Relaunch
-    - `callback`: Callback
-    - `scheduled`: Scheduled
-    - `dependency`: Dependency
-    - `workflow`: Workflow
-    - `webhook`: Webhook
-    - `sync`: Sync
-    - `scm`: SCM Update
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-* `failed`:  (boolean)
-* `started`: The date and time the job was queued for starting. (datetime)
-* `finished`: The date and time the job finished execution. (datetime)
-* `canceled_on`: The date and time when the cancel request was sent. (datetime)
-* `elapsed`: Elapsed time in seconds that the job ran. (decimal)
-* `job_explanation`: A status field to indicate the state of the job if it wasn&#39;t able to run and capture stdout (string)
-* `workflow_job_template`:  (id)
-* `extra_vars`:  (json)
-* `allow_simultaneous`:  (boolean)
-* `job_template`: If automatically created for a sliced job run, the job template the workflow job was created from. (id)
-* `is_sliced_job`:  (boolean)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id)
-* `limit`:  (string)
-* `scm_branch`:  (string)
-* `webhook_service`: Service that webhook requests will be accepted from (choice)
-    - `""`: ---------
-    - `github`: GitHub
-    - `gitlab`: GitLab
-* `webhook_credential`: Personal Access Token for posting back the status to the service API (id)
-* `webhook_guid`: Unique identifier of the event that triggered this webhook (string)
-
-
-
-## Sorting
-
-To specify that workflow jobs are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+WorkflowJobsWorkflowJobsList  List Workflow Jobs
+ Make a GET request to this resource to retrieve the list of workflow jobs.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of workflow jobs found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more workflow job records.    ## Results  Each workflow job data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this workflow job. (integer) * &#x60;type&#x60;: Data type for this workflow job. (choice) * &#x60;url&#x60;: URL for this workflow job. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this workflow job was created. (datetime) * &#x60;modified&#x60;: Timestamp when this workflow job was last modified. (datetime) * &#x60;name&#x60;: Name of this workflow job. (string) * &#x60;description&#x60;: Optional description of this workflow job. (string) * &#x60;unified_job_template&#x60;:  (id) * &#x60;launch_type&#x60;:  (choice)     - &#x60;manual&#x60;: Manual     - &#x60;relaunch&#x60;: Relaunch     - &#x60;callback&#x60;: Callback     - &#x60;scheduled&#x60;: Scheduled     - &#x60;dependency&#x60;: Dependency     - &#x60;workflow&#x60;: Workflow     - &#x60;webhook&#x60;: Webhook     - &#x60;sync&#x60;: Sync     - &#x60;scm&#x60;: SCM Update * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled * &#x60;failed&#x60;:  (boolean) * &#x60;started&#x60;: The date and time the job was queued for starting. (datetime) * &#x60;finished&#x60;: The date and time the job finished execution. (datetime) * &#x60;canceled_on&#x60;: The date and time when the cancel request was sent. (datetime) * &#x60;elapsed&#x60;: Elapsed time in seconds that the job ran. (decimal) * &#x60;job_explanation&#x60;: A status field to indicate the state of the job if it wasn&amp;#39;t able to run and capture stdout (string) * &#x60;workflow_job_template&#x60;:  (id) * &#x60;extra_vars&#x60;:  (json) * &#x60;allow_simultaneous&#x60;:  (boolean) * &#x60;job_template&#x60;: If automatically created for a sliced job run, the job template the workflow job was created from. (id) * &#x60;is_sliced_job&#x60;:  (boolean) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id) * &#x60;limit&#x60;:  (string) * &#x60;scm_branch&#x60;:  (string) * &#x60;webhook_service&#x60;: Service that webhook requests will be accepted from (choice)     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;github&#x60;: GitHub     - &#x60;gitlab&#x60;: GitLab * &#x60;webhook_credential&#x60;: Personal Access Token for posting back the status to the service API (id) * &#x60;webhook_guid&#x60;: Unique identifier of the event that triggered this webhook (string)    ## Sorting  To specify that workflow jobs are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiWorkflowJobsWorkflowJobsListRequest
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsList(ctx _context.Context) ApiWorkflowJobsWorkflowJobsListRequest {
-	return ApiWorkflowJobsWorkflowJobsListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsListExecute(r ApiWorkflowJobsWorkflowJobsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobsWorkflowJobsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsList(ctx _context.Context, localVarOptionals *WorkflowJobsWorkflowJobsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -897,25 +446,20 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsListExecute(r ApiWorkfl
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobsApiService.WorkflowJobsWorkflowJobsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_jobs/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_jobs/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -934,12 +478,12 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsListExecute(r ApiWorkfl
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -961,142 +505,24 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsListExecute(r ApiWorkfl
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobsWorkflowJobsNotificationsListRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiWorkflowJobsWorkflowJobsNotificationsListRequest) Page(page int32) ApiWorkflowJobsWorkflowJobsNotificationsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiWorkflowJobsWorkflowJobsNotificationsListRequest) PageSize(pageSize int32) ApiWorkflowJobsWorkflowJobsNotificationsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiWorkflowJobsWorkflowJobsNotificationsListRequest) Search(search string) ApiWorkflowJobsWorkflowJobsNotificationsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobsWorkflowJobsNotificationsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobsWorkflowJobsNotificationsListExecute(r)
+// WorkflowJobsWorkflowJobsNotificationsListOpts Optional parameters for the method 'WorkflowJobsWorkflowJobsNotificationsList'
+type WorkflowJobsWorkflowJobsNotificationsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * WorkflowJobsWorkflowJobsNotificationsList  List Notifications for a Workflow Job
- * 
-Make a GET request to this resource to retrieve a list of
-notifications associated with the selected
-workflow job.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of notifications
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more notification records.  
-
-## Results
-
-Each notification data structure includes the following fields:
-
-* `id`: Database ID for this notification. (integer)
-* `type`: Data type for this notification. (choice)
-* `url`: URL for this notification. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this notification was created. (datetime)
-* `modified`: Timestamp when this notification was last modified. (datetime)
-* `notification_template`:  (id)
-* `error`:  (string)
-* `status`:  (choice)
-    - `pending`: Pending
-    - `successful`: Successful
-    - `failed`: Failed
-* `notifications_sent`:  (integer)
-* `notification_type`:  (choice)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `recipients`:  (string)
-* `subject`:  (string)
-* `body`: Notification body (json)
-
-
-
-## Sorting
-
-To specify that notifications are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+WorkflowJobsWorkflowJobsNotificationsList  List Notifications for a Workflow Job
+ Make a GET request to this resource to retrieve a list of notifications associated with the selected workflow job.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of notifications found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more notification records.    ## Results  Each notification data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this notification. (integer) * &#x60;type&#x60;: Data type for this notification. (choice) * &#x60;url&#x60;: URL for this notification. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this notification was created. (datetime) * &#x60;modified&#x60;: Timestamp when this notification was last modified. (datetime) * &#x60;notification_template&#x60;:  (id) * &#x60;error&#x60;:  (string) * &#x60;status&#x60;:  (choice)     - &#x60;pending&#x60;: Pending     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed * &#x60;notifications_sent&#x60;:  (integer) * &#x60;notification_type&#x60;:  (choice)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;recipients&#x60;:  (string) * &#x60;subject&#x60;:  (string) * &#x60;body&#x60;: Notification body (json)    ## Sorting  To specify that notifications are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobsWorkflowJobsNotificationsListRequest
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsNotificationsList(ctx _context.Context, id string) ApiWorkflowJobsWorkflowJobsNotificationsListRequest {
-	return ApiWorkflowJobsWorkflowJobsNotificationsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsNotificationsListExecute(r ApiWorkflowJobsWorkflowJobsNotificationsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobsWorkflowJobsNotificationsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsNotificationsList(ctx _context.Context, id string, localVarOptionals *WorkflowJobsWorkflowJobsNotificationsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1105,26 +531,22 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsNotificationsListExecut
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobsApiService.WorkflowJobsWorkflowJobsNotificationsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_jobs/{id}/notifications/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_jobs/{id}/notifications/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1143,12 +565,12 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsNotificationsListExecut
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1170,97 +592,20 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsNotificationsListExecut
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobsWorkflowJobsReadRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobsApiService
-	id string
-	search *string
-}
-
-func (r ApiWorkflowJobsWorkflowJobsReadRequest) Search(search string) ApiWorkflowJobsWorkflowJobsReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobsWorkflowJobsReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobsWorkflowJobsReadExecute(r)
+// WorkflowJobsWorkflowJobsReadOpts Optional parameters for the method 'WorkflowJobsWorkflowJobsRead'
+type WorkflowJobsWorkflowJobsReadOpts struct {
+    Search optional.String
 }
 
 /*
- * WorkflowJobsWorkflowJobsRead  Retrieve a Workflow Job
- * 
-Make GET request to this resource to retrieve a single workflow job
-record containing the following fields:
-
-* `id`: Database ID for this workflow job. (integer)
-* `type`: Data type for this workflow job. (choice)
-* `url`: URL for this workflow job. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this workflow job was created. (datetime)
-* `modified`: Timestamp when this workflow job was last modified. (datetime)
-* `name`: Name of this workflow job. (string)
-* `description`: Optional description of this workflow job. (string)
-* `unified_job_template`:  (id)
-* `launch_type`:  (choice)
-    - `manual`: Manual
-    - `relaunch`: Relaunch
-    - `callback`: Callback
-    - `scheduled`: Scheduled
-    - `dependency`: Dependency
-    - `workflow`: Workflow
-    - `webhook`: Webhook
-    - `sync`: Sync
-    - `scm`: SCM Update
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-* `failed`:  (boolean)
-* `started`: The date and time the job was queued for starting. (datetime)
-* `finished`: The date and time the job finished execution. (datetime)
-* `canceled_on`: The date and time when the cancel request was sent. (datetime)
-* `elapsed`: Elapsed time in seconds that the job ran. (decimal)
-* `job_args`:  (string)
-* `job_cwd`:  (string)
-* `job_env`:  (json)
-* `job_explanation`: A status field to indicate the state of the job if it wasn&#39;t able to run and capture stdout (string)
-* `result_traceback`:  (string)
-* `workflow_job_template`:  (id)
-* `extra_vars`:  (json)
-* `allow_simultaneous`:  (boolean)
-* `job_template`: If automatically created for a sliced job run, the job template the workflow job was created from. (id)
-* `is_sliced_job`:  (boolean)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id)
-* `limit`:  (string)
-* `scm_branch`:  (string)
-* `webhook_service`: Service that webhook requests will be accepted from (choice)
-    - `""`: ---------
-    - `github`: GitHub
-    - `gitlab`: GitLab
-* `webhook_credential`: Personal Access Token for posting back the status to the service API (id)
-* `webhook_guid`: Unique identifier of the event that triggered this webhook (string)
+WorkflowJobsWorkflowJobsRead  Retrieve a Workflow Job
+ Make GET request to this resource to retrieve a single workflow job record containing the following fields:  * &#x60;id&#x60;: Database ID for this workflow job. (integer) * &#x60;type&#x60;: Data type for this workflow job. (choice) * &#x60;url&#x60;: URL for this workflow job. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this workflow job was created. (datetime) * &#x60;modified&#x60;: Timestamp when this workflow job was last modified. (datetime) * &#x60;name&#x60;: Name of this workflow job. (string) * &#x60;description&#x60;: Optional description of this workflow job. (string) * &#x60;unified_job_template&#x60;:  (id) * &#x60;launch_type&#x60;:  (choice)     - &#x60;manual&#x60;: Manual     - &#x60;relaunch&#x60;: Relaunch     - &#x60;callback&#x60;: Callback     - &#x60;scheduled&#x60;: Scheduled     - &#x60;dependency&#x60;: Dependency     - &#x60;workflow&#x60;: Workflow     - &#x60;webhook&#x60;: Webhook     - &#x60;sync&#x60;: Sync     - &#x60;scm&#x60;: SCM Update * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled * &#x60;failed&#x60;:  (boolean) * &#x60;started&#x60;: The date and time the job was queued for starting. (datetime) * &#x60;finished&#x60;: The date and time the job finished execution. (datetime) * &#x60;canceled_on&#x60;: The date and time when the cancel request was sent. (datetime) * &#x60;elapsed&#x60;: Elapsed time in seconds that the job ran. (decimal) * &#x60;job_args&#x60;:  (string) * &#x60;job_cwd&#x60;:  (string) * &#x60;job_env&#x60;:  (json) * &#x60;job_explanation&#x60;: A status field to indicate the state of the job if it wasn&amp;#39;t able to run and capture stdout (string) * &#x60;result_traceback&#x60;:  (string) * &#x60;workflow_job_template&#x60;:  (id) * &#x60;extra_vars&#x60;:  (json) * &#x60;allow_simultaneous&#x60;:  (boolean) * &#x60;job_template&#x60;: If automatically created for a sliced job run, the job template the workflow job was created from. (id) * &#x60;is_sliced_job&#x60;:  (boolean) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id) * &#x60;limit&#x60;:  (string) * &#x60;scm_branch&#x60;:  (string) * &#x60;webhook_service&#x60;: Service that webhook requests will be accepted from (choice)     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;github&#x60;: GitHub     - &#x60;gitlab&#x60;: GitLab * &#x60;webhook_credential&#x60;: Personal Access Token for posting back the status to the service API (id) * &#x60;webhook_guid&#x60;: Unique identifier of the event that triggered this webhook (string)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobsWorkflowJobsReadRequest
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsRead(ctx _context.Context, id string) ApiWorkflowJobsWorkflowJobsReadRequest {
-	return ApiWorkflowJobsWorkflowJobsReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsReadExecute(r ApiWorkflowJobsWorkflowJobsReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobsWorkflowJobsReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsRead(ctx _context.Context, id string, localVarOptionals *WorkflowJobsWorkflowJobsReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1269,20 +614,16 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsReadExecute(r ApiWorkfl
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobsApiService.WorkflowJobsWorkflowJobsRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_jobs/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_jobs/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1301,12 +642,12 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsReadExecute(r ApiWorkfl
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1328,39 +669,13 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsReadExecute(r ApiWorkfl
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobsWorkflowJobsRelaunchCreateRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobsApiService
-	id string
-}
-
-
-func (r ApiWorkflowJobsWorkflowJobsRelaunchCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobsWorkflowJobsRelaunchCreateExecute(r)
-}
-
 /*
- * WorkflowJobsWorkflowJobsRelaunchCreate Relaunch a workflow job
- * 
-Make a POST request to this endpoint to launch a workflow job identical to the parent workflow job. This will spawn jobs, project updates, or inventory updates based on the unified job templates referenced in the workflow nodes in the workflow job. No POST data is accepted for this action.
-
-If successful, the response status code will be 201 and serialized data of the new workflow job will be returned.
+WorkflowJobsWorkflowJobsRelaunchCreate Relaunch a workflow job
+ Make a POST request to this endpoint to launch a workflow job identical to the parent workflow job. This will spawn jobs, project updates, or inventory updates based on the unified job templates referenced in the workflow nodes in the workflow job. No POST data is accepted for this action.  If successful, the response status code will be 201 and serialized data of the new workflow job will be returned.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobsWorkflowJobsRelaunchCreateRequest
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsRelaunchCreate(ctx _context.Context, id string) ApiWorkflowJobsWorkflowJobsRelaunchCreateRequest {
-	return ApiWorkflowJobsWorkflowJobsRelaunchCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsRelaunchCreateExecute(r ApiWorkflowJobsWorkflowJobsRelaunchCreateRequest) (*_nethttp.Response, error) {
+*/
+func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsRelaunchCreate(ctx _context.Context, id string) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -1369,13 +684,9 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsRelaunchCreateExecute(r
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobsApiService.WorkflowJobsWorkflowJobsRelaunchCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_jobs/{id}/relaunch/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_jobs/{id}/relaunch/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1398,12 +709,12 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsRelaunchCreateExecute(r
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1425,54 +736,24 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsRelaunchCreateExecute(r
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobsWorkflowJobsRelaunchListRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiWorkflowJobsWorkflowJobsRelaunchListRequest) Page(page int32) ApiWorkflowJobsWorkflowJobsRelaunchListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiWorkflowJobsWorkflowJobsRelaunchListRequest) PageSize(pageSize int32) ApiWorkflowJobsWorkflowJobsRelaunchListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiWorkflowJobsWorkflowJobsRelaunchListRequest) Search(search string) ApiWorkflowJobsWorkflowJobsRelaunchListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobsWorkflowJobsRelaunchListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobsWorkflowJobsRelaunchListExecute(r)
+// WorkflowJobsWorkflowJobsRelaunchListOpts Optional parameters for the method 'WorkflowJobsWorkflowJobsRelaunchList'
+type WorkflowJobsWorkflowJobsRelaunchListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * WorkflowJobsWorkflowJobsRelaunchList Relaunch a workflow job
- * 
-Make a POST request to this endpoint to launch a workflow job identical to the parent workflow job. This will spawn jobs, project updates, or inventory updates based on the unified job templates referenced in the workflow nodes in the workflow job. No POST data is accepted for this action.
-
-If successful, the response status code will be 201 and serialized data of the new workflow job will be returned.
+WorkflowJobsWorkflowJobsRelaunchList Relaunch a workflow job
+ Make a POST request to this endpoint to launch a workflow job identical to the parent workflow job. This will spawn jobs, project updates, or inventory updates based on the unified job templates referenced in the workflow nodes in the workflow job. No POST data is accepted for this action.  If successful, the response status code will be 201 and serialized data of the new workflow job will be returned.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobsWorkflowJobsRelaunchListRequest
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsRelaunchList(ctx _context.Context, id string) ApiWorkflowJobsWorkflowJobsRelaunchListRequest {
-	return ApiWorkflowJobsWorkflowJobsRelaunchListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsRelaunchListExecute(r ApiWorkflowJobsWorkflowJobsRelaunchListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobsWorkflowJobsRelaunchListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsRelaunchList(ctx _context.Context, id string, localVarOptionals *WorkflowJobsWorkflowJobsRelaunchListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1481,26 +762,22 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsRelaunchListExecute(r A
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobsApiService.WorkflowJobsWorkflowJobsRelaunchList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_jobs/{id}/relaunch/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_jobs/{id}/relaunch/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1519,12 +796,12 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsRelaunchListExecute(r A
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1546,151 +823,24 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsRelaunchListExecute(r A
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobsWorkflowJobsWorkflowNodesListRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiWorkflowJobsWorkflowJobsWorkflowNodesListRequest) Page(page int32) ApiWorkflowJobsWorkflowJobsWorkflowNodesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiWorkflowJobsWorkflowJobsWorkflowNodesListRequest) PageSize(pageSize int32) ApiWorkflowJobsWorkflowJobsWorkflowNodesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiWorkflowJobsWorkflowJobsWorkflowNodesListRequest) Search(search string) ApiWorkflowJobsWorkflowJobsWorkflowNodesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobsWorkflowJobsWorkflowNodesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobsWorkflowJobsWorkflowNodesListExecute(r)
+// WorkflowJobsWorkflowJobsWorkflowNodesListOpts Optional parameters for the method 'WorkflowJobsWorkflowJobsWorkflowNodesList'
+type WorkflowJobsWorkflowJobsWorkflowNodesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * WorkflowJobsWorkflowJobsWorkflowNodesList  List Workflow Job Nodes for a Workflow Job
- * 
-Make a GET request to this resource to retrieve a list of
-workflow job nodes associated with the selected
-workflow job.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of workflow job nodes
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more workflow job node records.  
-
-## Results
-
-Each workflow job node data structure includes the following fields:
-
-* `id`: Database ID for this workflow job node. (integer)
-* `type`: Data type for this workflow job node. (choice)
-* `url`: URL for this workflow job node. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this workflow job node was created. (datetime)
-* `modified`: Timestamp when this workflow job node was last modified. (datetime)
-* `extra_data`:  (json)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id)
-* `scm_branch`:  (string)
-* `job_type`:  (choice)
-    - `None`: ---------
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string)
-* `skip_tags`:  (string)
-* `limit`:  (string)
-* `diff_mode`:  (boolean)
-* `verbosity`:  (choice)
-    - `None`: ---------
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `job`:  (id)
-* `workflow_job`:  (id)
-* `unified_job_template`:  (id)
-* `success_nodes`:  (field)
-* `failure_nodes`:  (field)
-* `always_nodes`:  (field)
-* `all_parents_must_converge`: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean)
-* `do_not_run`: Indicates that a job will not be created when True. Workflow runtime semantics will mark this True if the node is in a path that will decidedly not be ran. A value of False means the node may not run. (boolean)
-* `identifier`: An identifier coresponding to the workflow job template node that this node was created from. (string)
-
-
-
-## Sorting
-
-To specify that workflow job nodes are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+WorkflowJobsWorkflowJobsWorkflowNodesList  List Workflow Job Nodes for a Workflow Job
+ Make a GET request to this resource to retrieve a list of workflow job nodes associated with the selected workflow job.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of workflow job nodes found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more workflow job node records.    ## Results  Each workflow job node data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this workflow job node. (integer) * &#x60;type&#x60;: Data type for this workflow job node. (choice) * &#x60;url&#x60;: URL for this workflow job node. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this workflow job node was created. (datetime) * &#x60;modified&#x60;: Timestamp when this workflow job node was last modified. (datetime) * &#x60;extra_data&#x60;:  (json) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id) * &#x60;scm_branch&#x60;:  (string) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string) * &#x60;skip_tags&#x60;:  (string) * &#x60;limit&#x60;:  (string) * &#x60;diff_mode&#x60;:  (boolean) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;job&#x60;:  (id) * &#x60;workflow_job&#x60;:  (id) * &#x60;unified_job_template&#x60;:  (id) * &#x60;success_nodes&#x60;:  (field) * &#x60;failure_nodes&#x60;:  (field) * &#x60;always_nodes&#x60;:  (field) * &#x60;all_parents_must_converge&#x60;: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean) * &#x60;do_not_run&#x60;: Indicates that a job will not be created when True. Workflow runtime semantics will mark this True if the node is in a path that will decidedly not be ran. A value of False means the node may not run. (boolean) * &#x60;identifier&#x60;: An identifier coresponding to the workflow job template node that this node was created from. (string)    ## Sorting  To specify that workflow job nodes are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobsWorkflowJobsWorkflowNodesListRequest
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsWorkflowNodesList(ctx _context.Context, id string) ApiWorkflowJobsWorkflowJobsWorkflowNodesListRequest {
-	return ApiWorkflowJobsWorkflowJobsWorkflowNodesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsWorkflowNodesListExecute(r ApiWorkflowJobsWorkflowJobsWorkflowNodesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobsWorkflowJobsWorkflowNodesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsWorkflowNodesList(ctx _context.Context, id string, localVarOptionals *WorkflowJobsWorkflowJobsWorkflowNodesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1699,26 +849,22 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsWorkflowNodesListExecut
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobsApiService.WorkflowJobsWorkflowJobsWorkflowNodesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_jobs/{id}/workflow_nodes/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_jobs/{id}/workflow_nodes/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1737,12 +883,12 @@ func (a *WorkflowJobsApiService) WorkflowJobsWorkflowJobsWorkflowNodesListExecut
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

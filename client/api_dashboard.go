@@ -24,68 +24,12 @@ var (
 // DashboardApiService DashboardApi service
 type DashboardApiService service
 
-type ApiDashboardDashboardGraphsJobsListRequest struct {
-	ctx _context.Context
-	ApiService *DashboardApiService
-}
-
-
-func (r ApiDashboardDashboardGraphsJobsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.DashboardDashboardGraphsJobsListExecute(r)
-}
-
 /*
- * DashboardDashboardGraphsJobsList  View Statistics for Job Runs
- * 
-Make a GET request to this resource to retrieve aggregate statistics about job runs suitable for graphing.
-
-## Parmeters and Filtering
-
-The `period` of the data can be adjusted with:
-
-    ?period=month
-
-Where `month` can be replaced with `week`, `two_weeks`, or `day`.  `month` is the default.
-
-The type of job can be filtered with:
-
-    ?job_type=all
-
-Where `all` can be replaced with `inv_sync`, `playbook_run` or `scm_update`.  `all` is the default.
-
-## Results
-
-Data will be returned in the following format:
-
-    "jobs": {
-            "successful": [
-                [
-                    1402808400.0, 
-                    9
-                ], ... ],
-            "failed": [
-    	        [
-                    1402808400.0, 
-                    3
-                ], ... ]
-    }
-
-Each element contains an epoch timestamp represented in seconds and a numerical value indicating
-the number of events during that time period
+DashboardDashboardGraphsJobsList  View Statistics for Job Runs
+ Make a GET request to this resource to retrieve aggregate statistics about job runs suitable for graphing.  ## Parmeters and Filtering  The &#x60;period&#x60; of the data can be adjusted with:      ?period&#x3D;month  Where &#x60;month&#x60; can be replaced with &#x60;week&#x60;, &#x60;two_weeks&#x60;, or &#x60;day&#x60;.  &#x60;month&#x60; is the default.  The type of job can be filtered with:      ?job_type&#x3D;all  Where &#x60;all&#x60; can be replaced with &#x60;inv_sync&#x60;, &#x60;playbook_run&#x60; or &#x60;scm_update&#x60;.  &#x60;all&#x60; is the default.  ## Results  Data will be returned in the following format:      \&quot;jobs\&quot;: {             \&quot;successful\&quot;: [                 [                     1402808400.0,                      9                 ], ... ],             \&quot;failed\&quot;: [              [                     1402808400.0,                      3                 ], ... ]     }  Each element contains an epoch timestamp represented in seconds and a numerical value indicating the number of events during that time period
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiDashboardDashboardGraphsJobsListRequest
- */
-func (a *DashboardApiService) DashboardDashboardGraphsJobsList(ctx _context.Context) ApiDashboardDashboardGraphsJobsListRequest {
-	return ApiDashboardDashboardGraphsJobsListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *DashboardApiService) DashboardDashboardGraphsJobsListExecute(r ApiDashboardDashboardGraphsJobsListRequest) (*_nethttp.Response, error) {
+*/
+func (a *DashboardApiService) DashboardDashboardGraphsJobsList(ctx _context.Context) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -94,13 +38,8 @@ func (a *DashboardApiService) DashboardDashboardGraphsJobsListExecute(r ApiDashb
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DashboardApiService.DashboardDashboardGraphsJobsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/dashboard/graphs/jobs/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/dashboard/graphs/jobs/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -122,12 +61,12 @@ func (a *DashboardApiService) DashboardDashboardGraphsJobsListExecute(r ApiDashb
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -149,32 +88,11 @@ func (a *DashboardApiService) DashboardDashboardGraphsJobsListExecute(r ApiDashb
 	return localVarHTTPResponse, nil
 }
 
-type ApiDashboardDashboardListRequest struct {
-	ctx _context.Context
-	ApiService *DashboardApiService
-}
-
-
-func (r ApiDashboardDashboardListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.DashboardDashboardListExecute(r)
-}
-
 /*
- * DashboardDashboardList Show Dashboard Details
+DashboardDashboardList Show Dashboard Details
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiDashboardDashboardListRequest
- */
-func (a *DashboardApiService) DashboardDashboardList(ctx _context.Context) ApiDashboardDashboardListRequest {
-	return ApiDashboardDashboardListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *DashboardApiService) DashboardDashboardListExecute(r ApiDashboardDashboardListRequest) (*_nethttp.Response, error) {
+*/
+func (a *DashboardApiService) DashboardDashboardList(ctx _context.Context) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -183,13 +101,8 @@ func (a *DashboardApiService) DashboardDashboardListExecute(r ApiDashboardDashbo
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DashboardApiService.DashboardDashboardList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/dashboard/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/dashboard/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -211,12 +124,12 @@ func (a *DashboardApiService) DashboardDashboardListExecute(r ApiDashboardDashbo
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

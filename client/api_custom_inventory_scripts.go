@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,40 +26,19 @@ var (
 // CustomInventoryScriptsApiService CustomInventoryScriptsApi service
 type CustomInventoryScriptsApiService service
 
-type ApiCustomInventoryScriptsInventoryScriptsCopyCreateRequest struct {
-	ctx _context.Context
-	ApiService *CustomInventoryScriptsApiService
-	id string
-	data *InlineObject26
-}
-
-func (r ApiCustomInventoryScriptsInventoryScriptsCopyCreateRequest) Data(data InlineObject26) ApiCustomInventoryScriptsInventoryScriptsCopyCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiCustomInventoryScriptsInventoryScriptsCopyCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CustomInventoryScriptsInventoryScriptsCopyCreateExecute(r)
+// CustomInventoryScriptsInventoryScriptsCopyCreateOpts Optional parameters for the method 'CustomInventoryScriptsInventoryScriptsCopyCreate'
+type CustomInventoryScriptsInventoryScriptsCopyCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * CustomInventoryScriptsInventoryScriptsCopyCreate Method for CustomInventoryScriptsInventoryScriptsCopyCreate
+CustomInventoryScriptsInventoryScriptsCopyCreate Method for CustomInventoryScriptsInventoryScriptsCopyCreate
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiCustomInventoryScriptsInventoryScriptsCopyCreateRequest
- */
-func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsCopyCreate(ctx _context.Context, id string) ApiCustomInventoryScriptsInventoryScriptsCopyCreateRequest {
-	return ApiCustomInventoryScriptsInventoryScriptsCopyCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsCopyCreateExecute(r ApiCustomInventoryScriptsInventoryScriptsCopyCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CustomInventoryScriptsInventoryScriptsCopyCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject26) - 
+*/
+func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsCopyCreate(ctx _context.Context, id string, localVarOptionals *CustomInventoryScriptsInventoryScriptsCopyCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -67,13 +47,9 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomInventoryScriptsApiService.CustomInventoryScriptsInventoryScriptsCopyCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_scripts/{id}/copy/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_scripts/{id}/copy/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -97,13 +73,20 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject26)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject26")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -125,50 +108,23 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 	return localVarHTTPResponse, nil
 }
 
-type ApiCustomInventoryScriptsInventoryScriptsCopyListRequest struct {
-	ctx _context.Context
-	ApiService *CustomInventoryScriptsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiCustomInventoryScriptsInventoryScriptsCopyListRequest) Page(page int32) ApiCustomInventoryScriptsInventoryScriptsCopyListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiCustomInventoryScriptsInventoryScriptsCopyListRequest) PageSize(pageSize int32) ApiCustomInventoryScriptsInventoryScriptsCopyListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiCustomInventoryScriptsInventoryScriptsCopyListRequest) Search(search string) ApiCustomInventoryScriptsInventoryScriptsCopyListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiCustomInventoryScriptsInventoryScriptsCopyListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CustomInventoryScriptsInventoryScriptsCopyListExecute(r)
+// CustomInventoryScriptsInventoryScriptsCopyListOpts Optional parameters for the method 'CustomInventoryScriptsInventoryScriptsCopyList'
+type CustomInventoryScriptsInventoryScriptsCopyListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * CustomInventoryScriptsInventoryScriptsCopyList Method for CustomInventoryScriptsInventoryScriptsCopyList
+CustomInventoryScriptsInventoryScriptsCopyList Method for CustomInventoryScriptsInventoryScriptsCopyList
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiCustomInventoryScriptsInventoryScriptsCopyListRequest
- */
-func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsCopyList(ctx _context.Context, id string) ApiCustomInventoryScriptsInventoryScriptsCopyListRequest {
-	return ApiCustomInventoryScriptsInventoryScriptsCopyListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsCopyListExecute(r ApiCustomInventoryScriptsInventoryScriptsCopyListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CustomInventoryScriptsInventoryScriptsCopyListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsCopyList(ctx _context.Context, id string, localVarOptionals *CustomInventoryScriptsInventoryScriptsCopyListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -177,26 +133,22 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomInventoryScriptsApiService.CustomInventoryScriptsInventoryScriptsCopyList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_scripts/{id}/copy/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_scripts/{id}/copy/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -215,12 +167,12 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -242,53 +194,19 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 	return localVarHTTPResponse, nil
 }
 
-type ApiCustomInventoryScriptsInventoryScriptsCreateRequest struct {
-	ctx _context.Context
-	ApiService *CustomInventoryScriptsApiService
-	data *InlineObject23
-}
-
-func (r ApiCustomInventoryScriptsInventoryScriptsCreateRequest) Data(data InlineObject23) ApiCustomInventoryScriptsInventoryScriptsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiCustomInventoryScriptsInventoryScriptsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CustomInventoryScriptsInventoryScriptsCreateExecute(r)
+// CustomInventoryScriptsInventoryScriptsCreateOpts Optional parameters for the method 'CustomInventoryScriptsInventoryScriptsCreate'
+type CustomInventoryScriptsInventoryScriptsCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * CustomInventoryScriptsInventoryScriptsCreate  Create a Custom Inventory Script
- * 
-Make a POST request to this resource with the following custom inventory script
-fields to create a new custom inventory script:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this custom inventory script. (string, required)
-* `description`: Optional description of this custom inventory script. (string, default=`""`)
-* `script`:  (string, required)
-* `organization`: Organization owning this inventory script (id, required)
+CustomInventoryScriptsInventoryScriptsCreate  Create a Custom Inventory Script
+ Make a POST request to this resource with the following custom inventory script fields to create a new custom inventory script:          * &#x60;name&#x60;: Name of this custom inventory script. (string, required) * &#x60;description&#x60;: Optional description of this custom inventory script. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;script&#x60;:  (string, required) * &#x60;organization&#x60;: Organization owning this inventory script (id, required)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiCustomInventoryScriptsInventoryScriptsCreateRequest
- */
-func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsCreate(ctx _context.Context) ApiCustomInventoryScriptsInventoryScriptsCreateRequest {
-	return ApiCustomInventoryScriptsInventoryScriptsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsCreateExecute(r ApiCustomInventoryScriptsInventoryScriptsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CustomInventoryScriptsInventoryScriptsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject23) - 
+*/
+func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsCreate(ctx _context.Context, localVarOptionals *CustomInventoryScriptsInventoryScriptsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -297,13 +215,8 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomInventoryScriptsApiService.CustomInventoryScriptsInventoryScriptsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_scripts/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_scripts/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -326,13 +239,20 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject23)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject23")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -354,42 +274,20 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 	return localVarHTTPResponse, nil
 }
 
-type ApiCustomInventoryScriptsInventoryScriptsDeleteRequest struct {
-	ctx _context.Context
-	ApiService *CustomInventoryScriptsApiService
-	id string
-	search *string
-}
-
-func (r ApiCustomInventoryScriptsInventoryScriptsDeleteRequest) Search(search string) ApiCustomInventoryScriptsInventoryScriptsDeleteRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiCustomInventoryScriptsInventoryScriptsDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CustomInventoryScriptsInventoryScriptsDeleteExecute(r)
+// CustomInventoryScriptsInventoryScriptsDeleteOpts Optional parameters for the method 'CustomInventoryScriptsInventoryScriptsDelete'
+type CustomInventoryScriptsInventoryScriptsDeleteOpts struct {
+    Search optional.String
 }
 
 /*
- * CustomInventoryScriptsInventoryScriptsDelete  Delete a Custom Inventory Script
- * 
-Make a DELETE request to this resource to delete this custom inventory script.
+CustomInventoryScriptsInventoryScriptsDelete  Delete a Custom Inventory Script
+ Make a DELETE request to this resource to delete this custom inventory script.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiCustomInventoryScriptsInventoryScriptsDeleteRequest
- */
-func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsDelete(ctx _context.Context, id string) ApiCustomInventoryScriptsInventoryScriptsDeleteRequest {
-	return ApiCustomInventoryScriptsInventoryScriptsDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsDeleteExecute(r ApiCustomInventoryScriptsInventoryScriptsDeleteRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CustomInventoryScriptsInventoryScriptsDeleteOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsDelete(ctx _context.Context, id string, localVarOptionals *CustomInventoryScriptsInventoryScriptsDeleteOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -398,20 +296,16 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomInventoryScriptsApiService.CustomInventoryScriptsInventoryScriptsDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_scripts/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_scripts/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -430,12 +324,12 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -457,122 +351,23 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 	return localVarHTTPResponse, nil
 }
 
-type ApiCustomInventoryScriptsInventoryScriptsListRequest struct {
-	ctx _context.Context
-	ApiService *CustomInventoryScriptsApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiCustomInventoryScriptsInventoryScriptsListRequest) Page(page int32) ApiCustomInventoryScriptsInventoryScriptsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiCustomInventoryScriptsInventoryScriptsListRequest) PageSize(pageSize int32) ApiCustomInventoryScriptsInventoryScriptsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiCustomInventoryScriptsInventoryScriptsListRequest) Search(search string) ApiCustomInventoryScriptsInventoryScriptsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiCustomInventoryScriptsInventoryScriptsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CustomInventoryScriptsInventoryScriptsListExecute(r)
+// CustomInventoryScriptsInventoryScriptsListOpts Optional parameters for the method 'CustomInventoryScriptsInventoryScriptsList'
+type CustomInventoryScriptsInventoryScriptsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * CustomInventoryScriptsInventoryScriptsList  List Custom Inventory Scripts
- * 
-Make a GET request to this resource to retrieve the list of
-custom inventory scripts.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of custom inventory scripts
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more custom inventory script records.  
-
-## Results
-
-Each custom inventory script data structure includes the following fields:
-
-* `id`: Database ID for this custom inventory script. (integer)
-* `type`: Data type for this custom inventory script. (choice)
-* `url`: URL for this custom inventory script. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this custom inventory script was created. (datetime)
-* `modified`: Timestamp when this custom inventory script was last modified. (datetime)
-* `name`: Name of this custom inventory script. (string)
-* `description`: Optional description of this custom inventory script. (string)
-* `script`:  (string)
-* `organization`: Organization owning this inventory script (id)
-
-
-
-## Sorting
-
-To specify that custom inventory scripts are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+CustomInventoryScriptsInventoryScriptsList  List Custom Inventory Scripts
+ Make a GET request to this resource to retrieve the list of custom inventory scripts.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of custom inventory scripts found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more custom inventory script records.    ## Results  Each custom inventory script data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this custom inventory script. (integer) * &#x60;type&#x60;: Data type for this custom inventory script. (choice) * &#x60;url&#x60;: URL for this custom inventory script. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this custom inventory script was created. (datetime) * &#x60;modified&#x60;: Timestamp when this custom inventory script was last modified. (datetime) * &#x60;name&#x60;: Name of this custom inventory script. (string) * &#x60;description&#x60;: Optional description of this custom inventory script. (string) * &#x60;script&#x60;:  (string) * &#x60;organization&#x60;: Organization owning this inventory script (id)    ## Sorting  To specify that custom inventory scripts are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiCustomInventoryScriptsInventoryScriptsListRequest
- */
-func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsList(ctx _context.Context) ApiCustomInventoryScriptsInventoryScriptsListRequest {
-	return ApiCustomInventoryScriptsInventoryScriptsListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsListExecute(r ApiCustomInventoryScriptsInventoryScriptsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CustomInventoryScriptsInventoryScriptsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsList(ctx _context.Context, localVarOptionals *CustomInventoryScriptsInventoryScriptsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -581,25 +376,20 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomInventoryScriptsApiService.CustomInventoryScriptsInventoryScriptsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_scripts/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_scripts/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -618,12 +408,12 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -645,122 +435,24 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 	return localVarHTTPResponse, nil
 }
 
-type ApiCustomInventoryScriptsInventoryScriptsObjectRolesListRequest struct {
-	ctx _context.Context
-	ApiService *CustomInventoryScriptsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiCustomInventoryScriptsInventoryScriptsObjectRolesListRequest) Page(page int32) ApiCustomInventoryScriptsInventoryScriptsObjectRolesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiCustomInventoryScriptsInventoryScriptsObjectRolesListRequest) PageSize(pageSize int32) ApiCustomInventoryScriptsInventoryScriptsObjectRolesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiCustomInventoryScriptsInventoryScriptsObjectRolesListRequest) Search(search string) ApiCustomInventoryScriptsInventoryScriptsObjectRolesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiCustomInventoryScriptsInventoryScriptsObjectRolesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CustomInventoryScriptsInventoryScriptsObjectRolesListExecute(r)
+// CustomInventoryScriptsInventoryScriptsObjectRolesListOpts Optional parameters for the method 'CustomInventoryScriptsInventoryScriptsObjectRolesList'
+type CustomInventoryScriptsInventoryScriptsObjectRolesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * CustomInventoryScriptsInventoryScriptsObjectRolesList  List Roles for a Custom Inventory Script
- * 
-Make a GET request to this resource to retrieve a list of
-roles associated with the selected
-custom inventory script.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of roles
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more role records.  
-
-## Results
-
-Each role data structure includes the following fields:
-
-* `id`: Database ID for this role. (integer)
-* `type`: Data type for this role. (choice)
-* `url`: URL for this role. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `name`: Name of this role. (field)
-* `description`: Optional description of this role. (field)
-
-
-
-## Sorting
-
-To specify that roles are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+CustomInventoryScriptsInventoryScriptsObjectRolesList  List Roles for a Custom Inventory Script
+ Make a GET request to this resource to retrieve a list of roles associated with the selected custom inventory script.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of roles found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more role records.    ## Results  Each role data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this role. (integer) * &#x60;type&#x60;: Data type for this role. (choice) * &#x60;url&#x60;: URL for this role. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;name&#x60;: Name of this role. (field) * &#x60;description&#x60;: Optional description of this role. (field)    ## Sorting  To specify that roles are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiCustomInventoryScriptsInventoryScriptsObjectRolesListRequest
- */
-func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsObjectRolesList(ctx _context.Context, id string) ApiCustomInventoryScriptsInventoryScriptsObjectRolesListRequest {
-	return ApiCustomInventoryScriptsInventoryScriptsObjectRolesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsObjectRolesListExecute(r ApiCustomInventoryScriptsInventoryScriptsObjectRolesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CustomInventoryScriptsInventoryScriptsObjectRolesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsObjectRolesList(ctx _context.Context, id string, localVarOptionals *CustomInventoryScriptsInventoryScriptsObjectRolesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -769,26 +461,22 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomInventoryScriptsApiService.CustomInventoryScriptsInventoryScriptsObjectRolesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_scripts/{id}/object_roles/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_scripts/{id}/object_roles/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -807,12 +495,12 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -834,70 +522,22 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 	return localVarHTTPResponse, nil
 }
 
-type ApiCustomInventoryScriptsInventoryScriptsPartialUpdateRequest struct {
-	ctx _context.Context
-	ApiService *CustomInventoryScriptsApiService
-	id string
-	search *string
-	data *InlineObject25
-}
-
-func (r ApiCustomInventoryScriptsInventoryScriptsPartialUpdateRequest) Search(search string) ApiCustomInventoryScriptsInventoryScriptsPartialUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiCustomInventoryScriptsInventoryScriptsPartialUpdateRequest) Data(data InlineObject25) ApiCustomInventoryScriptsInventoryScriptsPartialUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiCustomInventoryScriptsInventoryScriptsPartialUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CustomInventoryScriptsInventoryScriptsPartialUpdateExecute(r)
+// CustomInventoryScriptsInventoryScriptsPartialUpdateOpts Optional parameters for the method 'CustomInventoryScriptsInventoryScriptsPartialUpdate'
+type CustomInventoryScriptsInventoryScriptsPartialUpdateOpts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * CustomInventoryScriptsInventoryScriptsPartialUpdate  Update a Custom Inventory Script
- * 
-Make a PUT or PATCH request to this resource to update this
-custom inventory script.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this custom inventory script. (string, required)
-* `description`: Optional description of this custom inventory script. (string, default=`""`)
-* `script`:  (string, required)
-* `organization`: Organization owning this inventory script (id, required)
-
-
-
-
-
-
-
-
-For a PATCH request, include only the fields that are being modified.
+CustomInventoryScriptsInventoryScriptsPartialUpdate  Update a Custom Inventory Script
+ Make a PUT or PATCH request to this resource to update this custom inventory script.  The following fields may be modified:          * &#x60;name&#x60;: Name of this custom inventory script. (string, required) * &#x60;description&#x60;: Optional description of this custom inventory script. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;script&#x60;:  (string, required) * &#x60;organization&#x60;: Organization owning this inventory script (id, required)         For a PATCH request, include only the fields that are being modified.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiCustomInventoryScriptsInventoryScriptsPartialUpdateRequest
- */
-func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsPartialUpdate(ctx _context.Context, id string) ApiCustomInventoryScriptsInventoryScriptsPartialUpdateRequest {
-	return ApiCustomInventoryScriptsInventoryScriptsPartialUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsPartialUpdateExecute(r ApiCustomInventoryScriptsInventoryScriptsPartialUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CustomInventoryScriptsInventoryScriptsPartialUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject25) - 
+*/
+func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsPartialUpdate(ctx _context.Context, id string, localVarOptionals *CustomInventoryScriptsInventoryScriptsPartialUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPatch
 		localVarPostBody     interface{}
@@ -906,20 +546,16 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomInventoryScriptsApiService.CustomInventoryScriptsInventoryScriptsPartialUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_scripts/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_scripts/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -939,13 +575,20 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject25)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject25")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -967,55 +610,20 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 	return localVarHTTPResponse, nil
 }
 
-type ApiCustomInventoryScriptsInventoryScriptsReadRequest struct {
-	ctx _context.Context
-	ApiService *CustomInventoryScriptsApiService
-	id string
-	search *string
-}
-
-func (r ApiCustomInventoryScriptsInventoryScriptsReadRequest) Search(search string) ApiCustomInventoryScriptsInventoryScriptsReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiCustomInventoryScriptsInventoryScriptsReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CustomInventoryScriptsInventoryScriptsReadExecute(r)
+// CustomInventoryScriptsInventoryScriptsReadOpts Optional parameters for the method 'CustomInventoryScriptsInventoryScriptsRead'
+type CustomInventoryScriptsInventoryScriptsReadOpts struct {
+    Search optional.String
 }
 
 /*
- * CustomInventoryScriptsInventoryScriptsRead  Retrieve a Custom Inventory Script
- * 
-Make GET request to this resource to retrieve a single custom inventory script
-record containing the following fields:
-
-* `id`: Database ID for this custom inventory script. (integer)
-* `type`: Data type for this custom inventory script. (choice)
-* `url`: URL for this custom inventory script. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this custom inventory script was created. (datetime)
-* `modified`: Timestamp when this custom inventory script was last modified. (datetime)
-* `name`: Name of this custom inventory script. (string)
-* `description`: Optional description of this custom inventory script. (string)
-* `script`:  (string)
-* `organization`: Organization owning this inventory script (id)
+CustomInventoryScriptsInventoryScriptsRead  Retrieve a Custom Inventory Script
+ Make GET request to this resource to retrieve a single custom inventory script record containing the following fields:  * &#x60;id&#x60;: Database ID for this custom inventory script. (integer) * &#x60;type&#x60;: Data type for this custom inventory script. (choice) * &#x60;url&#x60;: URL for this custom inventory script. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this custom inventory script was created. (datetime) * &#x60;modified&#x60;: Timestamp when this custom inventory script was last modified. (datetime) * &#x60;name&#x60;: Name of this custom inventory script. (string) * &#x60;description&#x60;: Optional description of this custom inventory script. (string) * &#x60;script&#x60;:  (string) * &#x60;organization&#x60;: Organization owning this inventory script (id)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiCustomInventoryScriptsInventoryScriptsReadRequest
- */
-func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsRead(ctx _context.Context, id string) ApiCustomInventoryScriptsInventoryScriptsReadRequest {
-	return ApiCustomInventoryScriptsInventoryScriptsReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsReadExecute(r ApiCustomInventoryScriptsInventoryScriptsReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CustomInventoryScriptsInventoryScriptsReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsRead(ctx _context.Context, id string, localVarOptionals *CustomInventoryScriptsInventoryScriptsReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1024,20 +632,16 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomInventoryScriptsApiService.CustomInventoryScriptsInventoryScriptsRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_scripts/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_scripts/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1056,12 +660,12 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1083,68 +687,22 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 	return localVarHTTPResponse, nil
 }
 
-type ApiCustomInventoryScriptsInventoryScriptsUpdateRequest struct {
-	ctx _context.Context
-	ApiService *CustomInventoryScriptsApiService
-	id string
-	search *string
-	data *InlineObject24
-}
-
-func (r ApiCustomInventoryScriptsInventoryScriptsUpdateRequest) Search(search string) ApiCustomInventoryScriptsInventoryScriptsUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiCustomInventoryScriptsInventoryScriptsUpdateRequest) Data(data InlineObject24) ApiCustomInventoryScriptsInventoryScriptsUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiCustomInventoryScriptsInventoryScriptsUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CustomInventoryScriptsInventoryScriptsUpdateExecute(r)
+// CustomInventoryScriptsInventoryScriptsUpdateOpts Optional parameters for the method 'CustomInventoryScriptsInventoryScriptsUpdate'
+type CustomInventoryScriptsInventoryScriptsUpdateOpts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * CustomInventoryScriptsInventoryScriptsUpdate  Update a Custom Inventory Script
- * 
-Make a PUT or PATCH request to this resource to update this
-custom inventory script.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this custom inventory script. (string, required)
-* `description`: Optional description of this custom inventory script. (string, default=`""`)
-* `script`:  (string, required)
-* `organization`: Organization owning this inventory script (id, required)
-
-
-
-
-
-
-For a PUT request, include **all** fields in the request.
+CustomInventoryScriptsInventoryScriptsUpdate  Update a Custom Inventory Script
+ Make a PUT or PATCH request to this resource to update this custom inventory script.  The following fields may be modified:          * &#x60;name&#x60;: Name of this custom inventory script. (string, required) * &#x60;description&#x60;: Optional description of this custom inventory script. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;script&#x60;:  (string, required) * &#x60;organization&#x60;: Organization owning this inventory script (id, required)       For a PUT request, include **all** fields in the request.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiCustomInventoryScriptsInventoryScriptsUpdateRequest
- */
-func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsUpdate(ctx _context.Context, id string) ApiCustomInventoryScriptsInventoryScriptsUpdateRequest {
-	return ApiCustomInventoryScriptsInventoryScriptsUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsUpdateExecute(r ApiCustomInventoryScriptsInventoryScriptsUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CustomInventoryScriptsInventoryScriptsUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject24) - 
+*/
+func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScriptsUpdate(ctx _context.Context, id string, localVarOptionals *CustomInventoryScriptsInventoryScriptsUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -1153,20 +711,16 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CustomInventoryScriptsApiService.CustomInventoryScriptsInventoryScriptsUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventory_scripts/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventory_scripts/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -1186,13 +740,20 @@ func (a *CustomInventoryScriptsApiService) CustomInventoryScriptsInventoryScript
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject24)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject24")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

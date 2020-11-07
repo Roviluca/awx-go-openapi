@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,129 +26,23 @@ var (
 // ActivityStreamsApiService ActivityStreamsApi service
 type ActivityStreamsApiService service
 
-type ApiActivityStreamsActivityStreamListRequest struct {
-	ctx _context.Context
-	ApiService *ActivityStreamsApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiActivityStreamsActivityStreamListRequest) Page(page int32) ApiActivityStreamsActivityStreamListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiActivityStreamsActivityStreamListRequest) PageSize(pageSize int32) ApiActivityStreamsActivityStreamListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiActivityStreamsActivityStreamListRequest) Search(search string) ApiActivityStreamsActivityStreamListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiActivityStreamsActivityStreamListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.ActivityStreamsActivityStreamListExecute(r)
+// ActivityStreamsActivityStreamListOpts Optional parameters for the method 'ActivityStreamsActivityStreamList'
+type ActivityStreamsActivityStreamListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * ActivityStreamsActivityStreamList  List Activity Streams
- * 
-Make a GET request to this resource to retrieve the list of
-activity streams.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of activity streams
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more activity stream records.  
-
-## Results
-
-Each activity stream data structure includes the following fields:
-
-* `id`: Database ID for this activity stream. (integer)
-* `type`: Data type for this activity stream. (choice)
-* `url`: URL for this activity stream. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `timestamp`:  (datetime)
-* `operation`: The action taken with respect to the given object(s). (choice)
-    - `create`: Entity Created
-    - `update`: Entity Updated
-    - `delete`: Entity Deleted
-    - `associate`: Entity Associated with another Entity
-    - `disassociate`: Entity was Disassociated with another Entity
-* `changes`: A summary of the new and changed values when an object is created, updated, or deleted (json)
-* `object1`: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string)
-* `object2`: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string)
-* `object_association`: When present, shows the field name of the role or relationship that changed. (field)
-* `action_node`: The cluster node the activity took place on. (string)
-* `object_type`: When present, shows the model on which the role or relationship was defined. (field)
-
-
-
-## Sorting
-
-To specify that activity streams are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+ActivityStreamsActivityStreamList  List Activity Streams
+ Make a GET request to this resource to retrieve the list of activity streams.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of activity streams found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more activity stream records.    ## Results  Each activity stream data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this activity stream. (integer) * &#x60;type&#x60;: Data type for this activity stream. (choice) * &#x60;url&#x60;: URL for this activity stream. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;timestamp&#x60;:  (datetime) * &#x60;operation&#x60;: The action taken with respect to the given object(s). (choice)     - &#x60;create&#x60;: Entity Created     - &#x60;update&#x60;: Entity Updated     - &#x60;delete&#x60;: Entity Deleted     - &#x60;associate&#x60;: Entity Associated with another Entity     - &#x60;disassociate&#x60;: Entity was Disassociated with another Entity * &#x60;changes&#x60;: A summary of the new and changed values when an object is created, updated, or deleted (json) * &#x60;object1&#x60;: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string) * &#x60;object2&#x60;: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string) * &#x60;object_association&#x60;: When present, shows the field name of the role or relationship that changed. (field) * &#x60;action_node&#x60;: The cluster node the activity took place on. (string) * &#x60;object_type&#x60;: When present, shows the model on which the role or relationship was defined. (field)    ## Sorting  To specify that activity streams are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiActivityStreamsActivityStreamListRequest
- */
-func (a *ActivityStreamsApiService) ActivityStreamsActivityStreamList(ctx _context.Context) ApiActivityStreamsActivityStreamListRequest {
-	return ApiActivityStreamsActivityStreamListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *ActivityStreamsApiService) ActivityStreamsActivityStreamListExecute(r ApiActivityStreamsActivityStreamListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *ActivityStreamsActivityStreamListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *ActivityStreamsApiService) ActivityStreamsActivityStreamList(ctx _context.Context, localVarOptionals *ActivityStreamsActivityStreamListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -156,25 +51,20 @@ func (a *ActivityStreamsApiService) ActivityStreamsActivityStreamListExecute(r A
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ActivityStreamsApiService.ActivityStreamsActivityStreamList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/activity_stream/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/activity_stream/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -193,12 +83,12 @@ func (a *ActivityStreamsApiService) ActivityStreamsActivityStreamListExecute(r A
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -220,62 +110,20 @@ func (a *ActivityStreamsApiService) ActivityStreamsActivityStreamListExecute(r A
 	return localVarHTTPResponse, nil
 }
 
-type ApiActivityStreamsActivityStreamReadRequest struct {
-	ctx _context.Context
-	ApiService *ActivityStreamsApiService
-	id string
-	search *string
-}
-
-func (r ApiActivityStreamsActivityStreamReadRequest) Search(search string) ApiActivityStreamsActivityStreamReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiActivityStreamsActivityStreamReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.ActivityStreamsActivityStreamReadExecute(r)
+// ActivityStreamsActivityStreamReadOpts Optional parameters for the method 'ActivityStreamsActivityStreamRead'
+type ActivityStreamsActivityStreamReadOpts struct {
+    Search optional.String
 }
 
 /*
- * ActivityStreamsActivityStreamRead  Retrieve an Activity Stream
- * 
-Make GET request to this resource to retrieve a single activity stream
-record containing the following fields:
-
-* `id`: Database ID for this activity stream. (integer)
-* `type`: Data type for this activity stream. (choice)
-* `url`: URL for this activity stream. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `timestamp`:  (datetime)
-* `operation`: The action taken with respect to the given object(s). (choice)
-    - `create`: Entity Created
-    - `update`: Entity Updated
-    - `delete`: Entity Deleted
-    - `associate`: Entity Associated with another Entity
-    - `disassociate`: Entity was Disassociated with another Entity
-* `changes`: A summary of the new and changed values when an object is created, updated, or deleted (json)
-* `object1`: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string)
-* `object2`: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string)
-* `object_association`: When present, shows the field name of the role or relationship that changed. (field)
-* `action_node`: The cluster node the activity took place on. (string)
-* `object_type`: When present, shows the model on which the role or relationship was defined. (field)
+ActivityStreamsActivityStreamRead  Retrieve an Activity Stream
+ Make GET request to this resource to retrieve a single activity stream record containing the following fields:  * &#x60;id&#x60;: Database ID for this activity stream. (integer) * &#x60;type&#x60;: Data type for this activity stream. (choice) * &#x60;url&#x60;: URL for this activity stream. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;timestamp&#x60;:  (datetime) * &#x60;operation&#x60;: The action taken with respect to the given object(s). (choice)     - &#x60;create&#x60;: Entity Created     - &#x60;update&#x60;: Entity Updated     - &#x60;delete&#x60;: Entity Deleted     - &#x60;associate&#x60;: Entity Associated with another Entity     - &#x60;disassociate&#x60;: Entity was Disassociated with another Entity * &#x60;changes&#x60;: A summary of the new and changed values when an object is created, updated, or deleted (json) * &#x60;object1&#x60;: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string) * &#x60;object2&#x60;: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string) * &#x60;object_association&#x60;: When present, shows the field name of the role or relationship that changed. (field) * &#x60;action_node&#x60;: The cluster node the activity took place on. (string) * &#x60;object_type&#x60;: When present, shows the model on which the role or relationship was defined. (field)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiActivityStreamsActivityStreamReadRequest
- */
-func (a *ActivityStreamsApiService) ActivityStreamsActivityStreamRead(ctx _context.Context, id string) ApiActivityStreamsActivityStreamReadRequest {
-	return ApiActivityStreamsActivityStreamReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *ActivityStreamsApiService) ActivityStreamsActivityStreamReadExecute(r ApiActivityStreamsActivityStreamReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *ActivityStreamsActivityStreamReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *ActivityStreamsApiService) ActivityStreamsActivityStreamRead(ctx _context.Context, id string, localVarOptionals *ActivityStreamsActivityStreamReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -284,20 +132,16 @@ func (a *ActivityStreamsApiService) ActivityStreamsActivityStreamReadExecute(r A
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ActivityStreamsApiService.ActivityStreamsActivityStreamRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/activity_stream/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/activity_stream/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -316,12 +160,12 @@ func (a *ActivityStreamsApiService) ActivityStreamsActivityStreamReadExecute(r A
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

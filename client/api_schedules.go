@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,66 +26,19 @@ var (
 // SchedulesApiService SchedulesApi service
 type SchedulesApiService service
 
-type ApiSchedulesSchedulesCreateRequest struct {
-	ctx _context.Context
-	ApiService *SchedulesApiService
-	data *map[string]interface{}
-}
-
-func (r ApiSchedulesSchedulesCreateRequest) Data(data map[string]interface{}) ApiSchedulesSchedulesCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiSchedulesSchedulesCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SchedulesSchedulesCreateExecute(r)
+// SchedulesSchedulesCreateOpts Optional parameters for the method 'SchedulesSchedulesCreate'
+type SchedulesSchedulesCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * SchedulesSchedulesCreate Schedule Details
- * ================
-The following lists the expected format and details of our rrules:
-
-* DTSTART is required and must follow the following format: DTSTART:YYYYMMDDTHHMMSSZ
-* DTSTART is expected to be in UTC
-* INTERVAL is required
-* SECONDLY is not supported
-* TZID is not supported
-* RRULE must precede the rule statements
-* BYDAY is supported but not BYDAY with a numerical prefix
-* BYYEARDAY and BYWEEKNO are not supported
-* Only one rrule statement per schedule is supported
-* COUNT must be < 1000
-
-Here are some example rrules:
-
-    "DTSTART:20500331T055000Z RRULE:FREQ=MINUTELY;INTERVAL=10;COUNT=5"
-    "DTSTART:20240331T075000Z RRULE:FREQ=DAILY;INTERVAL=1;COUNT=1"
-    "DTSTART:20140331T075000Z RRULE:FREQ=MINUTELY;INTERVAL=1;UNTIL=20230401T075000Z"
-    "DTSTART:20140331T075000Z RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,WE,FR"
-    "DTSTART:20140331T075000Z RRULE:FREQ=WEEKLY;INTERVAL=5;BYDAY=MO"
-    "DTSTART:20140331T075000Z RRULE:FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=6"
-    "DTSTART:20140331T075000Z RRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=4;BYDAY=SU"
-    "DTSTART:20140331T075000Z RRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=-1;BYDAY=MO,TU,WE,TH,FR"
-    "DTSTART:20140331T075000Z RRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=-1;BYDAY=MO,TU,WE,TH,FR,SA,SU"
-    "DTSTART:20140331T075000Z RRULE:FREQ=YEARLY;INTERVAL=1;BYMONTH=4;BYMONTHDAY=1"
-    "DTSTART:20140331T075000Z RRULE:FREQ=YEARLY;INTERVAL=1;BYSETPOS=-1;BYMONTH=8;BYDAY=SU"
-    "DTSTART:20140331T075000Z RRULE:FREQ=WEEKLY;INTERVAL=1;UNTIL=20230401T075000Z;BYDAY=MO,WE,FR"
-    "DTSTART:20140331T075000Z RRULE:FREQ=HOURLY;INTERVAL=1;UNTIL=20230610T075000Z"
+SchedulesSchedulesCreate Schedule Details
+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; The following lists the expected format and details of our rrules:  * DTSTART is required and must follow the following format: DTSTART:YYYYMMDDTHHMMSSZ * DTSTART is expected to be in UTC * INTERVAL is required * SECONDLY is not supported * TZID is not supported * RRULE must precede the rule statements * BYDAY is supported but not BYDAY with a numerical prefix * BYYEARDAY and BYWEEKNO are not supported * Only one rrule statement per schedule is supported * COUNT must be &lt; 1000  Here are some example rrules:      \&quot;DTSTART:20500331T055000Z RRULE:FREQ&#x3D;MINUTELY;INTERVAL&#x3D;10;COUNT&#x3D;5\&quot;     \&quot;DTSTART:20240331T075000Z RRULE:FREQ&#x3D;DAILY;INTERVAL&#x3D;1;COUNT&#x3D;1\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;MINUTELY;INTERVAL&#x3D;1;UNTIL&#x3D;20230401T075000Z\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;WEEKLY;INTERVAL&#x3D;1;BYDAY&#x3D;MO,WE,FR\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;WEEKLY;INTERVAL&#x3D;5;BYDAY&#x3D;MO\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;MONTHLY;INTERVAL&#x3D;1;BYMONTHDAY&#x3D;6\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;MONTHLY;INTERVAL&#x3D;1;BYSETPOS&#x3D;4;BYDAY&#x3D;SU\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;MONTHLY;INTERVAL&#x3D;1;BYSETPOS&#x3D;-1;BYDAY&#x3D;MO,TU,WE,TH,FR\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;MONTHLY;INTERVAL&#x3D;1;BYSETPOS&#x3D;-1;BYDAY&#x3D;MO,TU,WE,TH,FR,SA,SU\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;YEARLY;INTERVAL&#x3D;1;BYMONTH&#x3D;4;BYMONTHDAY&#x3D;1\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;YEARLY;INTERVAL&#x3D;1;BYSETPOS&#x3D;-1;BYMONTH&#x3D;8;BYDAY&#x3D;SU\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;WEEKLY;INTERVAL&#x3D;1;UNTIL&#x3D;20230401T075000Z;BYDAY&#x3D;MO,WE,FR\&quot;     \&quot;DTSTART:20140331T075000Z RRULE:FREQ&#x3D;HOURLY;INTERVAL&#x3D;1;UNTIL&#x3D;20230610T075000Z\&quot;
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiSchedulesSchedulesCreateRequest
- */
-func (a *SchedulesApiService) SchedulesSchedulesCreate(ctx _context.Context) ApiSchedulesSchedulesCreateRequest {
-	return ApiSchedulesSchedulesCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SchedulesApiService) SchedulesSchedulesCreateExecute(r ApiSchedulesSchedulesCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *SchedulesSchedulesCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *SchedulesApiService) SchedulesSchedulesCreate(ctx _context.Context, localVarOptionals *SchedulesSchedulesCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -93,13 +47,8 @@ func (a *SchedulesApiService) SchedulesSchedulesCreateExecute(r ApiSchedulesSche
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SchedulesApiService.SchedulesSchedulesCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/schedules/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/schedules/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -122,13 +71,16 @@ func (a *SchedulesApiService) SchedulesSchedulesCreateExecute(r ApiSchedulesSche
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -150,80 +102,20 @@ func (a *SchedulesApiService) SchedulesSchedulesCreateExecute(r ApiSchedulesSche
 	return localVarHTTPResponse, nil
 }
 
-type ApiSchedulesSchedulesCredentialsCreateRequest struct {
-	ctx _context.Context
-	ApiService *SchedulesApiService
-	id string
-	data *InlineObject59
-}
-
-func (r ApiSchedulesSchedulesCredentialsCreateRequest) Data(data InlineObject59) ApiSchedulesSchedulesCredentialsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiSchedulesSchedulesCredentialsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SchedulesSchedulesCredentialsCreateExecute(r)
+// SchedulesSchedulesCredentialsCreateOpts Optional parameters for the method 'SchedulesSchedulesCredentialsCreate'
+type SchedulesSchedulesCredentialsCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * SchedulesSchedulesCredentialsCreate  Create a Credential for a Schedule
- * 
-Make a POST request to this resource with the following credential
-fields to create a new credential associated with this
-schedule.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this credential. (string, required)
-* `description`: Optional description of this credential. (string, default=`""`)
-* `organization`:  (id, default=`None`)
-* `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id, required)
-
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)
-
-
-
-
-
-
-
-
-
-
-
-# Add Credentials for a Schedule:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing credential with this schedule.
-
-# Remove Credentials from this Schedule:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the credential from this schedule
- without deleting the credential.
+SchedulesSchedulesCredentialsCreate  Create a Credential for a Schedule
+ Make a POST request to this resource with the following credential fields to create a new credential associated with this schedule.          * &#x60;name&#x60;: Name of this credential. (string, required) * &#x60;description&#x60;: Optional description of this credential. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;:  (id, default&#x3D;&#x60;None&#x60;) * &#x60;credential_type&#x60;: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id, required)  * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default&#x3D;&#x60;{}&#x60;)            # Add Credentials for a Schedule:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing credential with this schedule.  # Remove Credentials from this Schedule:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the credential from this schedule  without deleting the credential.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiSchedulesSchedulesCredentialsCreateRequest
- */
-func (a *SchedulesApiService) SchedulesSchedulesCredentialsCreate(ctx _context.Context, id string) ApiSchedulesSchedulesCredentialsCreateRequest {
-	return ApiSchedulesSchedulesCredentialsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SchedulesApiService) SchedulesSchedulesCredentialsCreateExecute(r ApiSchedulesSchedulesCredentialsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *SchedulesSchedulesCredentialsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject59) - 
+*/
+func (a *SchedulesApiService) SchedulesSchedulesCredentialsCreate(ctx _context.Context, id string, localVarOptionals *SchedulesSchedulesCredentialsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -232,13 +124,9 @@ func (a *SchedulesApiService) SchedulesSchedulesCredentialsCreateExecute(r ApiSc
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SchedulesApiService.SchedulesSchedulesCredentialsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/schedules/{id}/credentials/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/schedules/{id}/credentials/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -262,13 +150,20 @@ func (a *SchedulesApiService) SchedulesSchedulesCredentialsCreateExecute(r ApiSc
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject59)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject59")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -290,131 +185,24 @@ func (a *SchedulesApiService) SchedulesSchedulesCredentialsCreateExecute(r ApiSc
 	return localVarHTTPResponse, nil
 }
 
-type ApiSchedulesSchedulesCredentialsListRequest struct {
-	ctx _context.Context
-	ApiService *SchedulesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiSchedulesSchedulesCredentialsListRequest) Page(page int32) ApiSchedulesSchedulesCredentialsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiSchedulesSchedulesCredentialsListRequest) PageSize(pageSize int32) ApiSchedulesSchedulesCredentialsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiSchedulesSchedulesCredentialsListRequest) Search(search string) ApiSchedulesSchedulesCredentialsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiSchedulesSchedulesCredentialsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SchedulesSchedulesCredentialsListExecute(r)
+// SchedulesSchedulesCredentialsListOpts Optional parameters for the method 'SchedulesSchedulesCredentialsList'
+type SchedulesSchedulesCredentialsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * SchedulesSchedulesCredentialsList  List Credentials for a Schedule
- * 
-Make a GET request to this resource to retrieve a list of
-credentials associated with the selected
-schedule.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of credentials
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more credential records.  
-
-## Results
-
-Each credential data structure includes the following fields:
-
-* `id`: Database ID for this credential. (integer)
-* `type`: Data type for this credential. (choice)
-* `url`: URL for this credential. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this credential was created. (datetime)
-* `modified`: Timestamp when this credential was last modified. (datetime)
-* `name`: Name of this credential. (string)
-* `description`: Optional description of this credential. (string)
-* `organization`:  (id)
-* `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id)
-* `managed_by_tower`:  (boolean)
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json)
-* `kind`:  (field)
-* `cloud`:  (field)
-* `kubernetes`:  (field)
-
-
-
-## Sorting
-
-To specify that credentials are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+SchedulesSchedulesCredentialsList  List Credentials for a Schedule
+ Make a GET request to this resource to retrieve a list of credentials associated with the selected schedule.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of credentials found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more credential records.    ## Results  Each credential data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this credential. (integer) * &#x60;type&#x60;: Data type for this credential. (choice) * &#x60;url&#x60;: URL for this credential. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this credential was created. (datetime) * &#x60;modified&#x60;: Timestamp when this credential was last modified. (datetime) * &#x60;name&#x60;: Name of this credential. (string) * &#x60;description&#x60;: Optional description of this credential. (string) * &#x60;organization&#x60;:  (id) * &#x60;credential_type&#x60;: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id) * &#x60;managed_by_tower&#x60;:  (boolean) * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json) * &#x60;kind&#x60;:  (field) * &#x60;cloud&#x60;:  (field) * &#x60;kubernetes&#x60;:  (field)    ## Sorting  To specify that credentials are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiSchedulesSchedulesCredentialsListRequest
- */
-func (a *SchedulesApiService) SchedulesSchedulesCredentialsList(ctx _context.Context, id string) ApiSchedulesSchedulesCredentialsListRequest {
-	return ApiSchedulesSchedulesCredentialsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SchedulesApiService) SchedulesSchedulesCredentialsListExecute(r ApiSchedulesSchedulesCredentialsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *SchedulesSchedulesCredentialsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *SchedulesApiService) SchedulesSchedulesCredentialsList(ctx _context.Context, id string, localVarOptionals *SchedulesSchedulesCredentialsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -423,26 +211,22 @@ func (a *SchedulesApiService) SchedulesSchedulesCredentialsListExecute(r ApiSche
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SchedulesApiService.SchedulesSchedulesCredentialsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/schedules/{id}/credentials/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/schedules/{id}/credentials/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -461,12 +245,12 @@ func (a *SchedulesApiService) SchedulesSchedulesCredentialsListExecute(r ApiSche
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -488,42 +272,20 @@ func (a *SchedulesApiService) SchedulesSchedulesCredentialsListExecute(r ApiSche
 	return localVarHTTPResponse, nil
 }
 
-type ApiSchedulesSchedulesDeleteRequest struct {
-	ctx _context.Context
-	ApiService *SchedulesApiService
-	id string
-	search *string
-}
-
-func (r ApiSchedulesSchedulesDeleteRequest) Search(search string) ApiSchedulesSchedulesDeleteRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiSchedulesSchedulesDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SchedulesSchedulesDeleteExecute(r)
+// SchedulesSchedulesDeleteOpts Optional parameters for the method 'SchedulesSchedulesDelete'
+type SchedulesSchedulesDeleteOpts struct {
+    Search optional.String
 }
 
 /*
- * SchedulesSchedulesDelete  Delete a Schedule
- * 
-Make a DELETE request to this resource to delete this schedule.
+SchedulesSchedulesDelete  Delete a Schedule
+ Make a DELETE request to this resource to delete this schedule.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiSchedulesSchedulesDeleteRequest
- */
-func (a *SchedulesApiService) SchedulesSchedulesDelete(ctx _context.Context, id string) ApiSchedulesSchedulesDeleteRequest {
-	return ApiSchedulesSchedulesDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SchedulesApiService) SchedulesSchedulesDeleteExecute(r ApiSchedulesSchedulesDeleteRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *SchedulesSchedulesDeleteOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *SchedulesApiService) SchedulesSchedulesDelete(ctx _context.Context, id string, localVarOptionals *SchedulesSchedulesDeleteOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -532,20 +294,16 @@ func (a *SchedulesApiService) SchedulesSchedulesDeleteExecute(r ApiSchedulesSche
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SchedulesApiService.SchedulesSchedulesDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/schedules/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/schedules/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -564,12 +322,12 @@ func (a *SchedulesApiService) SchedulesSchedulesDeleteExecute(r ApiSchedulesSche
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -591,152 +349,24 @@ func (a *SchedulesApiService) SchedulesSchedulesDeleteExecute(r ApiSchedulesSche
 	return localVarHTTPResponse, nil
 }
 
-type ApiSchedulesSchedulesJobsListRequest struct {
-	ctx _context.Context
-	ApiService *SchedulesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiSchedulesSchedulesJobsListRequest) Page(page int32) ApiSchedulesSchedulesJobsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiSchedulesSchedulesJobsListRequest) PageSize(pageSize int32) ApiSchedulesSchedulesJobsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiSchedulesSchedulesJobsListRequest) Search(search string) ApiSchedulesSchedulesJobsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiSchedulesSchedulesJobsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SchedulesSchedulesJobsListExecute(r)
+// SchedulesSchedulesJobsListOpts Optional parameters for the method 'SchedulesSchedulesJobsList'
+type SchedulesSchedulesJobsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * SchedulesSchedulesJobsList  List Unified Jobs for a Schedule
- * 
-Make a GET request to this resource to retrieve a list of
-unified jobs associated with the selected
-schedule.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of unified jobs
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more unified job records.  
-
-## Results
-
-Each unified job data structure includes the following fields:
-
-* `id`: Database ID for this unified job. (integer)
-* `type`: Data type for this unified job. (choice)
-* `url`: URL for this unified job. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this unified job was created. (datetime)
-* `modified`: Timestamp when this unified job was last modified. (datetime)
-* `name`: Name of this unified job. (string)
-* `description`: Optional description of this unified job. (string)
-* `unified_job_template`:  (id)
-* `launch_type`:  (choice)
-    - `manual`: Manual
-    - `relaunch`: Relaunch
-    - `callback`: Callback
-    - `scheduled`: Scheduled
-    - `dependency`: Dependency
-    - `workflow`: Workflow
-    - `webhook`: Webhook
-    - `sync`: Sync
-    - `scm`: SCM Update
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-* `failed`:  (boolean)
-* `started`: The date and time the job was queued for starting. (datetime)
-* `finished`: The date and time the job finished execution. (datetime)
-* `canceled_on`: The date and time when the cancel request was sent. (datetime)
-* `elapsed`: Elapsed time in seconds that the job ran. (decimal)
-* `job_explanation`: A status field to indicate the state of the job if it wasn&#39;t able to run and capture stdout (string)
-* `execution_node`: The node the job executed on. (string)
-* `controller_node`: The instance that managed the isolated execution environment. (string)
-
-
-
-## Sorting
-
-To specify that unified jobs are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+SchedulesSchedulesJobsList  List Unified Jobs for a Schedule
+ Make a GET request to this resource to retrieve a list of unified jobs associated with the selected schedule.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of unified jobs found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more unified job records.    ## Results  Each unified job data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this unified job. (integer) * &#x60;type&#x60;: Data type for this unified job. (choice) * &#x60;url&#x60;: URL for this unified job. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this unified job was created. (datetime) * &#x60;modified&#x60;: Timestamp when this unified job was last modified. (datetime) * &#x60;name&#x60;: Name of this unified job. (string) * &#x60;description&#x60;: Optional description of this unified job. (string) * &#x60;unified_job_template&#x60;:  (id) * &#x60;launch_type&#x60;:  (choice)     - &#x60;manual&#x60;: Manual     - &#x60;relaunch&#x60;: Relaunch     - &#x60;callback&#x60;: Callback     - &#x60;scheduled&#x60;: Scheduled     - &#x60;dependency&#x60;: Dependency     - &#x60;workflow&#x60;: Workflow     - &#x60;webhook&#x60;: Webhook     - &#x60;sync&#x60;: Sync     - &#x60;scm&#x60;: SCM Update * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled * &#x60;failed&#x60;:  (boolean) * &#x60;started&#x60;: The date and time the job was queued for starting. (datetime) * &#x60;finished&#x60;: The date and time the job finished execution. (datetime) * &#x60;canceled_on&#x60;: The date and time when the cancel request was sent. (datetime) * &#x60;elapsed&#x60;: Elapsed time in seconds that the job ran. (decimal) * &#x60;job_explanation&#x60;: A status field to indicate the state of the job if it wasn&amp;#39;t able to run and capture stdout (string) * &#x60;execution_node&#x60;: The node the job executed on. (string) * &#x60;controller_node&#x60;: The instance that managed the isolated execution environment. (string)    ## Sorting  To specify that unified jobs are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiSchedulesSchedulesJobsListRequest
- */
-func (a *SchedulesApiService) SchedulesSchedulesJobsList(ctx _context.Context, id string) ApiSchedulesSchedulesJobsListRequest {
-	return ApiSchedulesSchedulesJobsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SchedulesApiService) SchedulesSchedulesJobsListExecute(r ApiSchedulesSchedulesJobsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *SchedulesSchedulesJobsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *SchedulesApiService) SchedulesSchedulesJobsList(ctx _context.Context, id string, localVarOptionals *SchedulesSchedulesJobsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -745,26 +375,22 @@ func (a *SchedulesApiService) SchedulesSchedulesJobsListExecute(r ApiSchedulesSc
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SchedulesApiService.SchedulesSchedulesJobsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/schedules/{id}/jobs/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/schedules/{id}/jobs/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -783,12 +409,12 @@ func (a *SchedulesApiService) SchedulesSchedulesJobsListExecute(r ApiSchedulesSc
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -810,148 +436,23 @@ func (a *SchedulesApiService) SchedulesSchedulesJobsListExecute(r ApiSchedulesSc
 	return localVarHTTPResponse, nil
 }
 
-type ApiSchedulesSchedulesListRequest struct {
-	ctx _context.Context
-	ApiService *SchedulesApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiSchedulesSchedulesListRequest) Page(page int32) ApiSchedulesSchedulesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiSchedulesSchedulesListRequest) PageSize(pageSize int32) ApiSchedulesSchedulesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiSchedulesSchedulesListRequest) Search(search string) ApiSchedulesSchedulesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiSchedulesSchedulesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SchedulesSchedulesListExecute(r)
+// SchedulesSchedulesListOpts Optional parameters for the method 'SchedulesSchedulesList'
+type SchedulesSchedulesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * SchedulesSchedulesList  List Schedules
- * 
-Make a GET request to this resource to retrieve the list of
-schedules.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of schedules
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more schedule records.  
-
-## Results
-
-Each schedule data structure includes the following fields:
-
-* `rrule`: A value representing the schedules iCal recurrence rule. (string)
-* `id`: Database ID for this schedule. (integer)
-* `type`: Data type for this schedule. (choice)
-* `url`: URL for this schedule. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this schedule was created. (datetime)
-* `modified`: Timestamp when this schedule was last modified. (datetime)
-* `name`: Name of this schedule. (string)
-* `description`: Optional description of this schedule. (string)
-* `extra_data`:  (json)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id)
-* `scm_branch`:  (string)
-* `job_type`:  (choice)
-    - `None`: ---------
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string)
-* `skip_tags`:  (string)
-* `limit`:  (string)
-* `diff_mode`:  (boolean)
-* `verbosity`:  (choice)
-    - `None`: ---------
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `unified_job_template`:  (id)
-* `enabled`: Enables processing of this schedule. (boolean)
-* `dtstart`: The first occurrence of the schedule occurs on or after this time. (datetime)
-* `dtend`: The last occurrence of the schedule occurs before this time, aftewards the schedule expires. (datetime)
-* `next_run`: The next time that the scheduled action will run. (datetime)
-* `timezone`:  (field)
-* `until`:  (field)
-
-
-
-## Sorting
-
-To specify that schedules are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+SchedulesSchedulesList  List Schedules
+ Make a GET request to this resource to retrieve the list of schedules.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of schedules found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more schedule records.    ## Results  Each schedule data structure includes the following fields:  * &#x60;rrule&#x60;: A value representing the schedules iCal recurrence rule. (string) * &#x60;id&#x60;: Database ID for this schedule. (integer) * &#x60;type&#x60;: Data type for this schedule. (choice) * &#x60;url&#x60;: URL for this schedule. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this schedule was created. (datetime) * &#x60;modified&#x60;: Timestamp when this schedule was last modified. (datetime) * &#x60;name&#x60;: Name of this schedule. (string) * &#x60;description&#x60;: Optional description of this schedule. (string) * &#x60;extra_data&#x60;:  (json) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id) * &#x60;scm_branch&#x60;:  (string) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string) * &#x60;skip_tags&#x60;:  (string) * &#x60;limit&#x60;:  (string) * &#x60;diff_mode&#x60;:  (boolean) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;unified_job_template&#x60;:  (id) * &#x60;enabled&#x60;: Enables processing of this schedule. (boolean) * &#x60;dtstart&#x60;: The first occurrence of the schedule occurs on or after this time. (datetime) * &#x60;dtend&#x60;: The last occurrence of the schedule occurs before this time, aftewards the schedule expires. (datetime) * &#x60;next_run&#x60;: The next time that the scheduled action will run. (datetime) * &#x60;timezone&#x60;:  (field) * &#x60;until&#x60;:  (field)    ## Sorting  To specify that schedules are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiSchedulesSchedulesListRequest
- */
-func (a *SchedulesApiService) SchedulesSchedulesList(ctx _context.Context) ApiSchedulesSchedulesListRequest {
-	return ApiSchedulesSchedulesListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SchedulesApiService) SchedulesSchedulesListExecute(r ApiSchedulesSchedulesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *SchedulesSchedulesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *SchedulesApiService) SchedulesSchedulesList(ctx _context.Context, localVarOptionals *SchedulesSchedulesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -960,25 +461,20 @@ func (a *SchedulesApiService) SchedulesSchedulesListExecute(r ApiSchedulesSchedu
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SchedulesApiService.SchedulesSchedulesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/schedules/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/schedules/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -997,12 +493,12 @@ func (a *SchedulesApiService) SchedulesSchedulesListExecute(r ApiSchedulesSchedu
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1024,96 +520,22 @@ func (a *SchedulesApiService) SchedulesSchedulesListExecute(r ApiSchedulesSchedu
 	return localVarHTTPResponse, nil
 }
 
-type ApiSchedulesSchedulesPartialUpdateRequest struct {
-	ctx _context.Context
-	ApiService *SchedulesApiService
-	id string
-	search *string
-	data *map[string]interface{}
-}
-
-func (r ApiSchedulesSchedulesPartialUpdateRequest) Search(search string) ApiSchedulesSchedulesPartialUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiSchedulesSchedulesPartialUpdateRequest) Data(data map[string]interface{}) ApiSchedulesSchedulesPartialUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiSchedulesSchedulesPartialUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SchedulesSchedulesPartialUpdateExecute(r)
+// SchedulesSchedulesPartialUpdateOpts Optional parameters for the method 'SchedulesSchedulesPartialUpdate'
+type SchedulesSchedulesPartialUpdateOpts struct {
+    Search optional.String
+    Data optional.Map[string]interface{}
 }
 
 /*
- * SchedulesSchedulesPartialUpdate  Update a Schedule
- * 
-Make a PUT or PATCH request to this resource to update this
-schedule.  The following fields may be modified:
-
-
-* `rrule`: A value representing the schedules iCal recurrence rule. (string, required)
-
-
-
-
-
-
-
-* `name`: Name of this schedule. (string, required)
-* `description`: Optional description of this schedule. (string, default=`""`)
-* `extra_data`:  (json, default=`{}`)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id, default=``)
-* `scm_branch`:  (string, default=`""`)
-* `job_type`:  (choice)
-    - `None`: --------- (default)
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string, default=`""`)
-* `skip_tags`:  (string, default=`""`)
-* `limit`:  (string, default=`""`)
-* `diff_mode`:  (boolean, default=`None`)
-* `verbosity`:  (choice)
-    - `None`: --------- (default)
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `unified_job_template`:  (id, required)
-* `enabled`: Enables processing of this schedule. (boolean, default=`True`)
-
-
-
-
-
-
-
-
-
-
-
-
-
-For a PATCH request, include only the fields that are being modified.
+SchedulesSchedulesPartialUpdate  Update a Schedule
+ Make a PUT or PATCH request to this resource to update this schedule.  The following fields may be modified:   * &#x60;rrule&#x60;: A value representing the schedules iCal recurrence rule. (string, required)        * &#x60;name&#x60;: Name of this schedule. (string, required) * &#x60;description&#x60;: Optional description of this schedule. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;extra_data&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id, default&#x3D;&#x60;&#x60;) * &#x60;scm_branch&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: --------- (default)     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;skip_tags&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;limit&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;diff_mode&#x60;:  (boolean, default&#x3D;&#x60;None&#x60;) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: --------- (default)     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;unified_job_template&#x60;:  (id, required) * &#x60;enabled&#x60;: Enables processing of this schedule. (boolean, default&#x3D;&#x60;True&#x60;)              For a PATCH request, include only the fields that are being modified.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiSchedulesSchedulesPartialUpdateRequest
- */
-func (a *SchedulesApiService) SchedulesSchedulesPartialUpdate(ctx _context.Context, id string) ApiSchedulesSchedulesPartialUpdateRequest {
-	return ApiSchedulesSchedulesPartialUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SchedulesApiService) SchedulesSchedulesPartialUpdateExecute(r ApiSchedulesSchedulesPartialUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *SchedulesSchedulesPartialUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *SchedulesApiService) SchedulesSchedulesPartialUpdate(ctx _context.Context, id string, localVarOptionals *SchedulesSchedulesPartialUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPatch
 		localVarPostBody     interface{}
@@ -1122,20 +544,16 @@ func (a *SchedulesApiService) SchedulesSchedulesPartialUpdateExecute(r ApiSchedu
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SchedulesApiService.SchedulesSchedulesPartialUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/schedules/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/schedules/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -1155,13 +573,16 @@ func (a *SchedulesApiService) SchedulesSchedulesPartialUpdateExecute(r ApiSchedu
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1183,37 +604,18 @@ func (a *SchedulesApiService) SchedulesSchedulesPartialUpdateExecute(r ApiSchedu
 	return localVarHTTPResponse, nil
 }
 
-type ApiSchedulesSchedulesPreviewCreateRequest struct {
-	ctx _context.Context
-	ApiService *SchedulesApiService
-	data *map[string]interface{}
-}
-
-func (r ApiSchedulesSchedulesPreviewCreateRequest) Data(data map[string]interface{}) ApiSchedulesSchedulesPreviewCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiSchedulesSchedulesPreviewCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SchedulesSchedulesPreviewCreateExecute(r)
+// SchedulesSchedulesPreviewCreateOpts Optional parameters for the method 'SchedulesSchedulesPreviewCreate'
+type SchedulesSchedulesPreviewCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * SchedulesSchedulesPreviewCreate Method for SchedulesSchedulesPreviewCreate
+SchedulesSchedulesPreviewCreate Method for SchedulesSchedulesPreviewCreate
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiSchedulesSchedulesPreviewCreateRequest
- */
-func (a *SchedulesApiService) SchedulesSchedulesPreviewCreate(ctx _context.Context) ApiSchedulesSchedulesPreviewCreateRequest {
-	return ApiSchedulesSchedulesPreviewCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SchedulesApiService) SchedulesSchedulesPreviewCreateExecute(r ApiSchedulesSchedulesPreviewCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *SchedulesSchedulesPreviewCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *SchedulesApiService) SchedulesSchedulesPreviewCreate(ctx _context.Context, localVarOptionals *SchedulesSchedulesPreviewCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -1222,13 +624,8 @@ func (a *SchedulesApiService) SchedulesSchedulesPreviewCreateExecute(r ApiSchedu
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SchedulesApiService.SchedulesSchedulesPreviewCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/schedules/preview/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/schedules/preview/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -1251,13 +648,16 @@ func (a *SchedulesApiService) SchedulesSchedulesPreviewCreateExecute(r ApiSchedu
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1279,81 +679,20 @@ func (a *SchedulesApiService) SchedulesSchedulesPreviewCreateExecute(r ApiSchedu
 	return localVarHTTPResponse, nil
 }
 
-type ApiSchedulesSchedulesReadRequest struct {
-	ctx _context.Context
-	ApiService *SchedulesApiService
-	id string
-	search *string
-}
-
-func (r ApiSchedulesSchedulesReadRequest) Search(search string) ApiSchedulesSchedulesReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiSchedulesSchedulesReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SchedulesSchedulesReadExecute(r)
+// SchedulesSchedulesReadOpts Optional parameters for the method 'SchedulesSchedulesRead'
+type SchedulesSchedulesReadOpts struct {
+    Search optional.String
 }
 
 /*
- * SchedulesSchedulesRead  Retrieve a Schedule
- * 
-Make GET request to this resource to retrieve a single schedule
-record containing the following fields:
-
-* `rrule`: A value representing the schedules iCal recurrence rule. (string)
-* `id`: Database ID for this schedule. (integer)
-* `type`: Data type for this schedule. (choice)
-* `url`: URL for this schedule. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this schedule was created. (datetime)
-* `modified`: Timestamp when this schedule was last modified. (datetime)
-* `name`: Name of this schedule. (string)
-* `description`: Optional description of this schedule. (string)
-* `extra_data`:  (json)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id)
-* `scm_branch`:  (string)
-* `job_type`:  (choice)
-    - `None`: ---------
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string)
-* `skip_tags`:  (string)
-* `limit`:  (string)
-* `diff_mode`:  (boolean)
-* `verbosity`:  (choice)
-    - `None`: ---------
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `unified_job_template`:  (id)
-* `enabled`: Enables processing of this schedule. (boolean)
-* `dtstart`: The first occurrence of the schedule occurs on or after this time. (datetime)
-* `dtend`: The last occurrence of the schedule occurs before this time, aftewards the schedule expires. (datetime)
-* `next_run`: The next time that the scheduled action will run. (datetime)
-* `timezone`:  (field)
-* `until`:  (field)
+SchedulesSchedulesRead  Retrieve a Schedule
+ Make GET request to this resource to retrieve a single schedule record containing the following fields:  * &#x60;rrule&#x60;: A value representing the schedules iCal recurrence rule. (string) * &#x60;id&#x60;: Database ID for this schedule. (integer) * &#x60;type&#x60;: Data type for this schedule. (choice) * &#x60;url&#x60;: URL for this schedule. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this schedule was created. (datetime) * &#x60;modified&#x60;: Timestamp when this schedule was last modified. (datetime) * &#x60;name&#x60;: Name of this schedule. (string) * &#x60;description&#x60;: Optional description of this schedule. (string) * &#x60;extra_data&#x60;:  (json) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id) * &#x60;scm_branch&#x60;:  (string) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string) * &#x60;skip_tags&#x60;:  (string) * &#x60;limit&#x60;:  (string) * &#x60;diff_mode&#x60;:  (boolean) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;unified_job_template&#x60;:  (id) * &#x60;enabled&#x60;: Enables processing of this schedule. (boolean) * &#x60;dtstart&#x60;: The first occurrence of the schedule occurs on or after this time. (datetime) * &#x60;dtend&#x60;: The last occurrence of the schedule occurs before this time, aftewards the schedule expires. (datetime) * &#x60;next_run&#x60;: The next time that the scheduled action will run. (datetime) * &#x60;timezone&#x60;:  (field) * &#x60;until&#x60;:  (field)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiSchedulesSchedulesReadRequest
- */
-func (a *SchedulesApiService) SchedulesSchedulesRead(ctx _context.Context, id string) ApiSchedulesSchedulesReadRequest {
-	return ApiSchedulesSchedulesReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SchedulesApiService) SchedulesSchedulesReadExecute(r ApiSchedulesSchedulesReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *SchedulesSchedulesReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *SchedulesApiService) SchedulesSchedulesRead(ctx _context.Context, id string, localVarOptionals *SchedulesSchedulesReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1362,20 +701,16 @@ func (a *SchedulesApiService) SchedulesSchedulesReadExecute(r ApiSchedulesSchedu
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SchedulesApiService.SchedulesSchedulesRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/schedules/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/schedules/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1394,12 +729,12 @@ func (a *SchedulesApiService) SchedulesSchedulesReadExecute(r ApiSchedulesSchedu
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1421,94 +756,22 @@ func (a *SchedulesApiService) SchedulesSchedulesReadExecute(r ApiSchedulesSchedu
 	return localVarHTTPResponse, nil
 }
 
-type ApiSchedulesSchedulesUpdateRequest struct {
-	ctx _context.Context
-	ApiService *SchedulesApiService
-	id string
-	search *string
-	data *InlineObject58
-}
-
-func (r ApiSchedulesSchedulesUpdateRequest) Search(search string) ApiSchedulesSchedulesUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiSchedulesSchedulesUpdateRequest) Data(data InlineObject58) ApiSchedulesSchedulesUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiSchedulesSchedulesUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SchedulesSchedulesUpdateExecute(r)
+// SchedulesSchedulesUpdateOpts Optional parameters for the method 'SchedulesSchedulesUpdate'
+type SchedulesSchedulesUpdateOpts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * SchedulesSchedulesUpdate  Update a Schedule
- * 
-Make a PUT or PATCH request to this resource to update this
-schedule.  The following fields may be modified:
-
-
-* `rrule`: A value representing the schedules iCal recurrence rule. (string, required)
-
-
-
-
-
-
-
-* `name`: Name of this schedule. (string, required)
-* `description`: Optional description of this schedule. (string, default=`""`)
-* `extra_data`:  (json, default=`{}`)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id, default=``)
-* `scm_branch`:  (string, default=`""`)
-* `job_type`:  (choice)
-    - `None`: --------- (default)
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string, default=`""`)
-* `skip_tags`:  (string, default=`""`)
-* `limit`:  (string, default=`""`)
-* `diff_mode`:  (boolean, default=`None`)
-* `verbosity`:  (choice)
-    - `None`: --------- (default)
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `unified_job_template`:  (id, required)
-* `enabled`: Enables processing of this schedule. (boolean, default=`True`)
-
-
-
-
-
-
-
-
-
-
-
-For a PUT request, include **all** fields in the request.
+SchedulesSchedulesUpdate  Update a Schedule
+ Make a PUT or PATCH request to this resource to update this schedule.  The following fields may be modified:   * &#x60;rrule&#x60;: A value representing the schedules iCal recurrence rule. (string, required)        * &#x60;name&#x60;: Name of this schedule. (string, required) * &#x60;description&#x60;: Optional description of this schedule. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;extra_data&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id, default&#x3D;&#x60;&#x60;) * &#x60;scm_branch&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: --------- (default)     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;skip_tags&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;limit&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;diff_mode&#x60;:  (boolean, default&#x3D;&#x60;None&#x60;) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: --------- (default)     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;unified_job_template&#x60;:  (id, required) * &#x60;enabled&#x60;: Enables processing of this schedule. (boolean, default&#x3D;&#x60;True&#x60;)            For a PUT request, include **all** fields in the request.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiSchedulesSchedulesUpdateRequest
- */
-func (a *SchedulesApiService) SchedulesSchedulesUpdate(ctx _context.Context, id string) ApiSchedulesSchedulesUpdateRequest {
-	return ApiSchedulesSchedulesUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SchedulesApiService) SchedulesSchedulesUpdateExecute(r ApiSchedulesSchedulesUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *SchedulesSchedulesUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject58) - 
+*/
+func (a *SchedulesApiService) SchedulesSchedulesUpdate(ctx _context.Context, id string, localVarOptionals *SchedulesSchedulesUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -1517,20 +780,16 @@ func (a *SchedulesApiService) SchedulesSchedulesUpdateExecute(r ApiSchedulesSche
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SchedulesApiService.SchedulesSchedulesUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/schedules/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/schedules/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -1550,13 +809,20 @@ func (a *SchedulesApiService) SchedulesSchedulesUpdateExecute(r ApiSchedulesSche
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject58)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject58")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1578,32 +844,11 @@ func (a *SchedulesApiService) SchedulesSchedulesUpdateExecute(r ApiSchedulesSche
 	return localVarHTTPResponse, nil
 }
 
-type ApiSchedulesSchedulesZoneinfoListRequest struct {
-	ctx _context.Context
-	ApiService *SchedulesApiService
-}
-
-
-func (r ApiSchedulesSchedulesZoneinfoListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SchedulesSchedulesZoneinfoListExecute(r)
-}
-
 /*
- * SchedulesSchedulesZoneinfoList Method for SchedulesSchedulesZoneinfoList
+SchedulesSchedulesZoneinfoList Method for SchedulesSchedulesZoneinfoList
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiSchedulesSchedulesZoneinfoListRequest
- */
-func (a *SchedulesApiService) SchedulesSchedulesZoneinfoList(ctx _context.Context) ApiSchedulesSchedulesZoneinfoListRequest {
-	return ApiSchedulesSchedulesZoneinfoListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SchedulesApiService) SchedulesSchedulesZoneinfoListExecute(r ApiSchedulesSchedulesZoneinfoListRequest) (*_nethttp.Response, error) {
+*/
+func (a *SchedulesApiService) SchedulesSchedulesZoneinfoList(ctx _context.Context) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1612,13 +857,8 @@ func (a *SchedulesApiService) SchedulesSchedulesZoneinfoListExecute(r ApiSchedul
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SchedulesApiService.SchedulesSchedulesZoneinfoList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/schedules/zoneinfo/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/schedules/zoneinfo/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -1640,12 +880,12 @@ func (a *SchedulesApiService) SchedulesSchedulesZoneinfoListExecute(r ApiSchedul
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

@@ -24,32 +24,11 @@ var (
 // SystemConfigurationApiService SystemConfigurationApi service
 type SystemConfigurationApiService service
 
-type ApiSystemConfigurationAuthListRequest struct {
-	ctx _context.Context
-	ApiService *SystemConfigurationApiService
-}
-
-
-func (r ApiSystemConfigurationAuthListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SystemConfigurationAuthListExecute(r)
-}
-
 /*
- * SystemConfigurationAuthList List enabled single-sign-on endpoints
+SystemConfigurationAuthList List enabled single-sign-on endpoints
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiSystemConfigurationAuthListRequest
- */
-func (a *SystemConfigurationApiService) SystemConfigurationAuthList(ctx _context.Context) ApiSystemConfigurationAuthListRequest {
-	return ApiSystemConfigurationAuthListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SystemConfigurationApiService) SystemConfigurationAuthListExecute(r ApiSystemConfigurationAuthListRequest) (*_nethttp.Response, error) {
+*/
+func (a *SystemConfigurationApiService) SystemConfigurationAuthList(ctx _context.Context) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -58,13 +37,8 @@ func (a *SystemConfigurationApiService) SystemConfigurationAuthListExecute(r Api
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SystemConfigurationApiService.SystemConfigurationAuthList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/auth/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/auth/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -86,12 +60,12 @@ func (a *SystemConfigurationApiService) SystemConfigurationAuthListExecute(r Api
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -113,32 +87,11 @@ func (a *SystemConfigurationApiService) SystemConfigurationAuthListExecute(r Api
 	return localVarHTTPResponse, nil
 }
 
-type ApiSystemConfigurationConfigCreateRequest struct {
-	ctx _context.Context
-	ApiService *SystemConfigurationApiService
-}
-
-
-func (r ApiSystemConfigurationConfigCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SystemConfigurationConfigCreateExecute(r)
-}
-
 /*
- * SystemConfigurationConfigCreate Method for SystemConfigurationConfigCreate
+SystemConfigurationConfigCreate Method for SystemConfigurationConfigCreate
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiSystemConfigurationConfigCreateRequest
- */
-func (a *SystemConfigurationApiService) SystemConfigurationConfigCreate(ctx _context.Context) ApiSystemConfigurationConfigCreateRequest {
-	return ApiSystemConfigurationConfigCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SystemConfigurationApiService) SystemConfigurationConfigCreateExecute(r ApiSystemConfigurationConfigCreateRequest) (*_nethttp.Response, error) {
+*/
+func (a *SystemConfigurationApiService) SystemConfigurationConfigCreate(ctx _context.Context) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -147,13 +100,8 @@ func (a *SystemConfigurationApiService) SystemConfigurationConfigCreateExecute(r
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SystemConfigurationApiService.SystemConfigurationConfigCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/config/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/config/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -175,12 +123,12 @@ func (a *SystemConfigurationApiService) SystemConfigurationConfigCreateExecute(r
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -202,32 +150,11 @@ func (a *SystemConfigurationApiService) SystemConfigurationConfigCreateExecute(r
 	return localVarHTTPResponse, nil
 }
 
-type ApiSystemConfigurationConfigDeleteRequest struct {
-	ctx _context.Context
-	ApiService *SystemConfigurationApiService
-}
-
-
-func (r ApiSystemConfigurationConfigDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SystemConfigurationConfigDeleteExecute(r)
-}
-
 /*
- * SystemConfigurationConfigDelete Method for SystemConfigurationConfigDelete
+SystemConfigurationConfigDelete Method for SystemConfigurationConfigDelete
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiSystemConfigurationConfigDeleteRequest
- */
-func (a *SystemConfigurationApiService) SystemConfigurationConfigDelete(ctx _context.Context) ApiSystemConfigurationConfigDeleteRequest {
-	return ApiSystemConfigurationConfigDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SystemConfigurationApiService) SystemConfigurationConfigDeleteExecute(r ApiSystemConfigurationConfigDeleteRequest) (*_nethttp.Response, error) {
+*/
+func (a *SystemConfigurationApiService) SystemConfigurationConfigDelete(ctx _context.Context) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -236,13 +163,8 @@ func (a *SystemConfigurationApiService) SystemConfigurationConfigDeleteExecute(r
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SystemConfigurationApiService.SystemConfigurationConfigDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/config/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/config/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -264,12 +186,12 @@ func (a *SystemConfigurationApiService) SystemConfigurationConfigDeleteExecute(r
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -291,32 +213,11 @@ func (a *SystemConfigurationApiService) SystemConfigurationConfigDeleteExecute(r
 	return localVarHTTPResponse, nil
 }
 
-type ApiSystemConfigurationConfigListRequest struct {
-	ctx _context.Context
-	ApiService *SystemConfigurationApiService
-}
-
-
-func (r ApiSystemConfigurationConfigListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SystemConfigurationConfigListExecute(r)
-}
-
 /*
- * SystemConfigurationConfigList Return various sitewide configuration settings
+SystemConfigurationConfigList Return various sitewide configuration settings
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiSystemConfigurationConfigListRequest
- */
-func (a *SystemConfigurationApiService) SystemConfigurationConfigList(ctx _context.Context) ApiSystemConfigurationConfigListRequest {
-	return ApiSystemConfigurationConfigListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SystemConfigurationApiService) SystemConfigurationConfigListExecute(r ApiSystemConfigurationConfigListRequest) (*_nethttp.Response, error) {
+*/
+func (a *SystemConfigurationApiService) SystemConfigurationConfigList(ctx _context.Context) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -325,13 +226,8 @@ func (a *SystemConfigurationApiService) SystemConfigurationConfigListExecute(r A
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SystemConfigurationApiService.SystemConfigurationConfigList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/config/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/config/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -353,12 +249,12 @@ func (a *SystemConfigurationApiService) SystemConfigurationConfigListExecute(r A
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -380,32 +276,11 @@ func (a *SystemConfigurationApiService) SystemConfigurationConfigListExecute(r A
 	return localVarHTTPResponse, nil
 }
 
-type ApiSystemConfigurationConfigSubscriptionsCreateRequest struct {
-	ctx _context.Context
-	ApiService *SystemConfigurationApiService
-}
-
-
-func (r ApiSystemConfigurationConfigSubscriptionsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SystemConfigurationConfigSubscriptionsCreateExecute(r)
-}
-
 /*
- * SystemConfigurationConfigSubscriptionsCreate Method for SystemConfigurationConfigSubscriptionsCreate
+SystemConfigurationConfigSubscriptionsCreate Method for SystemConfigurationConfigSubscriptionsCreate
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiSystemConfigurationConfigSubscriptionsCreateRequest
- */
-func (a *SystemConfigurationApiService) SystemConfigurationConfigSubscriptionsCreate(ctx _context.Context) ApiSystemConfigurationConfigSubscriptionsCreateRequest {
-	return ApiSystemConfigurationConfigSubscriptionsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SystemConfigurationApiService) SystemConfigurationConfigSubscriptionsCreateExecute(r ApiSystemConfigurationConfigSubscriptionsCreateRequest) (*_nethttp.Response, error) {
+*/
+func (a *SystemConfigurationApiService) SystemConfigurationConfigSubscriptionsCreate(ctx _context.Context) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -414,13 +289,8 @@ func (a *SystemConfigurationApiService) SystemConfigurationConfigSubscriptionsCr
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SystemConfigurationApiService.SystemConfigurationConfigSubscriptionsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/config/subscriptions/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/config/subscriptions/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -442,12 +312,12 @@ func (a *SystemConfigurationApiService) SystemConfigurationConfigSubscriptionsCr
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -469,35 +339,12 @@ func (a *SystemConfigurationApiService) SystemConfigurationConfigSubscriptionsCr
 	return localVarHTTPResponse, nil
 }
 
-type ApiSystemConfigurationPingListRequest struct {
-	ctx _context.Context
-	ApiService *SystemConfigurationApiService
-}
-
-
-func (r ApiSystemConfigurationPingListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.SystemConfigurationPingListExecute(r)
-}
-
 /*
- * SystemConfigurationPingList Return some basic information about this instance
- * 
-Everything returned here should be considered public / insecure, as
-this requires no auth and is intended for use by the installer process.
+SystemConfigurationPingList Return some basic information about this instance
+ Everything returned here should be considered public / insecure, as this requires no auth and is intended for use by the installer process.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiSystemConfigurationPingListRequest
- */
-func (a *SystemConfigurationApiService) SystemConfigurationPingList(ctx _context.Context) ApiSystemConfigurationPingListRequest {
-	return ApiSystemConfigurationPingListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *SystemConfigurationApiService) SystemConfigurationPingListExecute(r ApiSystemConfigurationPingListRequest) (*_nethttp.Response, error) {
+*/
+func (a *SystemConfigurationApiService) SystemConfigurationPingList(ctx _context.Context) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -506,13 +353,8 @@ func (a *SystemConfigurationApiService) SystemConfigurationPingListExecute(r Api
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SystemConfigurationApiService.SystemConfigurationPingList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/ping/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/ping/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -534,12 +376,12 @@ func (a *SystemConfigurationApiService) SystemConfigurationPingListExecute(r Api
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

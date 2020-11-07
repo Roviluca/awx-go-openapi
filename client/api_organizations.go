@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,130 +26,24 @@ var (
 // OrganizationsApiService OrganizationsApi service
 type OrganizationsApiService service
 
-type ApiOrganizationsOrganizationsAccessListListRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsAccessListListRequest) Page(page int32) ApiOrganizationsOrganizationsAccessListListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiOrganizationsOrganizationsAccessListListRequest) PageSize(pageSize int32) ApiOrganizationsOrganizationsAccessListListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiOrganizationsOrganizationsAccessListListRequest) Search(search string) ApiOrganizationsOrganizationsAccessListListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsAccessListListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsAccessListListExecute(r)
+// OrganizationsOrganizationsAccessListListOpts Optional parameters for the method 'OrganizationsOrganizationsAccessListList'
+type OrganizationsOrganizationsAccessListListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsAccessListList  List Users
- * 
-Make a GET request to this resource to retrieve the list of
-users.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of users
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more user records.  
-
-## Results
-
-Each user data structure includes the following fields:
-
-* `id`: Database ID for this user. (integer)
-* `type`: Data type for this user. (choice)
-* `url`: URL for this user. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this user was created. (datetime)
-* `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string)
-* `first_name`:  (string)
-* `last_name`:  (string)
-* `email`:  (string)
-* `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean)
-* `is_system_auditor`:  (boolean)
-
-* `ldap_dn`:  (string)
-* `last_login`:  (datetime)
-* `external_account`: Set if the account is managed by an external service (field)
-
-
-
-## Sorting
-
-To specify that users are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=username
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-username
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=username,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+OrganizationsOrganizationsAccessListList  List Users
+ Make a GET request to this resource to retrieve the list of users.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of users found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more user records.    ## Results  Each user data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this user. (integer) * &#x60;type&#x60;: Data type for this user. (choice) * &#x60;url&#x60;: URL for this user. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this user was created. (datetime) * &#x60;username&#x60;: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string) * &#x60;first_name&#x60;:  (string) * &#x60;last_name&#x60;:  (string) * &#x60;email&#x60;:  (string) * &#x60;is_superuser&#x60;: Designates that this user has all permissions without explicitly assigning them. (boolean) * &#x60;is_system_auditor&#x60;:  (boolean)  * &#x60;ldap_dn&#x60;:  (string) * &#x60;last_login&#x60;:  (datetime) * &#x60;external_account&#x60;: Set if the account is managed by an external service (field)    ## Sorting  To specify that users are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;username  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-username  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;username,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsAccessListListRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsAccessListList(ctx _context.Context, id string) ApiOrganizationsOrganizationsAccessListListRequest {
-	return ApiOrganizationsOrganizationsAccessListListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsAccessListListExecute(r ApiOrganizationsOrganizationsAccessListListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsAccessListListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsAccessListList(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsAccessListListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -157,26 +52,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsAccessListListExecut
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsAccessListList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/access_list/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/access_list/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -195,12 +86,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsAccessListListExecut
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -222,133 +113,24 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsAccessListListExecut
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsActivityStreamListRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsActivityStreamListRequest) Page(page int32) ApiOrganizationsOrganizationsActivityStreamListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiOrganizationsOrganizationsActivityStreamListRequest) PageSize(pageSize int32) ApiOrganizationsOrganizationsActivityStreamListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiOrganizationsOrganizationsActivityStreamListRequest) Search(search string) ApiOrganizationsOrganizationsActivityStreamListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsActivityStreamListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsActivityStreamListExecute(r)
+// OrganizationsOrganizationsActivityStreamListOpts Optional parameters for the method 'OrganizationsOrganizationsActivityStreamList'
+type OrganizationsOrganizationsActivityStreamListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsActivityStreamList  List Activity Streams for an Organization
- * 
-Make a GET request to this resource to retrieve a list of
-activity streams associated with the selected
-organization.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of activity streams
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more activity stream records.  
-
-## Results
-
-Each activity stream data structure includes the following fields:
-
-* `id`: Database ID for this activity stream. (integer)
-* `type`: Data type for this activity stream. (choice)
-* `url`: URL for this activity stream. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `timestamp`:  (datetime)
-* `operation`: The action taken with respect to the given object(s). (choice)
-    - `create`: Entity Created
-    - `update`: Entity Updated
-    - `delete`: Entity Deleted
-    - `associate`: Entity Associated with another Entity
-    - `disassociate`: Entity was Disassociated with another Entity
-* `changes`: A summary of the new and changed values when an object is created, updated, or deleted (json)
-* `object1`: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string)
-* `object2`: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string)
-* `object_association`: When present, shows the field name of the role or relationship that changed. (field)
-* `action_node`: The cluster node the activity took place on. (string)
-* `object_type`: When present, shows the model on which the role or relationship was defined. (field)
-
-
-
-## Sorting
-
-To specify that activity streams are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+OrganizationsOrganizationsActivityStreamList  List Activity Streams for an Organization
+ Make a GET request to this resource to retrieve a list of activity streams associated with the selected organization.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of activity streams found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more activity stream records.    ## Results  Each activity stream data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this activity stream. (integer) * &#x60;type&#x60;: Data type for this activity stream. (choice) * &#x60;url&#x60;: URL for this activity stream. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;timestamp&#x60;:  (datetime) * &#x60;operation&#x60;: The action taken with respect to the given object(s). (choice)     - &#x60;create&#x60;: Entity Created     - &#x60;update&#x60;: Entity Updated     - &#x60;delete&#x60;: Entity Deleted     - &#x60;associate&#x60;: Entity Associated with another Entity     - &#x60;disassociate&#x60;: Entity was Disassociated with another Entity * &#x60;changes&#x60;: A summary of the new and changed values when an object is created, updated, or deleted (json) * &#x60;object1&#x60;: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string) * &#x60;object2&#x60;: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string) * &#x60;object_association&#x60;: When present, shows the field name of the role or relationship that changed. (field) * &#x60;action_node&#x60;: The cluster node the activity took place on. (string) * &#x60;object_type&#x60;: When present, shows the model on which the role or relationship was defined. (field)    ## Sorting  To specify that activity streams are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsActivityStreamListRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsActivityStreamList(ctx _context.Context, id string) ApiOrganizationsOrganizationsActivityStreamListRequest {
-	return ApiOrganizationsOrganizationsActivityStreamListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsActivityStreamListExecute(r ApiOrganizationsOrganizationsActivityStreamListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsActivityStreamListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsActivityStreamList(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsActivityStreamListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -357,26 +139,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsActivityStreamListEx
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsActivityStreamList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/activity_stream/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/activity_stream/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -395,12 +173,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsActivityStreamListEx
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -422,80 +200,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsActivityStreamListEx
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsAdminsCreateRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiOrganizationsOrganizationsAdminsCreateRequest) Data(data map[string]interface{}) ApiOrganizationsOrganizationsAdminsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsAdminsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsAdminsCreateExecute(r)
+// OrganizationsOrganizationsAdminsCreateOpts Optional parameters for the method 'OrganizationsOrganizationsAdminsCreate'
+type OrganizationsOrganizationsAdminsCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * OrganizationsOrganizationsAdminsCreate  Create an Admin User for an Organization
- * 
-Make a POST request to this resource with the following admin user
-fields to create a new admin user associated with this
-organization.
-
-
-
-
-
-
-
-
-* `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string, required)
-* `first_name`:  (string, default=`""`)
-* `last_name`:  (string, default=`""`)
-* `email`:  (string, default=`""`)
-* `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean, default=`False`)
-* `is_system_auditor`:  (boolean, default=`False`)
-* `password`: Write-only field used to change the password. (string, default=`""`)
-
-
-
-
-
-
-
-
-
-
-
-# Add Admin Users for an Organization:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing admin user with this organization.
-
-# Remove Admin Users from this Organization:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the admin user from this organization
- without deleting the admin user.
+OrganizationsOrganizationsAdminsCreate  Create an Admin User for an Organization
+ Make a POST request to this resource with the following admin user fields to create a new admin user associated with this organization.         * &#x60;username&#x60;: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string, required) * &#x60;first_name&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;last_name&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;email&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;is_superuser&#x60;: Designates that this user has all permissions without explicitly assigning them. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;is_system_auditor&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;password&#x60;: Write-only field used to change the password. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)            # Add Admin Users for an Organization:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing admin user with this organization.  # Remove Admin Users from this Organization:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the admin user from this organization  without deleting the admin user.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsAdminsCreateRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsAdminsCreate(ctx _context.Context, id string) ApiOrganizationsOrganizationsAdminsCreateRequest {
-	return ApiOrganizationsOrganizationsAdminsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsAdminsCreateExecute(r ApiOrganizationsOrganizationsAdminsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsAdminsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsAdminsCreate(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsAdminsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -504,13 +222,9 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsAdminsCreateExecute(
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsAdminsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/admins/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/admins/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -534,13 +248,16 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsAdminsCreateExecute(
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -562,131 +279,24 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsAdminsCreateExecute(
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsAdminsListRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsAdminsListRequest) Page(page int32) ApiOrganizationsOrganizationsAdminsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiOrganizationsOrganizationsAdminsListRequest) PageSize(pageSize int32) ApiOrganizationsOrganizationsAdminsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiOrganizationsOrganizationsAdminsListRequest) Search(search string) ApiOrganizationsOrganizationsAdminsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsAdminsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsAdminsListExecute(r)
+// OrganizationsOrganizationsAdminsListOpts Optional parameters for the method 'OrganizationsOrganizationsAdminsList'
+type OrganizationsOrganizationsAdminsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsAdminsList  List Admin Users for an Organization
- * 
-Make a GET request to this resource to retrieve a list of
-admin users associated with the selected
-organization.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of admin users
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more admin user records.  
-
-## Results
-
-Each admin user data structure includes the following fields:
-
-* `id`: Database ID for this user. (integer)
-* `type`: Data type for this user. (choice)
-* `url`: URL for this user. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this user was created. (datetime)
-* `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string)
-* `first_name`:  (string)
-* `last_name`:  (string)
-* `email`:  (string)
-* `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean)
-* `is_system_auditor`:  (boolean)
-
-* `ldap_dn`:  (string)
-* `last_login`:  (datetime)
-* `external_account`: Set if the account is managed by an external service (field)
-
-
-
-## Sorting
-
-To specify that admin users are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=username
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-username
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=username,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+OrganizationsOrganizationsAdminsList  List Admin Users for an Organization
+ Make a GET request to this resource to retrieve a list of admin users associated with the selected organization.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of admin users found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more admin user records.    ## Results  Each admin user data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this user. (integer) * &#x60;type&#x60;: Data type for this user. (choice) * &#x60;url&#x60;: URL for this user. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this user was created. (datetime) * &#x60;username&#x60;: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string) * &#x60;first_name&#x60;:  (string) * &#x60;last_name&#x60;:  (string) * &#x60;email&#x60;:  (string) * &#x60;is_superuser&#x60;: Designates that this user has all permissions without explicitly assigning them. (boolean) * &#x60;is_system_auditor&#x60;:  (boolean)  * &#x60;ldap_dn&#x60;:  (string) * &#x60;last_login&#x60;:  (datetime) * &#x60;external_account&#x60;: Set if the account is managed by an external service (field)    ## Sorting  To specify that admin users are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;username  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-username  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;username,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsAdminsListRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsAdminsList(ctx _context.Context, id string) ApiOrganizationsOrganizationsAdminsListRequest {
-	return ApiOrganizationsOrganizationsAdminsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsAdminsListExecute(r ApiOrganizationsOrganizationsAdminsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsAdminsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsAdminsList(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsAdminsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -695,26 +305,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsAdminsListExecute(r 
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsAdminsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/admins/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/admins/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -733,12 +339,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsAdminsListExecute(r 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -760,65 +366,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsAdminsListExecute(r 
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsApplicationsCreateRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	data *InlineObject44
-}
-
-func (r ApiOrganizationsOrganizationsApplicationsCreateRequest) Data(data InlineObject44) ApiOrganizationsOrganizationsApplicationsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsApplicationsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsApplicationsCreateExecute(r)
+// OrganizationsOrganizationsApplicationsCreateOpts Optional parameters for the method 'OrganizationsOrganizationsApplicationsCreate'
+type OrganizationsOrganizationsApplicationsCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * OrganizationsOrganizationsApplicationsCreate  Create an Application for an Organization
- * 
-Make a POST request to this resource with the following application
-fields to create a new application associated with this
-organization.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this application. (string, required)
-* `description`: Optional description of this application. (string, default=`""`)
-
-
-* `client_type`: Set to Public or Confidential depending on how secure the client device is. (choice, required)
-    - `confidential`: Confidential
-    - `public`: Public
-* `redirect_uris`: Allowed URIs list, space separated (string, default=`""`)
-* `authorization_grant_type`: The Grant type the user must use for acquire tokens for this application. (choice, required)
-    - `authorization-code`: Authorization code
-    - `password`: Resource owner password-based
-* `skip_authorization`: Set True to skip authorization step for completely trusted applications. (boolean, default=`False`)
+OrganizationsOrganizationsApplicationsCreate  Create an Application for an Organization
+ Make a POST request to this resource with the following application fields to create a new application associated with this organization.          * &#x60;name&#x60;: Name of this application. (string, required) * &#x60;description&#x60;: Optional description of this application. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)   * &#x60;client_type&#x60;: Set to Public or Confidential depending on how secure the client device is. (choice, required)     - &#x60;confidential&#x60;: Confidential     - &#x60;public&#x60;: Public * &#x60;redirect_uris&#x60;: Allowed URIs list, space separated (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;authorization_grant_type&#x60;: The Grant type the user must use for acquire tokens for this application. (choice, required)     - &#x60;authorization-code&#x60;: Authorization code     - &#x60;password&#x60;: Resource owner password-based * &#x60;skip_authorization&#x60;: Set True to skip authorization step for completely trusted applications. (boolean, default&#x3D;&#x60;False&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsApplicationsCreateRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsApplicationsCreate(ctx _context.Context, id string) ApiOrganizationsOrganizationsApplicationsCreateRequest {
-	return ApiOrganizationsOrganizationsApplicationsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsApplicationsCreateExecute(r ApiOrganizationsOrganizationsApplicationsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsApplicationsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject44) - 
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsApplicationsCreate(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsApplicationsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -827,13 +388,9 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsApplicationsCreateEx
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsApplicationsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/applications/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/applications/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -857,13 +414,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsApplicationsCreateEx
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject44)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject44")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -885,135 +449,24 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsApplicationsCreateEx
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsApplicationsListRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsApplicationsListRequest) Page(page int32) ApiOrganizationsOrganizationsApplicationsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiOrganizationsOrganizationsApplicationsListRequest) PageSize(pageSize int32) ApiOrganizationsOrganizationsApplicationsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiOrganizationsOrganizationsApplicationsListRequest) Search(search string) ApiOrganizationsOrganizationsApplicationsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsApplicationsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsApplicationsListExecute(r)
+// OrganizationsOrganizationsApplicationsListOpts Optional parameters for the method 'OrganizationsOrganizationsApplicationsList'
+type OrganizationsOrganizationsApplicationsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsApplicationsList  List Applications for an Organization
- * 
-Make a GET request to this resource to retrieve a list of
-applications associated with the selected
-organization.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of applications
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more application records.  
-
-## Results
-
-Each application data structure includes the following fields:
-
-* `id`: Database ID for this application. (integer)
-* `type`: Data type for this application. (choice)
-* `url`: URL for this application. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this application was created. (datetime)
-* `modified`: Timestamp when this application was last modified. (datetime)
-* `name`: Name of this application. (string)
-* `description`: Optional description of this application. (string)
-* `client_id`:  (string)
-* `client_secret`: Used for more stringent verification of access to an application when creating a token. (string)
-* `client_type`: Set to Public or Confidential depending on how secure the client device is. (choice)
-    - `confidential`: Confidential
-    - `public`: Public
-* `redirect_uris`: Allowed URIs list, space separated (string)
-* `authorization_grant_type`: The Grant type the user must use for acquire tokens for this application. (choice)
-    - `authorization-code`: Authorization code
-    - `password`: Resource owner password-based
-* `skip_authorization`: Set True to skip authorization step for completely trusted applications. (boolean)
-* `organization`: Organization containing this application. (id)
-
-
-
-## Sorting
-
-To specify that applications are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+OrganizationsOrganizationsApplicationsList  List Applications for an Organization
+ Make a GET request to this resource to retrieve a list of applications associated with the selected organization.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of applications found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more application records.    ## Results  Each application data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this application. (integer) * &#x60;type&#x60;: Data type for this application. (choice) * &#x60;url&#x60;: URL for this application. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this application was created. (datetime) * &#x60;modified&#x60;: Timestamp when this application was last modified. (datetime) * &#x60;name&#x60;: Name of this application. (string) * &#x60;description&#x60;: Optional description of this application. (string) * &#x60;client_id&#x60;:  (string) * &#x60;client_secret&#x60;: Used for more stringent verification of access to an application when creating a token. (string) * &#x60;client_type&#x60;: Set to Public or Confidential depending on how secure the client device is. (choice)     - &#x60;confidential&#x60;: Confidential     - &#x60;public&#x60;: Public * &#x60;redirect_uris&#x60;: Allowed URIs list, space separated (string) * &#x60;authorization_grant_type&#x60;: The Grant type the user must use for acquire tokens for this application. (choice)     - &#x60;authorization-code&#x60;: Authorization code     - &#x60;password&#x60;: Resource owner password-based * &#x60;skip_authorization&#x60;: Set True to skip authorization step for completely trusted applications. (boolean) * &#x60;organization&#x60;: Organization containing this application. (id)    ## Sorting  To specify that applications are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsApplicationsListRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsApplicationsList(ctx _context.Context, id string) ApiOrganizationsOrganizationsApplicationsListRequest {
-	return ApiOrganizationsOrganizationsApplicationsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsApplicationsListExecute(r ApiOrganizationsOrganizationsApplicationsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsApplicationsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsApplicationsList(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsApplicationsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1022,26 +475,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsApplicationsListExec
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsApplicationsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/applications/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/applications/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1060,12 +509,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsApplicationsListExec
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1087,53 +536,19 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsApplicationsListExec
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsCreateRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	data *map[string]interface{}
-}
-
-func (r ApiOrganizationsOrganizationsCreateRequest) Data(data map[string]interface{}) ApiOrganizationsOrganizationsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsCreateExecute(r)
+// OrganizationsOrganizationsCreateOpts Optional parameters for the method 'OrganizationsOrganizationsCreate'
+type OrganizationsOrganizationsCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * OrganizationsOrganizationsCreate  Create an Organization
- * 
-Make a POST request to this resource with the following organization
-fields to create a new organization:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this organization. (string, required)
-* `description`: Optional description of this organization. (string, default=`""`)
-* `max_hosts`: Maximum number of hosts allowed to be managed by this organization. (integer, default=`0`)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string, default=`""`)
+OrganizationsOrganizationsCreate  Create an Organization
+ Make a POST request to this resource with the following organization fields to create a new organization:          * &#x60;name&#x60;: Name of this organization. (string, required) * &#x60;description&#x60;: Optional description of this organization. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;max_hosts&#x60;: Maximum number of hosts allowed to be managed by this organization. (integer, default&#x3D;&#x60;0&#x60;) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiOrganizationsOrganizationsCreateRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsCreate(ctx _context.Context) ApiOrganizationsOrganizationsCreateRequest {
-	return ApiOrganizationsOrganizationsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsCreateExecute(r ApiOrganizationsOrganizationsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsCreate(ctx _context.Context, localVarOptionals *OrganizationsOrganizationsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -1142,13 +557,8 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsCreateExecute(r ApiO
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -1171,13 +581,16 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsCreateExecute(r ApiO
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1199,59 +612,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsCreateExecute(r ApiO
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsCredentialsCreateRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	data *InlineObject45
-}
-
-func (r ApiOrganizationsOrganizationsCredentialsCreateRequest) Data(data InlineObject45) ApiOrganizationsOrganizationsCredentialsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsCredentialsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsCredentialsCreateExecute(r)
+// OrganizationsOrganizationsCredentialsCreateOpts Optional parameters for the method 'OrganizationsOrganizationsCredentialsCreate'
+type OrganizationsOrganizationsCredentialsCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * OrganizationsOrganizationsCredentialsCreate  Create a Credential for an Organization
- * 
-Make a POST request to this resource with the following credential
-fields to create a new credential associated with this
-organization.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this credential. (string, required)
-* `description`: Optional description of this credential. (string, default=`""`)
-
-* `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id, required)
-
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)
+OrganizationsOrganizationsCredentialsCreate  Create a Credential for an Organization
+ Make a POST request to this resource with the following credential fields to create a new credential associated with this organization.          * &#x60;name&#x60;: Name of this credential. (string, required) * &#x60;description&#x60;: Optional description of this credential. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)  * &#x60;credential_type&#x60;: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id, required)  * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default&#x3D;&#x60;{}&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsCredentialsCreateRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsCredentialsCreate(ctx _context.Context, id string) ApiOrganizationsOrganizationsCredentialsCreateRequest {
-	return ApiOrganizationsOrganizationsCredentialsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsCredentialsCreateExecute(r ApiOrganizationsOrganizationsCredentialsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsCredentialsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject45) - 
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsCredentialsCreate(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsCredentialsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -1260,13 +634,9 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsCredentialsCreateExe
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsCredentialsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/credentials/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/credentials/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1290,13 +660,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsCredentialsCreateExe
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject45)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject45")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1318,131 +695,24 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsCredentialsCreateExe
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsCredentialsListRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsCredentialsListRequest) Page(page int32) ApiOrganizationsOrganizationsCredentialsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiOrganizationsOrganizationsCredentialsListRequest) PageSize(pageSize int32) ApiOrganizationsOrganizationsCredentialsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiOrganizationsOrganizationsCredentialsListRequest) Search(search string) ApiOrganizationsOrganizationsCredentialsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsCredentialsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsCredentialsListExecute(r)
+// OrganizationsOrganizationsCredentialsListOpts Optional parameters for the method 'OrganizationsOrganizationsCredentialsList'
+type OrganizationsOrganizationsCredentialsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsCredentialsList  List Credentials for an Organization
- * 
-Make a GET request to this resource to retrieve a list of
-credentials associated with the selected
-organization.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of credentials
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more credential records.  
-
-## Results
-
-Each credential data structure includes the following fields:
-
-* `id`: Database ID for this credential. (integer)
-* `type`: Data type for this credential. (choice)
-* `url`: URL for this credential. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this credential was created. (datetime)
-* `modified`: Timestamp when this credential was last modified. (datetime)
-* `name`: Name of this credential. (string)
-* `description`: Optional description of this credential. (string)
-* `organization`: Inherit permissions from organization roles. If provided on creation, do not give either user or team. (id)
-* `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id)
-* `managed_by_tower`:  (boolean)
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json)
-* `kind`:  (field)
-* `cloud`:  (field)
-* `kubernetes`:  (field)
-
-
-
-## Sorting
-
-To specify that credentials are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+OrganizationsOrganizationsCredentialsList  List Credentials for an Organization
+ Make a GET request to this resource to retrieve a list of credentials associated with the selected organization.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of credentials found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more credential records.    ## Results  Each credential data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this credential. (integer) * &#x60;type&#x60;: Data type for this credential. (choice) * &#x60;url&#x60;: URL for this credential. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this credential was created. (datetime) * &#x60;modified&#x60;: Timestamp when this credential was last modified. (datetime) * &#x60;name&#x60;: Name of this credential. (string) * &#x60;description&#x60;: Optional description of this credential. (string) * &#x60;organization&#x60;: Inherit permissions from organization roles. If provided on creation, do not give either user or team. (id) * &#x60;credential_type&#x60;: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id) * &#x60;managed_by_tower&#x60;:  (boolean) * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json) * &#x60;kind&#x60;:  (field) * &#x60;cloud&#x60;:  (field) * &#x60;kubernetes&#x60;:  (field)    ## Sorting  To specify that credentials are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsCredentialsListRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsCredentialsList(ctx _context.Context, id string) ApiOrganizationsOrganizationsCredentialsListRequest {
-	return ApiOrganizationsOrganizationsCredentialsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsCredentialsListExecute(r ApiOrganizationsOrganizationsCredentialsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsCredentialsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsCredentialsList(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsCredentialsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1451,26 +721,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsCredentialsListExecu
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsCredentialsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/credentials/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/credentials/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1489,12 +755,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsCredentialsListExecu
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1516,42 +782,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsCredentialsListExecu
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsDeleteRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsDeleteRequest) Search(search string) ApiOrganizationsOrganizationsDeleteRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsDeleteExecute(r)
+// OrganizationsOrganizationsDeleteOpts Optional parameters for the method 'OrganizationsOrganizationsDelete'
+type OrganizationsOrganizationsDeleteOpts struct {
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsDelete  Delete an Organization
- * 
-Make a DELETE request to this resource to delete this organization.
+OrganizationsOrganizationsDelete  Delete an Organization
+ Make a DELETE request to this resource to delete this organization.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsDeleteRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsDelete(ctx _context.Context, id string) ApiOrganizationsOrganizationsDeleteRequest {
-	return ApiOrganizationsOrganizationsDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsDeleteExecute(r ApiOrganizationsOrganizationsDeleteRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsDeleteOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsDelete(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsDeleteOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -1560,20 +804,16 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsDeleteExecute(r ApiO
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1592,12 +832,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsDeleteExecute(r ApiO
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1619,80 +859,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsDeleteExecute(r ApiO
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsGalaxyCredentialsCreateRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiOrganizationsOrganizationsGalaxyCredentialsCreateRequest) Data(data map[string]interface{}) ApiOrganizationsOrganizationsGalaxyCredentialsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsGalaxyCredentialsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsGalaxyCredentialsCreateExecute(r)
+// OrganizationsOrganizationsGalaxyCredentialsCreateOpts Optional parameters for the method 'OrganizationsOrganizationsGalaxyCredentialsCreate'
+type OrganizationsOrganizationsGalaxyCredentialsCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * OrganizationsOrganizationsGalaxyCredentialsCreate  Create a Credential for an Organization
- * 
-Make a POST request to this resource with the following credential
-fields to create a new credential associated with this
-organization.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this credential. (string, required)
-* `description`: Optional description of this credential. (string, default=`""`)
-* `organization`:  (id, default=`None`)
-* `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id, required)
-
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)
-
-
-
-
-
-
-
-
-
-
-
-# Add Credentials for an Organization:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing credential with this organization.
-
-# Remove Credentials from this Organization:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the credential from this organization
- without deleting the credential.
+OrganizationsOrganizationsGalaxyCredentialsCreate  Create a Credential for an Organization
+ Make a POST request to this resource with the following credential fields to create a new credential associated with this organization.          * &#x60;name&#x60;: Name of this credential. (string, required) * &#x60;description&#x60;: Optional description of this credential. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;:  (id, default&#x3D;&#x60;None&#x60;) * &#x60;credential_type&#x60;: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id, required)  * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default&#x3D;&#x60;{}&#x60;)            # Add Credentials for an Organization:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing credential with this organization.  # Remove Credentials from this Organization:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the credential from this organization  without deleting the credential.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsGalaxyCredentialsCreateRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsGalaxyCredentialsCreate(ctx _context.Context, id string) ApiOrganizationsOrganizationsGalaxyCredentialsCreateRequest {
-	return ApiOrganizationsOrganizationsGalaxyCredentialsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsGalaxyCredentialsCreateExecute(r ApiOrganizationsOrganizationsGalaxyCredentialsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsGalaxyCredentialsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsGalaxyCredentialsCreate(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsGalaxyCredentialsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -1701,13 +881,9 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsGalaxyCredentialsCre
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsGalaxyCredentialsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/galaxy_credentials/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/galaxy_credentials/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1731,13 +907,16 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsGalaxyCredentialsCre
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1759,131 +938,24 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsGalaxyCredentialsCre
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsGalaxyCredentialsListRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsGalaxyCredentialsListRequest) Page(page int32) ApiOrganizationsOrganizationsGalaxyCredentialsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiOrganizationsOrganizationsGalaxyCredentialsListRequest) PageSize(pageSize int32) ApiOrganizationsOrganizationsGalaxyCredentialsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiOrganizationsOrganizationsGalaxyCredentialsListRequest) Search(search string) ApiOrganizationsOrganizationsGalaxyCredentialsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsGalaxyCredentialsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsGalaxyCredentialsListExecute(r)
+// OrganizationsOrganizationsGalaxyCredentialsListOpts Optional parameters for the method 'OrganizationsOrganizationsGalaxyCredentialsList'
+type OrganizationsOrganizationsGalaxyCredentialsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsGalaxyCredentialsList  List Credentials for an Organization
- * 
-Make a GET request to this resource to retrieve a list of
-credentials associated with the selected
-organization.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of credentials
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more credential records.  
-
-## Results
-
-Each credential data structure includes the following fields:
-
-* `id`: Database ID for this credential. (integer)
-* `type`: Data type for this credential. (choice)
-* `url`: URL for this credential. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this credential was created. (datetime)
-* `modified`: Timestamp when this credential was last modified. (datetime)
-* `name`: Name of this credential. (string)
-* `description`: Optional description of this credential. (string)
-* `organization`:  (id)
-* `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id)
-* `managed_by_tower`:  (boolean)
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json)
-* `kind`:  (field)
-* `cloud`:  (field)
-* `kubernetes`:  (field)
-
-
-
-## Sorting
-
-To specify that credentials are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+OrganizationsOrganizationsGalaxyCredentialsList  List Credentials for an Organization
+ Make a GET request to this resource to retrieve a list of credentials associated with the selected organization.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of credentials found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more credential records.    ## Results  Each credential data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this credential. (integer) * &#x60;type&#x60;: Data type for this credential. (choice) * &#x60;url&#x60;: URL for this credential. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this credential was created. (datetime) * &#x60;modified&#x60;: Timestamp when this credential was last modified. (datetime) * &#x60;name&#x60;: Name of this credential. (string) * &#x60;description&#x60;: Optional description of this credential. (string) * &#x60;organization&#x60;:  (id) * &#x60;credential_type&#x60;: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id) * &#x60;managed_by_tower&#x60;:  (boolean) * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json) * &#x60;kind&#x60;:  (field) * &#x60;cloud&#x60;:  (field) * &#x60;kubernetes&#x60;:  (field)    ## Sorting  To specify that credentials are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsGalaxyCredentialsListRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsGalaxyCredentialsList(ctx _context.Context, id string) ApiOrganizationsOrganizationsGalaxyCredentialsListRequest {
-	return ApiOrganizationsOrganizationsGalaxyCredentialsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsGalaxyCredentialsListExecute(r ApiOrganizationsOrganizationsGalaxyCredentialsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsGalaxyCredentialsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsGalaxyCredentialsList(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsGalaxyCredentialsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1892,26 +964,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsGalaxyCredentialsLis
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsGalaxyCredentialsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/galaxy_credentials/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/galaxy_credentials/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1930,12 +998,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsGalaxyCredentialsLis
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1957,88 +1025,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsGalaxyCredentialsLis
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsInstanceGroupsCreateRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiOrganizationsOrganizationsInstanceGroupsCreateRequest) Data(data map[string]interface{}) ApiOrganizationsOrganizationsInstanceGroupsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsInstanceGroupsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsInstanceGroupsCreateExecute(r)
+// OrganizationsOrganizationsInstanceGroupsCreateOpts Optional parameters for the method 'OrganizationsOrganizationsInstanceGroupsCreate'
+type OrganizationsOrganizationsInstanceGroupsCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * OrganizationsOrganizationsInstanceGroupsCreate  Create an Instance Group for an Organization
- * 
-Make a POST request to this resource with the following instance group
-fields to create a new instance group associated with this
-organization.
-
-
-
-
-
-
-* `name`: Name of this instance group. (string, required)
-
-
-
-
-
-
-
-
-
-
-
-
-
-* `credential`:  (id, default=``)
-* `policy_instance_percentage`: Minimum percentage of all instances that will be automatically assigned to this group when new instances come online. (integer, default=`0`)
-* `policy_instance_minimum`: Static minimum number of Instances that will be automatically assign to this group when new instances come online. (integer, default=`0`)
-* `policy_instance_list`: List of exact-match Instances that will be assigned to this group (json, default=``)
-* `pod_spec_override`:  (string, default=`""`)
-
-
-
-
-
-
-
-
-
-# Add Instance Groups for an Organization:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing instance group with this organization.
-
-# Remove Instance Groups from this Organization:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the instance group from this organization
- without deleting the instance group.
+OrganizationsOrganizationsInstanceGroupsCreate  Create an Instance Group for an Organization
+ Make a POST request to this resource with the following instance group fields to create a new instance group associated with this organization.       * &#x60;name&#x60;: Name of this instance group. (string, required)              * &#x60;credential&#x60;:  (id, default&#x3D;&#x60;&#x60;) * &#x60;policy_instance_percentage&#x60;: Minimum percentage of all instances that will be automatically assigned to this group when new instances come online. (integer, default&#x3D;&#x60;0&#x60;) * &#x60;policy_instance_minimum&#x60;: Static minimum number of Instances that will be automatically assign to this group when new instances come online. (integer, default&#x3D;&#x60;0&#x60;) * &#x60;policy_instance_list&#x60;: List of exact-match Instances that will be assigned to this group (json, default&#x3D;&#x60;&#x60;) * &#x60;pod_spec_override&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)          # Add Instance Groups for an Organization:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing instance group with this organization.  # Remove Instance Groups from this Organization:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the instance group from this organization  without deleting the instance group.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsInstanceGroupsCreateRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsInstanceGroupsCreate(ctx _context.Context, id string) ApiOrganizationsOrganizationsInstanceGroupsCreateRequest {
-	return ApiOrganizationsOrganizationsInstanceGroupsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsInstanceGroupsCreateExecute(r ApiOrganizationsOrganizationsInstanceGroupsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsInstanceGroupsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsInstanceGroupsCreate(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsInstanceGroupsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -2047,13 +1047,9 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsInstanceGroupsCreate
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsInstanceGroupsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/instance_groups/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/instance_groups/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -2077,13 +1073,16 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsInstanceGroupsCreate
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2105,139 +1104,24 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsInstanceGroupsCreate
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsInstanceGroupsListRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsInstanceGroupsListRequest) Page(page int32) ApiOrganizationsOrganizationsInstanceGroupsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiOrganizationsOrganizationsInstanceGroupsListRequest) PageSize(pageSize int32) ApiOrganizationsOrganizationsInstanceGroupsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiOrganizationsOrganizationsInstanceGroupsListRequest) Search(search string) ApiOrganizationsOrganizationsInstanceGroupsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsInstanceGroupsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsInstanceGroupsListExecute(r)
+// OrganizationsOrganizationsInstanceGroupsListOpts Optional parameters for the method 'OrganizationsOrganizationsInstanceGroupsList'
+type OrganizationsOrganizationsInstanceGroupsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsInstanceGroupsList  List Instance Groups for an Organization
- * 
-Make a GET request to this resource to retrieve a list of
-instance groups associated with the selected
-organization.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of instance groups
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more instance group records.  
-
-## Results
-
-Each instance group data structure includes the following fields:
-
-* `id`: Database ID for this instance group. (integer)
-* `type`: Data type for this instance group. (choice)
-* `url`: URL for this instance group. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `name`: Name of this instance group. (string)
-* `created`: Timestamp when this instance group was created. (datetime)
-* `modified`: Timestamp when this instance group was last modified. (datetime)
-* `capacity`:  (field)
-* `committed_capacity`:  (field)
-* `consumed_capacity`:  (field)
-* `percent_capacity_remaining`:  (field)
-* `jobs_running`: Count of jobs in the running or waiting state that are targeted for this instance group (integer)
-* `jobs_total`: Count of all jobs that target this instance group (integer)
-* `instances`:  (field)
-* `controller`: Instance Group to remotely control this group. (id)
-* `is_controller`: Indicates whether instance group controls any other group (boolean)
-* `is_isolated`: Indicates whether instances in this group are isolated.Isolated groups have a designated controller group. (boolean)
-* `is_containerized`: Indicates whether instances in this group are containerized.Containerized groups have a designated Openshift or Kubernetes cluster. (boolean)
-* `credential`:  (id)
-* `policy_instance_percentage`: Minimum percentage of all instances that will be automatically assigned to this group when new instances come online. (integer)
-* `policy_instance_minimum`: Static minimum number of Instances that will be automatically assign to this group when new instances come online. (integer)
-* `policy_instance_list`: List of exact-match Instances that will be assigned to this group (json)
-* `pod_spec_override`:  (string)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-
-
-
-## Sorting
-
-To specify that instance groups are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+OrganizationsOrganizationsInstanceGroupsList  List Instance Groups for an Organization
+ Make a GET request to this resource to retrieve a list of instance groups associated with the selected organization.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of instance groups found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more instance group records.    ## Results  Each instance group data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this instance group. (integer) * &#x60;type&#x60;: Data type for this instance group. (choice) * &#x60;url&#x60;: URL for this instance group. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;name&#x60;: Name of this instance group. (string) * &#x60;created&#x60;: Timestamp when this instance group was created. (datetime) * &#x60;modified&#x60;: Timestamp when this instance group was last modified. (datetime) * &#x60;capacity&#x60;:  (field) * &#x60;committed_capacity&#x60;:  (field) * &#x60;consumed_capacity&#x60;:  (field) * &#x60;percent_capacity_remaining&#x60;:  (field) * &#x60;jobs_running&#x60;: Count of jobs in the running or waiting state that are targeted for this instance group (integer) * &#x60;jobs_total&#x60;: Count of all jobs that target this instance group (integer) * &#x60;instances&#x60;:  (field) * &#x60;controller&#x60;: Instance Group to remotely control this group. (id) * &#x60;is_controller&#x60;: Indicates whether instance group controls any other group (boolean) * &#x60;is_isolated&#x60;: Indicates whether instances in this group are isolated.Isolated groups have a designated controller group. (boolean) * &#x60;is_containerized&#x60;: Indicates whether instances in this group are containerized.Containerized groups have a designated Openshift or Kubernetes cluster. (boolean) * &#x60;credential&#x60;:  (id) * &#x60;policy_instance_percentage&#x60;: Minimum percentage of all instances that will be automatically assigned to this group when new instances come online. (integer) * &#x60;policy_instance_minimum&#x60;: Static minimum number of Instances that will be automatically assign to this group when new instances come online. (integer) * &#x60;policy_instance_list&#x60;: List of exact-match Instances that will be assigned to this group (json) * &#x60;pod_spec_override&#x60;:  (string) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)    ## Sorting  To specify that instance groups are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsInstanceGroupsListRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsInstanceGroupsList(ctx _context.Context, id string) ApiOrganizationsOrganizationsInstanceGroupsListRequest {
-	return ApiOrganizationsOrganizationsInstanceGroupsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsInstanceGroupsListExecute(r ApiOrganizationsOrganizationsInstanceGroupsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsInstanceGroupsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsInstanceGroupsList(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsInstanceGroupsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2246,26 +1130,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsInstanceGroupsListEx
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsInstanceGroupsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/instance_groups/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/instance_groups/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2284,12 +1164,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsInstanceGroupsListEx
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2311,139 +1191,24 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsInstanceGroupsListEx
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsInventoriesListRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsInventoriesListRequest) Page(page int32) ApiOrganizationsOrganizationsInventoriesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiOrganizationsOrganizationsInventoriesListRequest) PageSize(pageSize int32) ApiOrganizationsOrganizationsInventoriesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiOrganizationsOrganizationsInventoriesListRequest) Search(search string) ApiOrganizationsOrganizationsInventoriesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsInventoriesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsInventoriesListExecute(r)
+// OrganizationsOrganizationsInventoriesListOpts Optional parameters for the method 'OrganizationsOrganizationsInventoriesList'
+type OrganizationsOrganizationsInventoriesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsInventoriesList  List Inventories for an Organization
- * 
-Make a GET request to this resource to retrieve a list of
-inventories associated with the selected
-organization.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of inventories
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more inventory records.  
-
-## Results
-
-Each inventory data structure includes the following fields:
-
-* `id`: Database ID for this inventory. (integer)
-* `type`: Data type for this inventory. (choice)
-* `url`: URL for this inventory. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this inventory was created. (datetime)
-* `modified`: Timestamp when this inventory was last modified. (datetime)
-* `name`: Name of this inventory. (string)
-* `description`: Optional description of this inventory. (string)
-* `organization`: Organization containing this inventory. (id)
-* `kind`: Kind of inventory being represented. (choice)
-    - `""`: Hosts have a direct link to this inventory.
-    - `smart`: Hosts for inventory generated using the host_filter property.
-* `host_filter`: Filter that will be applied to the hosts of this inventory. (string)
-* `variables`: Inventory variables in JSON or YAML format. (json)
-* `has_active_failures`: This field is deprecated and will be removed in a future release. Flag indicating whether any hosts in this inventory have failed. (boolean)
-* `total_hosts`: This field is deprecated and will be removed in a future release. Total number of hosts in this inventory. (integer)
-* `hosts_with_active_failures`: This field is deprecated and will be removed in a future release. Number of hosts in this inventory with active failures. (integer)
-* `total_groups`: This field is deprecated and will be removed in a future release. Total number of groups in this inventory. (integer)
-* `has_inventory_sources`: This field is deprecated and will be removed in a future release. Flag indicating whether this inventory has any external inventory sources. (boolean)
-* `total_inventory_sources`: Total number of external inventory sources configured within this inventory. (integer)
-* `inventory_sources_with_failures`: Number of external inventory sources in this inventory with failures. (integer)
-* `insights_credential`: Credentials to be used by hosts belonging to this inventory when accessing Red Hat Insights API. (id)
-* `pending_deletion`: Flag indicating the inventory is being deleted. (boolean)
-
-
-
-## Sorting
-
-To specify that inventories are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+OrganizationsOrganizationsInventoriesList  List Inventories for an Organization
+ Make a GET request to this resource to retrieve a list of inventories associated with the selected organization.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of inventories found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more inventory records.    ## Results  Each inventory data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this inventory. (integer) * &#x60;type&#x60;: Data type for this inventory. (choice) * &#x60;url&#x60;: URL for this inventory. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this inventory was created. (datetime) * &#x60;modified&#x60;: Timestamp when this inventory was last modified. (datetime) * &#x60;name&#x60;: Name of this inventory. (string) * &#x60;description&#x60;: Optional description of this inventory. (string) * &#x60;organization&#x60;: Organization containing this inventory. (id) * &#x60;kind&#x60;: Kind of inventory being represented. (choice)     - &#x60;\&quot;\&quot;&#x60;: Hosts have a direct link to this inventory.     - &#x60;smart&#x60;: Hosts for inventory generated using the host_filter property. * &#x60;host_filter&#x60;: Filter that will be applied to the hosts of this inventory. (string) * &#x60;variables&#x60;: Inventory variables in JSON or YAML format. (json) * &#x60;has_active_failures&#x60;: This field is deprecated and will be removed in a future release. Flag indicating whether any hosts in this inventory have failed. (boolean) * &#x60;total_hosts&#x60;: This field is deprecated and will be removed in a future release. Total number of hosts in this inventory. (integer) * &#x60;hosts_with_active_failures&#x60;: This field is deprecated and will be removed in a future release. Number of hosts in this inventory with active failures. (integer) * &#x60;total_groups&#x60;: This field is deprecated and will be removed in a future release. Total number of groups in this inventory. (integer) * &#x60;has_inventory_sources&#x60;: This field is deprecated and will be removed in a future release. Flag indicating whether this inventory has any external inventory sources. (boolean) * &#x60;total_inventory_sources&#x60;: Total number of external inventory sources configured within this inventory. (integer) * &#x60;inventory_sources_with_failures&#x60;: Number of external inventory sources in this inventory with failures. (integer) * &#x60;insights_credential&#x60;: Credentials to be used by hosts belonging to this inventory when accessing Red Hat Insights API. (id) * &#x60;pending_deletion&#x60;: Flag indicating the inventory is being deleted. (boolean)    ## Sorting  To specify that inventories are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsInventoriesListRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsInventoriesList(ctx _context.Context, id string) ApiOrganizationsOrganizationsInventoriesListRequest {
-	return ApiOrganizationsOrganizationsInventoriesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsInventoriesListExecute(r ApiOrganizationsOrganizationsInventoriesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsInventoriesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsInventoriesList(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsInventoriesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2452,26 +1217,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsInventoriesListExecu
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsInventoriesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/inventories/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/inventories/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2490,12 +1251,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsInventoriesListExecu
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2517,105 +1278,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsInventoriesListExecu
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsJobTemplatesCreateRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	data *InlineObject46
-}
-
-func (r ApiOrganizationsOrganizationsJobTemplatesCreateRequest) Data(data InlineObject46) ApiOrganizationsOrganizationsJobTemplatesCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsJobTemplatesCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsJobTemplatesCreateExecute(r)
+// OrganizationsOrganizationsJobTemplatesCreateOpts Optional parameters for the method 'OrganizationsOrganizationsJobTemplatesCreate'
+type OrganizationsOrganizationsJobTemplatesCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * OrganizationsOrganizationsJobTemplatesCreate  Create a Job Template for an Organization
- * 
-Make a POST request to this resource with the following job template
-fields to create a new job template associated with this
-organization.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this job template. (string, required)
-* `description`: Optional description of this job template. (string, default=`""`)
-* `job_type`:  (choice)
-    - `run`: Run (default)
-    - `check`: Check
-* `inventory`:  (id, default=``)
-* `project`:  (id, default=``)
-* `playbook`:  (string, default=`""`)
-* `scm_branch`: Branch to use in job run. Project default used if blank. Only allowed if project allow_override field is set to true. (string, default=`""`)
-* `forks`:  (integer, default=`0`)
-* `limit`:  (string, default=`""`)
-* `verbosity`:  (choice)
-    - `0`: 0 (Normal) (default)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `extra_vars`:  (json, default=``)
-* `job_tags`:  (string, default=`""`)
-* `force_handlers`:  (boolean, default=`False`)
-* `skip_tags`:  (string, default=`""`)
-* `start_at_task`:  (string, default=`""`)
-* `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer, default=`0`)
-* `use_fact_cache`: If enabled, Tower will act as an Ansible Fact Cache Plugin; persisting facts at the end of a playbook run to the database and caching facts for use by Ansible. (boolean, default=`False`)
-
-
-
-
-
-* `host_config_key`:  (string, default=`""`)
-* `ask_scm_branch_on_launch`:  (boolean, default=`False`)
-* `ask_diff_mode_on_launch`:  (boolean, default=`False`)
-* `ask_variables_on_launch`:  (boolean, default=`False`)
-* `ask_limit_on_launch`:  (boolean, default=`False`)
-* `ask_tags_on_launch`:  (boolean, default=`False`)
-* `ask_skip_tags_on_launch`:  (boolean, default=`False`)
-* `ask_job_type_on_launch`:  (boolean, default=`False`)
-* `ask_verbosity_on_launch`:  (boolean, default=`False`)
-* `ask_inventory_on_launch`:  (boolean, default=`False`)
-* `ask_credential_on_launch`:  (boolean, default=`False`)
-* `survey_enabled`:  (boolean, default=`False`)
-* `become_enabled`:  (boolean, default=`False`)
-* `diff_mode`: If enabled, textual changes made to any templated files on the host are shown in the standard output (boolean, default=`False`)
-* `allow_simultaneous`:  (boolean, default=`False`)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string, default=`""`)
-* `job_slice_count`: The number of jobs to slice into at runtime. Will cause the Job Template to launch a workflow if value is greater than 1. (integer, default=`1`)
-* `webhook_service`: Service that webhook requests will be accepted from (choice)
-    - `""`: ---------
-    - `github`: GitHub
-    - `gitlab`: GitLab
-* `webhook_credential`: Personal Access Token for posting back the status to the service API (id, default=``)
+OrganizationsOrganizationsJobTemplatesCreate  Create a Job Template for an Organization
+ Make a POST request to this resource with the following job template fields to create a new job template associated with this organization.          * &#x60;name&#x60;: Name of this job template. (string, required) * &#x60;description&#x60;: Optional description of this job template. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;job_type&#x60;:  (choice)     - &#x60;run&#x60;: Run (default)     - &#x60;check&#x60;: Check * &#x60;inventory&#x60;:  (id, default&#x3D;&#x60;&#x60;) * &#x60;project&#x60;:  (id, default&#x3D;&#x60;&#x60;) * &#x60;playbook&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;scm_branch&#x60;: Branch to use in job run. Project default used if blank. Only allowed if project allow_override field is set to true. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;forks&#x60;:  (integer, default&#x3D;&#x60;0&#x60;) * &#x60;limit&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (Normal) (default)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;extra_vars&#x60;:  (json, default&#x3D;&#x60;&#x60;) * &#x60;job_tags&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;force_handlers&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;skip_tags&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;start_at_task&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;timeout&#x60;: The amount of time (in seconds) to run before the task is canceled. (integer, default&#x3D;&#x60;0&#x60;) * &#x60;use_fact_cache&#x60;: If enabled, Tower will act as an Ansible Fact Cache Plugin; persisting facts at the end of a playbook run to the database and caching facts for use by Ansible. (boolean, default&#x3D;&#x60;False&#x60;)      * &#x60;host_config_key&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;ask_scm_branch_on_launch&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;ask_diff_mode_on_launch&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;ask_variables_on_launch&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;ask_limit_on_launch&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;ask_tags_on_launch&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;ask_skip_tags_on_launch&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;ask_job_type_on_launch&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;ask_verbosity_on_launch&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;ask_inventory_on_launch&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;ask_credential_on_launch&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;survey_enabled&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;become_enabled&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;diff_mode&#x60;: If enabled, textual changes made to any templated files on the host are shown in the standard output (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;allow_simultaneous&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;job_slice_count&#x60;: The number of jobs to slice into at runtime. Will cause the Job Template to launch a workflow if value is greater than 1. (integer, default&#x3D;&#x60;1&#x60;) * &#x60;webhook_service&#x60;: Service that webhook requests will be accepted from (choice)     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;github&#x60;: GitHub     - &#x60;gitlab&#x60;: GitLab * &#x60;webhook_credential&#x60;: Personal Access Token for posting back the status to the service API (id, default&#x3D;&#x60;&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsJobTemplatesCreateRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsJobTemplatesCreate(ctx _context.Context, id string) ApiOrganizationsOrganizationsJobTemplatesCreateRequest {
-	return ApiOrganizationsOrganizationsJobTemplatesCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsJobTemplatesCreateExecute(r ApiOrganizationsOrganizationsJobTemplatesCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsJobTemplatesCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject46) - 
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsJobTemplatesCreate(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsJobTemplatesCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -2624,13 +1300,9 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsJobTemplatesCreateEx
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsJobTemplatesCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/job_templates/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/job_templates/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -2654,13 +1326,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsJobTemplatesCreateEx
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject46)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject46")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2682,183 +1361,24 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsJobTemplatesCreateEx
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsJobTemplatesListRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsJobTemplatesListRequest) Page(page int32) ApiOrganizationsOrganizationsJobTemplatesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiOrganizationsOrganizationsJobTemplatesListRequest) PageSize(pageSize int32) ApiOrganizationsOrganizationsJobTemplatesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiOrganizationsOrganizationsJobTemplatesListRequest) Search(search string) ApiOrganizationsOrganizationsJobTemplatesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsJobTemplatesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsJobTemplatesListExecute(r)
+// OrganizationsOrganizationsJobTemplatesListOpts Optional parameters for the method 'OrganizationsOrganizationsJobTemplatesList'
+type OrganizationsOrganizationsJobTemplatesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsJobTemplatesList  List Job Templates for an Organization
- * 
-Make a GET request to this resource to retrieve a list of
-job templates associated with the selected
-organization.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of job templates
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more job template records.  
-
-## Results
-
-Each job template data structure includes the following fields:
-
-* `id`: Database ID for this job template. (integer)
-* `type`: Data type for this job template. (choice)
-* `url`: URL for this job template. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this job template was created. (datetime)
-* `modified`: Timestamp when this job template was last modified. (datetime)
-* `name`: Name of this job template. (string)
-* `description`: Optional description of this job template. (string)
-* `job_type`:  (choice)
-    - `run`: Run
-    - `check`: Check
-* `inventory`:  (id)
-* `project`:  (id)
-* `playbook`:  (string)
-* `scm_branch`: Branch to use in job run. Project default used if blank. Only allowed if project allow_override field is set to true. (string)
-* `forks`:  (integer)
-* `limit`:  (string)
-* `verbosity`:  (choice)
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `extra_vars`:  (json)
-* `job_tags`:  (string)
-* `force_handlers`:  (boolean)
-* `skip_tags`:  (string)
-* `start_at_task`:  (string)
-* `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer)
-* `use_fact_cache`: If enabled, Tower will act as an Ansible Fact Cache Plugin; persisting facts at the end of a playbook run to the database and caching facts for use by Ansible. (boolean)
-* `organization`: The organization used to determine access to this template. (id)
-* `last_job_run`:  (datetime)
-* `last_job_failed`:  (boolean)
-* `next_job_run`:  (datetime)
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-    - `never updated`: Never Updated
-* `host_config_key`:  (string)
-* `ask_scm_branch_on_launch`:  (boolean)
-* `ask_diff_mode_on_launch`:  (boolean)
-* `ask_variables_on_launch`:  (boolean)
-* `ask_limit_on_launch`:  (boolean)
-* `ask_tags_on_launch`:  (boolean)
-* `ask_skip_tags_on_launch`:  (boolean)
-* `ask_job_type_on_launch`:  (boolean)
-* `ask_verbosity_on_launch`:  (boolean)
-* `ask_inventory_on_launch`:  (boolean)
-* `ask_credential_on_launch`:  (boolean)
-* `survey_enabled`:  (boolean)
-* `become_enabled`:  (boolean)
-* `diff_mode`: If enabled, textual changes made to any templated files on the host are shown in the standard output (boolean)
-* `allow_simultaneous`:  (boolean)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string)
-* `job_slice_count`: The number of jobs to slice into at runtime. Will cause the Job Template to launch a workflow if value is greater than 1. (integer)
-* `webhook_service`: Service that webhook requests will be accepted from (choice)
-    - `""`: ---------
-    - `github`: GitHub
-    - `gitlab`: GitLab
-* `webhook_credential`: Personal Access Token for posting back the status to the service API (id)
-
-
-
-## Sorting
-
-To specify that job templates are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+OrganizationsOrganizationsJobTemplatesList  List Job Templates for an Organization
+ Make a GET request to this resource to retrieve a list of job templates associated with the selected organization.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of job templates found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more job template records.    ## Results  Each job template data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this job template. (integer) * &#x60;type&#x60;: Data type for this job template. (choice) * &#x60;url&#x60;: URL for this job template. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this job template was created. (datetime) * &#x60;modified&#x60;: Timestamp when this job template was last modified. (datetime) * &#x60;name&#x60;: Name of this job template. (string) * &#x60;description&#x60;: Optional description of this job template. (string) * &#x60;job_type&#x60;:  (choice)     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;inventory&#x60;:  (id) * &#x60;project&#x60;:  (id) * &#x60;playbook&#x60;:  (string) * &#x60;scm_branch&#x60;: Branch to use in job run. Project default used if blank. Only allowed if project allow_override field is set to true. (string) * &#x60;forks&#x60;:  (integer) * &#x60;limit&#x60;:  (string) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;extra_vars&#x60;:  (json) * &#x60;job_tags&#x60;:  (string) * &#x60;force_handlers&#x60;:  (boolean) * &#x60;skip_tags&#x60;:  (string) * &#x60;start_at_task&#x60;:  (string) * &#x60;timeout&#x60;: The amount of time (in seconds) to run before the task is canceled. (integer) * &#x60;use_fact_cache&#x60;: If enabled, Tower will act as an Ansible Fact Cache Plugin; persisting facts at the end of a playbook run to the database and caching facts for use by Ansible. (boolean) * &#x60;organization&#x60;: The organization used to determine access to this template. (id) * &#x60;last_job_run&#x60;:  (datetime) * &#x60;last_job_failed&#x60;:  (boolean) * &#x60;next_job_run&#x60;:  (datetime) * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled     - &#x60;never updated&#x60;: Never Updated * &#x60;host_config_key&#x60;:  (string) * &#x60;ask_scm_branch_on_launch&#x60;:  (boolean) * &#x60;ask_diff_mode_on_launch&#x60;:  (boolean) * &#x60;ask_variables_on_launch&#x60;:  (boolean) * &#x60;ask_limit_on_launch&#x60;:  (boolean) * &#x60;ask_tags_on_launch&#x60;:  (boolean) * &#x60;ask_skip_tags_on_launch&#x60;:  (boolean) * &#x60;ask_job_type_on_launch&#x60;:  (boolean) * &#x60;ask_verbosity_on_launch&#x60;:  (boolean) * &#x60;ask_inventory_on_launch&#x60;:  (boolean) * &#x60;ask_credential_on_launch&#x60;:  (boolean) * &#x60;survey_enabled&#x60;:  (boolean) * &#x60;become_enabled&#x60;:  (boolean) * &#x60;diff_mode&#x60;: If enabled, textual changes made to any templated files on the host are shown in the standard output (boolean) * &#x60;allow_simultaneous&#x60;:  (boolean) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string) * &#x60;job_slice_count&#x60;: The number of jobs to slice into at runtime. Will cause the Job Template to launch a workflow if value is greater than 1. (integer) * &#x60;webhook_service&#x60;: Service that webhook requests will be accepted from (choice)     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;github&#x60;: GitHub     - &#x60;gitlab&#x60;: GitLab * &#x60;webhook_credential&#x60;: Personal Access Token for posting back the status to the service API (id)    ## Sorting  To specify that job templates are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsJobTemplatesListRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsJobTemplatesList(ctx _context.Context, id string) ApiOrganizationsOrganizationsJobTemplatesListRequest {
-	return ApiOrganizationsOrganizationsJobTemplatesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsJobTemplatesListExecute(r ApiOrganizationsOrganizationsJobTemplatesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsJobTemplatesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsJobTemplatesList(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsJobTemplatesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2867,26 +1387,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsJobTemplatesListExec
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsJobTemplatesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/job_templates/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/job_templates/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2905,12 +1421,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsJobTemplatesListExec
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2932,122 +1448,23 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsJobTemplatesListExec
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsListRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsListRequest) Page(page int32) ApiOrganizationsOrganizationsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiOrganizationsOrganizationsListRequest) PageSize(pageSize int32) ApiOrganizationsOrganizationsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiOrganizationsOrganizationsListRequest) Search(search string) ApiOrganizationsOrganizationsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsListExecute(r)
+// OrganizationsOrganizationsListOpts Optional parameters for the method 'OrganizationsOrganizationsList'
+type OrganizationsOrganizationsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsList  List Organizations
- * 
-Make a GET request to this resource to retrieve the list of
-organizations.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of organizations
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more organization records.  
-
-## Results
-
-Each organization data structure includes the following fields:
-
-* `id`: Database ID for this organization. (integer)
-* `type`: Data type for this organization. (choice)
-* `url`: URL for this organization. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this organization was created. (datetime)
-* `modified`: Timestamp when this organization was last modified. (datetime)
-* `name`: Name of this organization. (string)
-* `description`: Optional description of this organization. (string)
-* `max_hosts`: Maximum number of hosts allowed to be managed by this organization. (integer)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string)
-
-
-
-## Sorting
-
-To specify that organizations are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+OrganizationsOrganizationsList  List Organizations
+ Make a GET request to this resource to retrieve the list of organizations.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of organizations found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more organization records.    ## Results  Each organization data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this organization. (integer) * &#x60;type&#x60;: Data type for this organization. (choice) * &#x60;url&#x60;: URL for this organization. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this organization was created. (datetime) * &#x60;modified&#x60;: Timestamp when this organization was last modified. (datetime) * &#x60;name&#x60;: Name of this organization. (string) * &#x60;description&#x60;: Optional description of this organization. (string) * &#x60;max_hosts&#x60;: Maximum number of hosts allowed to be managed by this organization. (integer) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string)    ## Sorting  To specify that organizations are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiOrganizationsOrganizationsListRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsList(ctx _context.Context) ApiOrganizationsOrganizationsListRequest {
-	return ApiOrganizationsOrganizationsListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsListExecute(r ApiOrganizationsOrganizationsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsList(ctx _context.Context, localVarOptionals *OrganizationsOrganizationsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -3056,25 +1473,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsListExecute(r ApiOrg
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -3093,12 +1505,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsListExecute(r ApiOrg
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3120,86 +1532,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsListExecute(r ApiOrg
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsNotificationTemplatesApprovalsCreateRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiOrganizationsOrganizationsNotificationTemplatesApprovalsCreateRequest) Data(data map[string]interface{}) ApiOrganizationsOrganizationsNotificationTemplatesApprovalsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsNotificationTemplatesApprovalsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsNotificationTemplatesApprovalsCreateExecute(r)
+// OrganizationsOrganizationsNotificationTemplatesApprovalsCreateOpts Optional parameters for the method 'OrganizationsOrganizationsNotificationTemplatesApprovalsCreate'
+type OrganizationsOrganizationsNotificationTemplatesApprovalsCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * OrganizationsOrganizationsNotificationTemplatesApprovalsCreate  Create a Notification Template for an Organization
- * 
-Make a POST request to this resource with the following notification template
-fields to create a new notification template associated with this
-organization.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this notification template. (string, required)
-* `description`: Optional description of this notification template. (string, default=`""`)
-* `organization`:  (id, required)
-* `notification_type`:  (choice, required)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json, default=`{}`)
-* `messages`: Optional custom messages for notification template. (json, default=`{&#39;started&#39;: None, &#39;success&#39;: None, &#39;error&#39;: None, &#39;workflow_approval&#39;: None}`)
-
-
-
-
-
-
-
-
-# Add Notification Templates for an Organization:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing notification template with this organization.
-
-# Remove Notification Templates from this Organization:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the notification template from this organization
- without deleting the notification template.
+OrganizationsOrganizationsNotificationTemplatesApprovalsCreate  Create a Notification Template for an Organization
+ Make a POST request to this resource with the following notification template fields to create a new notification template associated with this organization.          * &#x60;name&#x60;: Name of this notification template. (string, required) * &#x60;description&#x60;: Optional description of this notification template. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;:  (id, required) * &#x60;notification_type&#x60;:  (choice, required)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;messages&#x60;: Optional custom messages for notification template. (json, default&#x3D;&#x60;{&amp;#39;started&amp;#39;: None, &amp;#39;success&amp;#39;: None, &amp;#39;error&amp;#39;: None, &amp;#39;workflow_approval&amp;#39;: None}&#x60;)         # Add Notification Templates for an Organization:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing notification template with this organization.  # Remove Notification Templates from this Organization:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the notification template from this organization  without deleting the notification template.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsNotificationTemplatesApprovalsCreateRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesApprovalsCreate(ctx _context.Context, id string) ApiOrganizationsOrganizationsNotificationTemplatesApprovalsCreateRequest {
-	return ApiOrganizationsOrganizationsNotificationTemplatesApprovalsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesApprovalsCreateExecute(r ApiOrganizationsOrganizationsNotificationTemplatesApprovalsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsNotificationTemplatesApprovalsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesApprovalsCreate(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsNotificationTemplatesApprovalsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -3208,13 +1554,9 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsNotificationTemplatesApprovalsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/notification_templates_approvals/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/notification_templates_approvals/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -3238,13 +1580,16 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3266,137 +1611,24 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsNotificationTemplatesApprovalsListRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsNotificationTemplatesApprovalsListRequest) Page(page int32) ApiOrganizationsOrganizationsNotificationTemplatesApprovalsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiOrganizationsOrganizationsNotificationTemplatesApprovalsListRequest) PageSize(pageSize int32) ApiOrganizationsOrganizationsNotificationTemplatesApprovalsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiOrganizationsOrganizationsNotificationTemplatesApprovalsListRequest) Search(search string) ApiOrganizationsOrganizationsNotificationTemplatesApprovalsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsNotificationTemplatesApprovalsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsNotificationTemplatesApprovalsListExecute(r)
+// OrganizationsOrganizationsNotificationTemplatesApprovalsListOpts Optional parameters for the method 'OrganizationsOrganizationsNotificationTemplatesApprovalsList'
+type OrganizationsOrganizationsNotificationTemplatesApprovalsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsNotificationTemplatesApprovalsList  List Notification Templates for an Organization
- * 
-Make a GET request to this resource to retrieve a list of
-notification templates associated with the selected
-organization.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of notification templates
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more notification template records.  
-
-## Results
-
-Each notification template data structure includes the following fields:
-
-* `id`: Database ID for this notification template. (integer)
-* `type`: Data type for this notification template. (choice)
-* `url`: URL for this notification template. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this notification template was created. (datetime)
-* `modified`: Timestamp when this notification template was last modified. (datetime)
-* `name`: Name of this notification template. (string)
-* `description`: Optional description of this notification template. (string)
-* `organization`:  (id)
-* `notification_type`:  (choice)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json)
-* `messages`: Optional custom messages for notification template. (json)
-
-
-
-## Sorting
-
-To specify that notification templates are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+OrganizationsOrganizationsNotificationTemplatesApprovalsList  List Notification Templates for an Organization
+ Make a GET request to this resource to retrieve a list of notification templates associated with the selected organization.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of notification templates found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more notification template records.    ## Results  Each notification template data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this notification template. (integer) * &#x60;type&#x60;: Data type for this notification template. (choice) * &#x60;url&#x60;: URL for this notification template. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this notification template was created. (datetime) * &#x60;modified&#x60;: Timestamp when this notification template was last modified. (datetime) * &#x60;name&#x60;: Name of this notification template. (string) * &#x60;description&#x60;: Optional description of this notification template. (string) * &#x60;organization&#x60;:  (id) * &#x60;notification_type&#x60;:  (choice)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json) * &#x60;messages&#x60;: Optional custom messages for notification template. (json)    ## Sorting  To specify that notification templates are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsNotificationTemplatesApprovalsListRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesApprovalsList(ctx _context.Context, id string) ApiOrganizationsOrganizationsNotificationTemplatesApprovalsListRequest {
-	return ApiOrganizationsOrganizationsNotificationTemplatesApprovalsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesApprovalsListExecute(r ApiOrganizationsOrganizationsNotificationTemplatesApprovalsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsNotificationTemplatesApprovalsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesApprovalsList(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsNotificationTemplatesApprovalsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -3405,26 +1637,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsNotificationTemplatesApprovalsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/notification_templates_approvals/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/notification_templates_approvals/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -3443,12 +1671,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3470,85 +1698,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsNotificationTemplatesCreateRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	data *InlineObject47
-}
-
-func (r ApiOrganizationsOrganizationsNotificationTemplatesCreateRequest) Data(data InlineObject47) ApiOrganizationsOrganizationsNotificationTemplatesCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsNotificationTemplatesCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsNotificationTemplatesCreateExecute(r)
+// OrganizationsOrganizationsNotificationTemplatesCreateOpts Optional parameters for the method 'OrganizationsOrganizationsNotificationTemplatesCreate'
+type OrganizationsOrganizationsNotificationTemplatesCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * OrganizationsOrganizationsNotificationTemplatesCreate  Create a Notification Template for an Organization
- * 
-Make a POST request to this resource with the following notification template
-fields to create a new notification template associated with this
-organization.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this notification template. (string, required)
-* `description`: Optional description of this notification template. (string, default=`""`)
-
-* `notification_type`:  (choice, required)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json, default=`{}`)
-* `messages`: Optional custom messages for notification template. (json, default=`{&#39;started&#39;: None, &#39;success&#39;: None, &#39;error&#39;: None, &#39;workflow_approval&#39;: None}`)
-
-
-
-
-
-
-
-
-# Remove Organization Notification Templates:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-delete the associated notification template.
-
-    {
-        "id": 123,
-        "disassociate": true
-    }
+OrganizationsOrganizationsNotificationTemplatesCreate  Create a Notification Template for an Organization
+ Make a POST request to this resource with the following notification template fields to create a new notification template associated with this organization.          * &#x60;name&#x60;: Name of this notification template. (string, required) * &#x60;description&#x60;: Optional description of this notification template. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)  * &#x60;notification_type&#x60;:  (choice, required)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;messages&#x60;: Optional custom messages for notification template. (json, default&#x3D;&#x60;{&amp;#39;started&amp;#39;: None, &amp;#39;success&amp;#39;: None, &amp;#39;error&amp;#39;: None, &amp;#39;workflow_approval&amp;#39;: None}&#x60;)         # Remove Organization Notification Templates:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to delete the associated notification template.      {         \&quot;id\&quot;: 123,         \&quot;disassociate\&quot;: true     }
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsNotificationTemplatesCreateRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesCreate(ctx _context.Context, id string) ApiOrganizationsOrganizationsNotificationTemplatesCreateRequest {
-	return ApiOrganizationsOrganizationsNotificationTemplatesCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesCreateExecute(r ApiOrganizationsOrganizationsNotificationTemplatesCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsNotificationTemplatesCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject47) - 
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesCreate(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsNotificationTemplatesCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -3557,13 +1720,9 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsNotificationTemplatesCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/notification_templates/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/notification_templates/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -3587,13 +1746,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject47)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject47")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3615,86 +1781,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsNotificationTemplatesErrorCreateRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	data *InlineObject48
-}
-
-func (r ApiOrganizationsOrganizationsNotificationTemplatesErrorCreateRequest) Data(data InlineObject48) ApiOrganizationsOrganizationsNotificationTemplatesErrorCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsNotificationTemplatesErrorCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsNotificationTemplatesErrorCreateExecute(r)
+// OrganizationsOrganizationsNotificationTemplatesErrorCreateOpts Optional parameters for the method 'OrganizationsOrganizationsNotificationTemplatesErrorCreate'
+type OrganizationsOrganizationsNotificationTemplatesErrorCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * OrganizationsOrganizationsNotificationTemplatesErrorCreate  Create a Notification Template for an Organization
- * 
-Make a POST request to this resource with the following notification template
-fields to create a new notification template associated with this
-organization.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this notification template. (string, required)
-* `description`: Optional description of this notification template. (string, default=`""`)
-* `organization`:  (id, required)
-* `notification_type`:  (choice, required)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json, default=`{}`)
-* `messages`: Optional custom messages for notification template. (json, default=`{&#39;started&#39;: None, &#39;success&#39;: None, &#39;error&#39;: None, &#39;workflow_approval&#39;: None}`)
-
-
-
-
-
-
-
-
-# Add Notification Templates for an Organization:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing notification template with this organization.
-
-# Remove Notification Templates from this Organization:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the notification template from this organization
- without deleting the notification template.
+OrganizationsOrganizationsNotificationTemplatesErrorCreate  Create a Notification Template for an Organization
+ Make a POST request to this resource with the following notification template fields to create a new notification template associated with this organization.          * &#x60;name&#x60;: Name of this notification template. (string, required) * &#x60;description&#x60;: Optional description of this notification template. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;:  (id, required) * &#x60;notification_type&#x60;:  (choice, required)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;messages&#x60;: Optional custom messages for notification template. (json, default&#x3D;&#x60;{&amp;#39;started&amp;#39;: None, &amp;#39;success&amp;#39;: None, &amp;#39;error&amp;#39;: None, &amp;#39;workflow_approval&amp;#39;: None}&#x60;)         # Add Notification Templates for an Organization:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing notification template with this organization.  # Remove Notification Templates from this Organization:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the notification template from this organization  without deleting the notification template.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsNotificationTemplatesErrorCreateRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesErrorCreate(ctx _context.Context, id string) ApiOrganizationsOrganizationsNotificationTemplatesErrorCreateRequest {
-	return ApiOrganizationsOrganizationsNotificationTemplatesErrorCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesErrorCreateExecute(r ApiOrganizationsOrganizationsNotificationTemplatesErrorCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsNotificationTemplatesErrorCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject48) - 
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesErrorCreate(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsNotificationTemplatesErrorCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -3703,13 +1803,9 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsNotificationTemplatesErrorCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/notification_templates_error/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/notification_templates_error/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -3733,13 +1829,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject48)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject48")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3761,137 +1864,24 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsNotificationTemplatesErrorListRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsNotificationTemplatesErrorListRequest) Page(page int32) ApiOrganizationsOrganizationsNotificationTemplatesErrorListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiOrganizationsOrganizationsNotificationTemplatesErrorListRequest) PageSize(pageSize int32) ApiOrganizationsOrganizationsNotificationTemplatesErrorListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiOrganizationsOrganizationsNotificationTemplatesErrorListRequest) Search(search string) ApiOrganizationsOrganizationsNotificationTemplatesErrorListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsNotificationTemplatesErrorListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsNotificationTemplatesErrorListExecute(r)
+// OrganizationsOrganizationsNotificationTemplatesErrorListOpts Optional parameters for the method 'OrganizationsOrganizationsNotificationTemplatesErrorList'
+type OrganizationsOrganizationsNotificationTemplatesErrorListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsNotificationTemplatesErrorList  List Notification Templates for an Organization
- * 
-Make a GET request to this resource to retrieve a list of
-notification templates associated with the selected
-organization.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of notification templates
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more notification template records.  
-
-## Results
-
-Each notification template data structure includes the following fields:
-
-* `id`: Database ID for this notification template. (integer)
-* `type`: Data type for this notification template. (choice)
-* `url`: URL for this notification template. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this notification template was created. (datetime)
-* `modified`: Timestamp when this notification template was last modified. (datetime)
-* `name`: Name of this notification template. (string)
-* `description`: Optional description of this notification template. (string)
-* `organization`:  (id)
-* `notification_type`:  (choice)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json)
-* `messages`: Optional custom messages for notification template. (json)
-
-
-
-## Sorting
-
-To specify that notification templates are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+OrganizationsOrganizationsNotificationTemplatesErrorList  List Notification Templates for an Organization
+ Make a GET request to this resource to retrieve a list of notification templates associated with the selected organization.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of notification templates found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more notification template records.    ## Results  Each notification template data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this notification template. (integer) * &#x60;type&#x60;: Data type for this notification template. (choice) * &#x60;url&#x60;: URL for this notification template. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this notification template was created. (datetime) * &#x60;modified&#x60;: Timestamp when this notification template was last modified. (datetime) * &#x60;name&#x60;: Name of this notification template. (string) * &#x60;description&#x60;: Optional description of this notification template. (string) * &#x60;organization&#x60;:  (id) * &#x60;notification_type&#x60;:  (choice)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json) * &#x60;messages&#x60;: Optional custom messages for notification template. (json)    ## Sorting  To specify that notification templates are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsNotificationTemplatesErrorListRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesErrorList(ctx _context.Context, id string) ApiOrganizationsOrganizationsNotificationTemplatesErrorListRequest {
-	return ApiOrganizationsOrganizationsNotificationTemplatesErrorListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesErrorListExecute(r ApiOrganizationsOrganizationsNotificationTemplatesErrorListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsNotificationTemplatesErrorListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesErrorList(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsNotificationTemplatesErrorListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -3900,26 +1890,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsNotificationTemplatesErrorList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/notification_templates_error/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/notification_templates_error/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -3938,12 +1924,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3965,137 +1951,24 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsNotificationTemplatesListRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsNotificationTemplatesListRequest) Page(page int32) ApiOrganizationsOrganizationsNotificationTemplatesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiOrganizationsOrganizationsNotificationTemplatesListRequest) PageSize(pageSize int32) ApiOrganizationsOrganizationsNotificationTemplatesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiOrganizationsOrganizationsNotificationTemplatesListRequest) Search(search string) ApiOrganizationsOrganizationsNotificationTemplatesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsNotificationTemplatesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsNotificationTemplatesListExecute(r)
+// OrganizationsOrganizationsNotificationTemplatesListOpts Optional parameters for the method 'OrganizationsOrganizationsNotificationTemplatesList'
+type OrganizationsOrganizationsNotificationTemplatesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsNotificationTemplatesList  List Notification Templates for an Organization
- * 
-Make a GET request to this resource to retrieve a list of
-notification templates associated with the selected
-organization.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of notification templates
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more notification template records.  
-
-## Results
-
-Each notification template data structure includes the following fields:
-
-* `id`: Database ID for this notification template. (integer)
-* `type`: Data type for this notification template. (choice)
-* `url`: URL for this notification template. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this notification template was created. (datetime)
-* `modified`: Timestamp when this notification template was last modified. (datetime)
-* `name`: Name of this notification template. (string)
-* `description`: Optional description of this notification template. (string)
-* `organization`:  (id)
-* `notification_type`:  (choice)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json)
-* `messages`: Optional custom messages for notification template. (json)
-
-
-
-## Sorting
-
-To specify that notification templates are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+OrganizationsOrganizationsNotificationTemplatesList  List Notification Templates for an Organization
+ Make a GET request to this resource to retrieve a list of notification templates associated with the selected organization.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of notification templates found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more notification template records.    ## Results  Each notification template data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this notification template. (integer) * &#x60;type&#x60;: Data type for this notification template. (choice) * &#x60;url&#x60;: URL for this notification template. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this notification template was created. (datetime) * &#x60;modified&#x60;: Timestamp when this notification template was last modified. (datetime) * &#x60;name&#x60;: Name of this notification template. (string) * &#x60;description&#x60;: Optional description of this notification template. (string) * &#x60;organization&#x60;:  (id) * &#x60;notification_type&#x60;:  (choice)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json) * &#x60;messages&#x60;: Optional custom messages for notification template. (json)    ## Sorting  To specify that notification templates are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsNotificationTemplatesListRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesList(ctx _context.Context, id string) ApiOrganizationsOrganizationsNotificationTemplatesListRequest {
-	return ApiOrganizationsOrganizationsNotificationTemplatesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesListExecute(r ApiOrganizationsOrganizationsNotificationTemplatesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsNotificationTemplatesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesList(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsNotificationTemplatesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -4104,26 +1977,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsNotificationTemplatesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/notification_templates/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/notification_templates/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -4142,12 +2011,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -4169,86 +2038,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsNotificationTemplatesStartedCreateRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiOrganizationsOrganizationsNotificationTemplatesStartedCreateRequest) Data(data map[string]interface{}) ApiOrganizationsOrganizationsNotificationTemplatesStartedCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsNotificationTemplatesStartedCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsNotificationTemplatesStartedCreateExecute(r)
+// OrganizationsOrganizationsNotificationTemplatesStartedCreateOpts Optional parameters for the method 'OrganizationsOrganizationsNotificationTemplatesStartedCreate'
+type OrganizationsOrganizationsNotificationTemplatesStartedCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * OrganizationsOrganizationsNotificationTemplatesStartedCreate  Create a Notification Template for an Organization
- * 
-Make a POST request to this resource with the following notification template
-fields to create a new notification template associated with this
-organization.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this notification template. (string, required)
-* `description`: Optional description of this notification template. (string, default=`""`)
-* `organization`:  (id, required)
-* `notification_type`:  (choice, required)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json, default=`{}`)
-* `messages`: Optional custom messages for notification template. (json, default=`{&#39;started&#39;: None, &#39;success&#39;: None, &#39;error&#39;: None, &#39;workflow_approval&#39;: None}`)
-
-
-
-
-
-
-
-
-# Add Notification Templates for an Organization:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing notification template with this organization.
-
-# Remove Notification Templates from this Organization:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the notification template from this organization
- without deleting the notification template.
+OrganizationsOrganizationsNotificationTemplatesStartedCreate  Create a Notification Template for an Organization
+ Make a POST request to this resource with the following notification template fields to create a new notification template associated with this organization.          * &#x60;name&#x60;: Name of this notification template. (string, required) * &#x60;description&#x60;: Optional description of this notification template. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;:  (id, required) * &#x60;notification_type&#x60;:  (choice, required)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;messages&#x60;: Optional custom messages for notification template. (json, default&#x3D;&#x60;{&amp;#39;started&amp;#39;: None, &amp;#39;success&amp;#39;: None, &amp;#39;error&amp;#39;: None, &amp;#39;workflow_approval&amp;#39;: None}&#x60;)         # Add Notification Templates for an Organization:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing notification template with this organization.  # Remove Notification Templates from this Organization:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the notification template from this organization  without deleting the notification template.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsNotificationTemplatesStartedCreateRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesStartedCreate(ctx _context.Context, id string) ApiOrganizationsOrganizationsNotificationTemplatesStartedCreateRequest {
-	return ApiOrganizationsOrganizationsNotificationTemplatesStartedCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesStartedCreateExecute(r ApiOrganizationsOrganizationsNotificationTemplatesStartedCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsNotificationTemplatesStartedCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesStartedCreate(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsNotificationTemplatesStartedCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -4257,13 +2060,9 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsNotificationTemplatesStartedCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/notification_templates_started/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/notification_templates_started/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -4287,13 +2086,16 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -4315,137 +2117,24 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsNotificationTemplatesStartedListRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsNotificationTemplatesStartedListRequest) Page(page int32) ApiOrganizationsOrganizationsNotificationTemplatesStartedListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiOrganizationsOrganizationsNotificationTemplatesStartedListRequest) PageSize(pageSize int32) ApiOrganizationsOrganizationsNotificationTemplatesStartedListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiOrganizationsOrganizationsNotificationTemplatesStartedListRequest) Search(search string) ApiOrganizationsOrganizationsNotificationTemplatesStartedListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsNotificationTemplatesStartedListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsNotificationTemplatesStartedListExecute(r)
+// OrganizationsOrganizationsNotificationTemplatesStartedListOpts Optional parameters for the method 'OrganizationsOrganizationsNotificationTemplatesStartedList'
+type OrganizationsOrganizationsNotificationTemplatesStartedListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsNotificationTemplatesStartedList  List Notification Templates for an Organization
- * 
-Make a GET request to this resource to retrieve a list of
-notification templates associated with the selected
-organization.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of notification templates
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more notification template records.  
-
-## Results
-
-Each notification template data structure includes the following fields:
-
-* `id`: Database ID for this notification template. (integer)
-* `type`: Data type for this notification template. (choice)
-* `url`: URL for this notification template. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this notification template was created. (datetime)
-* `modified`: Timestamp when this notification template was last modified. (datetime)
-* `name`: Name of this notification template. (string)
-* `description`: Optional description of this notification template. (string)
-* `organization`:  (id)
-* `notification_type`:  (choice)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json)
-* `messages`: Optional custom messages for notification template. (json)
-
-
-
-## Sorting
-
-To specify that notification templates are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+OrganizationsOrganizationsNotificationTemplatesStartedList  List Notification Templates for an Organization
+ Make a GET request to this resource to retrieve a list of notification templates associated with the selected organization.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of notification templates found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more notification template records.    ## Results  Each notification template data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this notification template. (integer) * &#x60;type&#x60;: Data type for this notification template. (choice) * &#x60;url&#x60;: URL for this notification template. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this notification template was created. (datetime) * &#x60;modified&#x60;: Timestamp when this notification template was last modified. (datetime) * &#x60;name&#x60;: Name of this notification template. (string) * &#x60;description&#x60;: Optional description of this notification template. (string) * &#x60;organization&#x60;:  (id) * &#x60;notification_type&#x60;:  (choice)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json) * &#x60;messages&#x60;: Optional custom messages for notification template. (json)    ## Sorting  To specify that notification templates are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsNotificationTemplatesStartedListRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesStartedList(ctx _context.Context, id string) ApiOrganizationsOrganizationsNotificationTemplatesStartedListRequest {
-	return ApiOrganizationsOrganizationsNotificationTemplatesStartedListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesStartedListExecute(r ApiOrganizationsOrganizationsNotificationTemplatesStartedListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsNotificationTemplatesStartedListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesStartedList(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsNotificationTemplatesStartedListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -4454,26 +2143,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsNotificationTemplatesStartedList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/notification_templates_started/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/notification_templates_started/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -4492,12 +2177,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -4519,86 +2204,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsNotificationTemplatesSuccessCreateRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	data *InlineObject49
-}
-
-func (r ApiOrganizationsOrganizationsNotificationTemplatesSuccessCreateRequest) Data(data InlineObject49) ApiOrganizationsOrganizationsNotificationTemplatesSuccessCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsNotificationTemplatesSuccessCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsNotificationTemplatesSuccessCreateExecute(r)
+// OrganizationsOrganizationsNotificationTemplatesSuccessCreateOpts Optional parameters for the method 'OrganizationsOrganizationsNotificationTemplatesSuccessCreate'
+type OrganizationsOrganizationsNotificationTemplatesSuccessCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * OrganizationsOrganizationsNotificationTemplatesSuccessCreate  Create a Notification Template for an Organization
- * 
-Make a POST request to this resource with the following notification template
-fields to create a new notification template associated with this
-organization.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this notification template. (string, required)
-* `description`: Optional description of this notification template. (string, default=`""`)
-* `organization`:  (id, required)
-* `notification_type`:  (choice, required)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json, default=`{}`)
-* `messages`: Optional custom messages for notification template. (json, default=`{&#39;started&#39;: None, &#39;success&#39;: None, &#39;error&#39;: None, &#39;workflow_approval&#39;: None}`)
-
-
-
-
-
-
-
-
-# Add Notification Templates for an Organization:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing notification template with this organization.
-
-# Remove Notification Templates from this Organization:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the notification template from this organization
- without deleting the notification template.
+OrganizationsOrganizationsNotificationTemplatesSuccessCreate  Create a Notification Template for an Organization
+ Make a POST request to this resource with the following notification template fields to create a new notification template associated with this organization.          * &#x60;name&#x60;: Name of this notification template. (string, required) * &#x60;description&#x60;: Optional description of this notification template. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;:  (id, required) * &#x60;notification_type&#x60;:  (choice, required)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;messages&#x60;: Optional custom messages for notification template. (json, default&#x3D;&#x60;{&amp;#39;started&amp;#39;: None, &amp;#39;success&amp;#39;: None, &amp;#39;error&amp;#39;: None, &amp;#39;workflow_approval&amp;#39;: None}&#x60;)         # Add Notification Templates for an Organization:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing notification template with this organization.  # Remove Notification Templates from this Organization:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the notification template from this organization  without deleting the notification template.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsNotificationTemplatesSuccessCreateRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesSuccessCreate(ctx _context.Context, id string) ApiOrganizationsOrganizationsNotificationTemplatesSuccessCreateRequest {
-	return ApiOrganizationsOrganizationsNotificationTemplatesSuccessCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesSuccessCreateExecute(r ApiOrganizationsOrganizationsNotificationTemplatesSuccessCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsNotificationTemplatesSuccessCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject49) - 
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesSuccessCreate(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsNotificationTemplatesSuccessCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -4607,13 +2226,9 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsNotificationTemplatesSuccessCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/notification_templates_success/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/notification_templates_success/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -4637,13 +2252,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject49)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject49")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -4665,137 +2287,24 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsNotificationTemplatesSuccessListRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsNotificationTemplatesSuccessListRequest) Page(page int32) ApiOrganizationsOrganizationsNotificationTemplatesSuccessListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiOrganizationsOrganizationsNotificationTemplatesSuccessListRequest) PageSize(pageSize int32) ApiOrganizationsOrganizationsNotificationTemplatesSuccessListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiOrganizationsOrganizationsNotificationTemplatesSuccessListRequest) Search(search string) ApiOrganizationsOrganizationsNotificationTemplatesSuccessListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsNotificationTemplatesSuccessListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsNotificationTemplatesSuccessListExecute(r)
+// OrganizationsOrganizationsNotificationTemplatesSuccessListOpts Optional parameters for the method 'OrganizationsOrganizationsNotificationTemplatesSuccessList'
+type OrganizationsOrganizationsNotificationTemplatesSuccessListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsNotificationTemplatesSuccessList  List Notification Templates for an Organization
- * 
-Make a GET request to this resource to retrieve a list of
-notification templates associated with the selected
-organization.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of notification templates
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more notification template records.  
-
-## Results
-
-Each notification template data structure includes the following fields:
-
-* `id`: Database ID for this notification template. (integer)
-* `type`: Data type for this notification template. (choice)
-* `url`: URL for this notification template. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this notification template was created. (datetime)
-* `modified`: Timestamp when this notification template was last modified. (datetime)
-* `name`: Name of this notification template. (string)
-* `description`: Optional description of this notification template. (string)
-* `organization`:  (id)
-* `notification_type`:  (choice)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `notification_configuration`:  (json)
-* `messages`: Optional custom messages for notification template. (json)
-
-
-
-## Sorting
-
-To specify that notification templates are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+OrganizationsOrganizationsNotificationTemplatesSuccessList  List Notification Templates for an Organization
+ Make a GET request to this resource to retrieve a list of notification templates associated with the selected organization.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of notification templates found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more notification template records.    ## Results  Each notification template data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this notification template. (integer) * &#x60;type&#x60;: Data type for this notification template. (choice) * &#x60;url&#x60;: URL for this notification template. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this notification template was created. (datetime) * &#x60;modified&#x60;: Timestamp when this notification template was last modified. (datetime) * &#x60;name&#x60;: Name of this notification template. (string) * &#x60;description&#x60;: Optional description of this notification template. (string) * &#x60;organization&#x60;:  (id) * &#x60;notification_type&#x60;:  (choice)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;notification_configuration&#x60;:  (json) * &#x60;messages&#x60;: Optional custom messages for notification template. (json)    ## Sorting  To specify that notification templates are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsNotificationTemplatesSuccessListRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesSuccessList(ctx _context.Context, id string) ApiOrganizationsOrganizationsNotificationTemplatesSuccessListRequest {
-	return ApiOrganizationsOrganizationsNotificationTemplatesSuccessListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesSuccessListExecute(r ApiOrganizationsOrganizationsNotificationTemplatesSuccessListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsNotificationTemplatesSuccessListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplatesSuccessList(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsNotificationTemplatesSuccessListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -4804,26 +2313,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsNotificationTemplatesSuccessList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/notification_templates_success/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/notification_templates_success/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -4842,12 +2347,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -4869,122 +2374,24 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsNotificationTemplate
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsObjectRolesListRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsObjectRolesListRequest) Page(page int32) ApiOrganizationsOrganizationsObjectRolesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiOrganizationsOrganizationsObjectRolesListRequest) PageSize(pageSize int32) ApiOrganizationsOrganizationsObjectRolesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiOrganizationsOrganizationsObjectRolesListRequest) Search(search string) ApiOrganizationsOrganizationsObjectRolesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsObjectRolesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsObjectRolesListExecute(r)
+// OrganizationsOrganizationsObjectRolesListOpts Optional parameters for the method 'OrganizationsOrganizationsObjectRolesList'
+type OrganizationsOrganizationsObjectRolesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsObjectRolesList  List Roles for an Organization
- * 
-Make a GET request to this resource to retrieve a list of
-roles associated with the selected
-organization.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of roles
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more role records.  
-
-## Results
-
-Each role data structure includes the following fields:
-
-* `id`: Database ID for this role. (integer)
-* `type`: Data type for this role. (choice)
-* `url`: URL for this role. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `name`: Name of this role. (field)
-* `description`: Optional description of this role. (field)
-
-
-
-## Sorting
-
-To specify that roles are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+OrganizationsOrganizationsObjectRolesList  List Roles for an Organization
+ Make a GET request to this resource to retrieve a list of roles associated with the selected organization.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of roles found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more role records.    ## Results  Each role data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this role. (integer) * &#x60;type&#x60;: Data type for this role. (choice) * &#x60;url&#x60;: URL for this role. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;name&#x60;: Name of this role. (field) * &#x60;description&#x60;: Optional description of this role. (field)    ## Sorting  To specify that roles are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsObjectRolesListRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsObjectRolesList(ctx _context.Context, id string) ApiOrganizationsOrganizationsObjectRolesListRequest {
-	return ApiOrganizationsOrganizationsObjectRolesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsObjectRolesListExecute(r ApiOrganizationsOrganizationsObjectRolesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsObjectRolesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsObjectRolesList(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsObjectRolesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -4993,26 +2400,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsObjectRolesListExecu
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsObjectRolesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/object_roles/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/object_roles/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -5031,12 +2434,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsObjectRolesListExecu
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -5058,70 +2461,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsObjectRolesListExecu
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsPartialUpdateRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	search *string
-	data *map[string]interface{}
-}
-
-func (r ApiOrganizationsOrganizationsPartialUpdateRequest) Search(search string) ApiOrganizationsOrganizationsPartialUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiOrganizationsOrganizationsPartialUpdateRequest) Data(data map[string]interface{}) ApiOrganizationsOrganizationsPartialUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsPartialUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsPartialUpdateExecute(r)
+// OrganizationsOrganizationsPartialUpdateOpts Optional parameters for the method 'OrganizationsOrganizationsPartialUpdate'
+type OrganizationsOrganizationsPartialUpdateOpts struct {
+    Search optional.String
+    Data optional.Map[string]interface{}
 }
 
 /*
- * OrganizationsOrganizationsPartialUpdate  Update an Organization
- * 
-Make a PUT or PATCH request to this resource to update this
-organization.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this organization. (string, required)
-* `description`: Optional description of this organization. (string, default=`""`)
-* `max_hosts`: Maximum number of hosts allowed to be managed by this organization. (integer, default=`0`)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string, default=`""`)
-
-
-
-
-
-
-
-
-For a PATCH request, include only the fields that are being modified.
+OrganizationsOrganizationsPartialUpdate  Update an Organization
+ Make a PUT or PATCH request to this resource to update this organization.  The following fields may be modified:          * &#x60;name&#x60;: Name of this organization. (string, required) * &#x60;description&#x60;: Optional description of this organization. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;max_hosts&#x60;: Maximum number of hosts allowed to be managed by this organization. (integer, default&#x3D;&#x60;0&#x60;) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)         For a PATCH request, include only the fields that are being modified.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsPartialUpdateRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsPartialUpdate(ctx _context.Context, id string) ApiOrganizationsOrganizationsPartialUpdateRequest {
-	return ApiOrganizationsOrganizationsPartialUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsPartialUpdateExecute(r ApiOrganizationsOrganizationsPartialUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsPartialUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsPartialUpdate(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsPartialUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPatch
 		localVarPostBody     interface{}
@@ -5130,20 +2485,16 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsPartialUpdateExecute
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsPartialUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -5163,13 +2514,16 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsPartialUpdateExecute
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -5191,80 +2545,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsPartialUpdateExecute
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsProjectsCreateRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	data *InlineObject50
-}
-
-func (r ApiOrganizationsOrganizationsProjectsCreateRequest) Data(data InlineObject50) ApiOrganizationsOrganizationsProjectsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsProjectsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsProjectsCreateExecute(r)
+// OrganizationsOrganizationsProjectsCreateOpts Optional parameters for the method 'OrganizationsOrganizationsProjectsCreate'
+type OrganizationsOrganizationsProjectsCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * OrganizationsOrganizationsProjectsCreate  Create a Project for an Organization
- * 
-Make a POST request to this resource with the following project
-fields to create a new project associated with this
-organization.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this project. (string, required)
-* `description`: Optional description of this project. (string, default=`""`)
-* `local_path`: Local path (relative to PROJECTS_ROOT) containing playbooks and related files for this project. (string, default=`""`)
-* `scm_type`: Specifies the source control system used to store the project. (choice)
-    - `""`: Manual (default)
-    - `git`: Git
-    - `hg`: Mercurial
-    - `svn`: Subversion
-    - `insights`: Red Hat Insights
-    - `archive`: Remote Archive
-* `scm_url`: The location where the project is stored. (string, default=`""`)
-* `scm_branch`: Specific branch, tag or commit to checkout. (string, default=`""`)
-* `scm_refspec`: For git projects, an additional refspec to fetch. (string, default=`""`)
-* `scm_clean`: Discard any local changes before syncing the project. (boolean, default=`False`)
-* `scm_delete_on_update`: Delete the project before syncing. (boolean, default=`False`)
-* `credential`:  (id, default=``)
-* `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer, default=`0`)
-
-
-
-
-
-
-* `scm_update_on_launch`: Update the project when a job is launched that uses the project. (boolean, default=`False`)
-* `scm_update_cache_timeout`: The number of seconds after the last project update ran that a new project update will be launched as a job dependency. (integer, default=`0`)
-* `allow_override`: Allow changing the SCM branch or revision in a job template that uses this project. (boolean, default=`False`)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string, default=`""`)
+OrganizationsOrganizationsProjectsCreate  Create a Project for an Organization
+ Make a POST request to this resource with the following project fields to create a new project associated with this organization.          * &#x60;name&#x60;: Name of this project. (string, required) * &#x60;description&#x60;: Optional description of this project. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;local_path&#x60;: Local path (relative to PROJECTS_ROOT) containing playbooks and related files for this project. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;scm_type&#x60;: Specifies the source control system used to store the project. (choice)     - &#x60;\&quot;\&quot;&#x60;: Manual (default)     - &#x60;git&#x60;: Git     - &#x60;hg&#x60;: Mercurial     - &#x60;svn&#x60;: Subversion     - &#x60;insights&#x60;: Red Hat Insights     - &#x60;archive&#x60;: Remote Archive * &#x60;scm_url&#x60;: The location where the project is stored. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;scm_branch&#x60;: Specific branch, tag or commit to checkout. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;scm_refspec&#x60;: For git projects, an additional refspec to fetch. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;scm_clean&#x60;: Discard any local changes before syncing the project. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;scm_delete_on_update&#x60;: Delete the project before syncing. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;credential&#x60;:  (id, default&#x3D;&#x60;&#x60;) * &#x60;timeout&#x60;: The amount of time (in seconds) to run before the task is canceled. (integer, default&#x3D;&#x60;0&#x60;)       * &#x60;scm_update_on_launch&#x60;: Update the project when a job is launched that uses the project. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;scm_update_cache_timeout&#x60;: The number of seconds after the last project update ran that a new project update will be launched as a job dependency. (integer, default&#x3D;&#x60;0&#x60;) * &#x60;allow_override&#x60;: Allow changing the SCM branch or revision in a job template that uses this project. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsProjectsCreateRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsProjectsCreate(ctx _context.Context, id string) ApiOrganizationsOrganizationsProjectsCreateRequest {
-	return ApiOrganizationsOrganizationsProjectsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsProjectsCreateExecute(r ApiOrganizationsOrganizationsProjectsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsProjectsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject50) - 
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsProjectsCreate(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsProjectsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -5273,13 +2567,9 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsProjectsCreateExecut
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsProjectsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/projects/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/projects/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -5303,13 +2593,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsProjectsCreateExecut
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject50)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject50")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -5331,162 +2628,24 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsProjectsCreateExecut
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsProjectsListRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsProjectsListRequest) Page(page int32) ApiOrganizationsOrganizationsProjectsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiOrganizationsOrganizationsProjectsListRequest) PageSize(pageSize int32) ApiOrganizationsOrganizationsProjectsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiOrganizationsOrganizationsProjectsListRequest) Search(search string) ApiOrganizationsOrganizationsProjectsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsProjectsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsProjectsListExecute(r)
+// OrganizationsOrganizationsProjectsListOpts Optional parameters for the method 'OrganizationsOrganizationsProjectsList'
+type OrganizationsOrganizationsProjectsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsProjectsList  List Projects for an Organization
- * 
-Make a GET request to this resource to retrieve a list of
-projects associated with the selected
-organization.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of projects
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more project records.  
-
-## Results
-
-Each project data structure includes the following fields:
-
-* `id`: Database ID for this project. (integer)
-* `type`: Data type for this project. (choice)
-* `url`: URL for this project. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this project was created. (datetime)
-* `modified`: Timestamp when this project was last modified. (datetime)
-* `name`: Name of this project. (string)
-* `description`: Optional description of this project. (string)
-* `local_path`: Local path (relative to PROJECTS_ROOT) containing playbooks and related files for this project. (string)
-* `scm_type`: Specifies the source control system used to store the project. (choice)
-    - `""`: Manual
-    - `git`: Git
-    - `hg`: Mercurial
-    - `svn`: Subversion
-    - `insights`: Red Hat Insights
-    - `archive`: Remote Archive
-* `scm_url`: The location where the project is stored. (string)
-* `scm_branch`: Specific branch, tag or commit to checkout. (string)
-* `scm_refspec`: For git projects, an additional refspec to fetch. (string)
-* `scm_clean`: Discard any local changes before syncing the project. (boolean)
-* `scm_delete_on_update`: Delete the project before syncing. (boolean)
-* `credential`:  (id)
-* `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer)
-* `scm_revision`: The last revision fetched by a project update (string)
-* `last_job_run`:  (datetime)
-* `last_job_failed`:  (boolean)
-* `next_job_run`:  (datetime)
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-    - `never updated`: Never Updated
-    - `ok`: OK
-    - `missing`: Missing
-* `organization`: The organization used to determine access to this template. (id)
-* `scm_update_on_launch`: Update the project when a job is launched that uses the project. (boolean)
-* `scm_update_cache_timeout`: The number of seconds after the last project update ran that a new project update will be launched as a job dependency. (integer)
-* `allow_override`: Allow changing the SCM branch or revision in a job template that uses this project. (boolean)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string)
-* `last_update_failed`:  (boolean)
-* `last_updated`:  (datetime)
-
-
-
-## Sorting
-
-To specify that projects are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+OrganizationsOrganizationsProjectsList  List Projects for an Organization
+ Make a GET request to this resource to retrieve a list of projects associated with the selected organization.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of projects found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more project records.    ## Results  Each project data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this project. (integer) * &#x60;type&#x60;: Data type for this project. (choice) * &#x60;url&#x60;: URL for this project. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this project was created. (datetime) * &#x60;modified&#x60;: Timestamp when this project was last modified. (datetime) * &#x60;name&#x60;: Name of this project. (string) * &#x60;description&#x60;: Optional description of this project. (string) * &#x60;local_path&#x60;: Local path (relative to PROJECTS_ROOT) containing playbooks and related files for this project. (string) * &#x60;scm_type&#x60;: Specifies the source control system used to store the project. (choice)     - &#x60;\&quot;\&quot;&#x60;: Manual     - &#x60;git&#x60;: Git     - &#x60;hg&#x60;: Mercurial     - &#x60;svn&#x60;: Subversion     - &#x60;insights&#x60;: Red Hat Insights     - &#x60;archive&#x60;: Remote Archive * &#x60;scm_url&#x60;: The location where the project is stored. (string) * &#x60;scm_branch&#x60;: Specific branch, tag or commit to checkout. (string) * &#x60;scm_refspec&#x60;: For git projects, an additional refspec to fetch. (string) * &#x60;scm_clean&#x60;: Discard any local changes before syncing the project. (boolean) * &#x60;scm_delete_on_update&#x60;: Delete the project before syncing. (boolean) * &#x60;credential&#x60;:  (id) * &#x60;timeout&#x60;: The amount of time (in seconds) to run before the task is canceled. (integer) * &#x60;scm_revision&#x60;: The last revision fetched by a project update (string) * &#x60;last_job_run&#x60;:  (datetime) * &#x60;last_job_failed&#x60;:  (boolean) * &#x60;next_job_run&#x60;:  (datetime) * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled     - &#x60;never updated&#x60;: Never Updated     - &#x60;ok&#x60;: OK     - &#x60;missing&#x60;: Missing * &#x60;organization&#x60;: The organization used to determine access to this template. (id) * &#x60;scm_update_on_launch&#x60;: Update the project when a job is launched that uses the project. (boolean) * &#x60;scm_update_cache_timeout&#x60;: The number of seconds after the last project update ran that a new project update will be launched as a job dependency. (integer) * &#x60;allow_override&#x60;: Allow changing the SCM branch or revision in a job template that uses this project. (boolean) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string) * &#x60;last_update_failed&#x60;:  (boolean) * &#x60;last_updated&#x60;:  (datetime)    ## Sorting  To specify that projects are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsProjectsListRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsProjectsList(ctx _context.Context, id string) ApiOrganizationsOrganizationsProjectsListRequest {
-	return ApiOrganizationsOrganizationsProjectsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsProjectsListExecute(r ApiOrganizationsOrganizationsProjectsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsProjectsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsProjectsList(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsProjectsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -5495,26 +2654,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsProjectsListExecute(
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsProjectsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/projects/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/projects/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -5533,12 +2688,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsProjectsListExecute(
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -5560,55 +2715,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsProjectsListExecute(
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsReadRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsReadRequest) Search(search string) ApiOrganizationsOrganizationsReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsReadExecute(r)
+// OrganizationsOrganizationsReadOpts Optional parameters for the method 'OrganizationsOrganizationsRead'
+type OrganizationsOrganizationsReadOpts struct {
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsRead  Retrieve an Organization
- * 
-Make GET request to this resource to retrieve a single organization
-record containing the following fields:
-
-* `id`: Database ID for this organization. (integer)
-* `type`: Data type for this organization. (choice)
-* `url`: URL for this organization. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this organization was created. (datetime)
-* `modified`: Timestamp when this organization was last modified. (datetime)
-* `name`: Name of this organization. (string)
-* `description`: Optional description of this organization. (string)
-* `max_hosts`: Maximum number of hosts allowed to be managed by this organization. (integer)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string)
+OrganizationsOrganizationsRead  Retrieve an Organization
+ Make GET request to this resource to retrieve a single organization record containing the following fields:  * &#x60;id&#x60;: Database ID for this organization. (integer) * &#x60;type&#x60;: Data type for this organization. (choice) * &#x60;url&#x60;: URL for this organization. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this organization was created. (datetime) * &#x60;modified&#x60;: Timestamp when this organization was last modified. (datetime) * &#x60;name&#x60;: Name of this organization. (string) * &#x60;description&#x60;: Optional description of this organization. (string) * &#x60;max_hosts&#x60;: Maximum number of hosts allowed to be managed by this organization. (integer) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsReadRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsRead(ctx _context.Context, id string) ApiOrganizationsOrganizationsReadRequest {
-	return ApiOrganizationsOrganizationsReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsReadExecute(r ApiOrganizationsOrganizationsReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsRead(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -5617,20 +2737,16 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsReadExecute(r ApiOrg
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -5649,12 +2765,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsReadExecute(r ApiOrg
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -5676,73 +2792,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsReadExecute(r ApiOrg
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsTeamsCreateRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	data *InlineObject51
-}
-
-func (r ApiOrganizationsOrganizationsTeamsCreateRequest) Data(data InlineObject51) ApiOrganizationsOrganizationsTeamsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsTeamsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsTeamsCreateExecute(r)
+// OrganizationsOrganizationsTeamsCreateOpts Optional parameters for the method 'OrganizationsOrganizationsTeamsCreate'
+type OrganizationsOrganizationsTeamsCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * OrganizationsOrganizationsTeamsCreate  Create a Team for an Organization
- * 
-Make a POST request to this resource with the following team
-fields to create a new team associated with this
-organization.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this team. (string, required)
-* `description`: Optional description of this team. (string, default=`""`)
-
-
-
-
-
-
-
-
-
-# Remove Organization Teams:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-delete the associated team.
-
-    {
-        "id": 123,
-        "disassociate": true
-    }
+OrganizationsOrganizationsTeamsCreate  Create a Team for an Organization
+ Make a POST request to this resource with the following team fields to create a new team associated with this organization.          * &#x60;name&#x60;: Name of this team. (string, required) * &#x60;description&#x60;: Optional description of this team. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)          # Remove Organization Teams:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to delete the associated team.      {         \&quot;id\&quot;: 123,         \&quot;disassociate\&quot;: true     }
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsTeamsCreateRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsTeamsCreate(ctx _context.Context, id string) ApiOrganizationsOrganizationsTeamsCreateRequest {
-	return ApiOrganizationsOrganizationsTeamsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsTeamsCreateExecute(r ApiOrganizationsOrganizationsTeamsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsTeamsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject51) - 
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsTeamsCreate(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsTeamsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -5751,13 +2814,9 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsTeamsCreateExecute(r
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsTeamsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/teams/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/teams/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -5781,13 +2840,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsTeamsCreateExecute(r
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject51)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject51")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -5809,125 +2875,24 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsTeamsCreateExecute(r
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsTeamsListRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsTeamsListRequest) Page(page int32) ApiOrganizationsOrganizationsTeamsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiOrganizationsOrganizationsTeamsListRequest) PageSize(pageSize int32) ApiOrganizationsOrganizationsTeamsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiOrganizationsOrganizationsTeamsListRequest) Search(search string) ApiOrganizationsOrganizationsTeamsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsTeamsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsTeamsListExecute(r)
+// OrganizationsOrganizationsTeamsListOpts Optional parameters for the method 'OrganizationsOrganizationsTeamsList'
+type OrganizationsOrganizationsTeamsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsTeamsList  List Teams for an Organization
- * 
-Make a GET request to this resource to retrieve a list of
-teams associated with the selected
-organization.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of teams
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more team records.  
-
-## Results
-
-Each team data structure includes the following fields:
-
-* `id`: Database ID for this team. (integer)
-* `type`: Data type for this team. (choice)
-* `url`: URL for this team. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this team was created. (datetime)
-* `modified`: Timestamp when this team was last modified. (datetime)
-* `name`: Name of this team. (string)
-* `description`: Optional description of this team. (string)
-* `organization`:  (id)
-
-
-
-## Sorting
-
-To specify that teams are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+OrganizationsOrganizationsTeamsList  List Teams for an Organization
+ Make a GET request to this resource to retrieve a list of teams associated with the selected organization.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of teams found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more team records.    ## Results  Each team data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this team. (integer) * &#x60;type&#x60;: Data type for this team. (choice) * &#x60;url&#x60;: URL for this team. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this team was created. (datetime) * &#x60;modified&#x60;: Timestamp when this team was last modified. (datetime) * &#x60;name&#x60;: Name of this team. (string) * &#x60;description&#x60;: Optional description of this team. (string) * &#x60;organization&#x60;:  (id)    ## Sorting  To specify that teams are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsTeamsListRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsTeamsList(ctx _context.Context, id string) ApiOrganizationsOrganizationsTeamsListRequest {
-	return ApiOrganizationsOrganizationsTeamsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsTeamsListExecute(r ApiOrganizationsOrganizationsTeamsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsTeamsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsTeamsList(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsTeamsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -5936,26 +2901,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsTeamsListExecute(r A
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsTeamsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/teams/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/teams/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -5974,12 +2935,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsTeamsListExecute(r A
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -6001,68 +2962,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsTeamsListExecute(r A
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsUpdateRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	search *string
-	data *map[string]interface{}
-}
-
-func (r ApiOrganizationsOrganizationsUpdateRequest) Search(search string) ApiOrganizationsOrganizationsUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiOrganizationsOrganizationsUpdateRequest) Data(data map[string]interface{}) ApiOrganizationsOrganizationsUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsUpdateExecute(r)
+// OrganizationsOrganizationsUpdateOpts Optional parameters for the method 'OrganizationsOrganizationsUpdate'
+type OrganizationsOrganizationsUpdateOpts struct {
+    Search optional.String
+    Data optional.Map[string]interface{}
 }
 
 /*
- * OrganizationsOrganizationsUpdate  Update an Organization
- * 
-Make a PUT or PATCH request to this resource to update this
-organization.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this organization. (string, required)
-* `description`: Optional description of this organization. (string, default=`""`)
-* `max_hosts`: Maximum number of hosts allowed to be managed by this organization. (integer, default=`0`)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string, default=`""`)
-
-
-
-
-
-
-For a PUT request, include **all** fields in the request.
+OrganizationsOrganizationsUpdate  Update an Organization
+ Make a PUT or PATCH request to this resource to update this organization.  The following fields may be modified:          * &#x60;name&#x60;: Name of this organization. (string, required) * &#x60;description&#x60;: Optional description of this organization. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;max_hosts&#x60;: Maximum number of hosts allowed to be managed by this organization. (integer, default&#x3D;&#x60;0&#x60;) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)       For a PUT request, include **all** fields in the request.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsUpdateRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsUpdate(ctx _context.Context, id string) ApiOrganizationsOrganizationsUpdateRequest {
-	return ApiOrganizationsOrganizationsUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsUpdateExecute(r ApiOrganizationsOrganizationsUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsUpdate(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -6071,20 +2986,16 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsUpdateExecute(r ApiO
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -6104,13 +3015,16 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsUpdateExecute(r ApiO
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -6132,80 +3046,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsUpdateExecute(r ApiO
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsUsersCreateRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiOrganizationsOrganizationsUsersCreateRequest) Data(data map[string]interface{}) ApiOrganizationsOrganizationsUsersCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsUsersCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsUsersCreateExecute(r)
+// OrganizationsOrganizationsUsersCreateOpts Optional parameters for the method 'OrganizationsOrganizationsUsersCreate'
+type OrganizationsOrganizationsUsersCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * OrganizationsOrganizationsUsersCreate  Create a User for an Organization
- * 
-Make a POST request to this resource with the following user
-fields to create a new user associated with this
-organization.
-
-
-
-
-
-
-
-
-* `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string, required)
-* `first_name`:  (string, default=`""`)
-* `last_name`:  (string, default=`""`)
-* `email`:  (string, default=`""`)
-* `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean, default=`False`)
-* `is_system_auditor`:  (boolean, default=`False`)
-* `password`: Write-only field used to change the password. (string, default=`""`)
-
-
-
-
-
-
-
-
-
-
-
-# Add Users for an Organization:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing user with this organization.
-
-# Remove Users from this Organization:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the user from this organization
- without deleting the user.
+OrganizationsOrganizationsUsersCreate  Create a User for an Organization
+ Make a POST request to this resource with the following user fields to create a new user associated with this organization.         * &#x60;username&#x60;: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string, required) * &#x60;first_name&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;last_name&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;email&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;is_superuser&#x60;: Designates that this user has all permissions without explicitly assigning them. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;is_system_auditor&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;password&#x60;: Write-only field used to change the password. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)            # Add Users for an Organization:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing user with this organization.  # Remove Users from this Organization:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the user from this organization  without deleting the user.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsUsersCreateRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsUsersCreate(ctx _context.Context, id string) ApiOrganizationsOrganizationsUsersCreateRequest {
-	return ApiOrganizationsOrganizationsUsersCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsUsersCreateExecute(r ApiOrganizationsOrganizationsUsersCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsUsersCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsUsersCreate(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsUsersCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -6214,13 +3068,9 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsUsersCreateExecute(r
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsUsersCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/users/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/users/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -6244,13 +3094,16 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsUsersCreateExecute(r
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -6272,131 +3125,24 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsUsersCreateExecute(r
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsUsersListRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsUsersListRequest) Page(page int32) ApiOrganizationsOrganizationsUsersListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiOrganizationsOrganizationsUsersListRequest) PageSize(pageSize int32) ApiOrganizationsOrganizationsUsersListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiOrganizationsOrganizationsUsersListRequest) Search(search string) ApiOrganizationsOrganizationsUsersListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsUsersListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsUsersListExecute(r)
+// OrganizationsOrganizationsUsersListOpts Optional parameters for the method 'OrganizationsOrganizationsUsersList'
+type OrganizationsOrganizationsUsersListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsUsersList  List Users for an Organization
- * 
-Make a GET request to this resource to retrieve a list of
-users associated with the selected
-organization.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of users
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more user records.  
-
-## Results
-
-Each user data structure includes the following fields:
-
-* `id`: Database ID for this user. (integer)
-* `type`: Data type for this user. (choice)
-* `url`: URL for this user. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this user was created. (datetime)
-* `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string)
-* `first_name`:  (string)
-* `last_name`:  (string)
-* `email`:  (string)
-* `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean)
-* `is_system_auditor`:  (boolean)
-
-* `ldap_dn`:  (string)
-* `last_login`:  (datetime)
-* `external_account`: Set if the account is managed by an external service (field)
-
-
-
-## Sorting
-
-To specify that users are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=username
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-username
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=username,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+OrganizationsOrganizationsUsersList  List Users for an Organization
+ Make a GET request to this resource to retrieve a list of users associated with the selected organization.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of users found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more user records.    ## Results  Each user data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this user. (integer) * &#x60;type&#x60;: Data type for this user. (choice) * &#x60;url&#x60;: URL for this user. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this user was created. (datetime) * &#x60;username&#x60;: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string) * &#x60;first_name&#x60;:  (string) * &#x60;last_name&#x60;:  (string) * &#x60;email&#x60;:  (string) * &#x60;is_superuser&#x60;: Designates that this user has all permissions without explicitly assigning them. (boolean) * &#x60;is_system_auditor&#x60;:  (boolean)  * &#x60;ldap_dn&#x60;:  (string) * &#x60;last_login&#x60;:  (datetime) * &#x60;external_account&#x60;: Set if the account is managed by an external service (field)    ## Sorting  To specify that users are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;username  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-username  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;username,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsUsersListRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsUsersList(ctx _context.Context, id string) ApiOrganizationsOrganizationsUsersListRequest {
-	return ApiOrganizationsOrganizationsUsersListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsUsersListExecute(r ApiOrganizationsOrganizationsUsersListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsUsersListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsUsersList(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsUsersListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -6405,26 +3151,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsUsersListExecute(r A
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsUsersList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/users/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/users/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -6443,12 +3185,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsUsersListExecute(r A
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -6470,75 +3212,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsUsersListExecute(r A
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsWorkflowJobTemplatesCreateRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	data *InlineObject52
-}
-
-func (r ApiOrganizationsOrganizationsWorkflowJobTemplatesCreateRequest) Data(data InlineObject52) ApiOrganizationsOrganizationsWorkflowJobTemplatesCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsWorkflowJobTemplatesCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsWorkflowJobTemplatesCreateExecute(r)
+// OrganizationsOrganizationsWorkflowJobTemplatesCreateOpts Optional parameters for the method 'OrganizationsOrganizationsWorkflowJobTemplatesCreate'
+type OrganizationsOrganizationsWorkflowJobTemplatesCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * OrganizationsOrganizationsWorkflowJobTemplatesCreate  Create a Workflow Job Template for an Organization
- * 
-Make a POST request to this resource with the following workflow job template
-fields to create a new workflow job template associated with this
-organization.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this workflow job template. (string, required)
-* `description`: Optional description of this workflow job template. (string, default=`""`)
-
-
-
-
-* `extra_vars`:  (json, default=``)
-
-* `survey_enabled`:  (boolean, default=`False`)
-* `allow_simultaneous`:  (boolean, default=`False`)
-* `ask_variables_on_launch`:  (boolean, default=`False`)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id, default=``)
-* `limit`:  (string, default=`""`)
-* `scm_branch`:  (string, default=`""`)
-* `ask_inventory_on_launch`:  (boolean, default=`False`)
-* `ask_scm_branch_on_launch`:  (boolean, default=`False`)
-* `ask_limit_on_launch`:  (boolean, default=`False`)
-* `webhook_service`: Service that webhook requests will be accepted from (choice)
-    - `""`: ---------
-    - `github`: GitHub
-    - `gitlab`: GitLab
-* `webhook_credential`: Personal Access Token for posting back the status to the service API (id, default=``)
+OrganizationsOrganizationsWorkflowJobTemplatesCreate  Create a Workflow Job Template for an Organization
+ Make a POST request to this resource with the following workflow job template fields to create a new workflow job template associated with this organization.          * &#x60;name&#x60;: Name of this workflow job template. (string, required) * &#x60;description&#x60;: Optional description of this workflow job template. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)     * &#x60;extra_vars&#x60;:  (json, default&#x3D;&#x60;&#x60;)  * &#x60;survey_enabled&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;allow_simultaneous&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;ask_variables_on_launch&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id, default&#x3D;&#x60;&#x60;) * &#x60;limit&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;scm_branch&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;ask_inventory_on_launch&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;ask_scm_branch_on_launch&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;ask_limit_on_launch&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;webhook_service&#x60;: Service that webhook requests will be accepted from (choice)     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;github&#x60;: GitHub     - &#x60;gitlab&#x60;: GitLab * &#x60;webhook_credential&#x60;: Personal Access Token for posting back the status to the service API (id, default&#x3D;&#x60;&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsWorkflowJobTemplatesCreateRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsWorkflowJobTemplatesCreate(ctx _context.Context, id string) ApiOrganizationsOrganizationsWorkflowJobTemplatesCreateRequest {
-	return ApiOrganizationsOrganizationsWorkflowJobTemplatesCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsWorkflowJobTemplatesCreateExecute(r ApiOrganizationsOrganizationsWorkflowJobTemplatesCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsWorkflowJobTemplatesCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject52) - 
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsWorkflowJobTemplatesCreate(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsWorkflowJobTemplatesCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -6547,13 +3234,9 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsWorkflowJobTemplates
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsWorkflowJobTemplatesCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/workflow_job_templates/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/workflow_job_templates/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -6577,13 +3260,20 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsWorkflowJobTemplates
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject52)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject52")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -6605,157 +3295,24 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsWorkflowJobTemplates
 	return localVarHTTPResponse, nil
 }
 
-type ApiOrganizationsOrganizationsWorkflowJobTemplatesListRequest struct {
-	ctx _context.Context
-	ApiService *OrganizationsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiOrganizationsOrganizationsWorkflowJobTemplatesListRequest) Page(page int32) ApiOrganizationsOrganizationsWorkflowJobTemplatesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiOrganizationsOrganizationsWorkflowJobTemplatesListRequest) PageSize(pageSize int32) ApiOrganizationsOrganizationsWorkflowJobTemplatesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiOrganizationsOrganizationsWorkflowJobTemplatesListRequest) Search(search string) ApiOrganizationsOrganizationsWorkflowJobTemplatesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiOrganizationsOrganizationsWorkflowJobTemplatesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.OrganizationsOrganizationsWorkflowJobTemplatesListExecute(r)
+// OrganizationsOrganizationsWorkflowJobTemplatesListOpts Optional parameters for the method 'OrganizationsOrganizationsWorkflowJobTemplatesList'
+type OrganizationsOrganizationsWorkflowJobTemplatesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * OrganizationsOrganizationsWorkflowJobTemplatesList  List Workflow Job Templates for an Organization
- * 
-Make a GET request to this resource to retrieve a list of
-workflow job templates associated with the selected
-organization.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of workflow job templates
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more workflow job template records.  
-
-## Results
-
-Each workflow job template data structure includes the following fields:
-
-* `id`: Database ID for this workflow job template. (integer)
-* `type`: Data type for this workflow job template. (choice)
-* `url`: URL for this workflow job template. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this workflow job template was created. (datetime)
-* `modified`: Timestamp when this workflow job template was last modified. (datetime)
-* `name`: Name of this workflow job template. (string)
-* `description`: Optional description of this workflow job template. (string)
-* `last_job_run`:  (datetime)
-* `last_job_failed`:  (boolean)
-* `next_job_run`:  (datetime)
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-    - `never updated`: Never Updated
-    - `ok`: OK
-    - `missing`: Missing
-    - `none`: No External Source
-    - `updating`: Updating
-* `extra_vars`:  (json)
-* `organization`: The organization used to determine access to this template. (id)
-* `survey_enabled`:  (boolean)
-* `allow_simultaneous`:  (boolean)
-* `ask_variables_on_launch`:  (boolean)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id)
-* `limit`:  (string)
-* `scm_branch`:  (string)
-* `ask_inventory_on_launch`:  (boolean)
-* `ask_scm_branch_on_launch`:  (boolean)
-* `ask_limit_on_launch`:  (boolean)
-* `webhook_service`: Service that webhook requests will be accepted from (choice)
-    - `""`: ---------
-    - `github`: GitHub
-    - `gitlab`: GitLab
-* `webhook_credential`: Personal Access Token for posting back the status to the service API (id)
-
-
-
-## Sorting
-
-To specify that workflow job templates are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+OrganizationsOrganizationsWorkflowJobTemplatesList  List Workflow Job Templates for an Organization
+ Make a GET request to this resource to retrieve a list of workflow job templates associated with the selected organization.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of workflow job templates found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more workflow job template records.    ## Results  Each workflow job template data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this workflow job template. (integer) * &#x60;type&#x60;: Data type for this workflow job template. (choice) * &#x60;url&#x60;: URL for this workflow job template. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this workflow job template was created. (datetime) * &#x60;modified&#x60;: Timestamp when this workflow job template was last modified. (datetime) * &#x60;name&#x60;: Name of this workflow job template. (string) * &#x60;description&#x60;: Optional description of this workflow job template. (string) * &#x60;last_job_run&#x60;:  (datetime) * &#x60;last_job_failed&#x60;:  (boolean) * &#x60;next_job_run&#x60;:  (datetime) * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled     - &#x60;never updated&#x60;: Never Updated     - &#x60;ok&#x60;: OK     - &#x60;missing&#x60;: Missing     - &#x60;none&#x60;: No External Source     - &#x60;updating&#x60;: Updating * &#x60;extra_vars&#x60;:  (json) * &#x60;organization&#x60;: The organization used to determine access to this template. (id) * &#x60;survey_enabled&#x60;:  (boolean) * &#x60;allow_simultaneous&#x60;:  (boolean) * &#x60;ask_variables_on_launch&#x60;:  (boolean) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id) * &#x60;limit&#x60;:  (string) * &#x60;scm_branch&#x60;:  (string) * &#x60;ask_inventory_on_launch&#x60;:  (boolean) * &#x60;ask_scm_branch_on_launch&#x60;:  (boolean) * &#x60;ask_limit_on_launch&#x60;:  (boolean) * &#x60;webhook_service&#x60;: Service that webhook requests will be accepted from (choice)     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;github&#x60;: GitHub     - &#x60;gitlab&#x60;: GitLab * &#x60;webhook_credential&#x60;: Personal Access Token for posting back the status to the service API (id)    ## Sorting  To specify that workflow job templates are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiOrganizationsOrganizationsWorkflowJobTemplatesListRequest
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsWorkflowJobTemplatesList(ctx _context.Context, id string) ApiOrganizationsOrganizationsWorkflowJobTemplatesListRequest {
-	return ApiOrganizationsOrganizationsWorkflowJobTemplatesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *OrganizationsApiService) OrganizationsOrganizationsWorkflowJobTemplatesListExecute(r ApiOrganizationsOrganizationsWorkflowJobTemplatesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *OrganizationsOrganizationsWorkflowJobTemplatesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *OrganizationsApiService) OrganizationsOrganizationsWorkflowJobTemplatesList(ctx _context.Context, id string, localVarOptionals *OrganizationsOrganizationsWorkflowJobTemplatesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -6764,26 +3321,22 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsWorkflowJobTemplates
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OrganizationsApiService.OrganizationsOrganizationsWorkflowJobTemplatesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/organizations/{id}/workflow_job_templates/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/organizations/{id}/workflow_job_templates/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -6802,12 +3355,12 @@ func (a *OrganizationsApiService) OrganizationsOrganizationsWorkflowJobTemplates
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

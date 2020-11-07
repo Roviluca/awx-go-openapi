@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,63 +26,20 @@ var (
 // JobHostSummariesApiService JobHostSummariesApi service
 type JobHostSummariesApiService service
 
-type ApiJobHostSummariesJobHostSummariesReadRequest struct {
-	ctx _context.Context
-	ApiService *JobHostSummariesApiService
-	id string
-	search *string
-}
-
-func (r ApiJobHostSummariesJobHostSummariesReadRequest) Search(search string) ApiJobHostSummariesJobHostSummariesReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiJobHostSummariesJobHostSummariesReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.JobHostSummariesJobHostSummariesReadExecute(r)
+// JobHostSummariesJobHostSummariesReadOpts Optional parameters for the method 'JobHostSummariesJobHostSummariesRead'
+type JobHostSummariesJobHostSummariesReadOpts struct {
+    Search optional.String
 }
 
 /*
- * JobHostSummariesJobHostSummariesRead  Retrieve a Job Host Summary
- * 
-Make GET request to this resource to retrieve a single job host summary
-record containing the following fields:
-
-* `id`: Database ID for this job host summary. (integer)
-* `type`: Data type for this job host summary. (choice)
-* `url`: URL for this job host summary. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this job host summary was created. (datetime)
-* `modified`: Timestamp when this job host summary was last modified. (datetime)
-* `job`:  (id)
-* `host`:  (id)
-* `host_name`:  (string)
-* `changed`:  (integer)
-* `dark`:  (integer)
-* `failures`:  (integer)
-* `ok`:  (integer)
-* `processed`:  (integer)
-* `skipped`:  (integer)
-* `failed`:  (boolean)
-* `ignored`:  (integer)
-* `rescued`:  (integer)
+JobHostSummariesJobHostSummariesRead  Retrieve a Job Host Summary
+ Make GET request to this resource to retrieve a single job host summary record containing the following fields:  * &#x60;id&#x60;: Database ID for this job host summary. (integer) * &#x60;type&#x60;: Data type for this job host summary. (choice) * &#x60;url&#x60;: URL for this job host summary. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this job host summary was created. (datetime) * &#x60;modified&#x60;: Timestamp when this job host summary was last modified. (datetime) * &#x60;job&#x60;:  (id) * &#x60;host&#x60;:  (id) * &#x60;host_name&#x60;:  (string) * &#x60;changed&#x60;:  (integer) * &#x60;dark&#x60;:  (integer) * &#x60;failures&#x60;:  (integer) * &#x60;ok&#x60;:  (integer) * &#x60;processed&#x60;:  (integer) * &#x60;skipped&#x60;:  (integer) * &#x60;failed&#x60;:  (boolean) * &#x60;ignored&#x60;:  (integer) * &#x60;rescued&#x60;:  (integer)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiJobHostSummariesJobHostSummariesReadRequest
- */
-func (a *JobHostSummariesApiService) JobHostSummariesJobHostSummariesRead(ctx _context.Context, id string) ApiJobHostSummariesJobHostSummariesReadRequest {
-	return ApiJobHostSummariesJobHostSummariesReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *JobHostSummariesApiService) JobHostSummariesJobHostSummariesReadExecute(r ApiJobHostSummariesJobHostSummariesReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *JobHostSummariesJobHostSummariesReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *JobHostSummariesApiService) JobHostSummariesJobHostSummariesRead(ctx _context.Context, id string, localVarOptionals *JobHostSummariesJobHostSummariesReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -90,20 +48,16 @@ func (a *JobHostSummariesApiService) JobHostSummariesJobHostSummariesReadExecute
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "JobHostSummariesApiService.JobHostSummariesJobHostSummariesRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/job_host_summaries/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/job_host_summaries/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -122,12 +76,12 @@ func (a *JobHostSummariesApiService) JobHostSummariesJobHostSummariesReadExecute
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

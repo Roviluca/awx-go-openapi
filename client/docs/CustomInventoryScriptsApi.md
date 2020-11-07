@@ -18,53 +18,28 @@ Method | HTTP request | Description
 
 ## CustomInventoryScriptsInventoryScriptsCopyCreate
 
-> CustomInventoryScriptsInventoryScriptsCopyCreate(ctx, id).Data(data).Execute()
+> CustomInventoryScriptsInventoryScriptsCopyCreate(ctx, id, optional)
 
 
 
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := openapiclient.inline_object_26{Name: "Name_example"} // InlineObject26 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsCopyCreate(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsCopyCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***CustomInventoryScriptsInventoryScriptsCopyCreateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiCustomInventoryScriptsInventoryScriptsCopyCreateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a CustomInventoryScriptsInventoryScriptsCopyCreateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | [**InlineObject26**](InlineObject26.md) |  | 
+ **data** | [**optional.Interface of InlineObject26**](InlineObject26.md)|  | 
 
 ### Return type
 
@@ -86,57 +61,30 @@ No authorization required
 
 ## CustomInventoryScriptsInventoryScriptsCopyList
 
-> CustomInventoryScriptsInventoryScriptsCopyList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> CustomInventoryScriptsInventoryScriptsCopyList(ctx, id, optional)
 
 
 
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsCopyList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsCopyList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***CustomInventoryScriptsInventoryScriptsCopyListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiCustomInventoryScriptsInventoryScriptsCopyListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a CustomInventoryScriptsInventoryScriptsCopyListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -158,49 +106,28 @@ No authorization required
 
 ## CustomInventoryScriptsInventoryScriptsCreate
 
-> CustomInventoryScriptsInventoryScriptsCreate(ctx).Data(data).Execute()
+> CustomInventoryScriptsInventoryScriptsCreate(ctx, optional)
 
  Create a Custom Inventory Script
 
+ Make a POST request to this resource with the following custom inventory script fields to create a new custom inventory script:          * `name`: Name of this custom inventory script. (string, required) * `description`: Optional description of this custom inventory script. (string, default=`\"\"`) * `script`:  (string, required) * `organization`: Organization owning this inventory script (id, required)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    data := openapiclient.inline_object_23{Description: "Description_example", Name: "Name_example", Organization: 123, Script: "Script_example"} // InlineObject23 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsCreate(context.Background(), ).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsCreate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiCustomInventoryScriptsInventoryScriptsCreateRequest struct via the builder pattern
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **data** | [**InlineObject23**](InlineObject23.md) |  | 
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***CustomInventoryScriptsInventoryScriptsCreateOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a CustomInventoryScriptsInventoryScriptsCreateOpts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **data** | [**optional.Interface of InlineObject23**](InlineObject23.md)|  | 
 
 ### Return type
 
@@ -222,55 +149,30 @@ No authorization required
 
 ## CustomInventoryScriptsInventoryScriptsDelete
 
-> CustomInventoryScriptsInventoryScriptsDelete(ctx, id).Search(search).Execute()
+> CustomInventoryScriptsInventoryScriptsDelete(ctx, id, optional)
 
  Delete a Custom Inventory Script
 
+ Make a DELETE request to this resource to delete this custom inventory script.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsDelete(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsDelete``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***CustomInventoryScriptsInventoryScriptsDeleteOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiCustomInventoryScriptsInventoryScriptsDeleteRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a CustomInventoryScriptsInventoryScriptsDeleteOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -292,53 +194,30 @@ No authorization required
 
 ## CustomInventoryScriptsInventoryScriptsList
 
-> CustomInventoryScriptsInventoryScriptsList(ctx).Page(page).PageSize(pageSize).Search(search).Execute()
+> CustomInventoryScriptsInventoryScriptsList(ctx, optional)
 
  List Custom Inventory Scripts
 
+ Make a GET request to this resource to retrieve the list of custom inventory scripts.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of custom inventory scripts found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more custom inventory script records.    ## Results  Each custom inventory script data structure includes the following fields:  * `id`: Database ID for this custom inventory script. (integer) * `type`: Data type for this custom inventory script. (choice) * `url`: URL for this custom inventory script. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this custom inventory script was created. (datetime) * `modified`: Timestamp when this custom inventory script was last modified. (datetime) * `name`: Name of this custom inventory script. (string) * `description`: Optional description of this custom inventory script. (string) * `script`:  (string) * `organization`: Organization owning this inventory script (id)    ## Sorting  To specify that custom inventory scripts are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsList(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiCustomInventoryScriptsInventoryScriptsListRequest struct via the builder pattern
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***CustomInventoryScriptsInventoryScriptsListOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a CustomInventoryScriptsInventoryScriptsListOpts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -360,59 +239,32 @@ No authorization required
 
 ## CustomInventoryScriptsInventoryScriptsObjectRolesList
 
-> CustomInventoryScriptsInventoryScriptsObjectRolesList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> CustomInventoryScriptsInventoryScriptsObjectRolesList(ctx, id, optional)
 
  List Roles for a Custom Inventory Script
 
+ Make a GET request to this resource to retrieve a list of roles associated with the selected custom inventory script.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of roles found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more role records.    ## Results  Each role data structure includes the following fields:  * `id`: Database ID for this role. (integer) * `type`: Data type for this role. (choice) * `url`: URL for this role. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `name`: Name of this role. (field) * `description`: Optional description of this role. (field)    ## Sorting  To specify that roles are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsObjectRolesList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsObjectRolesList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***CustomInventoryScriptsInventoryScriptsObjectRolesListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiCustomInventoryScriptsInventoryScriptsObjectRolesListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a CustomInventoryScriptsInventoryScriptsObjectRolesListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -434,57 +286,31 @@ No authorization required
 
 ## CustomInventoryScriptsInventoryScriptsPartialUpdate
 
-> CustomInventoryScriptsInventoryScriptsPartialUpdate(ctx, id).Search(search).Data(data).Execute()
+> CustomInventoryScriptsInventoryScriptsPartialUpdate(ctx, id, optional)
 
  Update a Custom Inventory Script
 
+ Make a PUT or PATCH request to this resource to update this custom inventory script.  The following fields may be modified:          * `name`: Name of this custom inventory script. (string, required) * `description`: Optional description of this custom inventory script. (string, default=`\"\"`) * `script`:  (string, required) * `organization`: Organization owning this inventory script (id, required)         For a PATCH request, include only the fields that are being modified.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-    data := openapiclient.inline_object_25{Description: "Description_example", Name: "Name_example", Organization: 123, Script: "Script_example"} // InlineObject25 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsPartialUpdate(context.Background(), id).Search(search).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsPartialUpdate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***CustomInventoryScriptsInventoryScriptsPartialUpdateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiCustomInventoryScriptsInventoryScriptsPartialUpdateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a CustomInventoryScriptsInventoryScriptsPartialUpdateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
- **data** | [**InlineObject25**](InlineObject25.md) |  | 
+ **search** | **optional.String**| A search term. | 
+ **data** | [**optional.Interface of InlineObject25**](InlineObject25.md)|  | 
 
 ### Return type
 
@@ -506,55 +332,30 @@ No authorization required
 
 ## CustomInventoryScriptsInventoryScriptsRead
 
-> CustomInventoryScriptsInventoryScriptsRead(ctx, id).Search(search).Execute()
+> CustomInventoryScriptsInventoryScriptsRead(ctx, id, optional)
 
  Retrieve a Custom Inventory Script
 
+ Make GET request to this resource to retrieve a single custom inventory script record containing the following fields:  * `id`: Database ID for this custom inventory script. (integer) * `type`: Data type for this custom inventory script. (choice) * `url`: URL for this custom inventory script. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this custom inventory script was created. (datetime) * `modified`: Timestamp when this custom inventory script was last modified. (datetime) * `name`: Name of this custom inventory script. (string) * `description`: Optional description of this custom inventory script. (string) * `script`:  (string) * `organization`: Organization owning this inventory script (id)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsRead(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsRead``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***CustomInventoryScriptsInventoryScriptsReadOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiCustomInventoryScriptsInventoryScriptsReadRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a CustomInventoryScriptsInventoryScriptsReadOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -576,57 +377,31 @@ No authorization required
 
 ## CustomInventoryScriptsInventoryScriptsUpdate
 
-> CustomInventoryScriptsInventoryScriptsUpdate(ctx, id).Search(search).Data(data).Execute()
+> CustomInventoryScriptsInventoryScriptsUpdate(ctx, id, optional)
 
  Update a Custom Inventory Script
 
+ Make a PUT or PATCH request to this resource to update this custom inventory script.  The following fields may be modified:          * `name`: Name of this custom inventory script. (string, required) * `description`: Optional description of this custom inventory script. (string, default=`\"\"`) * `script`:  (string, required) * `organization`: Organization owning this inventory script (id, required)       For a PUT request, include **all** fields in the request.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-    data := openapiclient.inline_object_24{Description: "Description_example", Name: "Name_example", Organization: 123, Script: "Script_example"} // InlineObject24 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsUpdate(context.Background(), id).Search(search).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `CustomInventoryScriptsApi.CustomInventoryScriptsInventoryScriptsUpdate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***CustomInventoryScriptsInventoryScriptsUpdateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiCustomInventoryScriptsInventoryScriptsUpdateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a CustomInventoryScriptsInventoryScriptsUpdateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
- **data** | [**InlineObject24**](InlineObject24.md) |  | 
+ **search** | **optional.String**| A search term. | 
+ **data** | [**optional.Interface of InlineObject24**](InlineObject24.md)|  | 
 
 ### Return type
 

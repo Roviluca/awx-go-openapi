@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,133 +26,24 @@ var (
 // CredentialTypesApiService CredentialTypesApi service
 type CredentialTypesApiService service
 
-type ApiCredentialTypesCredentialTypesActivityStreamListRequest struct {
-	ctx _context.Context
-	ApiService *CredentialTypesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiCredentialTypesCredentialTypesActivityStreamListRequest) Page(page int32) ApiCredentialTypesCredentialTypesActivityStreamListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiCredentialTypesCredentialTypesActivityStreamListRequest) PageSize(pageSize int32) ApiCredentialTypesCredentialTypesActivityStreamListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiCredentialTypesCredentialTypesActivityStreamListRequest) Search(search string) ApiCredentialTypesCredentialTypesActivityStreamListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiCredentialTypesCredentialTypesActivityStreamListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CredentialTypesCredentialTypesActivityStreamListExecute(r)
+// CredentialTypesCredentialTypesActivityStreamListOpts Optional parameters for the method 'CredentialTypesCredentialTypesActivityStreamList'
+type CredentialTypesCredentialTypesActivityStreamListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * CredentialTypesCredentialTypesActivityStreamList  List Activity Streams for a Credential Type
- * 
-Make a GET request to this resource to retrieve a list of
-activity streams associated with the selected
-credential type.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of activity streams
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more activity stream records.  
-
-## Results
-
-Each activity stream data structure includes the following fields:
-
-* `id`: Database ID for this activity stream. (integer)
-* `type`: Data type for this activity stream. (choice)
-* `url`: URL for this activity stream. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `timestamp`:  (datetime)
-* `operation`: The action taken with respect to the given object(s). (choice)
-    - `create`: Entity Created
-    - `update`: Entity Updated
-    - `delete`: Entity Deleted
-    - `associate`: Entity Associated with another Entity
-    - `disassociate`: Entity was Disassociated with another Entity
-* `changes`: A summary of the new and changed values when an object is created, updated, or deleted (json)
-* `object1`: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string)
-* `object2`: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string)
-* `object_association`: When present, shows the field name of the role or relationship that changed. (field)
-* `action_node`: The cluster node the activity took place on. (string)
-* `object_type`: When present, shows the model on which the role or relationship was defined. (field)
-
-
-
-## Sorting
-
-To specify that activity streams are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+CredentialTypesCredentialTypesActivityStreamList  List Activity Streams for a Credential Type
+ Make a GET request to this resource to retrieve a list of activity streams associated with the selected credential type.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of activity streams found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more activity stream records.    ## Results  Each activity stream data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this activity stream. (integer) * &#x60;type&#x60;: Data type for this activity stream. (choice) * &#x60;url&#x60;: URL for this activity stream. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;timestamp&#x60;:  (datetime) * &#x60;operation&#x60;: The action taken with respect to the given object(s). (choice)     - &#x60;create&#x60;: Entity Created     - &#x60;update&#x60;: Entity Updated     - &#x60;delete&#x60;: Entity Deleted     - &#x60;associate&#x60;: Entity Associated with another Entity     - &#x60;disassociate&#x60;: Entity was Disassociated with another Entity * &#x60;changes&#x60;: A summary of the new and changed values when an object is created, updated, or deleted (json) * &#x60;object1&#x60;: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string) * &#x60;object2&#x60;: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string) * &#x60;object_association&#x60;: When present, shows the field name of the role or relationship that changed. (field) * &#x60;action_node&#x60;: The cluster node the activity took place on. (string) * &#x60;object_type&#x60;: When present, shows the model on which the role or relationship was defined. (field)    ## Sorting  To specify that activity streams are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiCredentialTypesCredentialTypesActivityStreamListRequest
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesActivityStreamList(ctx _context.Context, id string) ApiCredentialTypesCredentialTypesActivityStreamListRequest {
-	return ApiCredentialTypesCredentialTypesActivityStreamListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesActivityStreamListExecute(r ApiCredentialTypesCredentialTypesActivityStreamListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CredentialTypesCredentialTypesActivityStreamListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *CredentialTypesApiService) CredentialTypesCredentialTypesActivityStreamList(ctx _context.Context, id string, localVarOptionals *CredentialTypesCredentialTypesActivityStreamListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -160,26 +52,22 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesActivityStream
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CredentialTypesApiService.CredentialTypesCredentialTypesActivityStreamList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/credential_types/{id}/activity_stream/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/credential_types/{id}/activity_stream/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -198,12 +86,12 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesActivityStream
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -225,58 +113,19 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesActivityStream
 	return localVarHTTPResponse, nil
 }
 
-type ApiCredentialTypesCredentialTypesCreateRequest struct {
-	ctx _context.Context
-	ApiService *CredentialTypesApiService
-	data *map[string]interface{}
-}
-
-func (r ApiCredentialTypesCredentialTypesCreateRequest) Data(data map[string]interface{}) ApiCredentialTypesCredentialTypesCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiCredentialTypesCredentialTypesCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CredentialTypesCredentialTypesCreateExecute(r)
+// CredentialTypesCredentialTypesCreateOpts Optional parameters for the method 'CredentialTypesCredentialTypesCreate'
+type CredentialTypesCredentialTypesCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * CredentialTypesCredentialTypesCreate  Create a Credential Type
- * 
-Make a POST request to this resource with the following credential type
-fields to create a new credential type:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this credential type. (string, required)
-* `description`: Optional description of this credential type. (string, default=`""`)
-* `kind`:  (choice, required)
-    - `net`: Network
-    - `cloud`: Cloud
-
-
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)
-* `injectors`: Enter injectors using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)
+CredentialTypesCredentialTypesCreate  Create a Credential Type
+ Make a POST request to this resource with the following credential type fields to create a new credential type:          * &#x60;name&#x60;: Name of this credential type. (string, required) * &#x60;description&#x60;: Optional description of this credential type. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;kind&#x60;:  (choice, required)     - &#x60;net&#x60;: Network     - &#x60;cloud&#x60;: Cloud   * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default&#x3D;&#x60;{}&#x60;) * &#x60;injectors&#x60;: Enter injectors using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default&#x3D;&#x60;{}&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiCredentialTypesCredentialTypesCreateRequest
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesCreate(ctx _context.Context) ApiCredentialTypesCredentialTypesCreateRequest {
-	return ApiCredentialTypesCredentialTypesCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesCreateExecute(r ApiCredentialTypesCredentialTypesCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CredentialTypesCredentialTypesCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *CredentialTypesApiService) CredentialTypesCredentialTypesCreate(ctx _context.Context, localVarOptionals *CredentialTypesCredentialTypesCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -285,13 +134,8 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesCreateExecute(
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CredentialTypesApiService.CredentialTypesCredentialTypesCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/credential_types/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/credential_types/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -314,13 +158,16 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesCreateExecute(
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -342,59 +189,20 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesCreateExecute(
 	return localVarHTTPResponse, nil
 }
 
-type ApiCredentialTypesCredentialTypesCredentialsCreateRequest struct {
-	ctx _context.Context
-	ApiService *CredentialTypesApiService
-	id string
-	data *InlineObject3
-}
-
-func (r ApiCredentialTypesCredentialTypesCredentialsCreateRequest) Data(data InlineObject3) ApiCredentialTypesCredentialTypesCredentialsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiCredentialTypesCredentialTypesCredentialsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CredentialTypesCredentialTypesCredentialsCreateExecute(r)
+// CredentialTypesCredentialTypesCredentialsCreateOpts Optional parameters for the method 'CredentialTypesCredentialTypesCredentialsCreate'
+type CredentialTypesCredentialTypesCredentialsCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * CredentialTypesCredentialTypesCredentialsCreate  Create a Credential for a Credential Type
- * 
-Make a POST request to this resource with the following credential
-fields to create a new credential associated with this
-credential type.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this credential. (string, required)
-* `description`: Optional description of this credential. (string, default=`""`)
-* `organization`:  (id, default=`None`)
-* `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id, required)
-
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)
+CredentialTypesCredentialTypesCredentialsCreate  Create a Credential for a Credential Type
+ Make a POST request to this resource with the following credential fields to create a new credential associated with this credential type.          * &#x60;name&#x60;: Name of this credential. (string, required) * &#x60;description&#x60;: Optional description of this credential. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;:  (id, default&#x3D;&#x60;None&#x60;) * &#x60;credential_type&#x60;: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id, required)  * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default&#x3D;&#x60;{}&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiCredentialTypesCredentialTypesCredentialsCreateRequest
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesCredentialsCreate(ctx _context.Context, id string) ApiCredentialTypesCredentialTypesCredentialsCreateRequest {
-	return ApiCredentialTypesCredentialTypesCredentialsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesCredentialsCreateExecute(r ApiCredentialTypesCredentialTypesCredentialsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CredentialTypesCredentialTypesCredentialsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject3) - 
+*/
+func (a *CredentialTypesApiService) CredentialTypesCredentialTypesCredentialsCreate(ctx _context.Context, id string, localVarOptionals *CredentialTypesCredentialTypesCredentialsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -403,13 +211,9 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesCredentialsCre
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CredentialTypesApiService.CredentialTypesCredentialTypesCredentialsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/credential_types/{id}/credentials/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/credential_types/{id}/credentials/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -433,13 +237,20 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesCredentialsCre
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject3)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject3")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -461,131 +272,24 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesCredentialsCre
 	return localVarHTTPResponse, nil
 }
 
-type ApiCredentialTypesCredentialTypesCredentialsListRequest struct {
-	ctx _context.Context
-	ApiService *CredentialTypesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiCredentialTypesCredentialTypesCredentialsListRequest) Page(page int32) ApiCredentialTypesCredentialTypesCredentialsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiCredentialTypesCredentialTypesCredentialsListRequest) PageSize(pageSize int32) ApiCredentialTypesCredentialTypesCredentialsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiCredentialTypesCredentialTypesCredentialsListRequest) Search(search string) ApiCredentialTypesCredentialTypesCredentialsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiCredentialTypesCredentialTypesCredentialsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CredentialTypesCredentialTypesCredentialsListExecute(r)
+// CredentialTypesCredentialTypesCredentialsListOpts Optional parameters for the method 'CredentialTypesCredentialTypesCredentialsList'
+type CredentialTypesCredentialTypesCredentialsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * CredentialTypesCredentialTypesCredentialsList  List Credentials for a Credential Type
- * 
-Make a GET request to this resource to retrieve a list of
-credentials associated with the selected
-credential type.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of credentials
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more credential records.  
-
-## Results
-
-Each credential data structure includes the following fields:
-
-* `id`: Database ID for this credential. (integer)
-* `type`: Data type for this credential. (choice)
-* `url`: URL for this credential. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this credential was created. (datetime)
-* `modified`: Timestamp when this credential was last modified. (datetime)
-* `name`: Name of this credential. (string)
-* `description`: Optional description of this credential. (string)
-* `organization`:  (id)
-* `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id)
-* `managed_by_tower`:  (boolean)
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json)
-* `kind`:  (field)
-* `cloud`:  (field)
-* `kubernetes`:  (field)
-
-
-
-## Sorting
-
-To specify that credentials are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+CredentialTypesCredentialTypesCredentialsList  List Credentials for a Credential Type
+ Make a GET request to this resource to retrieve a list of credentials associated with the selected credential type.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of credentials found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more credential records.    ## Results  Each credential data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this credential. (integer) * &#x60;type&#x60;: Data type for this credential. (choice) * &#x60;url&#x60;: URL for this credential. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this credential was created. (datetime) * &#x60;modified&#x60;: Timestamp when this credential was last modified. (datetime) * &#x60;name&#x60;: Name of this credential. (string) * &#x60;description&#x60;: Optional description of this credential. (string) * &#x60;organization&#x60;:  (id) * &#x60;credential_type&#x60;: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id) * &#x60;managed_by_tower&#x60;:  (boolean) * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json) * &#x60;kind&#x60;:  (field) * &#x60;cloud&#x60;:  (field) * &#x60;kubernetes&#x60;:  (field)    ## Sorting  To specify that credentials are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiCredentialTypesCredentialTypesCredentialsListRequest
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesCredentialsList(ctx _context.Context, id string) ApiCredentialTypesCredentialTypesCredentialsListRequest {
-	return ApiCredentialTypesCredentialTypesCredentialsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesCredentialsListExecute(r ApiCredentialTypesCredentialTypesCredentialsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CredentialTypesCredentialTypesCredentialsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *CredentialTypesApiService) CredentialTypesCredentialTypesCredentialsList(ctx _context.Context, id string, localVarOptionals *CredentialTypesCredentialTypesCredentialsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -594,26 +298,22 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesCredentialsLis
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CredentialTypesApiService.CredentialTypesCredentialTypesCredentialsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/credential_types/{id}/credentials/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/credential_types/{id}/credentials/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -632,12 +332,12 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesCredentialsLis
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -659,42 +359,20 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesCredentialsLis
 	return localVarHTTPResponse, nil
 }
 
-type ApiCredentialTypesCredentialTypesDeleteRequest struct {
-	ctx _context.Context
-	ApiService *CredentialTypesApiService
-	id string
-	search *string
-}
-
-func (r ApiCredentialTypesCredentialTypesDeleteRequest) Search(search string) ApiCredentialTypesCredentialTypesDeleteRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiCredentialTypesCredentialTypesDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CredentialTypesCredentialTypesDeleteExecute(r)
+// CredentialTypesCredentialTypesDeleteOpts Optional parameters for the method 'CredentialTypesCredentialTypesDelete'
+type CredentialTypesCredentialTypesDeleteOpts struct {
+    Search optional.String
 }
 
 /*
- * CredentialTypesCredentialTypesDelete  Delete a Credential Type
- * 
-Make a DELETE request to this resource to delete this credential type.
+CredentialTypesCredentialTypesDelete  Delete a Credential Type
+ Make a DELETE request to this resource to delete this credential type.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiCredentialTypesCredentialTypesDeleteRequest
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesDelete(ctx _context.Context, id string) ApiCredentialTypesCredentialTypesDeleteRequest {
-	return ApiCredentialTypesCredentialTypesDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesDeleteExecute(r ApiCredentialTypesCredentialTypesDeleteRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CredentialTypesCredentialTypesDeleteOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *CredentialTypesApiService) CredentialTypesCredentialTypesDelete(ctx _context.Context, id string, localVarOptionals *CredentialTypesCredentialTypesDeleteOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -703,20 +381,16 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesDeleteExecute(
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CredentialTypesApiService.CredentialTypesCredentialTypesDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/credential_types/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/credential_types/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -735,12 +409,12 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesDeleteExecute(
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -762,135 +436,23 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesDeleteExecute(
 	return localVarHTTPResponse, nil
 }
 
-type ApiCredentialTypesCredentialTypesListRequest struct {
-	ctx _context.Context
-	ApiService *CredentialTypesApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiCredentialTypesCredentialTypesListRequest) Page(page int32) ApiCredentialTypesCredentialTypesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiCredentialTypesCredentialTypesListRequest) PageSize(pageSize int32) ApiCredentialTypesCredentialTypesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiCredentialTypesCredentialTypesListRequest) Search(search string) ApiCredentialTypesCredentialTypesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiCredentialTypesCredentialTypesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CredentialTypesCredentialTypesListExecute(r)
+// CredentialTypesCredentialTypesListOpts Optional parameters for the method 'CredentialTypesCredentialTypesList'
+type CredentialTypesCredentialTypesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * CredentialTypesCredentialTypesList  List Credential Types
- * 
-Make a GET request to this resource to retrieve the list of
-credential types.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of credential types
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more credential type records.  
-
-## Results
-
-Each credential type data structure includes the following fields:
-
-* `id`: Database ID for this credential type. (integer)
-* `type`: Data type for this credential type. (choice)
-* `url`: URL for this credential type. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this credential type was created. (datetime)
-* `modified`: Timestamp when this credential type was last modified. (datetime)
-* `name`: Name of this credential type. (string)
-* `description`: Optional description of this credential type. (string)
-* `kind`:  (choice)
-    - `ssh`: Machine
-    - `vault`: Vault
-    - `net`: Network
-    - `scm`: Source Control
-    - `cloud`: Cloud
-    - `token`: Personal Access Token
-    - `insights`: Insights
-    - `external`: External
-    - `kubernetes`: Kubernetes
-    - `galaxy`: Galaxy/Automation Hub
-* `namespace`:  (string)
-* `managed_by_tower`:  (boolean)
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json)
-* `injectors`: Enter injectors using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json)
-
-
-
-## Sorting
-
-To specify that credential types are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+CredentialTypesCredentialTypesList  List Credential Types
+ Make a GET request to this resource to retrieve the list of credential types.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of credential types found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more credential type records.    ## Results  Each credential type data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this credential type. (integer) * &#x60;type&#x60;: Data type for this credential type. (choice) * &#x60;url&#x60;: URL for this credential type. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this credential type was created. (datetime) * &#x60;modified&#x60;: Timestamp when this credential type was last modified. (datetime) * &#x60;name&#x60;: Name of this credential type. (string) * &#x60;description&#x60;: Optional description of this credential type. (string) * &#x60;kind&#x60;:  (choice)     - &#x60;ssh&#x60;: Machine     - &#x60;vault&#x60;: Vault     - &#x60;net&#x60;: Network     - &#x60;scm&#x60;: Source Control     - &#x60;cloud&#x60;: Cloud     - &#x60;token&#x60;: Personal Access Token     - &#x60;insights&#x60;: Insights     - &#x60;external&#x60;: External     - &#x60;kubernetes&#x60;: Kubernetes     - &#x60;galaxy&#x60;: Galaxy/Automation Hub * &#x60;namespace&#x60;:  (string) * &#x60;managed_by_tower&#x60;:  (boolean) * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json) * &#x60;injectors&#x60;: Enter injectors using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json)    ## Sorting  To specify that credential types are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiCredentialTypesCredentialTypesListRequest
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesList(ctx _context.Context) ApiCredentialTypesCredentialTypesListRequest {
-	return ApiCredentialTypesCredentialTypesListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesListExecute(r ApiCredentialTypesCredentialTypesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CredentialTypesCredentialTypesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *CredentialTypesApiService) CredentialTypesCredentialTypesList(ctx _context.Context, localVarOptionals *CredentialTypesCredentialTypesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -899,25 +461,20 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesListExecute(r 
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CredentialTypesApiService.CredentialTypesCredentialTypesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/credential_types/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/credential_types/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -936,12 +493,12 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesListExecute(r 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -963,75 +520,22 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesListExecute(r 
 	return localVarHTTPResponse, nil
 }
 
-type ApiCredentialTypesCredentialTypesPartialUpdateRequest struct {
-	ctx _context.Context
-	ApiService *CredentialTypesApiService
-	id string
-	search *string
-	data *map[string]interface{}
-}
-
-func (r ApiCredentialTypesCredentialTypesPartialUpdateRequest) Search(search string) ApiCredentialTypesCredentialTypesPartialUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiCredentialTypesCredentialTypesPartialUpdateRequest) Data(data map[string]interface{}) ApiCredentialTypesCredentialTypesPartialUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiCredentialTypesCredentialTypesPartialUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CredentialTypesCredentialTypesPartialUpdateExecute(r)
+// CredentialTypesCredentialTypesPartialUpdateOpts Optional parameters for the method 'CredentialTypesCredentialTypesPartialUpdate'
+type CredentialTypesCredentialTypesPartialUpdateOpts struct {
+    Search optional.String
+    Data optional.Map[string]interface{}
 }
 
 /*
- * CredentialTypesCredentialTypesPartialUpdate  Update a Credential Type
- * 
-Make a PUT or PATCH request to this resource to update this
-credential type.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this credential type. (string, required)
-* `description`: Optional description of this credential type. (string, default=`""`)
-* `kind`:  (choice, required)
-    - `net`: Network
-    - `cloud`: Cloud
-
-
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)
-* `injectors`: Enter injectors using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)
-
-
-
-
-
-
-
-
-For a PATCH request, include only the fields that are being modified.
+CredentialTypesCredentialTypesPartialUpdate  Update a Credential Type
+ Make a PUT or PATCH request to this resource to update this credential type.  The following fields may be modified:          * &#x60;name&#x60;: Name of this credential type. (string, required) * &#x60;description&#x60;: Optional description of this credential type. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;kind&#x60;:  (choice, required)     - &#x60;net&#x60;: Network     - &#x60;cloud&#x60;: Cloud   * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default&#x3D;&#x60;{}&#x60;) * &#x60;injectors&#x60;: Enter injectors using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default&#x3D;&#x60;{}&#x60;)         For a PATCH request, include only the fields that are being modified.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiCredentialTypesCredentialTypesPartialUpdateRequest
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesPartialUpdate(ctx _context.Context, id string) ApiCredentialTypesCredentialTypesPartialUpdateRequest {
-	return ApiCredentialTypesCredentialTypesPartialUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesPartialUpdateExecute(r ApiCredentialTypesCredentialTypesPartialUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CredentialTypesCredentialTypesPartialUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *CredentialTypesApiService) CredentialTypesCredentialTypesPartialUpdate(ctx _context.Context, id string, localVarOptionals *CredentialTypesCredentialTypesPartialUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPatch
 		localVarPostBody     interface{}
@@ -1040,20 +544,16 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesPartialUpdateE
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CredentialTypesApiService.CredentialTypesCredentialTypesPartialUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/credential_types/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/credential_types/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -1073,13 +573,16 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesPartialUpdateE
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1101,68 +604,20 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesPartialUpdateE
 	return localVarHTTPResponse, nil
 }
 
-type ApiCredentialTypesCredentialTypesReadRequest struct {
-	ctx _context.Context
-	ApiService *CredentialTypesApiService
-	id string
-	search *string
-}
-
-func (r ApiCredentialTypesCredentialTypesReadRequest) Search(search string) ApiCredentialTypesCredentialTypesReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiCredentialTypesCredentialTypesReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CredentialTypesCredentialTypesReadExecute(r)
+// CredentialTypesCredentialTypesReadOpts Optional parameters for the method 'CredentialTypesCredentialTypesRead'
+type CredentialTypesCredentialTypesReadOpts struct {
+    Search optional.String
 }
 
 /*
- * CredentialTypesCredentialTypesRead  Retrieve a Credential Type
- * 
-Make GET request to this resource to retrieve a single credential type
-record containing the following fields:
-
-* `id`: Database ID for this credential type. (integer)
-* `type`: Data type for this credential type. (choice)
-* `url`: URL for this credential type. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this credential type was created. (datetime)
-* `modified`: Timestamp when this credential type was last modified. (datetime)
-* `name`: Name of this credential type. (string)
-* `description`: Optional description of this credential type. (string)
-* `kind`:  (choice)
-    - `ssh`: Machine
-    - `vault`: Vault
-    - `net`: Network
-    - `scm`: Source Control
-    - `cloud`: Cloud
-    - `token`: Personal Access Token
-    - `insights`: Insights
-    - `external`: External
-    - `kubernetes`: Kubernetes
-    - `galaxy`: Galaxy/Automation Hub
-* `namespace`:  (string)
-* `managed_by_tower`:  (boolean)
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json)
-* `injectors`: Enter injectors using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json)
+CredentialTypesCredentialTypesRead  Retrieve a Credential Type
+ Make GET request to this resource to retrieve a single credential type record containing the following fields:  * &#x60;id&#x60;: Database ID for this credential type. (integer) * &#x60;type&#x60;: Data type for this credential type. (choice) * &#x60;url&#x60;: URL for this credential type. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this credential type was created. (datetime) * &#x60;modified&#x60;: Timestamp when this credential type was last modified. (datetime) * &#x60;name&#x60;: Name of this credential type. (string) * &#x60;description&#x60;: Optional description of this credential type. (string) * &#x60;kind&#x60;:  (choice)     - &#x60;ssh&#x60;: Machine     - &#x60;vault&#x60;: Vault     - &#x60;net&#x60;: Network     - &#x60;scm&#x60;: Source Control     - &#x60;cloud&#x60;: Cloud     - &#x60;token&#x60;: Personal Access Token     - &#x60;insights&#x60;: Insights     - &#x60;external&#x60;: External     - &#x60;kubernetes&#x60;: Kubernetes     - &#x60;galaxy&#x60;: Galaxy/Automation Hub * &#x60;namespace&#x60;:  (string) * &#x60;managed_by_tower&#x60;:  (boolean) * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json) * &#x60;injectors&#x60;: Enter injectors using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiCredentialTypesCredentialTypesReadRequest
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesRead(ctx _context.Context, id string) ApiCredentialTypesCredentialTypesReadRequest {
-	return ApiCredentialTypesCredentialTypesReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesReadExecute(r ApiCredentialTypesCredentialTypesReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CredentialTypesCredentialTypesReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *CredentialTypesApiService) CredentialTypesCredentialTypesRead(ctx _context.Context, id string, localVarOptionals *CredentialTypesCredentialTypesReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1171,20 +626,16 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesReadExecute(r 
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CredentialTypesApiService.CredentialTypesCredentialTypesRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/credential_types/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/credential_types/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1203,12 +654,12 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesReadExecute(r 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1230,43 +681,20 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesReadExecute(r 
 	return localVarHTTPResponse, nil
 }
 
-type ApiCredentialTypesCredentialTypesTestCreateRequest struct {
-	ctx _context.Context
-	ApiService *CredentialTypesApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiCredentialTypesCredentialTypesTestCreateRequest) Data(data map[string]interface{}) ApiCredentialTypesCredentialTypesTestCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiCredentialTypesCredentialTypesTestCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CredentialTypesCredentialTypesTestCreateExecute(r)
+// CredentialTypesCredentialTypesTestCreateOpts Optional parameters for the method 'CredentialTypesCredentialTypesTestCreate'
+type CredentialTypesCredentialTypesTestCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * CredentialTypesCredentialTypesTestCreate  Retrieve a Credential Type
- * 
-Make GET request to this resource to retrieve a single credential type
-record containing the following fields:
+CredentialTypesCredentialTypesTestCreate  Retrieve a Credential Type
+ Make GET request to this resource to retrieve a single credential type record containing the following fields:
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiCredentialTypesCredentialTypesTestCreateRequest
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesTestCreate(ctx _context.Context, id string) ApiCredentialTypesCredentialTypesTestCreateRequest {
-	return ApiCredentialTypesCredentialTypesTestCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesTestCreateExecute(r ApiCredentialTypesCredentialTypesTestCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CredentialTypesCredentialTypesTestCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *CredentialTypesApiService) CredentialTypesCredentialTypesTestCreate(ctx _context.Context, id string, localVarOptionals *CredentialTypesCredentialTypesTestCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -1275,13 +703,9 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesTestCreateExec
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CredentialTypesApiService.CredentialTypesCredentialTypesTestCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/credential_types/{id}/test/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/credential_types/{id}/test/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1305,13 +729,16 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesTestCreateExec
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1333,43 +760,20 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesTestCreateExec
 	return localVarHTTPResponse, nil
 }
 
-type ApiCredentialTypesCredentialTypesTestReadRequest struct {
-	ctx _context.Context
-	ApiService *CredentialTypesApiService
-	id string
-	search *string
-}
-
-func (r ApiCredentialTypesCredentialTypesTestReadRequest) Search(search string) ApiCredentialTypesCredentialTypesTestReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiCredentialTypesCredentialTypesTestReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CredentialTypesCredentialTypesTestReadExecute(r)
+// CredentialTypesCredentialTypesTestReadOpts Optional parameters for the method 'CredentialTypesCredentialTypesTestRead'
+type CredentialTypesCredentialTypesTestReadOpts struct {
+    Search optional.String
 }
 
 /*
- * CredentialTypesCredentialTypesTestRead  Retrieve a Credential Type
- * 
-Make GET request to this resource to retrieve a single credential type
-record containing the following fields:
+CredentialTypesCredentialTypesTestRead  Retrieve a Credential Type
+ Make GET request to this resource to retrieve a single credential type record containing the following fields:
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiCredentialTypesCredentialTypesTestReadRequest
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesTestRead(ctx _context.Context, id string) ApiCredentialTypesCredentialTypesTestReadRequest {
-	return ApiCredentialTypesCredentialTypesTestReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesTestReadExecute(r ApiCredentialTypesCredentialTypesTestReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CredentialTypesCredentialTypesTestReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *CredentialTypesApiService) CredentialTypesCredentialTypesTestRead(ctx _context.Context, id string, localVarOptionals *CredentialTypesCredentialTypesTestReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1378,20 +782,16 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesTestReadExecut
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CredentialTypesApiService.CredentialTypesCredentialTypesTestRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/credential_types/{id}/test/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/credential_types/{id}/test/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1410,12 +810,12 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesTestReadExecut
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1437,73 +837,22 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesTestReadExecut
 	return localVarHTTPResponse, nil
 }
 
-type ApiCredentialTypesCredentialTypesUpdateRequest struct {
-	ctx _context.Context
-	ApiService *CredentialTypesApiService
-	id string
-	search *string
-	data *InlineObject2
-}
-
-func (r ApiCredentialTypesCredentialTypesUpdateRequest) Search(search string) ApiCredentialTypesCredentialTypesUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiCredentialTypesCredentialTypesUpdateRequest) Data(data InlineObject2) ApiCredentialTypesCredentialTypesUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiCredentialTypesCredentialTypesUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CredentialTypesCredentialTypesUpdateExecute(r)
+// CredentialTypesCredentialTypesUpdateOpts Optional parameters for the method 'CredentialTypesCredentialTypesUpdate'
+type CredentialTypesCredentialTypesUpdateOpts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * CredentialTypesCredentialTypesUpdate  Update a Credential Type
- * 
-Make a PUT or PATCH request to this resource to update this
-credential type.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this credential type. (string, required)
-* `description`: Optional description of this credential type. (string, default=`""`)
-* `kind`:  (choice, required)
-    - `net`: Network
-    - `cloud`: Cloud
-
-
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)
-* `injectors`: Enter injectors using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)
-
-
-
-
-
-
-For a PUT request, include **all** fields in the request.
+CredentialTypesCredentialTypesUpdate  Update a Credential Type
+ Make a PUT or PATCH request to this resource to update this credential type.  The following fields may be modified:          * &#x60;name&#x60;: Name of this credential type. (string, required) * &#x60;description&#x60;: Optional description of this credential type. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;kind&#x60;:  (choice, required)     - &#x60;net&#x60;: Network     - &#x60;cloud&#x60;: Cloud   * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default&#x3D;&#x60;{}&#x60;) * &#x60;injectors&#x60;: Enter injectors using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default&#x3D;&#x60;{}&#x60;)       For a PUT request, include **all** fields in the request.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiCredentialTypesCredentialTypesUpdateRequest
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesUpdate(ctx _context.Context, id string) ApiCredentialTypesCredentialTypesUpdateRequest {
-	return ApiCredentialTypesCredentialTypesUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CredentialTypesApiService) CredentialTypesCredentialTypesUpdateExecute(r ApiCredentialTypesCredentialTypesUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CredentialTypesCredentialTypesUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject2) - 
+*/
+func (a *CredentialTypesApiService) CredentialTypesCredentialTypesUpdate(ctx _context.Context, id string, localVarOptionals *CredentialTypesCredentialTypesUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -1512,20 +861,16 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesUpdateExecute(
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CredentialTypesApiService.CredentialTypesCredentialTypesUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/credential_types/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/credential_types/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -1545,13 +890,20 @@ func (a *CredentialTypesApiService) CredentialTypesCredentialTypesUpdateExecute(
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject2)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject2")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

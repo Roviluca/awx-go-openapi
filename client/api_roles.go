@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,122 +26,24 @@ var (
 // RolesApiService RolesApi service
 type RolesApiService service
 
-type ApiRolesRolesChildrenListRequest struct {
-	ctx _context.Context
-	ApiService *RolesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiRolesRolesChildrenListRequest) Page(page int32) ApiRolesRolesChildrenListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiRolesRolesChildrenListRequest) PageSize(pageSize int32) ApiRolesRolesChildrenListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiRolesRolesChildrenListRequest) Search(search string) ApiRolesRolesChildrenListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiRolesRolesChildrenListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.RolesRolesChildrenListExecute(r)
+// RolesRolesChildrenListOpts Optional parameters for the method 'RolesRolesChildrenList'
+type RolesRolesChildrenListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * RolesRolesChildrenList  List Roles for a Role
- * 
-Make a GET request to this resource to retrieve a list of
-roles associated with the selected
-role.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of roles
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more role records.  
-
-## Results
-
-Each role data structure includes the following fields:
-
-* `id`: Database ID for this role. (integer)
-* `type`: Data type for this role. (choice)
-* `url`: URL for this role. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `name`: Name of this role. (field)
-* `description`: Optional description of this role. (field)
-
-
-
-## Sorting
-
-To specify that roles are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+RolesRolesChildrenList  List Roles for a Role
+ Make a GET request to this resource to retrieve a list of roles associated with the selected role.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of roles found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more role records.    ## Results  Each role data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this role. (integer) * &#x60;type&#x60;: Data type for this role. (choice) * &#x60;url&#x60;: URL for this role. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;name&#x60;: Name of this role. (field) * &#x60;description&#x60;: Optional description of this role. (field)    ## Sorting  To specify that roles are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiRolesRolesChildrenListRequest
- */
-func (a *RolesApiService) RolesRolesChildrenList(ctx _context.Context, id string) ApiRolesRolesChildrenListRequest {
-	return ApiRolesRolesChildrenListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *RolesApiService) RolesRolesChildrenListExecute(r ApiRolesRolesChildrenListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *RolesRolesChildrenListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *RolesApiService) RolesRolesChildrenList(ctx _context.Context, id string, localVarOptionals *RolesRolesChildrenListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -149,26 +52,22 @@ func (a *RolesApiService) RolesRolesChildrenListExecute(r ApiRolesRolesChildrenL
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiService.RolesRolesChildrenList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/roles/{id}/children/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/roles/{id}/children/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -187,12 +86,12 @@ func (a *RolesApiService) RolesRolesChildrenListExecute(r ApiRolesRolesChildrenL
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -214,118 +113,23 @@ func (a *RolesApiService) RolesRolesChildrenListExecute(r ApiRolesRolesChildrenL
 	return localVarHTTPResponse, nil
 }
 
-type ApiRolesRolesListRequest struct {
-	ctx _context.Context
-	ApiService *RolesApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiRolesRolesListRequest) Page(page int32) ApiRolesRolesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiRolesRolesListRequest) PageSize(pageSize int32) ApiRolesRolesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiRolesRolesListRequest) Search(search string) ApiRolesRolesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiRolesRolesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.RolesRolesListExecute(r)
+// RolesRolesListOpts Optional parameters for the method 'RolesRolesList'
+type RolesRolesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * RolesRolesList  List Roles
- * 
-Make a GET request to this resource to retrieve the list of
-roles.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of roles
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more role records.  
-
-## Results
-
-Each role data structure includes the following fields:
-
-* `id`: Database ID for this role. (integer)
-* `type`: Data type for this role. (choice)
-* `url`: URL for this role. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `name`: Name of this role. (field)
-* `description`: Optional description of this role. (field)
-
-
-
-## Sorting
-
-To specify that roles are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+RolesRolesList  List Roles
+ Make a GET request to this resource to retrieve the list of roles.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of roles found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more role records.    ## Results  Each role data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this role. (integer) * &#x60;type&#x60;: Data type for this role. (choice) * &#x60;url&#x60;: URL for this role. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;name&#x60;: Name of this role. (field) * &#x60;description&#x60;: Optional description of this role. (field)    ## Sorting  To specify that roles are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiRolesRolesListRequest
- */
-func (a *RolesApiService) RolesRolesList(ctx _context.Context) ApiRolesRolesListRequest {
-	return ApiRolesRolesListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *RolesApiService) RolesRolesListExecute(r ApiRolesRolesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *RolesRolesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *RolesApiService) RolesRolesList(ctx _context.Context, localVarOptionals *RolesRolesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -334,25 +138,20 @@ func (a *RolesApiService) RolesRolesListExecute(r ApiRolesRolesListRequest) (*_n
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiService.RolesRolesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/roles/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/roles/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -371,12 +170,12 @@ func (a *RolesApiService) RolesRolesListExecute(r ApiRolesRolesListRequest) (*_n
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -398,122 +197,24 @@ func (a *RolesApiService) RolesRolesListExecute(r ApiRolesRolesListRequest) (*_n
 	return localVarHTTPResponse, nil
 }
 
-type ApiRolesRolesParentsListRequest struct {
-	ctx _context.Context
-	ApiService *RolesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiRolesRolesParentsListRequest) Page(page int32) ApiRolesRolesParentsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiRolesRolesParentsListRequest) PageSize(pageSize int32) ApiRolesRolesParentsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiRolesRolesParentsListRequest) Search(search string) ApiRolesRolesParentsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiRolesRolesParentsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.RolesRolesParentsListExecute(r)
+// RolesRolesParentsListOpts Optional parameters for the method 'RolesRolesParentsList'
+type RolesRolesParentsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * RolesRolesParentsList  List Roles for a Role
- * 
-Make a GET request to this resource to retrieve a list of
-roles associated with the selected
-role.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of roles
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more role records.  
-
-## Results
-
-Each role data structure includes the following fields:
-
-* `id`: Database ID for this role. (integer)
-* `type`: Data type for this role. (choice)
-* `url`: URL for this role. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `name`: Name of this role. (field)
-* `description`: Optional description of this role. (field)
-
-
-
-## Sorting
-
-To specify that roles are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+RolesRolesParentsList  List Roles for a Role
+ Make a GET request to this resource to retrieve a list of roles associated with the selected role.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of roles found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more role records.    ## Results  Each role data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this role. (integer) * &#x60;type&#x60;: Data type for this role. (choice) * &#x60;url&#x60;: URL for this role. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;name&#x60;: Name of this role. (field) * &#x60;description&#x60;: Optional description of this role. (field)    ## Sorting  To specify that roles are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiRolesRolesParentsListRequest
- */
-func (a *RolesApiService) RolesRolesParentsList(ctx _context.Context, id string) ApiRolesRolesParentsListRequest {
-	return ApiRolesRolesParentsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *RolesApiService) RolesRolesParentsListExecute(r ApiRolesRolesParentsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *RolesRolesParentsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *RolesApiService) RolesRolesParentsList(ctx _context.Context, id string, localVarOptionals *RolesRolesParentsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -522,26 +223,22 @@ func (a *RolesApiService) RolesRolesParentsListExecute(r ApiRolesRolesParentsLis
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiService.RolesRolesParentsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/roles/{id}/parents/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/roles/{id}/parents/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -560,12 +257,12 @@ func (a *RolesApiService) RolesRolesParentsListExecute(r ApiRolesRolesParentsLis
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -587,51 +284,20 @@ func (a *RolesApiService) RolesRolesParentsListExecute(r ApiRolesRolesParentsLis
 	return localVarHTTPResponse, nil
 }
 
-type ApiRolesRolesReadRequest struct {
-	ctx _context.Context
-	ApiService *RolesApiService
-	id string
-	search *string
-}
-
-func (r ApiRolesRolesReadRequest) Search(search string) ApiRolesRolesReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiRolesRolesReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.RolesRolesReadExecute(r)
+// RolesRolesReadOpts Optional parameters for the method 'RolesRolesRead'
+type RolesRolesReadOpts struct {
+    Search optional.String
 }
 
 /*
- * RolesRolesRead  Retrieve a Role
- * 
-Make GET request to this resource to retrieve a single role
-record containing the following fields:
-
-* `id`: Database ID for this role. (integer)
-* `type`: Data type for this role. (choice)
-* `url`: URL for this role. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `name`: Name of this role. (field)
-* `description`: Optional description of this role. (field)
+RolesRolesRead  Retrieve a Role
+ Make GET request to this resource to retrieve a single role record containing the following fields:  * &#x60;id&#x60;: Database ID for this role. (integer) * &#x60;type&#x60;: Data type for this role. (choice) * &#x60;url&#x60;: URL for this role. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;name&#x60;: Name of this role. (field) * &#x60;description&#x60;: Optional description of this role. (field)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiRolesRolesReadRequest
- */
-func (a *RolesApiService) RolesRolesRead(ctx _context.Context, id string) ApiRolesRolesReadRequest {
-	return ApiRolesRolesReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *RolesApiService) RolesRolesReadExecute(r ApiRolesRolesReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *RolesRolesReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *RolesApiService) RolesRolesRead(ctx _context.Context, id string, localVarOptionals *RolesRolesReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -640,20 +306,16 @@ func (a *RolesApiService) RolesRolesReadExecute(r ApiRolesRolesReadRequest) (*_n
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiService.RolesRolesRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/roles/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/roles/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -672,12 +334,12 @@ func (a *RolesApiService) RolesRolesReadExecute(r ApiRolesRolesReadRequest) (*_n
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -699,74 +361,20 @@ func (a *RolesApiService) RolesRolesReadExecute(r ApiRolesRolesReadRequest) (*_n
 	return localVarHTTPResponse, nil
 }
 
-type ApiRolesRolesTeamsCreateRequest struct {
-	ctx _context.Context
-	ApiService *RolesApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiRolesRolesTeamsCreateRequest) Data(data map[string]interface{}) ApiRolesRolesTeamsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiRolesRolesTeamsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.RolesRolesTeamsCreateExecute(r)
+// RolesRolesTeamsCreateOpts Optional parameters for the method 'RolesRolesTeamsCreate'
+type RolesRolesTeamsCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * RolesRolesTeamsCreate  Create a Team for a Role
- * 
-Make a POST request to this resource with the following team
-fields to create a new team associated with this
-role.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this team. (string, required)
-* `description`: Optional description of this team. (string, default=`""`)
-* `organization`:  (id, required)
-
-
-
-
-
-
-
-
-# Add Teams for a Role:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing team with this role.
-
-# Remove Teams from this Role:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the team from this role
- without deleting the team.
+RolesRolesTeamsCreate  Create a Team for a Role
+ Make a POST request to this resource with the following team fields to create a new team associated with this role.          * &#x60;name&#x60;: Name of this team. (string, required) * &#x60;description&#x60;: Optional description of this team. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;:  (id, required)         # Add Teams for a Role:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing team with this role.  # Remove Teams from this Role:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the team from this role  without deleting the team.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiRolesRolesTeamsCreateRequest
- */
-func (a *RolesApiService) RolesRolesTeamsCreate(ctx _context.Context, id string) ApiRolesRolesTeamsCreateRequest {
-	return ApiRolesRolesTeamsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *RolesApiService) RolesRolesTeamsCreateExecute(r ApiRolesRolesTeamsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *RolesRolesTeamsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *RolesApiService) RolesRolesTeamsCreate(ctx _context.Context, id string, localVarOptionals *RolesRolesTeamsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -775,13 +383,9 @@ func (a *RolesApiService) RolesRolesTeamsCreateExecute(r ApiRolesRolesTeamsCreat
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiService.RolesRolesTeamsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/roles/{id}/teams/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/roles/{id}/teams/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -805,13 +409,16 @@ func (a *RolesApiService) RolesRolesTeamsCreateExecute(r ApiRolesRolesTeamsCreat
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -833,125 +440,24 @@ func (a *RolesApiService) RolesRolesTeamsCreateExecute(r ApiRolesRolesTeamsCreat
 	return localVarHTTPResponse, nil
 }
 
-type ApiRolesRolesTeamsListRequest struct {
-	ctx _context.Context
-	ApiService *RolesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiRolesRolesTeamsListRequest) Page(page int32) ApiRolesRolesTeamsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiRolesRolesTeamsListRequest) PageSize(pageSize int32) ApiRolesRolesTeamsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiRolesRolesTeamsListRequest) Search(search string) ApiRolesRolesTeamsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiRolesRolesTeamsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.RolesRolesTeamsListExecute(r)
+// RolesRolesTeamsListOpts Optional parameters for the method 'RolesRolesTeamsList'
+type RolesRolesTeamsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * RolesRolesTeamsList  List Teams for a Role
- * 
-Make a GET request to this resource to retrieve a list of
-teams associated with the selected
-role.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of teams
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more team records.  
-
-## Results
-
-Each team data structure includes the following fields:
-
-* `id`: Database ID for this team. (integer)
-* `type`: Data type for this team. (choice)
-* `url`: URL for this team. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this team was created. (datetime)
-* `modified`: Timestamp when this team was last modified. (datetime)
-* `name`: Name of this team. (string)
-* `description`: Optional description of this team. (string)
-* `organization`:  (id)
-
-
-
-## Sorting
-
-To specify that teams are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+RolesRolesTeamsList  List Teams for a Role
+ Make a GET request to this resource to retrieve a list of teams associated with the selected role.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of teams found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more team records.    ## Results  Each team data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this team. (integer) * &#x60;type&#x60;: Data type for this team. (choice) * &#x60;url&#x60;: URL for this team. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this team was created. (datetime) * &#x60;modified&#x60;: Timestamp when this team was last modified. (datetime) * &#x60;name&#x60;: Name of this team. (string) * &#x60;description&#x60;: Optional description of this team. (string) * &#x60;organization&#x60;:  (id)    ## Sorting  To specify that teams are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiRolesRolesTeamsListRequest
- */
-func (a *RolesApiService) RolesRolesTeamsList(ctx _context.Context, id string) ApiRolesRolesTeamsListRequest {
-	return ApiRolesRolesTeamsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *RolesApiService) RolesRolesTeamsListExecute(r ApiRolesRolesTeamsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *RolesRolesTeamsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *RolesApiService) RolesRolesTeamsList(ctx _context.Context, id string, localVarOptionals *RolesRolesTeamsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -960,26 +466,22 @@ func (a *RolesApiService) RolesRolesTeamsListExecute(r ApiRolesRolesTeamsListReq
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiService.RolesRolesTeamsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/roles/{id}/teams/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/roles/{id}/teams/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -998,12 +500,12 @@ func (a *RolesApiService) RolesRolesTeamsListExecute(r ApiRolesRolesTeamsListReq
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1025,80 +527,20 @@ func (a *RolesApiService) RolesRolesTeamsListExecute(r ApiRolesRolesTeamsListReq
 	return localVarHTTPResponse, nil
 }
 
-type ApiRolesRolesUsersCreateRequest struct {
-	ctx _context.Context
-	ApiService *RolesApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiRolesRolesUsersCreateRequest) Data(data map[string]interface{}) ApiRolesRolesUsersCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiRolesRolesUsersCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.RolesRolesUsersCreateExecute(r)
+// RolesRolesUsersCreateOpts Optional parameters for the method 'RolesRolesUsersCreate'
+type RolesRolesUsersCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * RolesRolesUsersCreate  Create a User for a Role
- * 
-Make a POST request to this resource with the following user
-fields to create a new user associated with this
-role.
-
-
-
-
-
-
-
-
-* `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string, required)
-* `first_name`:  (string, default=`""`)
-* `last_name`:  (string, default=`""`)
-* `email`:  (string, default=`""`)
-* `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean, default=`False`)
-* `is_system_auditor`:  (boolean, default=`False`)
-* `password`: Write-only field used to change the password. (string, default=`""`)
-
-
-
-
-
-
-
-
-
-
-
-# Add Users for a Role:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing user with this role.
-
-# Remove Users from this Role:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the user from this role
- without deleting the user.
+RolesRolesUsersCreate  Create a User for a Role
+ Make a POST request to this resource with the following user fields to create a new user associated with this role.         * &#x60;username&#x60;: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string, required) * &#x60;first_name&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;last_name&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;email&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;is_superuser&#x60;: Designates that this user has all permissions without explicitly assigning them. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;is_system_auditor&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;password&#x60;: Write-only field used to change the password. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)            # Add Users for a Role:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing user with this role.  # Remove Users from this Role:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the user from this role  without deleting the user.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiRolesRolesUsersCreateRequest
- */
-func (a *RolesApiService) RolesRolesUsersCreate(ctx _context.Context, id string) ApiRolesRolesUsersCreateRequest {
-	return ApiRolesRolesUsersCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *RolesApiService) RolesRolesUsersCreateExecute(r ApiRolesRolesUsersCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *RolesRolesUsersCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *RolesApiService) RolesRolesUsersCreate(ctx _context.Context, id string, localVarOptionals *RolesRolesUsersCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -1107,13 +549,9 @@ func (a *RolesApiService) RolesRolesUsersCreateExecute(r ApiRolesRolesUsersCreat
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiService.RolesRolesUsersCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/roles/{id}/users/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/roles/{id}/users/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1137,13 +575,16 @@ func (a *RolesApiService) RolesRolesUsersCreateExecute(r ApiRolesRolesUsersCreat
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1165,131 +606,24 @@ func (a *RolesApiService) RolesRolesUsersCreateExecute(r ApiRolesRolesUsersCreat
 	return localVarHTTPResponse, nil
 }
 
-type ApiRolesRolesUsersListRequest struct {
-	ctx _context.Context
-	ApiService *RolesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiRolesRolesUsersListRequest) Page(page int32) ApiRolesRolesUsersListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiRolesRolesUsersListRequest) PageSize(pageSize int32) ApiRolesRolesUsersListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiRolesRolesUsersListRequest) Search(search string) ApiRolesRolesUsersListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiRolesRolesUsersListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.RolesRolesUsersListExecute(r)
+// RolesRolesUsersListOpts Optional parameters for the method 'RolesRolesUsersList'
+type RolesRolesUsersListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * RolesRolesUsersList  List Users for a Role
- * 
-Make a GET request to this resource to retrieve a list of
-users associated with the selected
-role.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of users
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more user records.  
-
-## Results
-
-Each user data structure includes the following fields:
-
-* `id`: Database ID for this user. (integer)
-* `type`: Data type for this user. (choice)
-* `url`: URL for this user. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this user was created. (datetime)
-* `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string)
-* `first_name`:  (string)
-* `last_name`:  (string)
-* `email`:  (string)
-* `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean)
-* `is_system_auditor`:  (boolean)
-
-* `ldap_dn`:  (string)
-* `last_login`:  (datetime)
-* `external_account`: Set if the account is managed by an external service (field)
-
-
-
-## Sorting
-
-To specify that users are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=username
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-username
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=username,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+RolesRolesUsersList  List Users for a Role
+ Make a GET request to this resource to retrieve a list of users associated with the selected role.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of users found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more user records.    ## Results  Each user data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this user. (integer) * &#x60;type&#x60;: Data type for this user. (choice) * &#x60;url&#x60;: URL for this user. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this user was created. (datetime) * &#x60;username&#x60;: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string) * &#x60;first_name&#x60;:  (string) * &#x60;last_name&#x60;:  (string) * &#x60;email&#x60;:  (string) * &#x60;is_superuser&#x60;: Designates that this user has all permissions without explicitly assigning them. (boolean) * &#x60;is_system_auditor&#x60;:  (boolean)  * &#x60;ldap_dn&#x60;:  (string) * &#x60;last_login&#x60;:  (datetime) * &#x60;external_account&#x60;: Set if the account is managed by an external service (field)    ## Sorting  To specify that users are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;username  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-username  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;username,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiRolesRolesUsersListRequest
- */
-func (a *RolesApiService) RolesRolesUsersList(ctx _context.Context, id string) ApiRolesRolesUsersListRequest {
-	return ApiRolesRolesUsersListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *RolesApiService) RolesRolesUsersListExecute(r ApiRolesRolesUsersListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *RolesRolesUsersListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *RolesApiService) RolesRolesUsersList(ctx _context.Context, id string, localVarOptionals *RolesRolesUsersListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1298,26 +632,22 @@ func (a *RolesApiService) RolesRolesUsersListExecute(r ApiRolesRolesUsersListReq
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesApiService.RolesRolesUsersList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/roles/{id}/users/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/roles/{id}/users/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1336,12 +666,12 @@ func (a *RolesApiService) RolesRolesUsersListExecute(r ApiRolesRolesUsersListReq
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

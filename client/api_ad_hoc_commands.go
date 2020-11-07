@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,133 +26,24 @@ var (
 // AdHocCommandsApiService AdHocCommandsApi service
 type AdHocCommandsApiService service
 
-type ApiAdHocCommandsAdHocCommandsActivityStreamListRequest struct {
-	ctx _context.Context
-	ApiService *AdHocCommandsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiAdHocCommandsAdHocCommandsActivityStreamListRequest) Page(page int32) ApiAdHocCommandsAdHocCommandsActivityStreamListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiAdHocCommandsAdHocCommandsActivityStreamListRequest) PageSize(pageSize int32) ApiAdHocCommandsAdHocCommandsActivityStreamListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiAdHocCommandsAdHocCommandsActivityStreamListRequest) Search(search string) ApiAdHocCommandsAdHocCommandsActivityStreamListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiAdHocCommandsAdHocCommandsActivityStreamListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AdHocCommandsAdHocCommandsActivityStreamListExecute(r)
+// AdHocCommandsAdHocCommandsActivityStreamListOpts Optional parameters for the method 'AdHocCommandsAdHocCommandsActivityStreamList'
+type AdHocCommandsAdHocCommandsActivityStreamListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * AdHocCommandsAdHocCommandsActivityStreamList  List Activity Streams for an Ad Hoc Command
- * 
-Make a GET request to this resource to retrieve a list of
-activity streams associated with the selected
-ad hoc command.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of activity streams
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more activity stream records.  
-
-## Results
-
-Each activity stream data structure includes the following fields:
-
-* `id`: Database ID for this activity stream. (integer)
-* `type`: Data type for this activity stream. (choice)
-* `url`: URL for this activity stream. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `timestamp`:  (datetime)
-* `operation`: The action taken with respect to the given object(s). (choice)
-    - `create`: Entity Created
-    - `update`: Entity Updated
-    - `delete`: Entity Deleted
-    - `associate`: Entity Associated with another Entity
-    - `disassociate`: Entity was Disassociated with another Entity
-* `changes`: A summary of the new and changed values when an object is created, updated, or deleted (json)
-* `object1`: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string)
-* `object2`: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string)
-* `object_association`: When present, shows the field name of the role or relationship that changed. (field)
-* `action_node`: The cluster node the activity took place on. (string)
-* `object_type`: When present, shows the model on which the role or relationship was defined. (field)
-
-
-
-## Sorting
-
-To specify that activity streams are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+AdHocCommandsAdHocCommandsActivityStreamList  List Activity Streams for an Ad Hoc Command
+ Make a GET request to this resource to retrieve a list of activity streams associated with the selected ad hoc command.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of activity streams found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more activity stream records.    ## Results  Each activity stream data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this activity stream. (integer) * &#x60;type&#x60;: Data type for this activity stream. (choice) * &#x60;url&#x60;: URL for this activity stream. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;timestamp&#x60;:  (datetime) * &#x60;operation&#x60;: The action taken with respect to the given object(s). (choice)     - &#x60;create&#x60;: Entity Created     - &#x60;update&#x60;: Entity Updated     - &#x60;delete&#x60;: Entity Deleted     - &#x60;associate&#x60;: Entity Associated with another Entity     - &#x60;disassociate&#x60;: Entity was Disassociated with another Entity * &#x60;changes&#x60;: A summary of the new and changed values when an object is created, updated, or deleted (json) * &#x60;object1&#x60;: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string) * &#x60;object2&#x60;: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string) * &#x60;object_association&#x60;: When present, shows the field name of the role or relationship that changed. (field) * &#x60;action_node&#x60;: The cluster node the activity took place on. (string) * &#x60;object_type&#x60;: When present, shows the model on which the role or relationship was defined. (field)    ## Sorting  To specify that activity streams are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAdHocCommandsAdHocCommandsActivityStreamListRequest
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsActivityStreamList(ctx _context.Context, id string) ApiAdHocCommandsAdHocCommandsActivityStreamListRequest {
-	return ApiAdHocCommandsAdHocCommandsActivityStreamListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsActivityStreamListExecute(r ApiAdHocCommandsAdHocCommandsActivityStreamListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *AdHocCommandsAdHocCommandsActivityStreamListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsActivityStreamList(ctx _context.Context, id string, localVarOptionals *AdHocCommandsAdHocCommandsActivityStreamListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -160,26 +52,22 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsActivityStreamListEx
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AdHocCommandsApiService.AdHocCommandsAdHocCommandsActivityStreamList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/ad_hoc_commands/{id}/activity_stream/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/ad_hoc_commands/{id}/activity_stream/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -198,12 +86,12 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsActivityStreamListEx
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -225,40 +113,13 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsActivityStreamListEx
 	return localVarHTTPResponse, nil
 }
 
-type ApiAdHocCommandsAdHocCommandsCancelCreateRequest struct {
-	ctx _context.Context
-	ApiService *AdHocCommandsApiService
-	id string
-}
-
-
-func (r ApiAdHocCommandsAdHocCommandsCancelCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AdHocCommandsAdHocCommandsCancelCreateExecute(r)
-}
-
 /*
- * AdHocCommandsAdHocCommandsCancelCreate  Retrieve an Ad Hoc Command
- * 
-Make GET request to this resource to retrieve a single ad hoc command
-record containing the following fields:
-
-* `can_cancel`:  (boolean)
+AdHocCommandsAdHocCommandsCancelCreate  Retrieve an Ad Hoc Command
+ Make GET request to this resource to retrieve a single ad hoc command record containing the following fields:  * &#x60;can_cancel&#x60;:  (boolean)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAdHocCommandsAdHocCommandsCancelCreateRequest
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsCancelCreate(ctx _context.Context, id string) ApiAdHocCommandsAdHocCommandsCancelCreateRequest {
-	return ApiAdHocCommandsAdHocCommandsCancelCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsCancelCreateExecute(r ApiAdHocCommandsAdHocCommandsCancelCreateRequest) (*_nethttp.Response, error) {
+*/
+func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsCancelCreate(ctx _context.Context, id string) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -267,13 +128,9 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsCancelCreateExecute(
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AdHocCommandsApiService.AdHocCommandsAdHocCommandsCancelCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/ad_hoc_commands/{id}/cancel/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/ad_hoc_commands/{id}/cancel/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -296,12 +153,12 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsCancelCreateExecute(
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -323,45 +180,20 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsCancelCreateExecute(
 	return localVarHTTPResponse, nil
 }
 
-type ApiAdHocCommandsAdHocCommandsCancelReadRequest struct {
-	ctx _context.Context
-	ApiService *AdHocCommandsApiService
-	id string
-	search *string
-}
-
-func (r ApiAdHocCommandsAdHocCommandsCancelReadRequest) Search(search string) ApiAdHocCommandsAdHocCommandsCancelReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiAdHocCommandsAdHocCommandsCancelReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AdHocCommandsAdHocCommandsCancelReadExecute(r)
+// AdHocCommandsAdHocCommandsCancelReadOpts Optional parameters for the method 'AdHocCommandsAdHocCommandsCancelRead'
+type AdHocCommandsAdHocCommandsCancelReadOpts struct {
+    Search optional.String
 }
 
 /*
- * AdHocCommandsAdHocCommandsCancelRead  Retrieve an Ad Hoc Command
- * 
-Make GET request to this resource to retrieve a single ad hoc command
-record containing the following fields:
-
-* `can_cancel`:  (boolean)
+AdHocCommandsAdHocCommandsCancelRead  Retrieve an Ad Hoc Command
+ Make GET request to this resource to retrieve a single ad hoc command record containing the following fields:  * &#x60;can_cancel&#x60;:  (boolean)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAdHocCommandsAdHocCommandsCancelReadRequest
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsCancelRead(ctx _context.Context, id string) ApiAdHocCommandsAdHocCommandsCancelReadRequest {
-	return ApiAdHocCommandsAdHocCommandsCancelReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsCancelReadExecute(r ApiAdHocCommandsAdHocCommandsCancelReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *AdHocCommandsAdHocCommandsCancelReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsCancelRead(ctx _context.Context, id string, localVarOptionals *AdHocCommandsAdHocCommandsCancelReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -370,20 +202,16 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsCancelReadExecute(r 
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AdHocCommandsApiService.AdHocCommandsAdHocCommandsCancelRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/ad_hoc_commands/{id}/cancel/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/ad_hoc_commands/{id}/cancel/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -402,12 +230,12 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsCancelReadExecute(r 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -429,98 +257,19 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsCancelReadExecute(r 
 	return localVarHTTPResponse, nil
 }
 
-type ApiAdHocCommandsAdHocCommandsCreateRequest struct {
-	ctx _context.Context
-	ApiService *AdHocCommandsApiService
-	data *map[string]interface{}
-}
-
-func (r ApiAdHocCommandsAdHocCommandsCreateRequest) Data(data map[string]interface{}) ApiAdHocCommandsAdHocCommandsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiAdHocCommandsAdHocCommandsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AdHocCommandsAdHocCommandsCreateExecute(r)
+// AdHocCommandsAdHocCommandsCreateOpts Optional parameters for the method 'AdHocCommandsAdHocCommandsCreate'
+type AdHocCommandsAdHocCommandsCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * AdHocCommandsAdHocCommandsCreate  Create an Ad Hoc Command
- * 
-Make a POST request to this resource with the following ad hoc command
-fields to create a new ad hoc command:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-* `job_type`:  (choice)
-    - `run`: Run (default)
-    - `check`: Check
-* `inventory`:  (id, default=``)
-* `limit`:  (string, default=`""`)
-* `credential`:  (id, default=``)
-* `module_name`:  (choice)
-    - `command` (default)
-    - `shell`
-    - `yum`
-    - `apt`
-    - `apt_key`
-    - `apt_repository`
-    - `apt_rpm`
-    - `service`
-    - `group`
-    - `user`
-    - `mount`
-    - `ping`
-    - `selinux`
-    - `setup`
-    - `win_ping`
-    - `win_service`
-    - `win_updates`
-    - `win_group`
-    - `win_user`
-* `module_args`:  (string, default=`""`)
-* `forks`:  (integer, default=`0`)
-* `verbosity`:  (choice)
-    - `0`: 0 (Normal) (default)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `extra_vars`:  (string, default=`""`)
-* `become_enabled`:  (boolean, default=`False`)
-* `diff_mode`:  (boolean, default=`False`)
+AdHocCommandsAdHocCommandsCreate  Create an Ad Hoc Command
+ Make a POST request to this resource with the following ad hoc command fields to create a new ad hoc command:                     * &#x60;job_type&#x60;:  (choice)     - &#x60;run&#x60;: Run (default)     - &#x60;check&#x60;: Check * &#x60;inventory&#x60;:  (id, default&#x3D;&#x60;&#x60;) * &#x60;limit&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;credential&#x60;:  (id, default&#x3D;&#x60;&#x60;) * &#x60;module_name&#x60;:  (choice)     - &#x60;command&#x60; (default)     - &#x60;shell&#x60;     - &#x60;yum&#x60;     - &#x60;apt&#x60;     - &#x60;apt_key&#x60;     - &#x60;apt_repository&#x60;     - &#x60;apt_rpm&#x60;     - &#x60;service&#x60;     - &#x60;group&#x60;     - &#x60;user&#x60;     - &#x60;mount&#x60;     - &#x60;ping&#x60;     - &#x60;selinux&#x60;     - &#x60;setup&#x60;     - &#x60;win_ping&#x60;     - &#x60;win_service&#x60;     - &#x60;win_updates&#x60;     - &#x60;win_group&#x60;     - &#x60;win_user&#x60; * &#x60;module_args&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;forks&#x60;:  (integer, default&#x3D;&#x60;0&#x60;) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (Normal) (default)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;extra_vars&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;become_enabled&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;diff_mode&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiAdHocCommandsAdHocCommandsCreateRequest
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsCreate(ctx _context.Context) ApiAdHocCommandsAdHocCommandsCreateRequest {
-	return ApiAdHocCommandsAdHocCommandsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsCreateExecute(r ApiAdHocCommandsAdHocCommandsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *AdHocCommandsAdHocCommandsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsCreate(ctx _context.Context, localVarOptionals *AdHocCommandsAdHocCommandsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -529,13 +278,8 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsCreateExecute(r ApiA
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AdHocCommandsApiService.AdHocCommandsAdHocCommandsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/ad_hoc_commands/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/ad_hoc_commands/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -558,13 +302,16 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsCreateExecute(r ApiA
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -586,42 +333,20 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsCreateExecute(r ApiA
 	return localVarHTTPResponse, nil
 }
 
-type ApiAdHocCommandsAdHocCommandsDeleteRequest struct {
-	ctx _context.Context
-	ApiService *AdHocCommandsApiService
-	id string
-	search *string
-}
-
-func (r ApiAdHocCommandsAdHocCommandsDeleteRequest) Search(search string) ApiAdHocCommandsAdHocCommandsDeleteRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiAdHocCommandsAdHocCommandsDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AdHocCommandsAdHocCommandsDeleteExecute(r)
+// AdHocCommandsAdHocCommandsDeleteOpts Optional parameters for the method 'AdHocCommandsAdHocCommandsDelete'
+type AdHocCommandsAdHocCommandsDeleteOpts struct {
+    Search optional.String
 }
 
 /*
- * AdHocCommandsAdHocCommandsDelete  Delete an Ad Hoc Command
- * 
-Make a DELETE request to this resource to delete this ad hoc command.
+AdHocCommandsAdHocCommandsDelete  Delete an Ad Hoc Command
+ Make a DELETE request to this resource to delete this ad hoc command.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAdHocCommandsAdHocCommandsDeleteRequest
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsDelete(ctx _context.Context, id string) ApiAdHocCommandsAdHocCommandsDeleteRequest {
-	return ApiAdHocCommandsAdHocCommandsDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsDeleteExecute(r ApiAdHocCommandsAdHocCommandsDeleteRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *AdHocCommandsAdHocCommandsDeleteOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsDelete(ctx _context.Context, id string, localVarOptionals *AdHocCommandsAdHocCommandsDeleteOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -630,20 +355,16 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsDeleteExecute(r ApiA
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AdHocCommandsApiService.AdHocCommandsAdHocCommandsDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/ad_hoc_commands/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/ad_hoc_commands/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -662,12 +383,12 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsDeleteExecute(r ApiA
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -689,146 +410,24 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsDeleteExecute(r ApiA
 	return localVarHTTPResponse, nil
 }
 
-type ApiAdHocCommandsAdHocCommandsEventsListRequest struct {
-	ctx _context.Context
-	ApiService *AdHocCommandsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiAdHocCommandsAdHocCommandsEventsListRequest) Page(page int32) ApiAdHocCommandsAdHocCommandsEventsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiAdHocCommandsAdHocCommandsEventsListRequest) PageSize(pageSize int32) ApiAdHocCommandsAdHocCommandsEventsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiAdHocCommandsAdHocCommandsEventsListRequest) Search(search string) ApiAdHocCommandsAdHocCommandsEventsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiAdHocCommandsAdHocCommandsEventsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AdHocCommandsAdHocCommandsEventsListExecute(r)
+// AdHocCommandsAdHocCommandsEventsListOpts Optional parameters for the method 'AdHocCommandsAdHocCommandsEventsList'
+type AdHocCommandsAdHocCommandsEventsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * AdHocCommandsAdHocCommandsEventsList  List Ad Hoc Command Events for an Ad Hoc Command
- * 
-Make a GET request to this resource to retrieve a list of
-ad hoc command events associated with the selected
-ad hoc command.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of ad hoc command events
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more ad hoc command event records.  
-
-## Results
-
-Each ad hoc command event data structure includes the following fields:
-
-* `id`: Database ID for this ad hoc command event. (integer)
-* `type`: Data type for this ad hoc command event. (choice)
-* `url`: URL for this ad hoc command event. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this ad hoc command event was created. (datetime)
-* `modified`: Timestamp when this ad hoc command event was last modified. (datetime)
-* `ad_hoc_command`:  (id)
-* `event`:  (choice)
-    - `runner_on_failed`: Host Failed
-    - `runner_on_ok`: Host OK
-    - `runner_on_unreachable`: Host Unreachable
-    - `runner_on_skipped`: Host Skipped
-    - `debug`: Debug
-    - `verbose`: Verbose
-    - `deprecated`: Deprecated
-    - `warning`: Warning
-    - `system_warning`: System Warning
-    - `error`: Error
-* `counter`:  (integer)
-* `event_display`:  (string)
-* `event_data`:  (json)
-* `failed`:  (boolean)
-* `changed`:  (boolean)
-* `uuid`:  (string)
-* `host`:  (id)
-* `host_name`:  (string)
-* `stdout`:  (string)
-* `start_line`:  (integer)
-* `end_line`:  (integer)
-* `verbosity`:  (integer)
-
-
-
-## Sorting
-
-To specify that ad hoc command events are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+AdHocCommandsAdHocCommandsEventsList  List Ad Hoc Command Events for an Ad Hoc Command
+ Make a GET request to this resource to retrieve a list of ad hoc command events associated with the selected ad hoc command.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of ad hoc command events found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more ad hoc command event records.    ## Results  Each ad hoc command event data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this ad hoc command event. (integer) * &#x60;type&#x60;: Data type for this ad hoc command event. (choice) * &#x60;url&#x60;: URL for this ad hoc command event. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this ad hoc command event was created. (datetime) * &#x60;modified&#x60;: Timestamp when this ad hoc command event was last modified. (datetime) * &#x60;ad_hoc_command&#x60;:  (id) * &#x60;event&#x60;:  (choice)     - &#x60;runner_on_failed&#x60;: Host Failed     - &#x60;runner_on_ok&#x60;: Host OK     - &#x60;runner_on_unreachable&#x60;: Host Unreachable     - &#x60;runner_on_skipped&#x60;: Host Skipped     - &#x60;debug&#x60;: Debug     - &#x60;verbose&#x60;: Verbose     - &#x60;deprecated&#x60;: Deprecated     - &#x60;warning&#x60;: Warning     - &#x60;system_warning&#x60;: System Warning     - &#x60;error&#x60;: Error * &#x60;counter&#x60;:  (integer) * &#x60;event_display&#x60;:  (string) * &#x60;event_data&#x60;:  (json) * &#x60;failed&#x60;:  (boolean) * &#x60;changed&#x60;:  (boolean) * &#x60;uuid&#x60;:  (string) * &#x60;host&#x60;:  (id) * &#x60;host_name&#x60;:  (string) * &#x60;stdout&#x60;:  (string) * &#x60;start_line&#x60;:  (integer) * &#x60;end_line&#x60;:  (integer) * &#x60;verbosity&#x60;:  (integer)    ## Sorting  To specify that ad hoc command events are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAdHocCommandsAdHocCommandsEventsListRequest
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsEventsList(ctx _context.Context, id string) ApiAdHocCommandsAdHocCommandsEventsListRequest {
-	return ApiAdHocCommandsAdHocCommandsEventsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsEventsListExecute(r ApiAdHocCommandsAdHocCommandsEventsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *AdHocCommandsAdHocCommandsEventsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsEventsList(ctx _context.Context, id string, localVarOptionals *AdHocCommandsAdHocCommandsEventsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -837,26 +436,22 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsEventsListExecute(r 
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AdHocCommandsApiService.AdHocCommandsAdHocCommandsEventsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/ad_hoc_commands/{id}/events/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/ad_hoc_commands/{id}/events/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -875,12 +470,12 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsEventsListExecute(r 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -902,184 +497,23 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsEventsListExecute(r 
 	return localVarHTTPResponse, nil
 }
 
-type ApiAdHocCommandsAdHocCommandsListRequest struct {
-	ctx _context.Context
-	ApiService *AdHocCommandsApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiAdHocCommandsAdHocCommandsListRequest) Page(page int32) ApiAdHocCommandsAdHocCommandsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiAdHocCommandsAdHocCommandsListRequest) PageSize(pageSize int32) ApiAdHocCommandsAdHocCommandsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiAdHocCommandsAdHocCommandsListRequest) Search(search string) ApiAdHocCommandsAdHocCommandsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiAdHocCommandsAdHocCommandsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AdHocCommandsAdHocCommandsListExecute(r)
+// AdHocCommandsAdHocCommandsListOpts Optional parameters for the method 'AdHocCommandsAdHocCommandsList'
+type AdHocCommandsAdHocCommandsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * AdHocCommandsAdHocCommandsList  List Ad Hoc Commands
- * 
-Make a GET request to this resource to retrieve the list of
-ad hoc commands.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of ad hoc commands
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more ad hoc command records.  
-
-## Results
-
-Each ad hoc command data structure includes the following fields:
-
-* `id`: Database ID for this ad hoc command. (integer)
-* `type`: Data type for this ad hoc command. (choice)
-* `url`: URL for this ad hoc command. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this ad hoc command was created. (datetime)
-* `modified`: Timestamp when this ad hoc command was last modified. (datetime)
-* `name`: Name of this ad hoc command. (string)
-* `launch_type`:  (choice)
-    - `manual`: Manual
-    - `relaunch`: Relaunch
-    - `callback`: Callback
-    - `scheduled`: Scheduled
-    - `dependency`: Dependency
-    - `workflow`: Workflow
-    - `webhook`: Webhook
-    - `sync`: Sync
-    - `scm`: SCM Update
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-* `failed`:  (boolean)
-* `started`: The date and time the job was queued for starting. (datetime)
-* `finished`: The date and time the job finished execution. (datetime)
-* `canceled_on`: The date and time when the cancel request was sent. (datetime)
-* `elapsed`: Elapsed time in seconds that the job ran. (decimal)
-* `job_explanation`: A status field to indicate the state of the job if it wasn&#39;t able to run and capture stdout (string)
-* `execution_node`: The node the job executed on. (string)
-* `controller_node`: The instance that managed the isolated execution environment. (string)
-* `job_type`:  (choice)
-    - `run`: Run
-    - `check`: Check
-* `inventory`:  (id)
-* `limit`:  (string)
-* `credential`:  (id)
-* `module_name`:  (choice)
-    - `command`
-    - `shell`
-    - `yum`
-    - `apt`
-    - `apt_key`
-    - `apt_repository`
-    - `apt_rpm`
-    - `service`
-    - `group`
-    - `user`
-    - `mount`
-    - `ping`
-    - `selinux`
-    - `setup`
-    - `win_ping`
-    - `win_service`
-    - `win_updates`
-    - `win_group`
-    - `win_user`
-* `module_args`:  (string)
-* `forks`:  (integer)
-* `verbosity`:  (choice)
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `extra_vars`:  (string)
-* `become_enabled`:  (boolean)
-* `diff_mode`:  (boolean)
-
-
-
-## Sorting
-
-To specify that ad hoc commands are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+AdHocCommandsAdHocCommandsList  List Ad Hoc Commands
+ Make a GET request to this resource to retrieve the list of ad hoc commands.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of ad hoc commands found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more ad hoc command records.    ## Results  Each ad hoc command data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this ad hoc command. (integer) * &#x60;type&#x60;: Data type for this ad hoc command. (choice) * &#x60;url&#x60;: URL for this ad hoc command. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this ad hoc command was created. (datetime) * &#x60;modified&#x60;: Timestamp when this ad hoc command was last modified. (datetime) * &#x60;name&#x60;: Name of this ad hoc command. (string) * &#x60;launch_type&#x60;:  (choice)     - &#x60;manual&#x60;: Manual     - &#x60;relaunch&#x60;: Relaunch     - &#x60;callback&#x60;: Callback     - &#x60;scheduled&#x60;: Scheduled     - &#x60;dependency&#x60;: Dependency     - &#x60;workflow&#x60;: Workflow     - &#x60;webhook&#x60;: Webhook     - &#x60;sync&#x60;: Sync     - &#x60;scm&#x60;: SCM Update * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled * &#x60;failed&#x60;:  (boolean) * &#x60;started&#x60;: The date and time the job was queued for starting. (datetime) * &#x60;finished&#x60;: The date and time the job finished execution. (datetime) * &#x60;canceled_on&#x60;: The date and time when the cancel request was sent. (datetime) * &#x60;elapsed&#x60;: Elapsed time in seconds that the job ran. (decimal) * &#x60;job_explanation&#x60;: A status field to indicate the state of the job if it wasn&amp;#39;t able to run and capture stdout (string) * &#x60;execution_node&#x60;: The node the job executed on. (string) * &#x60;controller_node&#x60;: The instance that managed the isolated execution environment. (string) * &#x60;job_type&#x60;:  (choice)     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;inventory&#x60;:  (id) * &#x60;limit&#x60;:  (string) * &#x60;credential&#x60;:  (id) * &#x60;module_name&#x60;:  (choice)     - &#x60;command&#x60;     - &#x60;shell&#x60;     - &#x60;yum&#x60;     - &#x60;apt&#x60;     - &#x60;apt_key&#x60;     - &#x60;apt_repository&#x60;     - &#x60;apt_rpm&#x60;     - &#x60;service&#x60;     - &#x60;group&#x60;     - &#x60;user&#x60;     - &#x60;mount&#x60;     - &#x60;ping&#x60;     - &#x60;selinux&#x60;     - &#x60;setup&#x60;     - &#x60;win_ping&#x60;     - &#x60;win_service&#x60;     - &#x60;win_updates&#x60;     - &#x60;win_group&#x60;     - &#x60;win_user&#x60; * &#x60;module_args&#x60;:  (string) * &#x60;forks&#x60;:  (integer) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;extra_vars&#x60;:  (string) * &#x60;become_enabled&#x60;:  (boolean) * &#x60;diff_mode&#x60;:  (boolean)    ## Sorting  To specify that ad hoc commands are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiAdHocCommandsAdHocCommandsListRequest
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsList(ctx _context.Context) ApiAdHocCommandsAdHocCommandsListRequest {
-	return ApiAdHocCommandsAdHocCommandsListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsListExecute(r ApiAdHocCommandsAdHocCommandsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *AdHocCommandsAdHocCommandsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsList(ctx _context.Context, localVarOptionals *AdHocCommandsAdHocCommandsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1088,25 +522,20 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsListExecute(r ApiAdH
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AdHocCommandsApiService.AdHocCommandsAdHocCommandsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/ad_hoc_commands/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/ad_hoc_commands/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1125,12 +554,12 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsListExecute(r ApiAdH
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1152,142 +581,24 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsListExecute(r ApiAdH
 	return localVarHTTPResponse, nil
 }
 
-type ApiAdHocCommandsAdHocCommandsNotificationsListRequest struct {
-	ctx _context.Context
-	ApiService *AdHocCommandsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiAdHocCommandsAdHocCommandsNotificationsListRequest) Page(page int32) ApiAdHocCommandsAdHocCommandsNotificationsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiAdHocCommandsAdHocCommandsNotificationsListRequest) PageSize(pageSize int32) ApiAdHocCommandsAdHocCommandsNotificationsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiAdHocCommandsAdHocCommandsNotificationsListRequest) Search(search string) ApiAdHocCommandsAdHocCommandsNotificationsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiAdHocCommandsAdHocCommandsNotificationsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AdHocCommandsAdHocCommandsNotificationsListExecute(r)
+// AdHocCommandsAdHocCommandsNotificationsListOpts Optional parameters for the method 'AdHocCommandsAdHocCommandsNotificationsList'
+type AdHocCommandsAdHocCommandsNotificationsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * AdHocCommandsAdHocCommandsNotificationsList  List Notifications for an Ad Hoc Command
- * 
-Make a GET request to this resource to retrieve a list of
-notifications associated with the selected
-ad hoc command.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of notifications
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more notification records.  
-
-## Results
-
-Each notification data structure includes the following fields:
-
-* `id`: Database ID for this notification. (integer)
-* `type`: Data type for this notification. (choice)
-* `url`: URL for this notification. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this notification was created. (datetime)
-* `modified`: Timestamp when this notification was last modified. (datetime)
-* `notification_template`:  (id)
-* `error`:  (string)
-* `status`:  (choice)
-    - `pending`: Pending
-    - `successful`: Successful
-    - `failed`: Failed
-* `notifications_sent`:  (integer)
-* `notification_type`:  (choice)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `recipients`:  (string)
-* `subject`:  (string)
-* `body`: Notification body (json)
-
-
-
-## Sorting
-
-To specify that notifications are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+AdHocCommandsAdHocCommandsNotificationsList  List Notifications for an Ad Hoc Command
+ Make a GET request to this resource to retrieve a list of notifications associated with the selected ad hoc command.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of notifications found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more notification records.    ## Results  Each notification data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this notification. (integer) * &#x60;type&#x60;: Data type for this notification. (choice) * &#x60;url&#x60;: URL for this notification. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this notification was created. (datetime) * &#x60;modified&#x60;: Timestamp when this notification was last modified. (datetime) * &#x60;notification_template&#x60;:  (id) * &#x60;error&#x60;:  (string) * &#x60;status&#x60;:  (choice)     - &#x60;pending&#x60;: Pending     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed * &#x60;notifications_sent&#x60;:  (integer) * &#x60;notification_type&#x60;:  (choice)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;recipients&#x60;:  (string) * &#x60;subject&#x60;:  (string) * &#x60;body&#x60;: Notification body (json)    ## Sorting  To specify that notifications are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAdHocCommandsAdHocCommandsNotificationsListRequest
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsNotificationsList(ctx _context.Context, id string) ApiAdHocCommandsAdHocCommandsNotificationsListRequest {
-	return ApiAdHocCommandsAdHocCommandsNotificationsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsNotificationsListExecute(r ApiAdHocCommandsAdHocCommandsNotificationsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *AdHocCommandsAdHocCommandsNotificationsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsNotificationsList(ctx _context.Context, id string, localVarOptionals *AdHocCommandsAdHocCommandsNotificationsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1296,26 +607,22 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsNotificationsListExe
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AdHocCommandsApiService.AdHocCommandsAdHocCommandsNotificationsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/ad_hoc_commands/{id}/notifications/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/ad_hoc_commands/{id}/notifications/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1334,12 +641,12 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsNotificationsListExe
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1361,123 +668,20 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsNotificationsListExe
 	return localVarHTTPResponse, nil
 }
 
-type ApiAdHocCommandsAdHocCommandsReadRequest struct {
-	ctx _context.Context
-	ApiService *AdHocCommandsApiService
-	id string
-	search *string
-}
-
-func (r ApiAdHocCommandsAdHocCommandsReadRequest) Search(search string) ApiAdHocCommandsAdHocCommandsReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiAdHocCommandsAdHocCommandsReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AdHocCommandsAdHocCommandsReadExecute(r)
+// AdHocCommandsAdHocCommandsReadOpts Optional parameters for the method 'AdHocCommandsAdHocCommandsRead'
+type AdHocCommandsAdHocCommandsReadOpts struct {
+    Search optional.String
 }
 
 /*
- * AdHocCommandsAdHocCommandsRead  Retrieve an Ad Hoc Command
- * 
-Make GET request to this resource to retrieve a single ad hoc command
-record containing the following fields:
-
-* `id`: Database ID for this ad hoc command. (integer)
-* `type`: Data type for this ad hoc command. (choice)
-* `url`: URL for this ad hoc command. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this ad hoc command was created. (datetime)
-* `modified`: Timestamp when this ad hoc command was last modified. (datetime)
-* `name`: Name of this ad hoc command. (string)
-* `launch_type`:  (choice)
-    - `manual`: Manual
-    - `relaunch`: Relaunch
-    - `callback`: Callback
-    - `scheduled`: Scheduled
-    - `dependency`: Dependency
-    - `workflow`: Workflow
-    - `webhook`: Webhook
-    - `sync`: Sync
-    - `scm`: SCM Update
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-* `failed`:  (boolean)
-* `started`: The date and time the job was queued for starting. (datetime)
-* `finished`: The date and time the job finished execution. (datetime)
-* `canceled_on`: The date and time when the cancel request was sent. (datetime)
-* `elapsed`: Elapsed time in seconds that the job ran. (decimal)
-* `job_args`:  (string)
-* `job_cwd`:  (string)
-* `job_env`:  (json)
-* `job_explanation`: A status field to indicate the state of the job if it wasn&#39;t able to run and capture stdout (string)
-* `execution_node`: The node the job executed on. (string)
-* `controller_node`: The instance that managed the isolated execution environment. (string)
-* `result_traceback`:  (string)
-* `event_processing_finished`: Indicates whether all of the events generated by this unified job have been saved to the database. (boolean)
-* `job_type`:  (choice)
-    - `run`: Run
-    - `check`: Check
-* `inventory`:  (id)
-* `limit`:  (string)
-* `credential`:  (id)
-* `module_name`:  (choice)
-    - `command`
-    - `shell`
-    - `yum`
-    - `apt`
-    - `apt_key`
-    - `apt_repository`
-    - `apt_rpm`
-    - `service`
-    - `group`
-    - `user`
-    - `mount`
-    - `ping`
-    - `selinux`
-    - `setup`
-    - `win_ping`
-    - `win_service`
-    - `win_updates`
-    - `win_group`
-    - `win_user`
-* `module_args`:  (string)
-* `forks`:  (integer)
-* `verbosity`:  (choice)
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `extra_vars`:  (string)
-* `become_enabled`:  (boolean)
-* `diff_mode`:  (boolean)
-* `host_status_counts`: A count of hosts uniquely assigned to each status. (field)
+AdHocCommandsAdHocCommandsRead  Retrieve an Ad Hoc Command
+ Make GET request to this resource to retrieve a single ad hoc command record containing the following fields:  * &#x60;id&#x60;: Database ID for this ad hoc command. (integer) * &#x60;type&#x60;: Data type for this ad hoc command. (choice) * &#x60;url&#x60;: URL for this ad hoc command. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this ad hoc command was created. (datetime) * &#x60;modified&#x60;: Timestamp when this ad hoc command was last modified. (datetime) * &#x60;name&#x60;: Name of this ad hoc command. (string) * &#x60;launch_type&#x60;:  (choice)     - &#x60;manual&#x60;: Manual     - &#x60;relaunch&#x60;: Relaunch     - &#x60;callback&#x60;: Callback     - &#x60;scheduled&#x60;: Scheduled     - &#x60;dependency&#x60;: Dependency     - &#x60;workflow&#x60;: Workflow     - &#x60;webhook&#x60;: Webhook     - &#x60;sync&#x60;: Sync     - &#x60;scm&#x60;: SCM Update * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled * &#x60;failed&#x60;:  (boolean) * &#x60;started&#x60;: The date and time the job was queued for starting. (datetime) * &#x60;finished&#x60;: The date and time the job finished execution. (datetime) * &#x60;canceled_on&#x60;: The date and time when the cancel request was sent. (datetime) * &#x60;elapsed&#x60;: Elapsed time in seconds that the job ran. (decimal) * &#x60;job_args&#x60;:  (string) * &#x60;job_cwd&#x60;:  (string) * &#x60;job_env&#x60;:  (json) * &#x60;job_explanation&#x60;: A status field to indicate the state of the job if it wasn&amp;#39;t able to run and capture stdout (string) * &#x60;execution_node&#x60;: The node the job executed on. (string) * &#x60;controller_node&#x60;: The instance that managed the isolated execution environment. (string) * &#x60;result_traceback&#x60;:  (string) * &#x60;event_processing_finished&#x60;: Indicates whether all of the events generated by this unified job have been saved to the database. (boolean) * &#x60;job_type&#x60;:  (choice)     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;inventory&#x60;:  (id) * &#x60;limit&#x60;:  (string) * &#x60;credential&#x60;:  (id) * &#x60;module_name&#x60;:  (choice)     - &#x60;command&#x60;     - &#x60;shell&#x60;     - &#x60;yum&#x60;     - &#x60;apt&#x60;     - &#x60;apt_key&#x60;     - &#x60;apt_repository&#x60;     - &#x60;apt_rpm&#x60;     - &#x60;service&#x60;     - &#x60;group&#x60;     - &#x60;user&#x60;     - &#x60;mount&#x60;     - &#x60;ping&#x60;     - &#x60;selinux&#x60;     - &#x60;setup&#x60;     - &#x60;win_ping&#x60;     - &#x60;win_service&#x60;     - &#x60;win_updates&#x60;     - &#x60;win_group&#x60;     - &#x60;win_user&#x60; * &#x60;module_args&#x60;:  (string) * &#x60;forks&#x60;:  (integer) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;extra_vars&#x60;:  (string) * &#x60;become_enabled&#x60;:  (boolean) * &#x60;diff_mode&#x60;:  (boolean) * &#x60;host_status_counts&#x60;: A count of hosts uniquely assigned to each status. (field)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAdHocCommandsAdHocCommandsReadRequest
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsRead(ctx _context.Context, id string) ApiAdHocCommandsAdHocCommandsReadRequest {
-	return ApiAdHocCommandsAdHocCommandsReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsReadExecute(r ApiAdHocCommandsAdHocCommandsReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *AdHocCommandsAdHocCommandsReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsRead(ctx _context.Context, id string, localVarOptionals *AdHocCommandsAdHocCommandsReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1486,20 +690,16 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsReadExecute(r ApiAdH
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AdHocCommandsApiService.AdHocCommandsAdHocCommandsRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/ad_hoc_commands/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/ad_hoc_commands/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1518,12 +718,12 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsReadExecute(r ApiAdH
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1545,37 +745,13 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsReadExecute(r ApiAdH
 	return localVarHTTPResponse, nil
 }
 
-type ApiAdHocCommandsAdHocCommandsRelaunchCreateRequest struct {
-	ctx _context.Context
-	ApiService *AdHocCommandsApiService
-	id string
-}
-
-
-func (r ApiAdHocCommandsAdHocCommandsRelaunchCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AdHocCommandsAdHocCommandsRelaunchCreateExecute(r)
-}
-
 /*
- * AdHocCommandsAdHocCommandsRelaunchCreate Relaunch an Ad Hoc Command
- * 
-Make a POST request to this resource to launch a job. If any passwords or variables are required then they should be passed in via POST data.   In order to determine what values are required in order to launch a job based on this job template you may make a GET request to this endpoint.
+AdHocCommandsAdHocCommandsRelaunchCreate Relaunch an Ad Hoc Command
+ Make a POST request to this resource to launch a job. If any passwords or variables are required then they should be passed in via POST data.   In order to determine what values are required in order to launch a job based on this job template you may make a GET request to this endpoint.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAdHocCommandsAdHocCommandsRelaunchCreateRequest
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsRelaunchCreate(ctx _context.Context, id string) ApiAdHocCommandsAdHocCommandsRelaunchCreateRequest {
-	return ApiAdHocCommandsAdHocCommandsRelaunchCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsRelaunchCreateExecute(r ApiAdHocCommandsAdHocCommandsRelaunchCreateRequest) (*_nethttp.Response, error) {
+*/
+func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsRelaunchCreate(ctx _context.Context, id string) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -1584,13 +760,9 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsRelaunchCreateExecut
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AdHocCommandsApiService.AdHocCommandsAdHocCommandsRelaunchCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/ad_hoc_commands/{id}/relaunch/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/ad_hoc_commands/{id}/relaunch/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1613,12 +785,12 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsRelaunchCreateExecut
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1640,52 +812,24 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsRelaunchCreateExecut
 	return localVarHTTPResponse, nil
 }
 
-type ApiAdHocCommandsAdHocCommandsRelaunchListRequest struct {
-	ctx _context.Context
-	ApiService *AdHocCommandsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiAdHocCommandsAdHocCommandsRelaunchListRequest) Page(page int32) ApiAdHocCommandsAdHocCommandsRelaunchListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiAdHocCommandsAdHocCommandsRelaunchListRequest) PageSize(pageSize int32) ApiAdHocCommandsAdHocCommandsRelaunchListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiAdHocCommandsAdHocCommandsRelaunchListRequest) Search(search string) ApiAdHocCommandsAdHocCommandsRelaunchListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiAdHocCommandsAdHocCommandsRelaunchListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AdHocCommandsAdHocCommandsRelaunchListExecute(r)
+// AdHocCommandsAdHocCommandsRelaunchListOpts Optional parameters for the method 'AdHocCommandsAdHocCommandsRelaunchList'
+type AdHocCommandsAdHocCommandsRelaunchListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * AdHocCommandsAdHocCommandsRelaunchList Relaunch an Ad Hoc Command
- * 
-Make a POST request to this resource to launch a job. If any passwords or variables are required then they should be passed in via POST data.   In order to determine what values are required in order to launch a job based on this job template you may make a GET request to this endpoint.
+AdHocCommandsAdHocCommandsRelaunchList Relaunch an Ad Hoc Command
+ Make a POST request to this resource to launch a job. If any passwords or variables are required then they should be passed in via POST data.   In order to determine what values are required in order to launch a job based on this job template you may make a GET request to this endpoint.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAdHocCommandsAdHocCommandsRelaunchListRequest
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsRelaunchList(ctx _context.Context, id string) ApiAdHocCommandsAdHocCommandsRelaunchListRequest {
-	return ApiAdHocCommandsAdHocCommandsRelaunchListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsRelaunchListExecute(r ApiAdHocCommandsAdHocCommandsRelaunchListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *AdHocCommandsAdHocCommandsRelaunchListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsRelaunchList(ctx _context.Context, id string, localVarOptionals *AdHocCommandsAdHocCommandsRelaunchListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1694,26 +838,22 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsRelaunchListExecute(
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AdHocCommandsApiService.AdHocCommandsAdHocCommandsRelaunchList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/ad_hoc_commands/{id}/relaunch/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/ad_hoc_commands/{id}/relaunch/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1732,12 +872,12 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsRelaunchListExecute(
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1759,61 +899,13 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsRelaunchListExecute(
 	return localVarHTTPResponse, nil
 }
 
-type ApiAdHocCommandsAdHocCommandsStdoutReadRequest struct {
-	ctx _context.Context
-	ApiService *AdHocCommandsApiService
-	id string
-}
-
-
-func (r ApiAdHocCommandsAdHocCommandsStdoutReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AdHocCommandsAdHocCommandsStdoutReadExecute(r)
-}
-
 /*
- * AdHocCommandsAdHocCommandsStdoutRead  Retrieve Ad Hoc Command Stdout
- * 
-Make GET request to this resource to retrieve the stdout from running this
-ad hoc command.
-
-## Format
-
-Use the `format` query string parameter to specify the output format.
-
-* Browsable API: `?format=api`
-* HTML: `?format=html`
-* Plain Text: `?format=txt`
-* Plain Text with ANSI color codes: `?format=ansi`
-* JSON structure: `?format=json`
-* Downloaded Plain Text: `?format=txt_download`
-* Downloaded Plain Text with ANSI color codes: `?format=ansi_download`
-
-(_New in Ansible Tower 2.0.0_) When using the Browsable API, HTML and JSON
-formats, the `start_line` and `end_line` query string parameters can be used
-to specify a range of line numbers to retrieve.
-
-Use `dark=1` or `dark=0` as a query string parameter to force or disable a
-dark background.
-
-Files over 1.0 MB (configurable)
-will not display in the browser. Use the `txt_download` or `ansi_download`
-formats to download the file directly to view it.
+AdHocCommandsAdHocCommandsStdoutRead  Retrieve Ad Hoc Command Stdout
+ Make GET request to this resource to retrieve the stdout from running this ad hoc command.  ## Format  Use the &#x60;format&#x60; query string parameter to specify the output format.  * Browsable API: &#x60;?format&#x3D;api&#x60; * HTML: &#x60;?format&#x3D;html&#x60; * Plain Text: &#x60;?format&#x3D;txt&#x60; * Plain Text with ANSI color codes: &#x60;?format&#x3D;ansi&#x60; * JSON structure: &#x60;?format&#x3D;json&#x60; * Downloaded Plain Text: &#x60;?format&#x3D;txt_download&#x60; * Downloaded Plain Text with ANSI color codes: &#x60;?format&#x3D;ansi_download&#x60;  (_New in Ansible Tower 2.0.0_) When using the Browsable API, HTML and JSON formats, the &#x60;start_line&#x60; and &#x60;end_line&#x60; query string parameters can be used to specify a range of line numbers to retrieve.  Use &#x60;dark&#x3D;1&#x60; or &#x60;dark&#x3D;0&#x60; as a query string parameter to force or disable a dark background.  Files over 1.0 MB (configurable) will not display in the browser. Use the &#x60;txt_download&#x60; or &#x60;ansi_download&#x60; formats to download the file directly to view it.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAdHocCommandsAdHocCommandsStdoutReadRequest
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsStdoutRead(ctx _context.Context, id string) ApiAdHocCommandsAdHocCommandsStdoutReadRequest {
-	return ApiAdHocCommandsAdHocCommandsStdoutReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsStdoutReadExecute(r ApiAdHocCommandsAdHocCommandsStdoutReadRequest) (*_nethttp.Response, error) {
+*/
+func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsStdoutRead(ctx _context.Context, id string) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1822,13 +914,9 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsStdoutReadExecute(r 
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AdHocCommandsApiService.AdHocCommandsAdHocCommandsStdoutRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/ad_hoc_commands/{id}/stdout/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/ad_hoc_commands/{id}/stdout/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1851,12 +939,12 @@ func (a *AdHocCommandsApiService) AdHocCommandsAdHocCommandsStdoutReadExecute(r 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,151 +26,24 @@ var (
 // WorkflowJobNodesApiService WorkflowJobNodesApi service
 type WorkflowJobNodesApiService service
 
-type ApiWorkflowJobNodesWorkflowJobNodesAlwaysNodesListRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobNodesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiWorkflowJobNodesWorkflowJobNodesAlwaysNodesListRequest) Page(page int32) ApiWorkflowJobNodesWorkflowJobNodesAlwaysNodesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiWorkflowJobNodesWorkflowJobNodesAlwaysNodesListRequest) PageSize(pageSize int32) ApiWorkflowJobNodesWorkflowJobNodesAlwaysNodesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiWorkflowJobNodesWorkflowJobNodesAlwaysNodesListRequest) Search(search string) ApiWorkflowJobNodesWorkflowJobNodesAlwaysNodesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobNodesWorkflowJobNodesAlwaysNodesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobNodesWorkflowJobNodesAlwaysNodesListExecute(r)
+// WorkflowJobNodesWorkflowJobNodesAlwaysNodesListOpts Optional parameters for the method 'WorkflowJobNodesWorkflowJobNodesAlwaysNodesList'
+type WorkflowJobNodesWorkflowJobNodesAlwaysNodesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * WorkflowJobNodesWorkflowJobNodesAlwaysNodesList  List Workflow Job Nodes for a Workflow Job Node
- * 
-Make a GET request to this resource to retrieve a list of
-workflow job nodes associated with the selected
-workflow job node.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of workflow job nodes
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more workflow job node records.  
-
-## Results
-
-Each workflow job node data structure includes the following fields:
-
-* `id`: Database ID for this workflow job node. (integer)
-* `type`: Data type for this workflow job node. (choice)
-* `url`: URL for this workflow job node. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this workflow job node was created. (datetime)
-* `modified`: Timestamp when this workflow job node was last modified. (datetime)
-* `extra_data`:  (json)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id)
-* `scm_branch`:  (string)
-* `job_type`:  (choice)
-    - `None`: ---------
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string)
-* `skip_tags`:  (string)
-* `limit`:  (string)
-* `diff_mode`:  (boolean)
-* `verbosity`:  (choice)
-    - `None`: ---------
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `job`:  (id)
-* `workflow_job`:  (id)
-* `unified_job_template`:  (id)
-* `success_nodes`:  (field)
-* `failure_nodes`:  (field)
-* `always_nodes`:  (field)
-* `all_parents_must_converge`: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean)
-* `do_not_run`: Indicates that a job will not be created when True. Workflow runtime semantics will mark this True if the node is in a path that will decidedly not be ran. A value of False means the node may not run. (boolean)
-* `identifier`: An identifier coresponding to the workflow job template node that this node was created from. (string)
-
-
-
-## Sorting
-
-To specify that workflow job nodes are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+WorkflowJobNodesWorkflowJobNodesAlwaysNodesList  List Workflow Job Nodes for a Workflow Job Node
+ Make a GET request to this resource to retrieve a list of workflow job nodes associated with the selected workflow job node.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of workflow job nodes found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more workflow job node records.    ## Results  Each workflow job node data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this workflow job node. (integer) * &#x60;type&#x60;: Data type for this workflow job node. (choice) * &#x60;url&#x60;: URL for this workflow job node. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this workflow job node was created. (datetime) * &#x60;modified&#x60;: Timestamp when this workflow job node was last modified. (datetime) * &#x60;extra_data&#x60;:  (json) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id) * &#x60;scm_branch&#x60;:  (string) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string) * &#x60;skip_tags&#x60;:  (string) * &#x60;limit&#x60;:  (string) * &#x60;diff_mode&#x60;:  (boolean) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;job&#x60;:  (id) * &#x60;workflow_job&#x60;:  (id) * &#x60;unified_job_template&#x60;:  (id) * &#x60;success_nodes&#x60;:  (field) * &#x60;failure_nodes&#x60;:  (field) * &#x60;always_nodes&#x60;:  (field) * &#x60;all_parents_must_converge&#x60;: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean) * &#x60;do_not_run&#x60;: Indicates that a job will not be created when True. Workflow runtime semantics will mark this True if the node is in a path that will decidedly not be ran. A value of False means the node may not run. (boolean) * &#x60;identifier&#x60;: An identifier coresponding to the workflow job template node that this node was created from. (string)    ## Sorting  To specify that workflow job nodes are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobNodesWorkflowJobNodesAlwaysNodesListRequest
- */
-func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesAlwaysNodesList(ctx _context.Context, id string) ApiWorkflowJobNodesWorkflowJobNodesAlwaysNodesListRequest {
-	return ApiWorkflowJobNodesWorkflowJobNodesAlwaysNodesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesAlwaysNodesListExecute(r ApiWorkflowJobNodesWorkflowJobNodesAlwaysNodesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobNodesWorkflowJobNodesAlwaysNodesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesAlwaysNodesList(ctx _context.Context, id string, localVarOptionals *WorkflowJobNodesWorkflowJobNodesAlwaysNodesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -178,26 +52,22 @@ func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesAlwaysNodes
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobNodesApiService.WorkflowJobNodesWorkflowJobNodesAlwaysNodesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_nodes/{id}/always_nodes/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_nodes/{id}/always_nodes/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -216,12 +86,12 @@ func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesAlwaysNodes
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -243,131 +113,24 @@ func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesAlwaysNodes
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobNodesWorkflowJobNodesCredentialsListRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobNodesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiWorkflowJobNodesWorkflowJobNodesCredentialsListRequest) Page(page int32) ApiWorkflowJobNodesWorkflowJobNodesCredentialsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiWorkflowJobNodesWorkflowJobNodesCredentialsListRequest) PageSize(pageSize int32) ApiWorkflowJobNodesWorkflowJobNodesCredentialsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiWorkflowJobNodesWorkflowJobNodesCredentialsListRequest) Search(search string) ApiWorkflowJobNodesWorkflowJobNodesCredentialsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobNodesWorkflowJobNodesCredentialsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobNodesWorkflowJobNodesCredentialsListExecute(r)
+// WorkflowJobNodesWorkflowJobNodesCredentialsListOpts Optional parameters for the method 'WorkflowJobNodesWorkflowJobNodesCredentialsList'
+type WorkflowJobNodesWorkflowJobNodesCredentialsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * WorkflowJobNodesWorkflowJobNodesCredentialsList  List Credentials for a Workflow Job Node
- * 
-Make a GET request to this resource to retrieve a list of
-credentials associated with the selected
-workflow job node.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of credentials
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more credential records.  
-
-## Results
-
-Each credential data structure includes the following fields:
-
-* `id`: Database ID for this credential. (integer)
-* `type`: Data type for this credential. (choice)
-* `url`: URL for this credential. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this credential was created. (datetime)
-* `modified`: Timestamp when this credential was last modified. (datetime)
-* `name`: Name of this credential. (string)
-* `description`: Optional description of this credential. (string)
-* `organization`:  (id)
-* `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id)
-* `managed_by_tower`:  (boolean)
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json)
-* `kind`:  (field)
-* `cloud`:  (field)
-* `kubernetes`:  (field)
-
-
-
-## Sorting
-
-To specify that credentials are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+WorkflowJobNodesWorkflowJobNodesCredentialsList  List Credentials for a Workflow Job Node
+ Make a GET request to this resource to retrieve a list of credentials associated with the selected workflow job node.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of credentials found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more credential records.    ## Results  Each credential data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this credential. (integer) * &#x60;type&#x60;: Data type for this credential. (choice) * &#x60;url&#x60;: URL for this credential. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this credential was created. (datetime) * &#x60;modified&#x60;: Timestamp when this credential was last modified. (datetime) * &#x60;name&#x60;: Name of this credential. (string) * &#x60;description&#x60;: Optional description of this credential. (string) * &#x60;organization&#x60;:  (id) * &#x60;credential_type&#x60;: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id) * &#x60;managed_by_tower&#x60;:  (boolean) * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json) * &#x60;kind&#x60;:  (field) * &#x60;cloud&#x60;:  (field) * &#x60;kubernetes&#x60;:  (field)    ## Sorting  To specify that credentials are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobNodesWorkflowJobNodesCredentialsListRequest
- */
-func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesCredentialsList(ctx _context.Context, id string) ApiWorkflowJobNodesWorkflowJobNodesCredentialsListRequest {
-	return ApiWorkflowJobNodesWorkflowJobNodesCredentialsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesCredentialsListExecute(r ApiWorkflowJobNodesWorkflowJobNodesCredentialsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobNodesWorkflowJobNodesCredentialsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesCredentialsList(ctx _context.Context, id string, localVarOptionals *WorkflowJobNodesWorkflowJobNodesCredentialsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -376,26 +139,22 @@ func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesCredentials
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobNodesApiService.WorkflowJobNodesWorkflowJobNodesCredentialsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_nodes/{id}/credentials/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_nodes/{id}/credentials/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -414,12 +173,12 @@ func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesCredentials
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -441,151 +200,24 @@ func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesCredentials
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobNodesWorkflowJobNodesFailureNodesListRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobNodesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiWorkflowJobNodesWorkflowJobNodesFailureNodesListRequest) Page(page int32) ApiWorkflowJobNodesWorkflowJobNodesFailureNodesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiWorkflowJobNodesWorkflowJobNodesFailureNodesListRequest) PageSize(pageSize int32) ApiWorkflowJobNodesWorkflowJobNodesFailureNodesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiWorkflowJobNodesWorkflowJobNodesFailureNodesListRequest) Search(search string) ApiWorkflowJobNodesWorkflowJobNodesFailureNodesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobNodesWorkflowJobNodesFailureNodesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobNodesWorkflowJobNodesFailureNodesListExecute(r)
+// WorkflowJobNodesWorkflowJobNodesFailureNodesListOpts Optional parameters for the method 'WorkflowJobNodesWorkflowJobNodesFailureNodesList'
+type WorkflowJobNodesWorkflowJobNodesFailureNodesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * WorkflowJobNodesWorkflowJobNodesFailureNodesList  List Workflow Job Nodes for a Workflow Job Node
- * 
-Make a GET request to this resource to retrieve a list of
-workflow job nodes associated with the selected
-workflow job node.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of workflow job nodes
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more workflow job node records.  
-
-## Results
-
-Each workflow job node data structure includes the following fields:
-
-* `id`: Database ID for this workflow job node. (integer)
-* `type`: Data type for this workflow job node. (choice)
-* `url`: URL for this workflow job node. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this workflow job node was created. (datetime)
-* `modified`: Timestamp when this workflow job node was last modified. (datetime)
-* `extra_data`:  (json)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id)
-* `scm_branch`:  (string)
-* `job_type`:  (choice)
-    - `None`: ---------
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string)
-* `skip_tags`:  (string)
-* `limit`:  (string)
-* `diff_mode`:  (boolean)
-* `verbosity`:  (choice)
-    - `None`: ---------
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `job`:  (id)
-* `workflow_job`:  (id)
-* `unified_job_template`:  (id)
-* `success_nodes`:  (field)
-* `failure_nodes`:  (field)
-* `always_nodes`:  (field)
-* `all_parents_must_converge`: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean)
-* `do_not_run`: Indicates that a job will not be created when True. Workflow runtime semantics will mark this True if the node is in a path that will decidedly not be ran. A value of False means the node may not run. (boolean)
-* `identifier`: An identifier coresponding to the workflow job template node that this node was created from. (string)
-
-
-
-## Sorting
-
-To specify that workflow job nodes are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+WorkflowJobNodesWorkflowJobNodesFailureNodesList  List Workflow Job Nodes for a Workflow Job Node
+ Make a GET request to this resource to retrieve a list of workflow job nodes associated with the selected workflow job node.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of workflow job nodes found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more workflow job node records.    ## Results  Each workflow job node data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this workflow job node. (integer) * &#x60;type&#x60;: Data type for this workflow job node. (choice) * &#x60;url&#x60;: URL for this workflow job node. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this workflow job node was created. (datetime) * &#x60;modified&#x60;: Timestamp when this workflow job node was last modified. (datetime) * &#x60;extra_data&#x60;:  (json) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id) * &#x60;scm_branch&#x60;:  (string) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string) * &#x60;skip_tags&#x60;:  (string) * &#x60;limit&#x60;:  (string) * &#x60;diff_mode&#x60;:  (boolean) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;job&#x60;:  (id) * &#x60;workflow_job&#x60;:  (id) * &#x60;unified_job_template&#x60;:  (id) * &#x60;success_nodes&#x60;:  (field) * &#x60;failure_nodes&#x60;:  (field) * &#x60;always_nodes&#x60;:  (field) * &#x60;all_parents_must_converge&#x60;: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean) * &#x60;do_not_run&#x60;: Indicates that a job will not be created when True. Workflow runtime semantics will mark this True if the node is in a path that will decidedly not be ran. A value of False means the node may not run. (boolean) * &#x60;identifier&#x60;: An identifier coresponding to the workflow job template node that this node was created from. (string)    ## Sorting  To specify that workflow job nodes are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobNodesWorkflowJobNodesFailureNodesListRequest
- */
-func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesFailureNodesList(ctx _context.Context, id string) ApiWorkflowJobNodesWorkflowJobNodesFailureNodesListRequest {
-	return ApiWorkflowJobNodesWorkflowJobNodesFailureNodesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesFailureNodesListExecute(r ApiWorkflowJobNodesWorkflowJobNodesFailureNodesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobNodesWorkflowJobNodesFailureNodesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesFailureNodesList(ctx _context.Context, id string, localVarOptionals *WorkflowJobNodesWorkflowJobNodesFailureNodesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -594,26 +226,22 @@ func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesFailureNode
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobNodesApiService.WorkflowJobNodesWorkflowJobNodesFailureNodesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_nodes/{id}/failure_nodes/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_nodes/{id}/failure_nodes/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -632,12 +260,12 @@ func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesFailureNode
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -659,147 +287,23 @@ func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesFailureNode
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobNodesWorkflowJobNodesListRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobNodesApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiWorkflowJobNodesWorkflowJobNodesListRequest) Page(page int32) ApiWorkflowJobNodesWorkflowJobNodesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiWorkflowJobNodesWorkflowJobNodesListRequest) PageSize(pageSize int32) ApiWorkflowJobNodesWorkflowJobNodesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiWorkflowJobNodesWorkflowJobNodesListRequest) Search(search string) ApiWorkflowJobNodesWorkflowJobNodesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobNodesWorkflowJobNodesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobNodesWorkflowJobNodesListExecute(r)
+// WorkflowJobNodesWorkflowJobNodesListOpts Optional parameters for the method 'WorkflowJobNodesWorkflowJobNodesList'
+type WorkflowJobNodesWorkflowJobNodesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * WorkflowJobNodesWorkflowJobNodesList  List Workflow Job Nodes
- * 
-Make a GET request to this resource to retrieve the list of
-workflow job nodes.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of workflow job nodes
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more workflow job node records.  
-
-## Results
-
-Each workflow job node data structure includes the following fields:
-
-* `id`: Database ID for this workflow job node. (integer)
-* `type`: Data type for this workflow job node. (choice)
-* `url`: URL for this workflow job node. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this workflow job node was created. (datetime)
-* `modified`: Timestamp when this workflow job node was last modified. (datetime)
-* `extra_data`:  (json)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id)
-* `scm_branch`:  (string)
-* `job_type`:  (choice)
-    - `None`: ---------
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string)
-* `skip_tags`:  (string)
-* `limit`:  (string)
-* `diff_mode`:  (boolean)
-* `verbosity`:  (choice)
-    - `None`: ---------
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `job`:  (id)
-* `workflow_job`:  (id)
-* `unified_job_template`:  (id)
-* `success_nodes`:  (field)
-* `failure_nodes`:  (field)
-* `always_nodes`:  (field)
-* `all_parents_must_converge`: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean)
-* `do_not_run`: Indicates that a job will not be created when True. Workflow runtime semantics will mark this True if the node is in a path that will decidedly not be ran. A value of False means the node may not run. (boolean)
-* `identifier`: An identifier coresponding to the workflow job template node that this node was created from. (string)
-
-
-
-## Sorting
-
-To specify that workflow job nodes are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+WorkflowJobNodesWorkflowJobNodesList  List Workflow Job Nodes
+ Make a GET request to this resource to retrieve the list of workflow job nodes.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of workflow job nodes found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more workflow job node records.    ## Results  Each workflow job node data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this workflow job node. (integer) * &#x60;type&#x60;: Data type for this workflow job node. (choice) * &#x60;url&#x60;: URL for this workflow job node. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this workflow job node was created. (datetime) * &#x60;modified&#x60;: Timestamp when this workflow job node was last modified. (datetime) * &#x60;extra_data&#x60;:  (json) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id) * &#x60;scm_branch&#x60;:  (string) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string) * &#x60;skip_tags&#x60;:  (string) * &#x60;limit&#x60;:  (string) * &#x60;diff_mode&#x60;:  (boolean) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;job&#x60;:  (id) * &#x60;workflow_job&#x60;:  (id) * &#x60;unified_job_template&#x60;:  (id) * &#x60;success_nodes&#x60;:  (field) * &#x60;failure_nodes&#x60;:  (field) * &#x60;always_nodes&#x60;:  (field) * &#x60;all_parents_must_converge&#x60;: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean) * &#x60;do_not_run&#x60;: Indicates that a job will not be created when True. Workflow runtime semantics will mark this True if the node is in a path that will decidedly not be ran. A value of False means the node may not run. (boolean) * &#x60;identifier&#x60;: An identifier coresponding to the workflow job template node that this node was created from. (string)    ## Sorting  To specify that workflow job nodes are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiWorkflowJobNodesWorkflowJobNodesListRequest
- */
-func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesList(ctx _context.Context) ApiWorkflowJobNodesWorkflowJobNodesListRequest {
-	return ApiWorkflowJobNodesWorkflowJobNodesListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesListExecute(r ApiWorkflowJobNodesWorkflowJobNodesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobNodesWorkflowJobNodesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesList(ctx _context.Context, localVarOptionals *WorkflowJobNodesWorkflowJobNodesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -808,25 +312,20 @@ func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesListExecute
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobNodesApiService.WorkflowJobNodesWorkflowJobNodesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_nodes/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_nodes/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -845,12 +344,12 @@ func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesListExecute
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -872,80 +371,20 @@ func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesListExecute
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobNodesWorkflowJobNodesReadRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobNodesApiService
-	id string
-	search *string
-}
-
-func (r ApiWorkflowJobNodesWorkflowJobNodesReadRequest) Search(search string) ApiWorkflowJobNodesWorkflowJobNodesReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobNodesWorkflowJobNodesReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobNodesWorkflowJobNodesReadExecute(r)
+// WorkflowJobNodesWorkflowJobNodesReadOpts Optional parameters for the method 'WorkflowJobNodesWorkflowJobNodesRead'
+type WorkflowJobNodesWorkflowJobNodesReadOpts struct {
+    Search optional.String
 }
 
 /*
- * WorkflowJobNodesWorkflowJobNodesRead  Retrieve a Workflow Job Node
- * 
-Make GET request to this resource to retrieve a single workflow job node
-record containing the following fields:
-
-* `id`: Database ID for this workflow job node. (integer)
-* `type`: Data type for this workflow job node. (choice)
-* `url`: URL for this workflow job node. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this workflow job node was created. (datetime)
-* `modified`: Timestamp when this workflow job node was last modified. (datetime)
-* `extra_data`:  (json)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id)
-* `scm_branch`:  (string)
-* `job_type`:  (choice)
-    - `None`: ---------
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string)
-* `skip_tags`:  (string)
-* `limit`:  (string)
-* `diff_mode`:  (boolean)
-* `verbosity`:  (choice)
-    - `None`: ---------
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `job`:  (id)
-* `workflow_job`:  (id)
-* `unified_job_template`:  (id)
-* `success_nodes`:  (field)
-* `failure_nodes`:  (field)
-* `always_nodes`:  (field)
-* `all_parents_must_converge`: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean)
-* `do_not_run`: Indicates that a job will not be created when True. Workflow runtime semantics will mark this True if the node is in a path that will decidedly not be ran. A value of False means the node may not run. (boolean)
-* `identifier`: An identifier coresponding to the workflow job template node that this node was created from. (string)
+WorkflowJobNodesWorkflowJobNodesRead  Retrieve a Workflow Job Node
+ Make GET request to this resource to retrieve a single workflow job node record containing the following fields:  * &#x60;id&#x60;: Database ID for this workflow job node. (integer) * &#x60;type&#x60;: Data type for this workflow job node. (choice) * &#x60;url&#x60;: URL for this workflow job node. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this workflow job node was created. (datetime) * &#x60;modified&#x60;: Timestamp when this workflow job node was last modified. (datetime) * &#x60;extra_data&#x60;:  (json) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id) * &#x60;scm_branch&#x60;:  (string) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string) * &#x60;skip_tags&#x60;:  (string) * &#x60;limit&#x60;:  (string) * &#x60;diff_mode&#x60;:  (boolean) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;job&#x60;:  (id) * &#x60;workflow_job&#x60;:  (id) * &#x60;unified_job_template&#x60;:  (id) * &#x60;success_nodes&#x60;:  (field) * &#x60;failure_nodes&#x60;:  (field) * &#x60;always_nodes&#x60;:  (field) * &#x60;all_parents_must_converge&#x60;: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean) * &#x60;do_not_run&#x60;: Indicates that a job will not be created when True. Workflow runtime semantics will mark this True if the node is in a path that will decidedly not be ran. A value of False means the node may not run. (boolean) * &#x60;identifier&#x60;: An identifier coresponding to the workflow job template node that this node was created from. (string)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobNodesWorkflowJobNodesReadRequest
- */
-func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesRead(ctx _context.Context, id string) ApiWorkflowJobNodesWorkflowJobNodesReadRequest {
-	return ApiWorkflowJobNodesWorkflowJobNodesReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesReadExecute(r ApiWorkflowJobNodesWorkflowJobNodesReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobNodesWorkflowJobNodesReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesRead(ctx _context.Context, id string, localVarOptionals *WorkflowJobNodesWorkflowJobNodesReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -954,20 +393,16 @@ func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesReadExecute
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobNodesApiService.WorkflowJobNodesWorkflowJobNodesRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_nodes/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_nodes/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -986,12 +421,12 @@ func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesReadExecute
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1013,151 +448,24 @@ func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesReadExecute
 	return localVarHTTPResponse, nil
 }
 
-type ApiWorkflowJobNodesWorkflowJobNodesSuccessNodesListRequest struct {
-	ctx _context.Context
-	ApiService *WorkflowJobNodesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiWorkflowJobNodesWorkflowJobNodesSuccessNodesListRequest) Page(page int32) ApiWorkflowJobNodesWorkflowJobNodesSuccessNodesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiWorkflowJobNodesWorkflowJobNodesSuccessNodesListRequest) PageSize(pageSize int32) ApiWorkflowJobNodesWorkflowJobNodesSuccessNodesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiWorkflowJobNodesWorkflowJobNodesSuccessNodesListRequest) Search(search string) ApiWorkflowJobNodesWorkflowJobNodesSuccessNodesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiWorkflowJobNodesWorkflowJobNodesSuccessNodesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.WorkflowJobNodesWorkflowJobNodesSuccessNodesListExecute(r)
+// WorkflowJobNodesWorkflowJobNodesSuccessNodesListOpts Optional parameters for the method 'WorkflowJobNodesWorkflowJobNodesSuccessNodesList'
+type WorkflowJobNodesWorkflowJobNodesSuccessNodesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * WorkflowJobNodesWorkflowJobNodesSuccessNodesList  List Workflow Job Nodes for a Workflow Job Node
- * 
-Make a GET request to this resource to retrieve a list of
-workflow job nodes associated with the selected
-workflow job node.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of workflow job nodes
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more workflow job node records.  
-
-## Results
-
-Each workflow job node data structure includes the following fields:
-
-* `id`: Database ID for this workflow job node. (integer)
-* `type`: Data type for this workflow job node. (choice)
-* `url`: URL for this workflow job node. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this workflow job node was created. (datetime)
-* `modified`: Timestamp when this workflow job node was last modified. (datetime)
-* `extra_data`:  (json)
-* `inventory`: Inventory applied as a prompt, assuming job template prompts for inventory (id)
-* `scm_branch`:  (string)
-* `job_type`:  (choice)
-    - `None`: ---------
-    - `""`: ---------
-    - `run`: Run
-    - `check`: Check
-* `job_tags`:  (string)
-* `skip_tags`:  (string)
-* `limit`:  (string)
-* `diff_mode`:  (boolean)
-* `verbosity`:  (choice)
-    - `None`: ---------
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `job`:  (id)
-* `workflow_job`:  (id)
-* `unified_job_template`:  (id)
-* `success_nodes`:  (field)
-* `failure_nodes`:  (field)
-* `always_nodes`:  (field)
-* `all_parents_must_converge`: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean)
-* `do_not_run`: Indicates that a job will not be created when True. Workflow runtime semantics will mark this True if the node is in a path that will decidedly not be ran. A value of False means the node may not run. (boolean)
-* `identifier`: An identifier coresponding to the workflow job template node that this node was created from. (string)
-
-
-
-## Sorting
-
-To specify that workflow job nodes are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+WorkflowJobNodesWorkflowJobNodesSuccessNodesList  List Workflow Job Nodes for a Workflow Job Node
+ Make a GET request to this resource to retrieve a list of workflow job nodes associated with the selected workflow job node.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of workflow job nodes found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more workflow job node records.    ## Results  Each workflow job node data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this workflow job node. (integer) * &#x60;type&#x60;: Data type for this workflow job node. (choice) * &#x60;url&#x60;: URL for this workflow job node. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this workflow job node was created. (datetime) * &#x60;modified&#x60;: Timestamp when this workflow job node was last modified. (datetime) * &#x60;extra_data&#x60;:  (json) * &#x60;inventory&#x60;: Inventory applied as a prompt, assuming job template prompts for inventory (id) * &#x60;scm_branch&#x60;:  (string) * &#x60;job_type&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;:  (string) * &#x60;skip_tags&#x60;:  (string) * &#x60;limit&#x60;:  (string) * &#x60;diff_mode&#x60;:  (boolean) * &#x60;verbosity&#x60;:  (choice)     - &#x60;None&#x60;: ---------     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;job&#x60;:  (id) * &#x60;workflow_job&#x60;:  (id) * &#x60;unified_job_template&#x60;:  (id) * &#x60;success_nodes&#x60;:  (field) * &#x60;failure_nodes&#x60;:  (field) * &#x60;always_nodes&#x60;:  (field) * &#x60;all_parents_must_converge&#x60;: If enabled then the node will only run if all of the parent nodes have met the criteria to reach this node (boolean) * &#x60;do_not_run&#x60;: Indicates that a job will not be created when True. Workflow runtime semantics will mark this True if the node is in a path that will decidedly not be ran. A value of False means the node may not run. (boolean) * &#x60;identifier&#x60;: An identifier coresponding to the workflow job template node that this node was created from. (string)    ## Sorting  To specify that workflow job nodes are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiWorkflowJobNodesWorkflowJobNodesSuccessNodesListRequest
- */
-func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesSuccessNodesList(ctx _context.Context, id string) ApiWorkflowJobNodesWorkflowJobNodesSuccessNodesListRequest {
-	return ApiWorkflowJobNodesWorkflowJobNodesSuccessNodesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesSuccessNodesListExecute(r ApiWorkflowJobNodesWorkflowJobNodesSuccessNodesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *WorkflowJobNodesWorkflowJobNodesSuccessNodesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesSuccessNodesList(ctx _context.Context, id string, localVarOptionals *WorkflowJobNodesWorkflowJobNodesSuccessNodesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1166,26 +474,22 @@ func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesSuccessNode
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "WorkflowJobNodesApiService.WorkflowJobNodesWorkflowJobNodesSuccessNodesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/workflow_job_nodes/{id}/success_nodes/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/workflow_job_nodes/{id}/success_nodes/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1204,12 +508,12 @@ func (a *WorkflowJobNodesApiService) WorkflowJobNodesWorkflowJobNodesSuccessNode
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,72 +26,23 @@ var (
 // UsersApiService UsersApi service
 type UsersApiService service
 
-type ApiUsersMeListRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiUsersMeListRequest) Page(page int32) ApiUsersMeListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiUsersMeListRequest) PageSize(pageSize int32) ApiUsersMeListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiUsersMeListRequest) Search(search string) ApiUsersMeListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiUsersMeListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersMeListExecute(r)
+// UsersMeListOpts Optional parameters for the method 'UsersMeList'
+type UsersMeListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * UsersMeList  Retrieve Information about the current User
- * 
-Make a GET request to retrieve user information about the current user.
-
-One result should be returned containing the following fields:
-
-* `id`: Database ID for this user. (integer)
-* `type`: Data type for this user. (choice)
-* `url`: URL for this user. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this user was created. (datetime)
-* `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string)
-* `first_name`:  (string)
-* `last_name`:  (string)
-* `email`:  (string)
-* `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean)
-* `is_system_auditor`:  (boolean)
-
-* `ldap_dn`:  (string)
-* `last_login`:  (datetime)
-* `external_account`: Set if the account is managed by an external service (field)
-
-
-
-Use the primary URL for the user (/api/v2/users/N/) to modify the user.
+UsersMeList  Retrieve Information about the current User
+ Make a GET request to retrieve user information about the current user.  One result should be returned containing the following fields:  * &#x60;id&#x60;: Database ID for this user. (integer) * &#x60;type&#x60;: Data type for this user. (choice) * &#x60;url&#x60;: URL for this user. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this user was created. (datetime) * &#x60;username&#x60;: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string) * &#x60;first_name&#x60;:  (string) * &#x60;last_name&#x60;:  (string) * &#x60;email&#x60;:  (string) * &#x60;is_superuser&#x60;: Designates that this user has all permissions without explicitly assigning them. (boolean) * &#x60;is_system_auditor&#x60;:  (boolean)  * &#x60;ldap_dn&#x60;:  (string) * &#x60;last_login&#x60;:  (datetime) * &#x60;external_account&#x60;: Set if the account is managed by an external service (field)    Use the primary URL for the user (/api/v2/users/N/) to modify the user.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiUsersMeListRequest
- */
-func (a *UsersApiService) UsersMeList(ctx _context.Context) ApiUsersMeListRequest {
-	return ApiUsersMeListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersMeListExecute(r ApiUsersMeListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersMeListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *UsersApiService) UsersMeList(ctx _context.Context, localVarOptionals *UsersMeListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -99,25 +51,20 @@ func (a *UsersApiService) UsersMeListExecute(r ApiUsersMeListRequest) (*_nethttp
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersMeList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/me/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/me/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -136,12 +83,12 @@ func (a *UsersApiService) UsersMeListExecute(r ApiUsersMeListRequest) (*_nethttp
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -163,130 +110,24 @@ func (a *UsersApiService) UsersMeListExecute(r ApiUsersMeListRequest) (*_nethttp
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersAccessListListRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiUsersUsersAccessListListRequest) Page(page int32) ApiUsersUsersAccessListListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiUsersUsersAccessListListRequest) PageSize(pageSize int32) ApiUsersUsersAccessListListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiUsersUsersAccessListListRequest) Search(search string) ApiUsersUsersAccessListListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiUsersUsersAccessListListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersAccessListListExecute(r)
+// UsersUsersAccessListListOpts Optional parameters for the method 'UsersUsersAccessListList'
+type UsersUsersAccessListListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * UsersUsersAccessListList  List Users
- * 
-Make a GET request to this resource to retrieve the list of
-users.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of users
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more user records.  
-
-## Results
-
-Each user data structure includes the following fields:
-
-* `id`: Database ID for this user. (integer)
-* `type`: Data type for this user. (choice)
-* `url`: URL for this user. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this user was created. (datetime)
-* `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string)
-* `first_name`:  (string)
-* `last_name`:  (string)
-* `email`:  (string)
-* `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean)
-* `is_system_auditor`:  (boolean)
-
-* `ldap_dn`:  (string)
-* `last_login`:  (datetime)
-* `external_account`: Set if the account is managed by an external service (field)
-
-
-
-## Sorting
-
-To specify that users are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=username
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-username
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=username,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+UsersUsersAccessListList  List Users
+ Make a GET request to this resource to retrieve the list of users.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of users found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more user records.    ## Results  Each user data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this user. (integer) * &#x60;type&#x60;: Data type for this user. (choice) * &#x60;url&#x60;: URL for this user. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this user was created. (datetime) * &#x60;username&#x60;: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string) * &#x60;first_name&#x60;:  (string) * &#x60;last_name&#x60;:  (string) * &#x60;email&#x60;:  (string) * &#x60;is_superuser&#x60;: Designates that this user has all permissions without explicitly assigning them. (boolean) * &#x60;is_system_auditor&#x60;:  (boolean)  * &#x60;ldap_dn&#x60;:  (string) * &#x60;last_login&#x60;:  (datetime) * &#x60;external_account&#x60;: Set if the account is managed by an external service (field)    ## Sorting  To specify that users are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;username  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-username  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;username,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersAccessListListRequest
- */
-func (a *UsersApiService) UsersUsersAccessListList(ctx _context.Context, id string) ApiUsersUsersAccessListListRequest {
-	return ApiUsersUsersAccessListListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersAccessListListExecute(r ApiUsersUsersAccessListListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersAccessListListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *UsersApiService) UsersUsersAccessListList(ctx _context.Context, id string, localVarOptionals *UsersUsersAccessListListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -295,26 +136,22 @@ func (a *UsersApiService) UsersUsersAccessListListExecute(r ApiUsersUsersAccessL
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersAccessListList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/access_list/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/access_list/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -333,12 +170,12 @@ func (a *UsersApiService) UsersUsersAccessListListExecute(r ApiUsersUsersAccessL
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -360,133 +197,24 @@ func (a *UsersApiService) UsersUsersAccessListListExecute(r ApiUsersUsersAccessL
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersActivityStreamListRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiUsersUsersActivityStreamListRequest) Page(page int32) ApiUsersUsersActivityStreamListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiUsersUsersActivityStreamListRequest) PageSize(pageSize int32) ApiUsersUsersActivityStreamListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiUsersUsersActivityStreamListRequest) Search(search string) ApiUsersUsersActivityStreamListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiUsersUsersActivityStreamListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersActivityStreamListExecute(r)
+// UsersUsersActivityStreamListOpts Optional parameters for the method 'UsersUsersActivityStreamList'
+type UsersUsersActivityStreamListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * UsersUsersActivityStreamList  List Activity Streams for a User
- * 
-Make a GET request to this resource to retrieve a list of
-activity streams associated with the selected
-user.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of activity streams
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more activity stream records.  
-
-## Results
-
-Each activity stream data structure includes the following fields:
-
-* `id`: Database ID for this activity stream. (integer)
-* `type`: Data type for this activity stream. (choice)
-* `url`: URL for this activity stream. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `timestamp`:  (datetime)
-* `operation`: The action taken with respect to the given object(s). (choice)
-    - `create`: Entity Created
-    - `update`: Entity Updated
-    - `delete`: Entity Deleted
-    - `associate`: Entity Associated with another Entity
-    - `disassociate`: Entity was Disassociated with another Entity
-* `changes`: A summary of the new and changed values when an object is created, updated, or deleted (json)
-* `object1`: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string)
-* `object2`: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string)
-* `object_association`: When present, shows the field name of the role or relationship that changed. (field)
-* `action_node`: The cluster node the activity took place on. (string)
-* `object_type`: When present, shows the model on which the role or relationship was defined. (field)
-
-
-
-## Sorting
-
-To specify that activity streams are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+UsersUsersActivityStreamList  List Activity Streams for a User
+ Make a GET request to this resource to retrieve a list of activity streams associated with the selected user.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of activity streams found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more activity stream records.    ## Results  Each activity stream data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this activity stream. (integer) * &#x60;type&#x60;: Data type for this activity stream. (choice) * &#x60;url&#x60;: URL for this activity stream. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;timestamp&#x60;:  (datetime) * &#x60;operation&#x60;: The action taken with respect to the given object(s). (choice)     - &#x60;create&#x60;: Entity Created     - &#x60;update&#x60;: Entity Updated     - &#x60;delete&#x60;: Entity Deleted     - &#x60;associate&#x60;: Entity Associated with another Entity     - &#x60;disassociate&#x60;: Entity was Disassociated with another Entity * &#x60;changes&#x60;: A summary of the new and changed values when an object is created, updated, or deleted (json) * &#x60;object1&#x60;: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string) * &#x60;object2&#x60;: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string) * &#x60;object_association&#x60;: When present, shows the field name of the role or relationship that changed. (field) * &#x60;action_node&#x60;: The cluster node the activity took place on. (string) * &#x60;object_type&#x60;: When present, shows the model on which the role or relationship was defined. (field)    ## Sorting  To specify that activity streams are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersActivityStreamListRequest
- */
-func (a *UsersApiService) UsersUsersActivityStreamList(ctx _context.Context, id string) ApiUsersUsersActivityStreamListRequest {
-	return ApiUsersUsersActivityStreamListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersActivityStreamListExecute(r ApiUsersUsersActivityStreamListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersActivityStreamListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *UsersApiService) UsersUsersActivityStreamList(ctx _context.Context, id string, localVarOptionals *UsersUsersActivityStreamListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -495,26 +223,22 @@ func (a *UsersApiService) UsersUsersActivityStreamListExecute(r ApiUsersUsersAct
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersActivityStreamList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/activity_stream/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/activity_stream/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -533,12 +257,12 @@ func (a *UsersApiService) UsersUsersActivityStreamListExecute(r ApiUsersUsersAct
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -560,126 +284,24 @@ func (a *UsersApiService) UsersUsersActivityStreamListExecute(r ApiUsersUsersAct
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersAdminOfOrganizationsListRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiUsersUsersAdminOfOrganizationsListRequest) Page(page int32) ApiUsersUsersAdminOfOrganizationsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiUsersUsersAdminOfOrganizationsListRequest) PageSize(pageSize int32) ApiUsersUsersAdminOfOrganizationsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiUsersUsersAdminOfOrganizationsListRequest) Search(search string) ApiUsersUsersAdminOfOrganizationsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiUsersUsersAdminOfOrganizationsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersAdminOfOrganizationsListExecute(r)
+// UsersUsersAdminOfOrganizationsListOpts Optional parameters for the method 'UsersUsersAdminOfOrganizationsList'
+type UsersUsersAdminOfOrganizationsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * UsersUsersAdminOfOrganizationsList  List Organizations Administered by this User
- * 
-Make a GET request to this resource to retrieve a list of
-organizations of which the selected
-user is an admin.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of organizations
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more organization records.  
-
-## Results
-
-Each organization data structure includes the following fields:
-
-* `id`: Database ID for this organization. (integer)
-* `type`: Data type for this organization. (choice)
-* `url`: URL for this organization. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this organization was created. (datetime)
-* `modified`: Timestamp when this organization was last modified. (datetime)
-* `name`: Name of this organization. (string)
-* `description`: Optional description of this organization. (string)
-* `max_hosts`: Maximum number of hosts allowed to be managed by this organization. (integer)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string)
-
-
-
-## Sorting
-
-To specify that organizations are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+UsersUsersAdminOfOrganizationsList  List Organizations Administered by this User
+ Make a GET request to this resource to retrieve a list of organizations of which the selected user is an admin.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of organizations found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more organization records.    ## Results  Each organization data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this organization. (integer) * &#x60;type&#x60;: Data type for this organization. (choice) * &#x60;url&#x60;: URL for this organization. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this organization was created. (datetime) * &#x60;modified&#x60;: Timestamp when this organization was last modified. (datetime) * &#x60;name&#x60;: Name of this organization. (string) * &#x60;description&#x60;: Optional description of this organization. (string) * &#x60;max_hosts&#x60;: Maximum number of hosts allowed to be managed by this organization. (integer) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string)    ## Sorting  To specify that organizations are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersAdminOfOrganizationsListRequest
- */
-func (a *UsersApiService) UsersUsersAdminOfOrganizationsList(ctx _context.Context, id string) ApiUsersUsersAdminOfOrganizationsListRequest {
-	return ApiUsersUsersAdminOfOrganizationsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersAdminOfOrganizationsListExecute(r ApiUsersUsersAdminOfOrganizationsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersAdminOfOrganizationsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *UsersApiService) UsersUsersAdminOfOrganizationsList(ctx _context.Context, id string, localVarOptionals *UsersUsersAdminOfOrganizationsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -688,26 +310,22 @@ func (a *UsersApiService) UsersUsersAdminOfOrganizationsListExecute(r ApiUsersUs
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersAdminOfOrganizationsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/admin_of_organizations/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/admin_of_organizations/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -726,12 +344,12 @@ func (a *UsersApiService) UsersUsersAdminOfOrganizationsListExecute(r ApiUsersUs
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -753,65 +371,20 @@ func (a *UsersApiService) UsersUsersAdminOfOrganizationsListExecute(r ApiUsersUs
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersApplicationsCreateRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	data *InlineObject70
-}
-
-func (r ApiUsersUsersApplicationsCreateRequest) Data(data InlineObject70) ApiUsersUsersApplicationsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiUsersUsersApplicationsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersApplicationsCreateExecute(r)
+// UsersUsersApplicationsCreateOpts Optional parameters for the method 'UsersUsersApplicationsCreate'
+type UsersUsersApplicationsCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * UsersUsersApplicationsCreate  Create an Application
- * 
-Make a POST request to this resource with the following application
-fields to create a new application:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this application. (string, required)
-* `description`: Optional description of this application. (string, default=`""`)
-
-
-* `client_type`: Set to Public or Confidential depending on how secure the client device is. (choice, required)
-    - `confidential`: Confidential
-    - `public`: Public
-* `redirect_uris`: Allowed URIs list, space separated (string, default=`""`)
-* `authorization_grant_type`: The Grant type the user must use for acquire tokens for this application. (choice, required)
-    - `authorization-code`: Authorization code
-    - `password`: Resource owner password-based
-* `skip_authorization`: Set True to skip authorization step for completely trusted applications. (boolean, default=`False`)
-* `organization`: Organization containing this application. (id, required)
+UsersUsersApplicationsCreate  Create an Application
+ Make a POST request to this resource with the following application fields to create a new application:          * &#x60;name&#x60;: Name of this application. (string, required) * &#x60;description&#x60;: Optional description of this application. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)   * &#x60;client_type&#x60;: Set to Public or Confidential depending on how secure the client device is. (choice, required)     - &#x60;confidential&#x60;: Confidential     - &#x60;public&#x60;: Public * &#x60;redirect_uris&#x60;: Allowed URIs list, space separated (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;authorization_grant_type&#x60;: The Grant type the user must use for acquire tokens for this application. (choice, required)     - &#x60;authorization-code&#x60;: Authorization code     - &#x60;password&#x60;: Resource owner password-based * &#x60;skip_authorization&#x60;: Set True to skip authorization step for completely trusted applications. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;organization&#x60;: Organization containing this application. (id, required)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersApplicationsCreateRequest
- */
-func (a *UsersApiService) UsersUsersApplicationsCreate(ctx _context.Context, id string) ApiUsersUsersApplicationsCreateRequest {
-	return ApiUsersUsersApplicationsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersApplicationsCreateExecute(r ApiUsersUsersApplicationsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersApplicationsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject70) - 
+*/
+func (a *UsersApiService) UsersUsersApplicationsCreate(ctx _context.Context, id string, localVarOptionals *UsersUsersApplicationsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -820,13 +393,9 @@ func (a *UsersApiService) UsersUsersApplicationsCreateExecute(r ApiUsersUsersApp
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersApplicationsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/applications/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/applications/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -850,13 +419,20 @@ func (a *UsersApiService) UsersUsersApplicationsCreateExecute(r ApiUsersUsersApp
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject70)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject70")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -878,134 +454,24 @@ func (a *UsersApiService) UsersUsersApplicationsCreateExecute(r ApiUsersUsersApp
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersApplicationsListRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiUsersUsersApplicationsListRequest) Page(page int32) ApiUsersUsersApplicationsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiUsersUsersApplicationsListRequest) PageSize(pageSize int32) ApiUsersUsersApplicationsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiUsersUsersApplicationsListRequest) Search(search string) ApiUsersUsersApplicationsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiUsersUsersApplicationsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersApplicationsListExecute(r)
+// UsersUsersApplicationsListOpts Optional parameters for the method 'UsersUsersApplicationsList'
+type UsersUsersApplicationsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * UsersUsersApplicationsList  List Applications
- * 
-Make a GET request to this resource to retrieve the list of
-applications.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of applications
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more application records.  
-
-## Results
-
-Each application data structure includes the following fields:
-
-* `id`: Database ID for this application. (integer)
-* `type`: Data type for this application. (choice)
-* `url`: URL for this application. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this application was created. (datetime)
-* `modified`: Timestamp when this application was last modified. (datetime)
-* `name`: Name of this application. (string)
-* `description`: Optional description of this application. (string)
-* `client_id`:  (string)
-* `client_secret`: Used for more stringent verification of access to an application when creating a token. (string)
-* `client_type`: Set to Public or Confidential depending on how secure the client device is. (choice)
-    - `confidential`: Confidential
-    - `public`: Public
-* `redirect_uris`: Allowed URIs list, space separated (string)
-* `authorization_grant_type`: The Grant type the user must use for acquire tokens for this application. (choice)
-    - `authorization-code`: Authorization code
-    - `password`: Resource owner password-based
-* `skip_authorization`: Set True to skip authorization step for completely trusted applications. (boolean)
-* `organization`: Organization containing this application. (id)
-
-
-
-## Sorting
-
-To specify that applications are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+UsersUsersApplicationsList  List Applications
+ Make a GET request to this resource to retrieve the list of applications.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of applications found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more application records.    ## Results  Each application data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this application. (integer) * &#x60;type&#x60;: Data type for this application. (choice) * &#x60;url&#x60;: URL for this application. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this application was created. (datetime) * &#x60;modified&#x60;: Timestamp when this application was last modified. (datetime) * &#x60;name&#x60;: Name of this application. (string) * &#x60;description&#x60;: Optional description of this application. (string) * &#x60;client_id&#x60;:  (string) * &#x60;client_secret&#x60;: Used for more stringent verification of access to an application when creating a token. (string) * &#x60;client_type&#x60;: Set to Public or Confidential depending on how secure the client device is. (choice)     - &#x60;confidential&#x60;: Confidential     - &#x60;public&#x60;: Public * &#x60;redirect_uris&#x60;: Allowed URIs list, space separated (string) * &#x60;authorization_grant_type&#x60;: The Grant type the user must use for acquire tokens for this application. (choice)     - &#x60;authorization-code&#x60;: Authorization code     - &#x60;password&#x60;: Resource owner password-based * &#x60;skip_authorization&#x60;: Set True to skip authorization step for completely trusted applications. (boolean) * &#x60;organization&#x60;: Organization containing this application. (id)    ## Sorting  To specify that applications are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersApplicationsListRequest
- */
-func (a *UsersApiService) UsersUsersApplicationsList(ctx _context.Context, id string) ApiUsersUsersApplicationsListRequest {
-	return ApiUsersUsersApplicationsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersApplicationsListExecute(r ApiUsersUsersApplicationsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersApplicationsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *UsersApiService) UsersUsersApplicationsList(ctx _context.Context, id string, localVarOptionals *UsersUsersApplicationsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1014,26 +480,22 @@ func (a *UsersApiService) UsersUsersApplicationsListExecute(r ApiUsersUsersAppli
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersApplicationsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/applications/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/applications/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1052,12 +514,12 @@ func (a *UsersApiService) UsersUsersApplicationsListExecute(r ApiUsersUsersAppli
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1079,60 +541,20 @@ func (a *UsersApiService) UsersUsersApplicationsListExecute(r ApiUsersUsersAppli
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersAuthorizedTokensCreateRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiUsersUsersAuthorizedTokensCreateRequest) Data(data map[string]interface{}) ApiUsersUsersAuthorizedTokensCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiUsersUsersAuthorizedTokensCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersAuthorizedTokensCreateExecute(r)
+// UsersUsersAuthorizedTokensCreateOpts Optional parameters for the method 'UsersUsersAuthorizedTokensCreate'
+type UsersUsersAuthorizedTokensCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * UsersUsersAuthorizedTokensCreate  Create an Access Token for a User
- * 
-Make a POST request to this resource with the following access token
-fields to create a new access token associated with this
-user.
-
-
-
-
-
-
-
-
-
-* `description`: Optional description of this access token. (string, default=`""`)
-
-
-
-* `application`:  (id, required)
-
-* `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string, default=`"write"`)
+UsersUsersAuthorizedTokensCreate  Create an Access Token for a User
+ Make a POST request to this resource with the following access token fields to create a new access token associated with this user.          * &#x60;description&#x60;: Optional description of this access token. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)    * &#x60;application&#x60;:  (id, required)  * &#x60;scope&#x60;: Allowed scopes, further restricts user&amp;#39;s permissions. Must be a simple space-separated string with allowed scopes [&amp;#39;read&amp;#39;, &amp;#39;write&amp;#39;]. (string, default&#x3D;&#x60;\&quot;write\&quot;&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersAuthorizedTokensCreateRequest
- */
-func (a *UsersApiService) UsersUsersAuthorizedTokensCreate(ctx _context.Context, id string) ApiUsersUsersAuthorizedTokensCreateRequest {
-	return ApiUsersUsersAuthorizedTokensCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersAuthorizedTokensCreateExecute(r ApiUsersUsersAuthorizedTokensCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersAuthorizedTokensCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *UsersApiService) UsersUsersAuthorizedTokensCreate(ctx _context.Context, id string, localVarOptionals *UsersUsersAuthorizedTokensCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -1141,13 +563,9 @@ func (a *UsersApiService) UsersUsersAuthorizedTokensCreateExecute(r ApiUsersUser
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersAuthorizedTokensCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/authorized_tokens/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/authorized_tokens/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1171,13 +589,16 @@ func (a *UsersApiService) UsersUsersAuthorizedTokensCreateExecute(r ApiUsersUser
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1199,129 +620,24 @@ func (a *UsersApiService) UsersUsersAuthorizedTokensCreateExecute(r ApiUsersUser
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersAuthorizedTokensListRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiUsersUsersAuthorizedTokensListRequest) Page(page int32) ApiUsersUsersAuthorizedTokensListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiUsersUsersAuthorizedTokensListRequest) PageSize(pageSize int32) ApiUsersUsersAuthorizedTokensListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiUsersUsersAuthorizedTokensListRequest) Search(search string) ApiUsersUsersAuthorizedTokensListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiUsersUsersAuthorizedTokensListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersAuthorizedTokensListExecute(r)
+// UsersUsersAuthorizedTokensListOpts Optional parameters for the method 'UsersUsersAuthorizedTokensList'
+type UsersUsersAuthorizedTokensListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * UsersUsersAuthorizedTokensList  List Access Tokens for a User
- * 
-Make a GET request to this resource to retrieve a list of
-access tokens associated with the selected
-user.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of access tokens
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more access token records.  
-
-## Results
-
-Each access token data structure includes the following fields:
-
-* `id`: Database ID for this access token. (integer)
-* `type`: Data type for this access token. (choice)
-* `url`: URL for this access token. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this access token was created. (datetime)
-* `modified`: Timestamp when this access token was last modified. (datetime)
-* `description`: Optional description of this access token. (string)
-* `user`: The user representing the token owner (id)
-* `token`:  (string)
-* `refresh_token`:  (field)
-* `application`:  (id)
-* `expires`:  (datetime)
-* `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string)
-
-
-
-## Sorting
-
-To specify that access tokens are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+UsersUsersAuthorizedTokensList  List Access Tokens for a User
+ Make a GET request to this resource to retrieve a list of access tokens associated with the selected user.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of access tokens found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more access token records.    ## Results  Each access token data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this access token. (integer) * &#x60;type&#x60;: Data type for this access token. (choice) * &#x60;url&#x60;: URL for this access token. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this access token was created. (datetime) * &#x60;modified&#x60;: Timestamp when this access token was last modified. (datetime) * &#x60;description&#x60;: Optional description of this access token. (string) * &#x60;user&#x60;: The user representing the token owner (id) * &#x60;token&#x60;:  (string) * &#x60;refresh_token&#x60;:  (field) * &#x60;application&#x60;:  (id) * &#x60;expires&#x60;:  (datetime) * &#x60;scope&#x60;: Allowed scopes, further restricts user&amp;#39;s permissions. Must be a simple space-separated string with allowed scopes [&amp;#39;read&amp;#39;, &amp;#39;write&amp;#39;]. (string)    ## Sorting  To specify that access tokens are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersAuthorizedTokensListRequest
- */
-func (a *UsersApiService) UsersUsersAuthorizedTokensList(ctx _context.Context, id string) ApiUsersUsersAuthorizedTokensListRequest {
-	return ApiUsersUsersAuthorizedTokensListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersAuthorizedTokensListExecute(r ApiUsersUsersAuthorizedTokensListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersAuthorizedTokensListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *UsersApiService) UsersUsersAuthorizedTokensList(ctx _context.Context, id string, localVarOptionals *UsersUsersAuthorizedTokensListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1330,26 +646,22 @@ func (a *UsersApiService) UsersUsersAuthorizedTokensListExecute(r ApiUsersUsersA
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersAuthorizedTokensList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/authorized_tokens/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/authorized_tokens/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1368,12 +680,12 @@ func (a *UsersApiService) UsersUsersAuthorizedTokensListExecute(r ApiUsersUsersA
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1395,55 +707,19 @@ func (a *UsersApiService) UsersUsersAuthorizedTokensListExecute(r ApiUsersUsersA
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersCreateRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	data *map[string]interface{}
-}
-
-func (r ApiUsersUsersCreateRequest) Data(data map[string]interface{}) ApiUsersUsersCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiUsersUsersCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersCreateExecute(r)
+// UsersUsersCreateOpts Optional parameters for the method 'UsersUsersCreate'
+type UsersUsersCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * UsersUsersCreate  Create a User
- * 
-Make a POST request to this resource with the following user
-fields to create a new user:
-
-
-
-
-
-
-
-
-* `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string, required)
-* `first_name`:  (string, default=`""`)
-* `last_name`:  (string, default=`""`)
-* `email`:  (string, default=`""`)
-* `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean, default=`False`)
-* `is_system_auditor`:  (boolean, default=`False`)
-* `password`: Write-only field used to change the password. (string, default=`""`)
+UsersUsersCreate  Create a User
+ Make a POST request to this resource with the following user fields to create a new user:         * &#x60;username&#x60;: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string, required) * &#x60;first_name&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;last_name&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;email&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;is_superuser&#x60;: Designates that this user has all permissions without explicitly assigning them. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;is_system_auditor&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;password&#x60;: Write-only field used to change the password. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiUsersUsersCreateRequest
- */
-func (a *UsersApiService) UsersUsersCreate(ctx _context.Context) ApiUsersUsersCreateRequest {
-	return ApiUsersUsersCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersCreateExecute(r ApiUsersUsersCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *UsersApiService) UsersUsersCreate(ctx _context.Context, localVarOptionals *UsersUsersCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -1452,12 +728,86 @@ func (a *UsersApiService) UsersUsersCreateExecute(r ApiUsersUsersCreateRequest) 
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/"
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
 	}
 
-	localVarPath := localBasePath + "/api/v2/users/"
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(r)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
+// UsersUsersCredentialsCreateOpts Optional parameters for the method 'UsersUsersCredentialsCreate'
+type UsersUsersCredentialsCreateOpts struct {
+    Data optional.Map[string]interface{}
+}
+
+/*
+UsersUsersCredentialsCreate  Create a Credential for a User
+ Make a POST request to this resource with the following credential fields to create a new credential associated with this user.          * &#x60;name&#x60;: Name of this credential. (string, required) * &#x60;description&#x60;: Optional description of this credential. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;credential_type&#x60;: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id, required)  * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default&#x3D;&#x60;{}&#x60;)
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param id
+ * @param optional nil or *UsersUsersCredentialsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *UsersApiService) UsersUsersCredentialsCreate(ctx _context.Context, id string, localVarOptionals *UsersUsersCredentialsCreateOpts) (*_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodPost
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+	)
+
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/credentials/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1481,13 +831,16 @@ func (a *UsersApiService) UsersUsersCreateExecute(r ApiUsersUsersCreateRequest) 
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1509,249 +862,24 @@ func (a *UsersApiService) UsersUsersCreateExecute(r ApiUsersUsersCreateRequest) 
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersCredentialsCreateRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiUsersUsersCredentialsCreateRequest) Data(data map[string]interface{}) ApiUsersUsersCredentialsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiUsersUsersCredentialsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersCredentialsCreateExecute(r)
+// UsersUsersCredentialsListOpts Optional parameters for the method 'UsersUsersCredentialsList'
+type UsersUsersCredentialsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * UsersUsersCredentialsCreate  Create a Credential for a User
- * 
-Make a POST request to this resource with the following credential
-fields to create a new credential associated with this
-user.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this credential. (string, required)
-* `description`: Optional description of this credential. (string, default=`""`)
-* `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id, required)
-
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json, default=`{}`)
+UsersUsersCredentialsList  List Credentials for a User
+ Make a GET request to this resource to retrieve a list of credentials associated with the selected user.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of credentials found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more credential records.    ## Results  Each credential data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this credential. (integer) * &#x60;type&#x60;: Data type for this credential. (choice) * &#x60;url&#x60;: URL for this credential. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this credential was created. (datetime) * &#x60;modified&#x60;: Timestamp when this credential was last modified. (datetime) * &#x60;name&#x60;: Name of this credential. (string) * &#x60;description&#x60;: Optional description of this credential. (string) * &#x60;credential_type&#x60;: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id) * &#x60;managed_by_tower&#x60;:  (boolean) * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json) * &#x60;kind&#x60;:  (field) * &#x60;cloud&#x60;:  (field) * &#x60;kubernetes&#x60;:  (field)     ## Sorting  To specify that credentials are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersCredentialsCreateRequest
- */
-func (a *UsersApiService) UsersUsersCredentialsCreate(ctx _context.Context, id string) ApiUsersUsersCredentialsCreateRequest {
-	return ApiUsersUsersCredentialsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersCredentialsCreateExecute(r ApiUsersUsersCredentialsCreateRequest) (*_nethttp.Response, error) {
-	var (
-		localVarHTTPMethod   = _nethttp.MethodPost
-		localVarPostBody     interface{}
-		localVarFormFileName string
-		localVarFileName     string
-		localVarFileBytes    []byte
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersCredentialsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/credentials/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := _neturl.Values{}
-	localVarFormParams := _neturl.Values{}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"application/json"}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
-	if err != nil {
-		return nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarHTTPResponse, err
-	}
-
-	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	if err != nil {
-		return localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		return localVarHTTPResponse, newErr
-	}
-
-	return localVarHTTPResponse, nil
-}
-
-type ApiUsersUsersCredentialsListRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiUsersUsersCredentialsListRequest) Page(page int32) ApiUsersUsersCredentialsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiUsersUsersCredentialsListRequest) PageSize(pageSize int32) ApiUsersUsersCredentialsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiUsersUsersCredentialsListRequest) Search(search string) ApiUsersUsersCredentialsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiUsersUsersCredentialsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersCredentialsListExecute(r)
-}
-
-/*
- * UsersUsersCredentialsList  List Credentials for a User
- * 
-Make a GET request to this resource to retrieve a list of
-credentials associated with the selected
-user.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of credentials
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more credential records.  
-
-## Results
-
-Each credential data structure includes the following fields:
-
-* `id`: Database ID for this credential. (integer)
-* `type`: Data type for this credential. (choice)
-* `url`: URL for this credential. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this credential was created. (datetime)
-* `modified`: Timestamp when this credential was last modified. (datetime)
-* `name`: Name of this credential. (string)
-* `description`: Optional description of this credential. (string)
-* `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id)
-* `managed_by_tower`:  (boolean)
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json)
-* `kind`:  (field)
-* `cloud`:  (field)
-* `kubernetes`:  (field)
-
-
-
-
-## Sorting
-
-To specify that credentials are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param id
- * @return ApiUsersUsersCredentialsListRequest
- */
-func (a *UsersApiService) UsersUsersCredentialsList(ctx _context.Context, id string) ApiUsersUsersCredentialsListRequest {
-	return ApiUsersUsersCredentialsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersCredentialsListExecute(r ApiUsersUsersCredentialsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersCredentialsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *UsersApiService) UsersUsersCredentialsList(ctx _context.Context, id string, localVarOptionals *UsersUsersCredentialsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1760,26 +888,22 @@ func (a *UsersApiService) UsersUsersCredentialsListExecute(r ApiUsersUsersCreden
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersCredentialsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/credentials/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/credentials/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1798,12 +922,12 @@ func (a *UsersApiService) UsersUsersCredentialsListExecute(r ApiUsersUsersCreden
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1825,42 +949,20 @@ func (a *UsersApiService) UsersUsersCredentialsListExecute(r ApiUsersUsersCreden
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersDeleteRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	search *string
-}
-
-func (r ApiUsersUsersDeleteRequest) Search(search string) ApiUsersUsersDeleteRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiUsersUsersDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersDeleteExecute(r)
+// UsersUsersDeleteOpts Optional parameters for the method 'UsersUsersDelete'
+type UsersUsersDeleteOpts struct {
+    Search optional.String
 }
 
 /*
- * UsersUsersDelete  Delete a User
- * 
-Make a DELETE request to this resource to delete this user.
+UsersUsersDelete  Delete a User
+ Make a DELETE request to this resource to delete this user.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersDeleteRequest
- */
-func (a *UsersApiService) UsersUsersDelete(ctx _context.Context, id string) ApiUsersUsersDeleteRequest {
-	return ApiUsersUsersDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersDeleteExecute(r ApiUsersUsersDeleteRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersDeleteOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *UsersApiService) UsersUsersDelete(ctx _context.Context, id string, localVarOptionals *UsersUsersDeleteOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -1869,20 +971,16 @@ func (a *UsersApiService) UsersUsersDeleteExecute(r ApiUsersUsersDeleteRequest) 
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1901,12 +999,12 @@ func (a *UsersApiService) UsersUsersDeleteExecute(r ApiUsersUsersDeleteRequest) 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1928,127 +1026,23 @@ func (a *UsersApiService) UsersUsersDeleteExecute(r ApiUsersUsersDeleteRequest) 
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersListRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiUsersUsersListRequest) Page(page int32) ApiUsersUsersListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiUsersUsersListRequest) PageSize(pageSize int32) ApiUsersUsersListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiUsersUsersListRequest) Search(search string) ApiUsersUsersListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiUsersUsersListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersListExecute(r)
+// UsersUsersListOpts Optional parameters for the method 'UsersUsersList'
+type UsersUsersListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * UsersUsersList  List Users
- * 
-Make a GET request to this resource to retrieve the list of
-users.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of users
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more user records.  
-
-## Results
-
-Each user data structure includes the following fields:
-
-* `id`: Database ID for this user. (integer)
-* `type`: Data type for this user. (choice)
-* `url`: URL for this user. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this user was created. (datetime)
-* `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string)
-* `first_name`:  (string)
-* `last_name`:  (string)
-* `email`:  (string)
-* `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean)
-* `is_system_auditor`:  (boolean)
-
-* `ldap_dn`:  (string)
-* `last_login`:  (datetime)
-* `external_account`: Set if the account is managed by an external service (field)
-
-
-
-## Sorting
-
-To specify that users are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=username
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-username
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=username,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+UsersUsersList  List Users
+ Make a GET request to this resource to retrieve the list of users.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of users found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more user records.    ## Results  Each user data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this user. (integer) * &#x60;type&#x60;: Data type for this user. (choice) * &#x60;url&#x60;: URL for this user. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this user was created. (datetime) * &#x60;username&#x60;: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string) * &#x60;first_name&#x60;:  (string) * &#x60;last_name&#x60;:  (string) * &#x60;email&#x60;:  (string) * &#x60;is_superuser&#x60;: Designates that this user has all permissions without explicitly assigning them. (boolean) * &#x60;is_system_auditor&#x60;:  (boolean)  * &#x60;ldap_dn&#x60;:  (string) * &#x60;last_login&#x60;:  (datetime) * &#x60;external_account&#x60;: Set if the account is managed by an external service (field)    ## Sorting  To specify that users are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;username  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-username  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;username,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiUsersUsersListRequest
- */
-func (a *UsersApiService) UsersUsersList(ctx _context.Context) ApiUsersUsersListRequest {
-	return ApiUsersUsersListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersListExecute(r ApiUsersUsersListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *UsersApiService) UsersUsersList(ctx _context.Context, localVarOptionals *UsersUsersListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2057,25 +1051,20 @@ func (a *UsersApiService) UsersUsersListExecute(r ApiUsersUsersListRequest) (*_n
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2094,12 +1083,12 @@ func (a *UsersApiService) UsersUsersListExecute(r ApiUsersUsersListRequest) (*_n
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2121,126 +1110,24 @@ func (a *UsersApiService) UsersUsersListExecute(r ApiUsersUsersListRequest) (*_n
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersOrganizationsListRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiUsersUsersOrganizationsListRequest) Page(page int32) ApiUsersUsersOrganizationsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiUsersUsersOrganizationsListRequest) PageSize(pageSize int32) ApiUsersUsersOrganizationsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiUsersUsersOrganizationsListRequest) Search(search string) ApiUsersUsersOrganizationsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiUsersUsersOrganizationsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersOrganizationsListExecute(r)
+// UsersUsersOrganizationsListOpts Optional parameters for the method 'UsersUsersOrganizationsList'
+type UsersUsersOrganizationsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * UsersUsersOrganizationsList  List Organizations for a User
- * 
-Make a GET request to this resource to retrieve a list of
-organizations associated with the selected
-user.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of organizations
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more organization records.  
-
-## Results
-
-Each organization data structure includes the following fields:
-
-* `id`: Database ID for this organization. (integer)
-* `type`: Data type for this organization. (choice)
-* `url`: URL for this organization. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this organization was created. (datetime)
-* `modified`: Timestamp when this organization was last modified. (datetime)
-* `name`: Name of this organization. (string)
-* `description`: Optional description of this organization. (string)
-* `max_hosts`: Maximum number of hosts allowed to be managed by this organization. (integer)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string)
-
-
-
-## Sorting
-
-To specify that organizations are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+UsersUsersOrganizationsList  List Organizations for a User
+ Make a GET request to this resource to retrieve a list of organizations associated with the selected user.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of organizations found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more organization records.    ## Results  Each organization data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this organization. (integer) * &#x60;type&#x60;: Data type for this organization. (choice) * &#x60;url&#x60;: URL for this organization. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this organization was created. (datetime) * &#x60;modified&#x60;: Timestamp when this organization was last modified. (datetime) * &#x60;name&#x60;: Name of this organization. (string) * &#x60;description&#x60;: Optional description of this organization. (string) * &#x60;max_hosts&#x60;: Maximum number of hosts allowed to be managed by this organization. (integer) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string)    ## Sorting  To specify that organizations are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersOrganizationsListRequest
- */
-func (a *UsersApiService) UsersUsersOrganizationsList(ctx _context.Context, id string) ApiUsersUsersOrganizationsListRequest {
-	return ApiUsersUsersOrganizationsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersOrganizationsListExecute(r ApiUsersUsersOrganizationsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersOrganizationsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *UsersApiService) UsersUsersOrganizationsList(ctx _context.Context, id string, localVarOptionals *UsersUsersOrganizationsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2249,26 +1136,22 @@ func (a *UsersApiService) UsersUsersOrganizationsListExecute(r ApiUsersUsersOrga
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersOrganizationsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/organizations/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/organizations/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2287,12 +1170,12 @@ func (a *UsersApiService) UsersUsersOrganizationsListExecute(r ApiUsersUsersOrga
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2314,75 +1197,22 @@ func (a *UsersApiService) UsersUsersOrganizationsListExecute(r ApiUsersUsersOrga
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersPartialUpdateRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	search *string
-	data *map[string]interface{}
-}
-
-func (r ApiUsersUsersPartialUpdateRequest) Search(search string) ApiUsersUsersPartialUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiUsersUsersPartialUpdateRequest) Data(data map[string]interface{}) ApiUsersUsersPartialUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiUsersUsersPartialUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersPartialUpdateExecute(r)
+// UsersUsersPartialUpdateOpts Optional parameters for the method 'UsersUsersPartialUpdate'
+type UsersUsersPartialUpdateOpts struct {
+    Search optional.String
+    Data optional.Map[string]interface{}
 }
 
 /*
- * UsersUsersPartialUpdate  Update a User
- * 
-Make a PUT or PATCH request to this resource to update this
-user.  The following fields may be modified:
-
-
-
-
-
-
-
-
-* `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string, required)
-* `first_name`:  (string, default=`""`)
-* `last_name`:  (string, default=`""`)
-* `email`:  (string, default=`""`)
-* `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean, default=`False`)
-* `is_system_auditor`:  (boolean, default=`False`)
-* `password`: Write-only field used to change the password. (string, default=`""`)
-
-
-
-
-
-
-
-
-
-
-
-For a PATCH request, include only the fields that are being modified.
+UsersUsersPartialUpdate  Update a User
+ Make a PUT or PATCH request to this resource to update this user.  The following fields may be modified:         * &#x60;username&#x60;: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string, required) * &#x60;first_name&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;last_name&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;email&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;is_superuser&#x60;: Designates that this user has all permissions without explicitly assigning them. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;is_system_auditor&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;password&#x60;: Write-only field used to change the password. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)            For a PATCH request, include only the fields that are being modified.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersPartialUpdateRequest
- */
-func (a *UsersApiService) UsersUsersPartialUpdate(ctx _context.Context, id string) ApiUsersUsersPartialUpdateRequest {
-	return ApiUsersUsersPartialUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersPartialUpdateExecute(r ApiUsersUsersPartialUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersPartialUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *UsersApiService) UsersUsersPartialUpdate(ctx _context.Context, id string, localVarOptionals *UsersUsersPartialUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPatch
 		localVarPostBody     interface{}
@@ -2391,20 +1221,16 @@ func (a *UsersApiService) UsersUsersPartialUpdateExecute(r ApiUsersUsersPartialU
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersPartialUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -2424,13 +1250,16 @@ func (a *UsersApiService) UsersUsersPartialUpdateExecute(r ApiUsersUsersPartialU
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2452,60 +1281,20 @@ func (a *UsersApiService) UsersUsersPartialUpdateExecute(r ApiUsersUsersPartialU
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersPersonalTokensCreateRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	data *InlineObject71
-}
-
-func (r ApiUsersUsersPersonalTokensCreateRequest) Data(data InlineObject71) ApiUsersUsersPersonalTokensCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiUsersUsersPersonalTokensCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersPersonalTokensCreateExecute(r)
+// UsersUsersPersonalTokensCreateOpts Optional parameters for the method 'UsersUsersPersonalTokensCreate'
+type UsersUsersPersonalTokensCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * UsersUsersPersonalTokensCreate  Create an Access Token for a User
- * 
-Make a POST request to this resource with the following access token
-fields to create a new access token associated with this
-user.
-
-
-
-
-
-
-
-
-
-* `description`: Optional description of this access token. (string, default=`""`)
-
-
-
-
-
-* `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string, default=`"write"`)
+UsersUsersPersonalTokensCreate  Create an Access Token for a User
+ Make a POST request to this resource with the following access token fields to create a new access token associated with this user.          * &#x60;description&#x60;: Optional description of this access token. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)      * &#x60;scope&#x60;: Allowed scopes, further restricts user&amp;#39;s permissions. Must be a simple space-separated string with allowed scopes [&amp;#39;read&amp;#39;, &amp;#39;write&amp;#39;]. (string, default&#x3D;&#x60;\&quot;write\&quot;&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersPersonalTokensCreateRequest
- */
-func (a *UsersApiService) UsersUsersPersonalTokensCreate(ctx _context.Context, id string) ApiUsersUsersPersonalTokensCreateRequest {
-	return ApiUsersUsersPersonalTokensCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersPersonalTokensCreateExecute(r ApiUsersUsersPersonalTokensCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersPersonalTokensCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject71) - 
+*/
+func (a *UsersApiService) UsersUsersPersonalTokensCreate(ctx _context.Context, id string, localVarOptionals *UsersUsersPersonalTokensCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -2514,13 +1303,9 @@ func (a *UsersApiService) UsersUsersPersonalTokensCreateExecute(r ApiUsersUsersP
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersPersonalTokensCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/personal_tokens/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/personal_tokens/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -2544,13 +1329,20 @@ func (a *UsersApiService) UsersUsersPersonalTokensCreateExecute(r ApiUsersUsersP
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject71)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject71")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2572,129 +1364,24 @@ func (a *UsersApiService) UsersUsersPersonalTokensCreateExecute(r ApiUsersUsersP
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersPersonalTokensListRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiUsersUsersPersonalTokensListRequest) Page(page int32) ApiUsersUsersPersonalTokensListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiUsersUsersPersonalTokensListRequest) PageSize(pageSize int32) ApiUsersUsersPersonalTokensListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiUsersUsersPersonalTokensListRequest) Search(search string) ApiUsersUsersPersonalTokensListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiUsersUsersPersonalTokensListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersPersonalTokensListExecute(r)
+// UsersUsersPersonalTokensListOpts Optional parameters for the method 'UsersUsersPersonalTokensList'
+type UsersUsersPersonalTokensListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * UsersUsersPersonalTokensList  List Access Tokens for a User
- * 
-Make a GET request to this resource to retrieve a list of
-access tokens associated with the selected
-user.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of access tokens
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more access token records.  
-
-## Results
-
-Each access token data structure includes the following fields:
-
-* `id`: Database ID for this access token. (integer)
-* `type`: Data type for this access token. (choice)
-* `url`: URL for this access token. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this access token was created. (datetime)
-* `modified`: Timestamp when this access token was last modified. (datetime)
-* `description`: Optional description of this access token. (string)
-* `user`: The user representing the token owner (id)
-* `token`:  (string)
-* `refresh_token`:  (field)
-* `application`:  (id)
-* `expires`:  (datetime)
-* `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string)
-
-
-
-## Sorting
-
-To specify that access tokens are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+UsersUsersPersonalTokensList  List Access Tokens for a User
+ Make a GET request to this resource to retrieve a list of access tokens associated with the selected user.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of access tokens found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more access token records.    ## Results  Each access token data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this access token. (integer) * &#x60;type&#x60;: Data type for this access token. (choice) * &#x60;url&#x60;: URL for this access token. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this access token was created. (datetime) * &#x60;modified&#x60;: Timestamp when this access token was last modified. (datetime) * &#x60;description&#x60;: Optional description of this access token. (string) * &#x60;user&#x60;: The user representing the token owner (id) * &#x60;token&#x60;:  (string) * &#x60;refresh_token&#x60;:  (field) * &#x60;application&#x60;:  (id) * &#x60;expires&#x60;:  (datetime) * &#x60;scope&#x60;: Allowed scopes, further restricts user&amp;#39;s permissions. Must be a simple space-separated string with allowed scopes [&amp;#39;read&amp;#39;, &amp;#39;write&amp;#39;]. (string)    ## Sorting  To specify that access tokens are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersPersonalTokensListRequest
- */
-func (a *UsersApiService) UsersUsersPersonalTokensList(ctx _context.Context, id string) ApiUsersUsersPersonalTokensListRequest {
-	return ApiUsersUsersPersonalTokensListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersPersonalTokensListExecute(r ApiUsersUsersPersonalTokensListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersPersonalTokensListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *UsersApiService) UsersUsersPersonalTokensList(ctx _context.Context, id string, localVarOptionals *UsersUsersPersonalTokensListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2703,26 +1390,22 @@ func (a *UsersApiService) UsersUsersPersonalTokensListExecute(r ApiUsersUsersPer
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersPersonalTokensList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/personal_tokens/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/personal_tokens/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2741,12 +1424,12 @@ func (a *UsersApiService) UsersUsersPersonalTokensListExecute(r ApiUsersUsersPer
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2768,162 +1451,24 @@ func (a *UsersApiService) UsersUsersPersonalTokensListExecute(r ApiUsersUsersPer
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersProjectsListRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiUsersUsersProjectsListRequest) Page(page int32) ApiUsersUsersProjectsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiUsersUsersProjectsListRequest) PageSize(pageSize int32) ApiUsersUsersProjectsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiUsersUsersProjectsListRequest) Search(search string) ApiUsersUsersProjectsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiUsersUsersProjectsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersProjectsListExecute(r)
+// UsersUsersProjectsListOpts Optional parameters for the method 'UsersUsersProjectsList'
+type UsersUsersProjectsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * UsersUsersProjectsList  List Projects for a User
- * 
-Make a GET request to this resource to retrieve a list of
-projects associated with the selected
-user.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of projects
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more project records.  
-
-## Results
-
-Each project data structure includes the following fields:
-
-* `id`: Database ID for this project. (integer)
-* `type`: Data type for this project. (choice)
-* `url`: URL for this project. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this project was created. (datetime)
-* `modified`: Timestamp when this project was last modified. (datetime)
-* `name`: Name of this project. (string)
-* `description`: Optional description of this project. (string)
-* `local_path`: Local path (relative to PROJECTS_ROOT) containing playbooks and related files for this project. (string)
-* `scm_type`: Specifies the source control system used to store the project. (choice)
-    - `""`: Manual
-    - `git`: Git
-    - `hg`: Mercurial
-    - `svn`: Subversion
-    - `insights`: Red Hat Insights
-    - `archive`: Remote Archive
-* `scm_url`: The location where the project is stored. (string)
-* `scm_branch`: Specific branch, tag or commit to checkout. (string)
-* `scm_refspec`: For git projects, an additional refspec to fetch. (string)
-* `scm_clean`: Discard any local changes before syncing the project. (boolean)
-* `scm_delete_on_update`: Delete the project before syncing. (boolean)
-* `credential`:  (id)
-* `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer)
-* `scm_revision`: The last revision fetched by a project update (string)
-* `last_job_run`:  (datetime)
-* `last_job_failed`:  (boolean)
-* `next_job_run`:  (datetime)
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-    - `never updated`: Never Updated
-    - `ok`: OK
-    - `missing`: Missing
-* `organization`: The organization used to determine access to this template. (id)
-* `scm_update_on_launch`: Update the project when a job is launched that uses the project. (boolean)
-* `scm_update_cache_timeout`: The number of seconds after the last project update ran that a new project update will be launched as a job dependency. (integer)
-* `allow_override`: Allow changing the SCM branch or revision in a job template that uses this project. (boolean)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string)
-* `last_update_failed`:  (boolean)
-* `last_updated`:  (datetime)
-
-
-
-## Sorting
-
-To specify that projects are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+UsersUsersProjectsList  List Projects for a User
+ Make a GET request to this resource to retrieve a list of projects associated with the selected user.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of projects found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more project records.    ## Results  Each project data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this project. (integer) * &#x60;type&#x60;: Data type for this project. (choice) * &#x60;url&#x60;: URL for this project. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this project was created. (datetime) * &#x60;modified&#x60;: Timestamp when this project was last modified. (datetime) * &#x60;name&#x60;: Name of this project. (string) * &#x60;description&#x60;: Optional description of this project. (string) * &#x60;local_path&#x60;: Local path (relative to PROJECTS_ROOT) containing playbooks and related files for this project. (string) * &#x60;scm_type&#x60;: Specifies the source control system used to store the project. (choice)     - &#x60;\&quot;\&quot;&#x60;: Manual     - &#x60;git&#x60;: Git     - &#x60;hg&#x60;: Mercurial     - &#x60;svn&#x60;: Subversion     - &#x60;insights&#x60;: Red Hat Insights     - &#x60;archive&#x60;: Remote Archive * &#x60;scm_url&#x60;: The location where the project is stored. (string) * &#x60;scm_branch&#x60;: Specific branch, tag or commit to checkout. (string) * &#x60;scm_refspec&#x60;: For git projects, an additional refspec to fetch. (string) * &#x60;scm_clean&#x60;: Discard any local changes before syncing the project. (boolean) * &#x60;scm_delete_on_update&#x60;: Delete the project before syncing. (boolean) * &#x60;credential&#x60;:  (id) * &#x60;timeout&#x60;: The amount of time (in seconds) to run before the task is canceled. (integer) * &#x60;scm_revision&#x60;: The last revision fetched by a project update (string) * &#x60;last_job_run&#x60;:  (datetime) * &#x60;last_job_failed&#x60;:  (boolean) * &#x60;next_job_run&#x60;:  (datetime) * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled     - &#x60;never updated&#x60;: Never Updated     - &#x60;ok&#x60;: OK     - &#x60;missing&#x60;: Missing * &#x60;organization&#x60;: The organization used to determine access to this template. (id) * &#x60;scm_update_on_launch&#x60;: Update the project when a job is launched that uses the project. (boolean) * &#x60;scm_update_cache_timeout&#x60;: The number of seconds after the last project update ran that a new project update will be launched as a job dependency. (integer) * &#x60;allow_override&#x60;: Allow changing the SCM branch or revision in a job template that uses this project. (boolean) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string) * &#x60;last_update_failed&#x60;:  (boolean) * &#x60;last_updated&#x60;:  (datetime)    ## Sorting  To specify that projects are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersProjectsListRequest
- */
-func (a *UsersApiService) UsersUsersProjectsList(ctx _context.Context, id string) ApiUsersUsersProjectsListRequest {
-	return ApiUsersUsersProjectsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersProjectsListExecute(r ApiUsersUsersProjectsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersProjectsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *UsersApiService) UsersUsersProjectsList(ctx _context.Context, id string, localVarOptionals *UsersUsersProjectsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2932,26 +1477,22 @@ func (a *UsersApiService) UsersUsersProjectsListExecute(r ApiUsersUsersProjectsL
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersProjectsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/projects/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/projects/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2970,12 +1511,12 @@ func (a *UsersApiService) UsersUsersProjectsListExecute(r ApiUsersUsersProjectsL
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2997,60 +1538,20 @@ func (a *UsersApiService) UsersUsersProjectsListExecute(r ApiUsersUsersProjectsL
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersReadRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	search *string
-}
-
-func (r ApiUsersUsersReadRequest) Search(search string) ApiUsersUsersReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiUsersUsersReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersReadExecute(r)
+// UsersUsersReadOpts Optional parameters for the method 'UsersUsersRead'
+type UsersUsersReadOpts struct {
+    Search optional.String
 }
 
 /*
- * UsersUsersRead  Retrieve a User
- * 
-Make GET request to this resource to retrieve a single user
-record containing the following fields:
-
-* `id`: Database ID for this user. (integer)
-* `type`: Data type for this user. (choice)
-* `url`: URL for this user. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this user was created. (datetime)
-* `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string)
-* `first_name`:  (string)
-* `last_name`:  (string)
-* `email`:  (string)
-* `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean)
-* `is_system_auditor`:  (boolean)
-
-* `ldap_dn`:  (string)
-* `last_login`:  (datetime)
-* `external_account`: Set if the account is managed by an external service (field)
+UsersUsersRead  Retrieve a User
+ Make GET request to this resource to retrieve a single user record containing the following fields:  * &#x60;id&#x60;: Database ID for this user. (integer) * &#x60;type&#x60;: Data type for this user. (choice) * &#x60;url&#x60;: URL for this user. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this user was created. (datetime) * &#x60;username&#x60;: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string) * &#x60;first_name&#x60;:  (string) * &#x60;last_name&#x60;:  (string) * &#x60;email&#x60;:  (string) * &#x60;is_superuser&#x60;: Designates that this user has all permissions without explicitly assigning them. (boolean) * &#x60;is_system_auditor&#x60;:  (boolean)  * &#x60;ldap_dn&#x60;:  (string) * &#x60;last_login&#x60;:  (datetime) * &#x60;external_account&#x60;: Set if the account is managed by an external service (field)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersReadRequest
- */
-func (a *UsersApiService) UsersUsersRead(ctx _context.Context, id string) ApiUsersUsersReadRequest {
-	return ApiUsersUsersReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersReadExecute(r ApiUsersUsersReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *UsersApiService) UsersUsersRead(ctx _context.Context, id string, localVarOptionals *UsersUsersReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -3059,20 +1560,16 @@ func (a *UsersApiService) UsersUsersReadExecute(r ApiUsersUsersReadRequest) (*_n
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -3091,12 +1588,12 @@ func (a *UsersApiService) UsersUsersReadExecute(r ApiUsersUsersReadRequest) (*_n
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3118,45 +1615,20 @@ func (a *UsersApiService) UsersUsersReadExecute(r ApiUsersUsersReadRequest) (*_n
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersRolesCreateRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiUsersUsersRolesCreateRequest) Data(data map[string]interface{}) ApiUsersUsersRolesCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiUsersUsersRolesCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersRolesCreateExecute(r)
+// UsersUsersRolesCreateOpts Optional parameters for the method 'UsersUsersRolesCreate'
+type UsersUsersRolesCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * UsersUsersRolesCreate  Associate Roles with this User
- * 
-Make a POST request to this resource to add or remove a role from this user. The following fields may be modified:
-
-   * `id`: The Role ID to add to the user. (int, required)
-   * `disassociate`: Provide if you want to remove the role. (any value, optional)
+UsersUsersRolesCreate  Associate Roles with this User
+ Make a POST request to this resource to add or remove a role from this user. The following fields may be modified:     * &#x60;id&#x60;: The Role ID to add to the user. (int, required)    * &#x60;disassociate&#x60;: Provide if you want to remove the role. (any value, optional)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersRolesCreateRequest
- */
-func (a *UsersApiService) UsersUsersRolesCreate(ctx _context.Context, id string) ApiUsersUsersRolesCreateRequest {
-	return ApiUsersUsersRolesCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersRolesCreateExecute(r ApiUsersUsersRolesCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersRolesCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *UsersApiService) UsersUsersRolesCreate(ctx _context.Context, id string, localVarOptionals *UsersUsersRolesCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -3165,13 +1637,9 @@ func (a *UsersApiService) UsersUsersRolesCreateExecute(r ApiUsersUsersRolesCreat
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersRolesCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/roles/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/roles/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -3195,13 +1663,16 @@ func (a *UsersApiService) UsersUsersRolesCreateExecute(r ApiUsersUsersRolesCreat
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3223,120 +1694,24 @@ func (a *UsersApiService) UsersUsersRolesCreateExecute(r ApiUsersUsersRolesCreat
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersRolesListRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiUsersUsersRolesListRequest) Page(page int32) ApiUsersUsersRolesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiUsersUsersRolesListRequest) PageSize(pageSize int32) ApiUsersUsersRolesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiUsersUsersRolesListRequest) Search(search string) ApiUsersUsersRolesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiUsersUsersRolesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersRolesListExecute(r)
+// UsersUsersRolesListOpts Optional parameters for the method 'UsersUsersRolesList'
+type UsersUsersRolesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * UsersUsersRolesList  List Roles for a User
- * 
-Make a GET request to this resource to retrieve a list of roles associated with the selected user.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of roles
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more role records.  
-
-## Results
-
-Each role data structure includes the following fields:
-
-* `id`: Database ID for this role. (integer)
-* `type`: Data type for this role. (choice)
-* `url`: URL for this role. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `name`: Name of this role. (field)
-* `description`: Optional description of this role. (field)
-
-
-
-## Sorting
-
-To specify that roles are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+UsersUsersRolesList  List Roles for a User
+ Make a GET request to this resource to retrieve a list of roles associated with the selected user.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of roles found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more role records.    ## Results  Each role data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this role. (integer) * &#x60;type&#x60;: Data type for this role. (choice) * &#x60;url&#x60;: URL for this role. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;name&#x60;: Name of this role. (field) * &#x60;description&#x60;: Optional description of this role. (field)    ## Sorting  To specify that roles are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersRolesListRequest
- */
-func (a *UsersApiService) UsersUsersRolesList(ctx _context.Context, id string) ApiUsersUsersRolesListRequest {
-	return ApiUsersUsersRolesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersRolesListExecute(r ApiUsersUsersRolesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersRolesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *UsersApiService) UsersUsersRolesList(ctx _context.Context, id string, localVarOptionals *UsersUsersRolesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -3345,26 +1720,22 @@ func (a *UsersApiService) UsersUsersRolesListExecute(r ApiUsersUsersRolesListReq
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersRolesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/roles/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/roles/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -3383,12 +1754,12 @@ func (a *UsersApiService) UsersUsersRolesListExecute(r ApiUsersUsersRolesListReq
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3410,125 +1781,24 @@ func (a *UsersApiService) UsersUsersRolesListExecute(r ApiUsersUsersRolesListReq
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersTeamsListRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiUsersUsersTeamsListRequest) Page(page int32) ApiUsersUsersTeamsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiUsersUsersTeamsListRequest) PageSize(pageSize int32) ApiUsersUsersTeamsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiUsersUsersTeamsListRequest) Search(search string) ApiUsersUsersTeamsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiUsersUsersTeamsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersTeamsListExecute(r)
+// UsersUsersTeamsListOpts Optional parameters for the method 'UsersUsersTeamsList'
+type UsersUsersTeamsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * UsersUsersTeamsList  List Teams for a User
- * 
-Make a GET request to this resource to retrieve a list of
-teams associated with the selected
-user.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of teams
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more team records.  
-
-## Results
-
-Each team data structure includes the following fields:
-
-* `id`: Database ID for this team. (integer)
-* `type`: Data type for this team. (choice)
-* `url`: URL for this team. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this team was created. (datetime)
-* `modified`: Timestamp when this team was last modified. (datetime)
-* `name`: Name of this team. (string)
-* `description`: Optional description of this team. (string)
-* `organization`:  (id)
-
-
-
-## Sorting
-
-To specify that teams are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+UsersUsersTeamsList  List Teams for a User
+ Make a GET request to this resource to retrieve a list of teams associated with the selected user.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of teams found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more team records.    ## Results  Each team data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this team. (integer) * &#x60;type&#x60;: Data type for this team. (choice) * &#x60;url&#x60;: URL for this team. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this team was created. (datetime) * &#x60;modified&#x60;: Timestamp when this team was last modified. (datetime) * &#x60;name&#x60;: Name of this team. (string) * &#x60;description&#x60;: Optional description of this team. (string) * &#x60;organization&#x60;:  (id)    ## Sorting  To specify that teams are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersTeamsListRequest
- */
-func (a *UsersApiService) UsersUsersTeamsList(ctx _context.Context, id string) ApiUsersUsersTeamsListRequest {
-	return ApiUsersUsersTeamsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersTeamsListExecute(r ApiUsersUsersTeamsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersTeamsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *UsersApiService) UsersUsersTeamsList(ctx _context.Context, id string, localVarOptionals *UsersUsersTeamsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -3537,26 +1807,22 @@ func (a *UsersApiService) UsersUsersTeamsListExecute(r ApiUsersUsersTeamsListReq
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersTeamsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/teams/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/teams/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -3575,12 +1841,12 @@ func (a *UsersApiService) UsersUsersTeamsListExecute(r ApiUsersUsersTeamsListReq
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3602,60 +1868,20 @@ func (a *UsersApiService) UsersUsersTeamsListExecute(r ApiUsersUsersTeamsListReq
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersTokensCreateRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiUsersUsersTokensCreateRequest) Data(data map[string]interface{}) ApiUsersUsersTokensCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiUsersUsersTokensCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersTokensCreateExecute(r)
+// UsersUsersTokensCreateOpts Optional parameters for the method 'UsersUsersTokensCreate'
+type UsersUsersTokensCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * UsersUsersTokensCreate  Create an Access Token for a User
- * 
-Make a POST request to this resource with the following access token
-fields to create a new access token associated with this
-user.
-
-
-
-
-
-
-
-
-
-* `description`: Optional description of this access token. (string, default=`""`)
-
-
-
-* `application`:  (id, default=``)
-
-* `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string, default=`"write"`)
+UsersUsersTokensCreate  Create an Access Token for a User
+ Make a POST request to this resource with the following access token fields to create a new access token associated with this user.          * &#x60;description&#x60;: Optional description of this access token. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)    * &#x60;application&#x60;:  (id, default&#x3D;&#x60;&#x60;)  * &#x60;scope&#x60;: Allowed scopes, further restricts user&amp;#39;s permissions. Must be a simple space-separated string with allowed scopes [&amp;#39;read&amp;#39;, &amp;#39;write&amp;#39;]. (string, default&#x3D;&#x60;\&quot;write\&quot;&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersTokensCreateRequest
- */
-func (a *UsersApiService) UsersUsersTokensCreate(ctx _context.Context, id string) ApiUsersUsersTokensCreateRequest {
-	return ApiUsersUsersTokensCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersTokensCreateExecute(r ApiUsersUsersTokensCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersTokensCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *UsersApiService) UsersUsersTokensCreate(ctx _context.Context, id string, localVarOptionals *UsersUsersTokensCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -3664,13 +1890,9 @@ func (a *UsersApiService) UsersUsersTokensCreateExecute(r ApiUsersUsersTokensCre
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersTokensCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/tokens/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/tokens/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -3694,13 +1916,16 @@ func (a *UsersApiService) UsersUsersTokensCreateExecute(r ApiUsersUsersTokensCre
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3722,129 +1947,24 @@ func (a *UsersApiService) UsersUsersTokensCreateExecute(r ApiUsersUsersTokensCre
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersTokensListRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiUsersUsersTokensListRequest) Page(page int32) ApiUsersUsersTokensListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiUsersUsersTokensListRequest) PageSize(pageSize int32) ApiUsersUsersTokensListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiUsersUsersTokensListRequest) Search(search string) ApiUsersUsersTokensListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiUsersUsersTokensListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersTokensListExecute(r)
+// UsersUsersTokensListOpts Optional parameters for the method 'UsersUsersTokensList'
+type UsersUsersTokensListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * UsersUsersTokensList  List Access Tokens for a User
- * 
-Make a GET request to this resource to retrieve a list of
-access tokens associated with the selected
-user.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of access tokens
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more access token records.  
-
-## Results
-
-Each access token data structure includes the following fields:
-
-* `id`: Database ID for this access token. (integer)
-* `type`: Data type for this access token. (choice)
-* `url`: URL for this access token. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this access token was created. (datetime)
-* `modified`: Timestamp when this access token was last modified. (datetime)
-* `description`: Optional description of this access token. (string)
-* `user`: The user representing the token owner (id)
-* `token`:  (string)
-* `refresh_token`:  (field)
-* `application`:  (id)
-* `expires`:  (datetime)
-* `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string)
-
-
-
-## Sorting
-
-To specify that access tokens are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+UsersUsersTokensList  List Access Tokens for a User
+ Make a GET request to this resource to retrieve a list of access tokens associated with the selected user.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of access tokens found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more access token records.    ## Results  Each access token data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this access token. (integer) * &#x60;type&#x60;: Data type for this access token. (choice) * &#x60;url&#x60;: URL for this access token. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this access token was created. (datetime) * &#x60;modified&#x60;: Timestamp when this access token was last modified. (datetime) * &#x60;description&#x60;: Optional description of this access token. (string) * &#x60;user&#x60;: The user representing the token owner (id) * &#x60;token&#x60;:  (string) * &#x60;refresh_token&#x60;:  (field) * &#x60;application&#x60;:  (id) * &#x60;expires&#x60;:  (datetime) * &#x60;scope&#x60;: Allowed scopes, further restricts user&amp;#39;s permissions. Must be a simple space-separated string with allowed scopes [&amp;#39;read&amp;#39;, &amp;#39;write&amp;#39;]. (string)    ## Sorting  To specify that access tokens are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersTokensListRequest
- */
-func (a *UsersApiService) UsersUsersTokensList(ctx _context.Context, id string) ApiUsersUsersTokensListRequest {
-	return ApiUsersUsersTokensListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersTokensListExecute(r ApiUsersUsersTokensListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersTokensListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *UsersApiService) UsersUsersTokensList(ctx _context.Context, id string, localVarOptionals *UsersUsersTokensListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -3853,26 +1973,22 @@ func (a *UsersApiService) UsersUsersTokensListExecute(r ApiUsersUsersTokensListR
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersTokensList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/tokens/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/tokens/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -3891,12 +2007,12 @@ func (a *UsersApiService) UsersUsersTokensListExecute(r ApiUsersUsersTokensListR
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3918,73 +2034,22 @@ func (a *UsersApiService) UsersUsersTokensListExecute(r ApiUsersUsersTokensListR
 	return localVarHTTPResponse, nil
 }
 
-type ApiUsersUsersUpdateRequest struct {
-	ctx _context.Context
-	ApiService *UsersApiService
-	id string
-	search *string
-	data *InlineObject69
-}
-
-func (r ApiUsersUsersUpdateRequest) Search(search string) ApiUsersUsersUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiUsersUsersUpdateRequest) Data(data InlineObject69) ApiUsersUsersUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiUsersUsersUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.UsersUsersUpdateExecute(r)
+// UsersUsersUpdateOpts Optional parameters for the method 'UsersUsersUpdate'
+type UsersUsersUpdateOpts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * UsersUsersUpdate  Update a User
- * 
-Make a PUT or PATCH request to this resource to update this
-user.  The following fields may be modified:
-
-
-
-
-
-
-
-
-* `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string, required)
-* `first_name`:  (string, default=`""`)
-* `last_name`:  (string, default=`""`)
-* `email`:  (string, default=`""`)
-* `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean, default=`False`)
-* `is_system_auditor`:  (boolean, default=`False`)
-* `password`: Write-only field used to change the password. (string, default=`""`)
-
-
-
-
-
-
-
-
-
-For a PUT request, include **all** fields in the request.
+UsersUsersUpdate  Update a User
+ Make a PUT or PATCH request to this resource to update this user.  The following fields may be modified:         * &#x60;username&#x60;: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string, required) * &#x60;first_name&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;last_name&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;email&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;is_superuser&#x60;: Designates that this user has all permissions without explicitly assigning them. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;is_system_auditor&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;password&#x60;: Write-only field used to change the password. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)          For a PUT request, include **all** fields in the request.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiUsersUsersUpdateRequest
- */
-func (a *UsersApiService) UsersUsersUpdate(ctx _context.Context, id string) ApiUsersUsersUpdateRequest {
-	return ApiUsersUsersUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *UsersApiService) UsersUsersUpdateExecute(r ApiUsersUsersUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *UsersUsersUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject69) - 
+*/
+func (a *UsersApiService) UsersUsersUpdate(ctx _context.Context, id string, localVarOptionals *UsersUsersUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -3993,20 +2058,16 @@ func (a *UsersApiService) UsersUsersUpdateExecute(r ApiUsersUsersUpdateRequest) 
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersApiService.UsersUsersUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/users/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/users/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -4026,13 +2087,20 @@ func (a *UsersApiService) UsersUsersUpdateExecute(r ApiUsersUsersUpdateRequest) 
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject69)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject69")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

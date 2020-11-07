@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,45 +26,13 @@ var (
 // ProjectUpdatesApiService ProjectUpdatesApi service
 type ProjectUpdatesApiService service
 
-type ApiProjectUpdatesProjectUpdatesCancelCreateRequest struct {
-	ctx _context.Context
-	ApiService *ProjectUpdatesApiService
-	id string
-}
-
-
-func (r ApiProjectUpdatesProjectUpdatesCancelCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.ProjectUpdatesProjectUpdatesCancelCreateExecute(r)
-}
-
 /*
- * ProjectUpdatesProjectUpdatesCancelCreate  Cancel Project Update
- * 
-Make a GET request to this resource to determine if the project update can be
-canceled.  The response will include the following field:
-
-* `can_cancel`: Indicates whether this update can be canceled (boolean,
-  read-only)
-
-Make a POST request to this resource to cancel a pending or running project
-update.  The response status code will be 202 if successful, or 405 if the
-update cannot be canceled.
+ProjectUpdatesProjectUpdatesCancelCreate  Cancel Project Update
+ Make a GET request to this resource to determine if the project update can be canceled.  The response will include the following field:  * &#x60;can_cancel&#x60;: Indicates whether this update can be canceled (boolean,   read-only)  Make a POST request to this resource to cancel a pending or running project update.  The response status code will be 202 if successful, or 405 if the update cannot be canceled.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiProjectUpdatesProjectUpdatesCancelCreateRequest
- */
-func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesCancelCreate(ctx _context.Context, id string) ApiProjectUpdatesProjectUpdatesCancelCreateRequest {
-	return ApiProjectUpdatesProjectUpdatesCancelCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesCancelCreateExecute(r ApiProjectUpdatesProjectUpdatesCancelCreateRequest) (*_nethttp.Response, error) {
+*/
+func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesCancelCreate(ctx _context.Context, id string) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -72,13 +41,9 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesCancelCreateExecu
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectUpdatesApiService.ProjectUpdatesProjectUpdatesCancelCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/project_updates/{id}/cancel/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/project_updates/{id}/cancel/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -101,12 +66,12 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesCancelCreateExecu
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -128,50 +93,20 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesCancelCreateExecu
 	return localVarHTTPResponse, nil
 }
 
-type ApiProjectUpdatesProjectUpdatesCancelReadRequest struct {
-	ctx _context.Context
-	ApiService *ProjectUpdatesApiService
-	id string
-	search *string
-}
-
-func (r ApiProjectUpdatesProjectUpdatesCancelReadRequest) Search(search string) ApiProjectUpdatesProjectUpdatesCancelReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiProjectUpdatesProjectUpdatesCancelReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.ProjectUpdatesProjectUpdatesCancelReadExecute(r)
+// ProjectUpdatesProjectUpdatesCancelReadOpts Optional parameters for the method 'ProjectUpdatesProjectUpdatesCancelRead'
+type ProjectUpdatesProjectUpdatesCancelReadOpts struct {
+    Search optional.String
 }
 
 /*
- * ProjectUpdatesProjectUpdatesCancelRead  Cancel Project Update
- * 
-Make a GET request to this resource to determine if the project update can be
-canceled.  The response will include the following field:
-
-* `can_cancel`: Indicates whether this update can be canceled (boolean,
-  read-only)
-
-Make a POST request to this resource to cancel a pending or running project
-update.  The response status code will be 202 if successful, or 405 if the
-update cannot be canceled.
+ProjectUpdatesProjectUpdatesCancelRead  Cancel Project Update
+ Make a GET request to this resource to determine if the project update can be canceled.  The response will include the following field:  * &#x60;can_cancel&#x60;: Indicates whether this update can be canceled (boolean,   read-only)  Make a POST request to this resource to cancel a pending or running project update.  The response status code will be 202 if successful, or 405 if the update cannot be canceled.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiProjectUpdatesProjectUpdatesCancelReadRequest
- */
-func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesCancelRead(ctx _context.Context, id string) ApiProjectUpdatesProjectUpdatesCancelReadRequest {
-	return ApiProjectUpdatesProjectUpdatesCancelReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesCancelReadExecute(r ApiProjectUpdatesProjectUpdatesCancelReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *ProjectUpdatesProjectUpdatesCancelReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesCancelRead(ctx _context.Context, id string, localVarOptionals *ProjectUpdatesProjectUpdatesCancelReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -180,20 +115,16 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesCancelReadExecute
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectUpdatesApiService.ProjectUpdatesProjectUpdatesCancelRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/project_updates/{id}/cancel/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/project_updates/{id}/cancel/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -212,12 +143,12 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesCancelReadExecute
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -239,42 +170,20 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesCancelReadExecute
 	return localVarHTTPResponse, nil
 }
 
-type ApiProjectUpdatesProjectUpdatesDeleteRequest struct {
-	ctx _context.Context
-	ApiService *ProjectUpdatesApiService
-	id string
-	search *string
-}
-
-func (r ApiProjectUpdatesProjectUpdatesDeleteRequest) Search(search string) ApiProjectUpdatesProjectUpdatesDeleteRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiProjectUpdatesProjectUpdatesDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.ProjectUpdatesProjectUpdatesDeleteExecute(r)
+// ProjectUpdatesProjectUpdatesDeleteOpts Optional parameters for the method 'ProjectUpdatesProjectUpdatesDelete'
+type ProjectUpdatesProjectUpdatesDeleteOpts struct {
+    Search optional.String
 }
 
 /*
- * ProjectUpdatesProjectUpdatesDelete  Delete a Project Update
- * 
-Make a DELETE request to this resource to delete this project update.
+ProjectUpdatesProjectUpdatesDelete  Delete a Project Update
+ Make a DELETE request to this resource to delete this project update.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiProjectUpdatesProjectUpdatesDeleteRequest
- */
-func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesDelete(ctx _context.Context, id string) ApiProjectUpdatesProjectUpdatesDeleteRequest {
-	return ApiProjectUpdatesProjectUpdatesDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesDeleteExecute(r ApiProjectUpdatesProjectUpdatesDeleteRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *ProjectUpdatesProjectUpdatesDeleteOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesDelete(ctx _context.Context, id string, localVarOptionals *ProjectUpdatesProjectUpdatesDeleteOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -283,20 +192,16 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesDeleteExecute(r A
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectUpdatesApiService.ProjectUpdatesProjectUpdatesDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/project_updates/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/project_updates/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -315,12 +220,12 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesDeleteExecute(r A
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -342,173 +247,24 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesDeleteExecute(r A
 	return localVarHTTPResponse, nil
 }
 
-type ApiProjectUpdatesProjectUpdatesEventsListRequest struct {
-	ctx _context.Context
-	ApiService *ProjectUpdatesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiProjectUpdatesProjectUpdatesEventsListRequest) Page(page int32) ApiProjectUpdatesProjectUpdatesEventsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiProjectUpdatesProjectUpdatesEventsListRequest) PageSize(pageSize int32) ApiProjectUpdatesProjectUpdatesEventsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiProjectUpdatesProjectUpdatesEventsListRequest) Search(search string) ApiProjectUpdatesProjectUpdatesEventsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiProjectUpdatesProjectUpdatesEventsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.ProjectUpdatesProjectUpdatesEventsListExecute(r)
+// ProjectUpdatesProjectUpdatesEventsListOpts Optional parameters for the method 'ProjectUpdatesProjectUpdatesEventsList'
+type ProjectUpdatesProjectUpdatesEventsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * ProjectUpdatesProjectUpdatesEventsList  List Project Update Events for a Project Update
- * 
-Make a GET request to this resource to retrieve a list of
-project update events associated with the selected
-project update.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of project update events
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more project update event records.  
-
-## Results
-
-Each project update event data structure includes the following fields:
-
-* `id`: Database ID for this project update event. (integer)
-* `type`: Data type for this project update event. (choice)
-* `url`: URL for this project update event. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this project update event was created. (datetime)
-* `modified`: Timestamp when this project update event was last modified. (datetime)
-* `event`:  (choice)
-    - `runner_on_failed`: Host Failed
-    - `runner_on_start`: Host Started
-    - `runner_on_ok`: Host OK
-    - `runner_on_error`: Host Failure
-    - `runner_on_skipped`: Host Skipped
-    - `runner_on_unreachable`: Host Unreachable
-    - `runner_on_no_hosts`: No Hosts Remaining
-    - `runner_on_async_poll`: Host Polling
-    - `runner_on_async_ok`: Host Async OK
-    - `runner_on_async_failed`: Host Async Failure
-    - `runner_item_on_ok`: Item OK
-    - `runner_item_on_failed`: Item Failed
-    - `runner_item_on_skipped`: Item Skipped
-    - `runner_retry`: Host Retry
-    - `runner_on_file_diff`: File Difference
-    - `playbook_on_start`: Playbook Started
-    - `playbook_on_notify`: Running Handlers
-    - `playbook_on_include`: Including File
-    - `playbook_on_no_hosts_matched`: No Hosts Matched
-    - `playbook_on_no_hosts_remaining`: No Hosts Remaining
-    - `playbook_on_task_start`: Task Started
-    - `playbook_on_vars_prompt`: Variables Prompted
-    - `playbook_on_setup`: Gathering Facts
-    - `playbook_on_import_for_host`: internal: on Import for Host
-    - `playbook_on_not_import_for_host`: internal: on Not Import for Host
-    - `playbook_on_play_start`: Play Started
-    - `playbook_on_stats`: Playbook Complete
-    - `debug`: Debug
-    - `verbose`: Verbose
-    - `deprecated`: Deprecated
-    - `warning`: Warning
-    - `system_warning`: System Warning
-    - `error`: Error
-* `counter`:  (integer)
-* `event_display`:  (string)
-* `event_data`:  (json)
-* `event_level`:  (integer)
-* `failed`:  (boolean)
-* `changed`:  (boolean)
-* `uuid`:  (string)
-* `host_name`:  (field)
-* `playbook`:  (string)
-* `play`:  (string)
-* `task`:  (string)
-* `role`:  (string)
-* `stdout`:  (field)
-* `start_line`:  (integer)
-* `end_line`:  (integer)
-* `verbosity`:  (integer)
-* `project_update`:  (id)
-
-
-
-## Sorting
-
-To specify that project update events are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+ProjectUpdatesProjectUpdatesEventsList  List Project Update Events for a Project Update
+ Make a GET request to this resource to retrieve a list of project update events associated with the selected project update.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of project update events found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more project update event records.    ## Results  Each project update event data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this project update event. (integer) * &#x60;type&#x60;: Data type for this project update event. (choice) * &#x60;url&#x60;: URL for this project update event. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this project update event was created. (datetime) * &#x60;modified&#x60;: Timestamp when this project update event was last modified. (datetime) * &#x60;event&#x60;:  (choice)     - &#x60;runner_on_failed&#x60;: Host Failed     - &#x60;runner_on_start&#x60;: Host Started     - &#x60;runner_on_ok&#x60;: Host OK     - &#x60;runner_on_error&#x60;: Host Failure     - &#x60;runner_on_skipped&#x60;: Host Skipped     - &#x60;runner_on_unreachable&#x60;: Host Unreachable     - &#x60;runner_on_no_hosts&#x60;: No Hosts Remaining     - &#x60;runner_on_async_poll&#x60;: Host Polling     - &#x60;runner_on_async_ok&#x60;: Host Async OK     - &#x60;runner_on_async_failed&#x60;: Host Async Failure     - &#x60;runner_item_on_ok&#x60;: Item OK     - &#x60;runner_item_on_failed&#x60;: Item Failed     - &#x60;runner_item_on_skipped&#x60;: Item Skipped     - &#x60;runner_retry&#x60;: Host Retry     - &#x60;runner_on_file_diff&#x60;: File Difference     - &#x60;playbook_on_start&#x60;: Playbook Started     - &#x60;playbook_on_notify&#x60;: Running Handlers     - &#x60;playbook_on_include&#x60;: Including File     - &#x60;playbook_on_no_hosts_matched&#x60;: No Hosts Matched     - &#x60;playbook_on_no_hosts_remaining&#x60;: No Hosts Remaining     - &#x60;playbook_on_task_start&#x60;: Task Started     - &#x60;playbook_on_vars_prompt&#x60;: Variables Prompted     - &#x60;playbook_on_setup&#x60;: Gathering Facts     - &#x60;playbook_on_import_for_host&#x60;: internal: on Import for Host     - &#x60;playbook_on_not_import_for_host&#x60;: internal: on Not Import for Host     - &#x60;playbook_on_play_start&#x60;: Play Started     - &#x60;playbook_on_stats&#x60;: Playbook Complete     - &#x60;debug&#x60;: Debug     - &#x60;verbose&#x60;: Verbose     - &#x60;deprecated&#x60;: Deprecated     - &#x60;warning&#x60;: Warning     - &#x60;system_warning&#x60;: System Warning     - &#x60;error&#x60;: Error * &#x60;counter&#x60;:  (integer) * &#x60;event_display&#x60;:  (string) * &#x60;event_data&#x60;:  (json) * &#x60;event_level&#x60;:  (integer) * &#x60;failed&#x60;:  (boolean) * &#x60;changed&#x60;:  (boolean) * &#x60;uuid&#x60;:  (string) * &#x60;host_name&#x60;:  (field) * &#x60;playbook&#x60;:  (string) * &#x60;play&#x60;:  (string) * &#x60;task&#x60;:  (string) * &#x60;role&#x60;:  (string) * &#x60;stdout&#x60;:  (field) * &#x60;start_line&#x60;:  (integer) * &#x60;end_line&#x60;:  (integer) * &#x60;verbosity&#x60;:  (integer) * &#x60;project_update&#x60;:  (id)    ## Sorting  To specify that project update events are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiProjectUpdatesProjectUpdatesEventsListRequest
- */
-func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesEventsList(ctx _context.Context, id string) ApiProjectUpdatesProjectUpdatesEventsListRequest {
-	return ApiProjectUpdatesProjectUpdatesEventsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesEventsListExecute(r ApiProjectUpdatesProjectUpdatesEventsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *ProjectUpdatesProjectUpdatesEventsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesEventsList(ctx _context.Context, id string, localVarOptionals *ProjectUpdatesProjectUpdatesEventsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -517,26 +273,22 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesEventsListExecute
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectUpdatesApiService.ProjectUpdatesProjectUpdatesEventsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/project_updates/{id}/events/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/project_updates/{id}/events/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -555,12 +307,12 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesEventsListExecute
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -582,168 +334,23 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesEventsListExecute
 	return localVarHTTPResponse, nil
 }
 
-type ApiProjectUpdatesProjectUpdatesListRequest struct {
-	ctx _context.Context
-	ApiService *ProjectUpdatesApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiProjectUpdatesProjectUpdatesListRequest) Page(page int32) ApiProjectUpdatesProjectUpdatesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiProjectUpdatesProjectUpdatesListRequest) PageSize(pageSize int32) ApiProjectUpdatesProjectUpdatesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiProjectUpdatesProjectUpdatesListRequest) Search(search string) ApiProjectUpdatesProjectUpdatesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiProjectUpdatesProjectUpdatesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.ProjectUpdatesProjectUpdatesListExecute(r)
+// ProjectUpdatesProjectUpdatesListOpts Optional parameters for the method 'ProjectUpdatesProjectUpdatesList'
+type ProjectUpdatesProjectUpdatesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * ProjectUpdatesProjectUpdatesList  List Project Updates
- * 
-Make a GET request to this resource to retrieve the list of
-project updates.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of project updates
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more project update records.  
-
-## Results
-
-Each project update data structure includes the following fields:
-
-* `id`: Database ID for this project update. (integer)
-* `type`: Data type for this project update. (choice)
-* `url`: URL for this project update. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this project update was created. (datetime)
-* `modified`: Timestamp when this project update was last modified. (datetime)
-* `name`: Name of this project update. (string)
-* `description`: Optional description of this project update. (string)
-* `unified_job_template`:  (id)
-* `launch_type`:  (choice)
-    - `manual`: Manual
-    - `relaunch`: Relaunch
-    - `callback`: Callback
-    - `scheduled`: Scheduled
-    - `dependency`: Dependency
-    - `workflow`: Workflow
-    - `webhook`: Webhook
-    - `sync`: Sync
-    - `scm`: SCM Update
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-* `failed`:  (boolean)
-* `started`: The date and time the job was queued for starting. (datetime)
-* `finished`: The date and time the job finished execution. (datetime)
-* `canceled_on`: The date and time when the cancel request was sent. (datetime)
-* `elapsed`: Elapsed time in seconds that the job ran. (decimal)
-* `job_explanation`: A status field to indicate the state of the job if it wasn&#39;t able to run and capture stdout (string)
-* `execution_node`: The node the job executed on. (string)
-* `local_path`: Local path (relative to PROJECTS_ROOT) containing playbooks and related files for this project. (string)
-* `scm_type`: Specifies the source control system used to store the project. (choice)
-    - `""`: Manual
-    - `git`: Git
-    - `hg`: Mercurial
-    - `svn`: Subversion
-    - `insights`: Red Hat Insights
-    - `archive`: Remote Archive
-* `scm_url`: The location where the project is stored. (string)
-* `scm_branch`: Specific branch, tag or commit to checkout. (string)
-* `scm_refspec`: For git projects, an additional refspec to fetch. (string)
-* `scm_clean`: Discard any local changes before syncing the project. (boolean)
-* `scm_delete_on_update`: Delete the project before syncing. (boolean)
-* `credential`:  (id)
-* `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer)
-* `scm_revision`: The SCM Revision discovered by this update for the given project and branch. (string)
-* `project`:  (id)
-* `job_type`:  (choice)
-    - `run`: Run
-    - `check`: Check
-* `job_tags`: Parts of the project update playbook that will be run. (string)
-
-
-
-## Sorting
-
-To specify that project updates are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+ProjectUpdatesProjectUpdatesList  List Project Updates
+ Make a GET request to this resource to retrieve the list of project updates.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of project updates found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more project update records.    ## Results  Each project update data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this project update. (integer) * &#x60;type&#x60;: Data type for this project update. (choice) * &#x60;url&#x60;: URL for this project update. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this project update was created. (datetime) * &#x60;modified&#x60;: Timestamp when this project update was last modified. (datetime) * &#x60;name&#x60;: Name of this project update. (string) * &#x60;description&#x60;: Optional description of this project update. (string) * &#x60;unified_job_template&#x60;:  (id) * &#x60;launch_type&#x60;:  (choice)     - &#x60;manual&#x60;: Manual     - &#x60;relaunch&#x60;: Relaunch     - &#x60;callback&#x60;: Callback     - &#x60;scheduled&#x60;: Scheduled     - &#x60;dependency&#x60;: Dependency     - &#x60;workflow&#x60;: Workflow     - &#x60;webhook&#x60;: Webhook     - &#x60;sync&#x60;: Sync     - &#x60;scm&#x60;: SCM Update * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled * &#x60;failed&#x60;:  (boolean) * &#x60;started&#x60;: The date and time the job was queued for starting. (datetime) * &#x60;finished&#x60;: The date and time the job finished execution. (datetime) * &#x60;canceled_on&#x60;: The date and time when the cancel request was sent. (datetime) * &#x60;elapsed&#x60;: Elapsed time in seconds that the job ran. (decimal) * &#x60;job_explanation&#x60;: A status field to indicate the state of the job if it wasn&amp;#39;t able to run and capture stdout (string) * &#x60;execution_node&#x60;: The node the job executed on. (string) * &#x60;local_path&#x60;: Local path (relative to PROJECTS_ROOT) containing playbooks and related files for this project. (string) * &#x60;scm_type&#x60;: Specifies the source control system used to store the project. (choice)     - &#x60;\&quot;\&quot;&#x60;: Manual     - &#x60;git&#x60;: Git     - &#x60;hg&#x60;: Mercurial     - &#x60;svn&#x60;: Subversion     - &#x60;insights&#x60;: Red Hat Insights     - &#x60;archive&#x60;: Remote Archive * &#x60;scm_url&#x60;: The location where the project is stored. (string) * &#x60;scm_branch&#x60;: Specific branch, tag or commit to checkout. (string) * &#x60;scm_refspec&#x60;: For git projects, an additional refspec to fetch. (string) * &#x60;scm_clean&#x60;: Discard any local changes before syncing the project. (boolean) * &#x60;scm_delete_on_update&#x60;: Delete the project before syncing. (boolean) * &#x60;credential&#x60;:  (id) * &#x60;timeout&#x60;: The amount of time (in seconds) to run before the task is canceled. (integer) * &#x60;scm_revision&#x60;: The SCM Revision discovered by this update for the given project and branch. (string) * &#x60;project&#x60;:  (id) * &#x60;job_type&#x60;:  (choice)     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;: Parts of the project update playbook that will be run. (string)    ## Sorting  To specify that project updates are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiProjectUpdatesProjectUpdatesListRequest
- */
-func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesList(ctx _context.Context) ApiProjectUpdatesProjectUpdatesListRequest {
-	return ApiProjectUpdatesProjectUpdatesListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesListExecute(r ApiProjectUpdatesProjectUpdatesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *ProjectUpdatesProjectUpdatesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesList(ctx _context.Context, localVarOptionals *ProjectUpdatesProjectUpdatesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -752,25 +359,20 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesListExecute(r Api
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectUpdatesApiService.ProjectUpdatesProjectUpdatesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/project_updates/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/project_updates/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -789,12 +391,12 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesListExecute(r Api
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -816,142 +418,24 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesListExecute(r Api
 	return localVarHTTPResponse, nil
 }
 
-type ApiProjectUpdatesProjectUpdatesNotificationsListRequest struct {
-	ctx _context.Context
-	ApiService *ProjectUpdatesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiProjectUpdatesProjectUpdatesNotificationsListRequest) Page(page int32) ApiProjectUpdatesProjectUpdatesNotificationsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiProjectUpdatesProjectUpdatesNotificationsListRequest) PageSize(pageSize int32) ApiProjectUpdatesProjectUpdatesNotificationsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiProjectUpdatesProjectUpdatesNotificationsListRequest) Search(search string) ApiProjectUpdatesProjectUpdatesNotificationsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiProjectUpdatesProjectUpdatesNotificationsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.ProjectUpdatesProjectUpdatesNotificationsListExecute(r)
+// ProjectUpdatesProjectUpdatesNotificationsListOpts Optional parameters for the method 'ProjectUpdatesProjectUpdatesNotificationsList'
+type ProjectUpdatesProjectUpdatesNotificationsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * ProjectUpdatesProjectUpdatesNotificationsList  List Notifications for a Project Update
- * 
-Make a GET request to this resource to retrieve a list of
-notifications associated with the selected
-project update.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of notifications
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more notification records.  
-
-## Results
-
-Each notification data structure includes the following fields:
-
-* `id`: Database ID for this notification. (integer)
-* `type`: Data type for this notification. (choice)
-* `url`: URL for this notification. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this notification was created. (datetime)
-* `modified`: Timestamp when this notification was last modified. (datetime)
-* `notification_template`:  (id)
-* `error`:  (string)
-* `status`:  (choice)
-    - `pending`: Pending
-    - `successful`: Successful
-    - `failed`: Failed
-* `notifications_sent`:  (integer)
-* `notification_type`:  (choice)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `recipients`:  (string)
-* `subject`:  (string)
-* `body`: Notification body (json)
-
-
-
-## Sorting
-
-To specify that notifications are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+ProjectUpdatesProjectUpdatesNotificationsList  List Notifications for a Project Update
+ Make a GET request to this resource to retrieve a list of notifications associated with the selected project update.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of notifications found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more notification records.    ## Results  Each notification data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this notification. (integer) * &#x60;type&#x60;: Data type for this notification. (choice) * &#x60;url&#x60;: URL for this notification. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this notification was created. (datetime) * &#x60;modified&#x60;: Timestamp when this notification was last modified. (datetime) * &#x60;notification_template&#x60;:  (id) * &#x60;error&#x60;:  (string) * &#x60;status&#x60;:  (choice)     - &#x60;pending&#x60;: Pending     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed * &#x60;notifications_sent&#x60;:  (integer) * &#x60;notification_type&#x60;:  (choice)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;recipients&#x60;:  (string) * &#x60;subject&#x60;:  (string) * &#x60;body&#x60;: Notification body (json)    ## Sorting  To specify that notifications are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiProjectUpdatesProjectUpdatesNotificationsListRequest
- */
-func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesNotificationsList(ctx _context.Context, id string) ApiProjectUpdatesProjectUpdatesNotificationsListRequest {
-	return ApiProjectUpdatesProjectUpdatesNotificationsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesNotificationsListExecute(r ApiProjectUpdatesProjectUpdatesNotificationsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *ProjectUpdatesProjectUpdatesNotificationsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesNotificationsList(ctx _context.Context, id string, localVarOptionals *ProjectUpdatesProjectUpdatesNotificationsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -960,26 +444,22 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesNotificationsList
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectUpdatesApiService.ProjectUpdatesProjectUpdatesNotificationsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/project_updates/{id}/notifications/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/project_updates/{id}/notifications/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -998,12 +478,12 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesNotificationsList
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1025,108 +505,20 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesNotificationsList
 	return localVarHTTPResponse, nil
 }
 
-type ApiProjectUpdatesProjectUpdatesReadRequest struct {
-	ctx _context.Context
-	ApiService *ProjectUpdatesApiService
-	id string
-	search *string
-}
-
-func (r ApiProjectUpdatesProjectUpdatesReadRequest) Search(search string) ApiProjectUpdatesProjectUpdatesReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiProjectUpdatesProjectUpdatesReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.ProjectUpdatesProjectUpdatesReadExecute(r)
+// ProjectUpdatesProjectUpdatesReadOpts Optional parameters for the method 'ProjectUpdatesProjectUpdatesRead'
+type ProjectUpdatesProjectUpdatesReadOpts struct {
+    Search optional.String
 }
 
 /*
- * ProjectUpdatesProjectUpdatesRead  Retrieve a Project Update
- * 
-Make GET request to this resource to retrieve a single project update
-record containing the following fields:
-
-* `id`: Database ID for this project update. (integer)
-* `type`: Data type for this project update. (choice)
-* `url`: URL for this project update. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this project update was created. (datetime)
-* `modified`: Timestamp when this project update was last modified. (datetime)
-* `name`: Name of this project update. (string)
-* `description`: Optional description of this project update. (string)
-* `local_path`: Local path (relative to PROJECTS_ROOT) containing playbooks and related files for this project. (string)
-* `scm_type`: Specifies the source control system used to store the project. (choice)
-    - `""`: Manual
-    - `git`: Git
-    - `hg`: Mercurial
-    - `svn`: Subversion
-    - `insights`: Red Hat Insights
-    - `archive`: Remote Archive
-* `scm_url`: The location where the project is stored. (string)
-* `scm_branch`: Specific branch, tag or commit to checkout. (string)
-* `scm_refspec`: For git projects, an additional refspec to fetch. (string)
-* `scm_clean`: Discard any local changes before syncing the project. (boolean)
-* `scm_delete_on_update`: Delete the project before syncing. (boolean)
-* `credential`:  (id)
-* `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer)
-* `scm_revision`: The SCM Revision discovered by this update for the given project and branch. (string)
-* `unified_job_template`:  (id)
-* `launch_type`:  (choice)
-    - `manual`: Manual
-    - `relaunch`: Relaunch
-    - `callback`: Callback
-    - `scheduled`: Scheduled
-    - `dependency`: Dependency
-    - `workflow`: Workflow
-    - `webhook`: Webhook
-    - `sync`: Sync
-    - `scm`: SCM Update
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-* `failed`:  (boolean)
-* `started`: The date and time the job was queued for starting. (datetime)
-* `finished`: The date and time the job finished execution. (datetime)
-* `canceled_on`: The date and time when the cancel request was sent. (datetime)
-* `elapsed`: Elapsed time in seconds that the job ran. (decimal)
-* `job_args`:  (string)
-* `job_cwd`:  (string)
-* `job_env`:  (json)
-* `job_explanation`: A status field to indicate the state of the job if it wasn&#39;t able to run and capture stdout (string)
-* `execution_node`: The node the job executed on. (string)
-* `result_traceback`:  (string)
-* `event_processing_finished`: Indicates whether all of the events generated by this unified job have been saved to the database. (boolean)
-* `project`:  (id)
-* `job_type`:  (choice)
-    - `run`: Run
-    - `check`: Check
-* `job_tags`: Parts of the project update playbook that will be run. (string)
-* `host_status_counts`: A count of hosts uniquely assigned to each status. (field)
-* `playbook_counts`: A count of all plays and tasks for the job run. (field)
+ProjectUpdatesProjectUpdatesRead  Retrieve a Project Update
+ Make GET request to this resource to retrieve a single project update record containing the following fields:  * &#x60;id&#x60;: Database ID for this project update. (integer) * &#x60;type&#x60;: Data type for this project update. (choice) * &#x60;url&#x60;: URL for this project update. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this project update was created. (datetime) * &#x60;modified&#x60;: Timestamp when this project update was last modified. (datetime) * &#x60;name&#x60;: Name of this project update. (string) * &#x60;description&#x60;: Optional description of this project update. (string) * &#x60;local_path&#x60;: Local path (relative to PROJECTS_ROOT) containing playbooks and related files for this project. (string) * &#x60;scm_type&#x60;: Specifies the source control system used to store the project. (choice)     - &#x60;\&quot;\&quot;&#x60;: Manual     - &#x60;git&#x60;: Git     - &#x60;hg&#x60;: Mercurial     - &#x60;svn&#x60;: Subversion     - &#x60;insights&#x60;: Red Hat Insights     - &#x60;archive&#x60;: Remote Archive * &#x60;scm_url&#x60;: The location where the project is stored. (string) * &#x60;scm_branch&#x60;: Specific branch, tag or commit to checkout. (string) * &#x60;scm_refspec&#x60;: For git projects, an additional refspec to fetch. (string) * &#x60;scm_clean&#x60;: Discard any local changes before syncing the project. (boolean) * &#x60;scm_delete_on_update&#x60;: Delete the project before syncing. (boolean) * &#x60;credential&#x60;:  (id) * &#x60;timeout&#x60;: The amount of time (in seconds) to run before the task is canceled. (integer) * &#x60;scm_revision&#x60;: The SCM Revision discovered by this update for the given project and branch. (string) * &#x60;unified_job_template&#x60;:  (id) * &#x60;launch_type&#x60;:  (choice)     - &#x60;manual&#x60;: Manual     - &#x60;relaunch&#x60;: Relaunch     - &#x60;callback&#x60;: Callback     - &#x60;scheduled&#x60;: Scheduled     - &#x60;dependency&#x60;: Dependency     - &#x60;workflow&#x60;: Workflow     - &#x60;webhook&#x60;: Webhook     - &#x60;sync&#x60;: Sync     - &#x60;scm&#x60;: SCM Update * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled * &#x60;failed&#x60;:  (boolean) * &#x60;started&#x60;: The date and time the job was queued for starting. (datetime) * &#x60;finished&#x60;: The date and time the job finished execution. (datetime) * &#x60;canceled_on&#x60;: The date and time when the cancel request was sent. (datetime) * &#x60;elapsed&#x60;: Elapsed time in seconds that the job ran. (decimal) * &#x60;job_args&#x60;:  (string) * &#x60;job_cwd&#x60;:  (string) * &#x60;job_env&#x60;:  (json) * &#x60;job_explanation&#x60;: A status field to indicate the state of the job if it wasn&amp;#39;t able to run and capture stdout (string) * &#x60;execution_node&#x60;: The node the job executed on. (string) * &#x60;result_traceback&#x60;:  (string) * &#x60;event_processing_finished&#x60;: Indicates whether all of the events generated by this unified job have been saved to the database. (boolean) * &#x60;project&#x60;:  (id) * &#x60;job_type&#x60;:  (choice)     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;job_tags&#x60;: Parts of the project update playbook that will be run. (string) * &#x60;host_status_counts&#x60;: A count of hosts uniquely assigned to each status. (field) * &#x60;playbook_counts&#x60;: A count of all plays and tasks for the job run. (field)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiProjectUpdatesProjectUpdatesReadRequest
- */
-func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesRead(ctx _context.Context, id string) ApiProjectUpdatesProjectUpdatesReadRequest {
-	return ApiProjectUpdatesProjectUpdatesReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesReadExecute(r ApiProjectUpdatesProjectUpdatesReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *ProjectUpdatesProjectUpdatesReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesRead(ctx _context.Context, id string, localVarOptionals *ProjectUpdatesProjectUpdatesReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1135,20 +527,16 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesReadExecute(r Api
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectUpdatesApiService.ProjectUpdatesProjectUpdatesRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/project_updates/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/project_updates/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1167,12 +555,12 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesReadExecute(r Api
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1194,183 +582,24 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesReadExecute(r Api
 	return localVarHTTPResponse, nil
 }
 
-type ApiProjectUpdatesProjectUpdatesScmInventoryUpdatesListRequest struct {
-	ctx _context.Context
-	ApiService *ProjectUpdatesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiProjectUpdatesProjectUpdatesScmInventoryUpdatesListRequest) Page(page int32) ApiProjectUpdatesProjectUpdatesScmInventoryUpdatesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiProjectUpdatesProjectUpdatesScmInventoryUpdatesListRequest) PageSize(pageSize int32) ApiProjectUpdatesProjectUpdatesScmInventoryUpdatesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiProjectUpdatesProjectUpdatesScmInventoryUpdatesListRequest) Search(search string) ApiProjectUpdatesProjectUpdatesScmInventoryUpdatesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiProjectUpdatesProjectUpdatesScmInventoryUpdatesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.ProjectUpdatesProjectUpdatesScmInventoryUpdatesListExecute(r)
+// ProjectUpdatesProjectUpdatesScmInventoryUpdatesListOpts Optional parameters for the method 'ProjectUpdatesProjectUpdatesScmInventoryUpdatesList'
+type ProjectUpdatesProjectUpdatesScmInventoryUpdatesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * ProjectUpdatesProjectUpdatesScmInventoryUpdatesList  List Inventory Updates for a Project Update
- * 
-Make a GET request to this resource to retrieve a list of
-inventory updates associated with the selected
-project update.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of inventory updates
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more inventory update records.  
-
-## Results
-
-Each inventory update data structure includes the following fields:
-
-* `id`: Database ID for this inventory update. (integer)
-* `type`: Data type for this inventory update. (choice)
-* `url`: URL for this inventory update. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this inventory update was created. (datetime)
-* `modified`: Timestamp when this inventory update was last modified. (datetime)
-* `name`: Name of this inventory update. (string)
-* `description`: Optional description of this inventory update. (string)
-* `unified_job_template`:  (id)
-* `launch_type`:  (choice)
-    - `manual`: Manual
-    - `relaunch`: Relaunch
-    - `callback`: Callback
-    - `scheduled`: Scheduled
-    - `dependency`: Dependency
-    - `workflow`: Workflow
-    - `webhook`: Webhook
-    - `sync`: Sync
-    - `scm`: SCM Update
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-* `failed`:  (boolean)
-* `started`: The date and time the job was queued for starting. (datetime)
-* `finished`: The date and time the job finished execution. (datetime)
-* `canceled_on`: The date and time when the cancel request was sent. (datetime)
-* `elapsed`: Elapsed time in seconds that the job ran. (decimal)
-* `job_explanation`: A status field to indicate the state of the job if it wasn&#39;t able to run and capture stdout (string)
-* `execution_node`: The node the job executed on. (string)
-* `source`:  (choice)
-    - `file`: File, Directory or Script
-    - `scm`: Sourced from a Project
-    - `ec2`: Amazon EC2
-    - `gce`: Google Compute Engine
-    - `azure_rm`: Microsoft Azure Resource Manager
-    - `vmware`: VMware vCenter
-    - `satellite6`: Red Hat Satellite 6
-    - `openstack`: OpenStack
-    - `rhv`: Red Hat Virtualization
-    - `tower`: Ansible Tower
-    - `custom`: Custom Script
-* `source_path`:  (string)
-* `source_script`:  (id)
-* `source_vars`: Inventory source variables in YAML or JSON format. (string)
-* `credential`: Cloud credential to use for inventory updates. (integer)
-* `enabled_var`: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &quot;foo.bar&quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&quot;foo&quot;, {}).get(&quot;bar&quot;, default) (string)
-* `enabled_value`: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var=&quot;status.power_state&quot;and enabled_value=&quot;powered_on&quot; with host variables:{   &quot;status&quot;: {     &quot;power_state&quot;: &quot;powered_on&quot;,     &quot;created&quot;: &quot;2018-02-01T08:00:00.000000Z:00&quot;,     &quot;healthy&quot;: true    },    &quot;name&quot;: &quot;foobar&quot;,    &quot;ip_address&quot;: &quot;192.168.2.1&quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string)
-* `host_filter`: Regex where only matching hosts will be imported into Tower. (string)
-* `overwrite`: Overwrite local groups and hosts from remote inventory source. (boolean)
-* `overwrite_vars`: Overwrite local variables from remote inventory source. (boolean)
-* `custom_virtualenv`:  (string)
-* `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer)
-* `verbosity`:  (choice)
-    - `0`: 0 (WARNING)
-    - `1`: 1 (INFO)
-    - `2`: 2 (DEBUG)
-* `inventory`:  (id)
-* `inventory_source`:  (id)
-* `license_error`:  (boolean)
-* `org_host_limit_error`:  (boolean)
-* `source_project_update`: Inventory files from this Project Update were used for the inventory update. (id)
-
-
-
-## Sorting
-
-To specify that inventory updates are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+ProjectUpdatesProjectUpdatesScmInventoryUpdatesList  List Inventory Updates for a Project Update
+ Make a GET request to this resource to retrieve a list of inventory updates associated with the selected project update.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of inventory updates found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more inventory update records.    ## Results  Each inventory update data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this inventory update. (integer) * &#x60;type&#x60;: Data type for this inventory update. (choice) * &#x60;url&#x60;: URL for this inventory update. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this inventory update was created. (datetime) * &#x60;modified&#x60;: Timestamp when this inventory update was last modified. (datetime) * &#x60;name&#x60;: Name of this inventory update. (string) * &#x60;description&#x60;: Optional description of this inventory update. (string) * &#x60;unified_job_template&#x60;:  (id) * &#x60;launch_type&#x60;:  (choice)     - &#x60;manual&#x60;: Manual     - &#x60;relaunch&#x60;: Relaunch     - &#x60;callback&#x60;: Callback     - &#x60;scheduled&#x60;: Scheduled     - &#x60;dependency&#x60;: Dependency     - &#x60;workflow&#x60;: Workflow     - &#x60;webhook&#x60;: Webhook     - &#x60;sync&#x60;: Sync     - &#x60;scm&#x60;: SCM Update * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled * &#x60;failed&#x60;:  (boolean) * &#x60;started&#x60;: The date and time the job was queued for starting. (datetime) * &#x60;finished&#x60;: The date and time the job finished execution. (datetime) * &#x60;canceled_on&#x60;: The date and time when the cancel request was sent. (datetime) * &#x60;elapsed&#x60;: Elapsed time in seconds that the job ran. (decimal) * &#x60;job_explanation&#x60;: A status field to indicate the state of the job if it wasn&amp;#39;t able to run and capture stdout (string) * &#x60;execution_node&#x60;: The node the job executed on. (string) * &#x60;source&#x60;:  (choice)     - &#x60;file&#x60;: File, Directory or Script     - &#x60;scm&#x60;: Sourced from a Project     - &#x60;ec2&#x60;: Amazon EC2     - &#x60;gce&#x60;: Google Compute Engine     - &#x60;azure_rm&#x60;: Microsoft Azure Resource Manager     - &#x60;vmware&#x60;: VMware vCenter     - &#x60;satellite6&#x60;: Red Hat Satellite 6     - &#x60;openstack&#x60;: OpenStack     - &#x60;rhv&#x60;: Red Hat Virtualization     - &#x60;tower&#x60;: Ansible Tower     - &#x60;custom&#x60;: Custom Script * &#x60;source_path&#x60;:  (string) * &#x60;source_script&#x60;:  (id) * &#x60;source_vars&#x60;: Inventory source variables in YAML or JSON format. (string) * &#x60;credential&#x60;: Cloud credential to use for inventory updates. (integer) * &#x60;enabled_var&#x60;: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &amp;quot;foo.bar&amp;quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&amp;quot;foo&amp;quot;, {}).get(&amp;quot;bar&amp;quot;, default) (string) * &#x60;enabled_value&#x60;: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var&#x3D;&amp;quot;status.power_state&amp;quot;and enabled_value&#x3D;&amp;quot;powered_on&amp;quot; with host variables:{   &amp;quot;status&amp;quot;: {     &amp;quot;power_state&amp;quot;: &amp;quot;powered_on&amp;quot;,     &amp;quot;created&amp;quot;: &amp;quot;2018-02-01T08:00:00.000000Z:00&amp;quot;,     &amp;quot;healthy&amp;quot;: true    },    &amp;quot;name&amp;quot;: &amp;quot;foobar&amp;quot;,    &amp;quot;ip_address&amp;quot;: &amp;quot;192.168.2.1&amp;quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string) * &#x60;host_filter&#x60;: Regex where only matching hosts will be imported into Tower. (string) * &#x60;overwrite&#x60;: Overwrite local groups and hosts from remote inventory source. (boolean) * &#x60;overwrite_vars&#x60;: Overwrite local variables from remote inventory source. (boolean) * &#x60;custom_virtualenv&#x60;:  (string) * &#x60;timeout&#x60;: The amount of time (in seconds) to run before the task is canceled. (integer) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (WARNING)     - &#x60;1&#x60;: 1 (INFO)     - &#x60;2&#x60;: 2 (DEBUG) * &#x60;inventory&#x60;:  (id) * &#x60;inventory_source&#x60;:  (id) * &#x60;license_error&#x60;:  (boolean) * &#x60;org_host_limit_error&#x60;:  (boolean) * &#x60;source_project_update&#x60;: Inventory files from this Project Update were used for the inventory update. (id)    ## Sorting  To specify that inventory updates are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiProjectUpdatesProjectUpdatesScmInventoryUpdatesListRequest
- */
-func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesScmInventoryUpdatesList(ctx _context.Context, id string) ApiProjectUpdatesProjectUpdatesScmInventoryUpdatesListRequest {
-	return ApiProjectUpdatesProjectUpdatesScmInventoryUpdatesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesScmInventoryUpdatesListExecute(r ApiProjectUpdatesProjectUpdatesScmInventoryUpdatesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *ProjectUpdatesProjectUpdatesScmInventoryUpdatesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesScmInventoryUpdatesList(ctx _context.Context, id string, localVarOptionals *ProjectUpdatesProjectUpdatesScmInventoryUpdatesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1379,26 +608,22 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesScmInventoryUpdat
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectUpdatesApiService.ProjectUpdatesProjectUpdatesScmInventoryUpdatesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/project_updates/{id}/scm_inventory_updates/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/project_updates/{id}/scm_inventory_updates/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1417,12 +642,12 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesScmInventoryUpdat
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1444,61 +669,13 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesScmInventoryUpdat
 	return localVarHTTPResponse, nil
 }
 
-type ApiProjectUpdatesProjectUpdatesStdoutReadRequest struct {
-	ctx _context.Context
-	ApiService *ProjectUpdatesApiService
-	id string
-}
-
-
-func (r ApiProjectUpdatesProjectUpdatesStdoutReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.ProjectUpdatesProjectUpdatesStdoutReadExecute(r)
-}
-
 /*
- * ProjectUpdatesProjectUpdatesStdoutRead  Retrieve Project Update Stdout
- * 
-Make GET request to this resource to retrieve the stdout from running this
-project update.
-
-## Format
-
-Use the `format` query string parameter to specify the output format.
-
-* Browsable API: `?format=api`
-* HTML: `?format=html`
-* Plain Text: `?format=txt`
-* Plain Text with ANSI color codes: `?format=ansi`
-* JSON structure: `?format=json`
-* Downloaded Plain Text: `?format=txt_download`
-* Downloaded Plain Text with ANSI color codes: `?format=ansi_download`
-
-(_New in Ansible Tower 2.0.0_) When using the Browsable API, HTML and JSON
-formats, the `start_line` and `end_line` query string parameters can be used
-to specify a range of line numbers to retrieve.
-
-Use `dark=1` or `dark=0` as a query string parameter to force or disable a
-dark background.
-
-Files over 1.0 MB (configurable)
-will not display in the browser. Use the `txt_download` or `ansi_download`
-formats to download the file directly to view it.
+ProjectUpdatesProjectUpdatesStdoutRead  Retrieve Project Update Stdout
+ Make GET request to this resource to retrieve the stdout from running this project update.  ## Format  Use the &#x60;format&#x60; query string parameter to specify the output format.  * Browsable API: &#x60;?format&#x3D;api&#x60; * HTML: &#x60;?format&#x3D;html&#x60; * Plain Text: &#x60;?format&#x3D;txt&#x60; * Plain Text with ANSI color codes: &#x60;?format&#x3D;ansi&#x60; * JSON structure: &#x60;?format&#x3D;json&#x60; * Downloaded Plain Text: &#x60;?format&#x3D;txt_download&#x60; * Downloaded Plain Text with ANSI color codes: &#x60;?format&#x3D;ansi_download&#x60;  (_New in Ansible Tower 2.0.0_) When using the Browsable API, HTML and JSON formats, the &#x60;start_line&#x60; and &#x60;end_line&#x60; query string parameters can be used to specify a range of line numbers to retrieve.  Use &#x60;dark&#x3D;1&#x60; or &#x60;dark&#x3D;0&#x60; as a query string parameter to force or disable a dark background.  Files over 1.0 MB (configurable) will not display in the browser. Use the &#x60;txt_download&#x60; or &#x60;ansi_download&#x60; formats to download the file directly to view it.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiProjectUpdatesProjectUpdatesStdoutReadRequest
- */
-func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesStdoutRead(ctx _context.Context, id string) ApiProjectUpdatesProjectUpdatesStdoutReadRequest {
-	return ApiProjectUpdatesProjectUpdatesStdoutReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesStdoutReadExecute(r ApiProjectUpdatesProjectUpdatesStdoutReadRequest) (*_nethttp.Response, error) {
+*/
+func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesStdoutRead(ctx _context.Context, id string) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1507,13 +684,9 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesStdoutReadExecute
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectUpdatesApiService.ProjectUpdatesProjectUpdatesStdoutRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/project_updates/{id}/stdout/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/project_updates/{id}/stdout/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1536,12 +709,12 @@ func (a *ProjectUpdatesApiService) ProjectUpdatesProjectUpdatesStdoutReadExecute
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

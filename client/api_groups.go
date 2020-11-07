@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,133 +26,24 @@ var (
 // GroupsApiService GroupsApi service
 type GroupsApiService service
 
-type ApiGroupsGroupsActivityStreamListRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiGroupsGroupsActivityStreamListRequest) Page(page int32) ApiGroupsGroupsActivityStreamListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiGroupsGroupsActivityStreamListRequest) PageSize(pageSize int32) ApiGroupsGroupsActivityStreamListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiGroupsGroupsActivityStreamListRequest) Search(search string) ApiGroupsGroupsActivityStreamListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiGroupsGroupsActivityStreamListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsActivityStreamListExecute(r)
+// GroupsGroupsActivityStreamListOpts Optional parameters for the method 'GroupsGroupsActivityStreamList'
+type GroupsGroupsActivityStreamListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * GroupsGroupsActivityStreamList  List Activity Streams for a Group
- * 
-Make a GET request to this resource to retrieve a list of
-activity streams associated with the selected
-group.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of activity streams
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more activity stream records.  
-
-## Results
-
-Each activity stream data structure includes the following fields:
-
-* `id`: Database ID for this activity stream. (integer)
-* `type`: Data type for this activity stream. (choice)
-* `url`: URL for this activity stream. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `timestamp`:  (datetime)
-* `operation`: The action taken with respect to the given object(s). (choice)
-    - `create`: Entity Created
-    - `update`: Entity Updated
-    - `delete`: Entity Deleted
-    - `associate`: Entity Associated with another Entity
-    - `disassociate`: Entity was Disassociated with another Entity
-* `changes`: A summary of the new and changed values when an object is created, updated, or deleted (json)
-* `object1`: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string)
-* `object2`: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string)
-* `object_association`: When present, shows the field name of the role or relationship that changed. (field)
-* `action_node`: The cluster node the activity took place on. (string)
-* `object_type`: When present, shows the model on which the role or relationship was defined. (field)
-
-
-
-## Sorting
-
-To specify that activity streams are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+GroupsGroupsActivityStreamList  List Activity Streams for a Group
+ Make a GET request to this resource to retrieve a list of activity streams associated with the selected group.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of activity streams found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more activity stream records.    ## Results  Each activity stream data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this activity stream. (integer) * &#x60;type&#x60;: Data type for this activity stream. (choice) * &#x60;url&#x60;: URL for this activity stream. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;timestamp&#x60;:  (datetime) * &#x60;operation&#x60;: The action taken with respect to the given object(s). (choice)     - &#x60;create&#x60;: Entity Created     - &#x60;update&#x60;: Entity Updated     - &#x60;delete&#x60;: Entity Deleted     - &#x60;associate&#x60;: Entity Associated with another Entity     - &#x60;disassociate&#x60;: Entity was Disassociated with another Entity * &#x60;changes&#x60;: A summary of the new and changed values when an object is created, updated, or deleted (json) * &#x60;object1&#x60;: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string) * &#x60;object2&#x60;: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string) * &#x60;object_association&#x60;: When present, shows the field name of the role or relationship that changed. (field) * &#x60;action_node&#x60;: The cluster node the activity took place on. (string) * &#x60;object_type&#x60;: When present, shows the model on which the role or relationship was defined. (field)    ## Sorting  To specify that activity streams are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiGroupsGroupsActivityStreamListRequest
- */
-func (a *GroupsApiService) GroupsGroupsActivityStreamList(ctx _context.Context, id string) ApiGroupsGroupsActivityStreamListRequest {
-	return ApiGroupsGroupsActivityStreamListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsActivityStreamListExecute(r ApiGroupsGroupsActivityStreamListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsActivityStreamListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *GroupsApiService) GroupsGroupsActivityStreamList(ctx _context.Context, id string, localVarOptionals *GroupsGroupsActivityStreamListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -160,26 +52,22 @@ func (a *GroupsApiService) GroupsGroupsActivityStreamListExecute(r ApiGroupsGrou
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsActivityStreamList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/{id}/activity_stream/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/{id}/activity_stream/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -198,12 +86,12 @@ func (a *GroupsApiService) GroupsGroupsActivityStreamListExecute(r ApiGroupsGrou
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -225,102 +113,20 @@ func (a *GroupsApiService) GroupsGroupsActivityStreamListExecute(r ApiGroupsGrou
 	return localVarHTTPResponse, nil
 }
 
-type ApiGroupsGroupsAdHocCommandsCreateRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	id string
-	data *InlineObject7
-}
-
-func (r ApiGroupsGroupsAdHocCommandsCreateRequest) Data(data InlineObject7) ApiGroupsGroupsAdHocCommandsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiGroupsGroupsAdHocCommandsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsAdHocCommandsCreateExecute(r)
+// GroupsGroupsAdHocCommandsCreateOpts Optional parameters for the method 'GroupsGroupsAdHocCommandsCreate'
+type GroupsGroupsAdHocCommandsCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * GroupsGroupsAdHocCommandsCreate  Create an Ad Hoc Command for a Group
- * 
-Make a POST request to this resource with the following ad hoc command
-fields to create a new ad hoc command associated with this
-group.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-* `job_type`:  (choice)
-    - `run`: Run (default)
-    - `check`: Check
-* `inventory`:  (id, default=``)
-* `limit`:  (string, default=`""`)
-* `credential`:  (id, default=``)
-* `module_name`:  (choice)
-    - `command` (default)
-    - `shell`
-    - `yum`
-    - `apt`
-    - `apt_key`
-    - `apt_repository`
-    - `apt_rpm`
-    - `service`
-    - `group`
-    - `user`
-    - `mount`
-    - `ping`
-    - `selinux`
-    - `setup`
-    - `win_ping`
-    - `win_service`
-    - `win_updates`
-    - `win_group`
-    - `win_user`
-* `module_args`:  (string, default=`""`)
-* `forks`:  (integer, default=`0`)
-* `verbosity`:  (choice)
-    - `0`: 0 (Normal) (default)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `extra_vars`:  (string, default=`""`)
-* `become_enabled`:  (boolean, default=`False`)
-* `diff_mode`:  (boolean, default=`False`)
+GroupsGroupsAdHocCommandsCreate  Create an Ad Hoc Command for a Group
+ Make a POST request to this resource with the following ad hoc command fields to create a new ad hoc command associated with this group.                     * &#x60;job_type&#x60;:  (choice)     - &#x60;run&#x60;: Run (default)     - &#x60;check&#x60;: Check * &#x60;inventory&#x60;:  (id, default&#x3D;&#x60;&#x60;) * &#x60;limit&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;credential&#x60;:  (id, default&#x3D;&#x60;&#x60;) * &#x60;module_name&#x60;:  (choice)     - &#x60;command&#x60; (default)     - &#x60;shell&#x60;     - &#x60;yum&#x60;     - &#x60;apt&#x60;     - &#x60;apt_key&#x60;     - &#x60;apt_repository&#x60;     - &#x60;apt_rpm&#x60;     - &#x60;service&#x60;     - &#x60;group&#x60;     - &#x60;user&#x60;     - &#x60;mount&#x60;     - &#x60;ping&#x60;     - &#x60;selinux&#x60;     - &#x60;setup&#x60;     - &#x60;win_ping&#x60;     - &#x60;win_service&#x60;     - &#x60;win_updates&#x60;     - &#x60;win_group&#x60;     - &#x60;win_user&#x60; * &#x60;module_args&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;forks&#x60;:  (integer, default&#x3D;&#x60;0&#x60;) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (Normal) (default)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;extra_vars&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;become_enabled&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;diff_mode&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiGroupsGroupsAdHocCommandsCreateRequest
- */
-func (a *GroupsApiService) GroupsGroupsAdHocCommandsCreate(ctx _context.Context, id string) ApiGroupsGroupsAdHocCommandsCreateRequest {
-	return ApiGroupsGroupsAdHocCommandsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsAdHocCommandsCreateExecute(r ApiGroupsGroupsAdHocCommandsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsAdHocCommandsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject7) - 
+*/
+func (a *GroupsApiService) GroupsGroupsAdHocCommandsCreate(ctx _context.Context, id string, localVarOptionals *GroupsGroupsAdHocCommandsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -329,13 +135,9 @@ func (a *GroupsApiService) GroupsGroupsAdHocCommandsCreateExecute(r ApiGroupsGro
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsAdHocCommandsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/{id}/ad_hoc_commands/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/{id}/ad_hoc_commands/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -359,13 +161,20 @@ func (a *GroupsApiService) GroupsGroupsAdHocCommandsCreateExecute(r ApiGroupsGro
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject7)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject7")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -387,188 +196,24 @@ func (a *GroupsApiService) GroupsGroupsAdHocCommandsCreateExecute(r ApiGroupsGro
 	return localVarHTTPResponse, nil
 }
 
-type ApiGroupsGroupsAdHocCommandsListRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiGroupsGroupsAdHocCommandsListRequest) Page(page int32) ApiGroupsGroupsAdHocCommandsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiGroupsGroupsAdHocCommandsListRequest) PageSize(pageSize int32) ApiGroupsGroupsAdHocCommandsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiGroupsGroupsAdHocCommandsListRequest) Search(search string) ApiGroupsGroupsAdHocCommandsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiGroupsGroupsAdHocCommandsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsAdHocCommandsListExecute(r)
+// GroupsGroupsAdHocCommandsListOpts Optional parameters for the method 'GroupsGroupsAdHocCommandsList'
+type GroupsGroupsAdHocCommandsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * GroupsGroupsAdHocCommandsList  List Ad Hoc Commands for a Group
- * 
-Make a GET request to this resource to retrieve a list of
-ad hoc commands associated with the selected
-group.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of ad hoc commands
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more ad hoc command records.  
-
-## Results
-
-Each ad hoc command data structure includes the following fields:
-
-* `id`: Database ID for this ad hoc command. (integer)
-* `type`: Data type for this ad hoc command. (choice)
-* `url`: URL for this ad hoc command. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this ad hoc command was created. (datetime)
-* `modified`: Timestamp when this ad hoc command was last modified. (datetime)
-* `name`: Name of this ad hoc command. (string)
-* `launch_type`:  (choice)
-    - `manual`: Manual
-    - `relaunch`: Relaunch
-    - `callback`: Callback
-    - `scheduled`: Scheduled
-    - `dependency`: Dependency
-    - `workflow`: Workflow
-    - `webhook`: Webhook
-    - `sync`: Sync
-    - `scm`: SCM Update
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-* `failed`:  (boolean)
-* `started`: The date and time the job was queued for starting. (datetime)
-* `finished`: The date and time the job finished execution. (datetime)
-* `canceled_on`: The date and time when the cancel request was sent. (datetime)
-* `elapsed`: Elapsed time in seconds that the job ran. (decimal)
-* `job_explanation`: A status field to indicate the state of the job if it wasn&#39;t able to run and capture stdout (string)
-* `execution_node`: The node the job executed on. (string)
-* `controller_node`: The instance that managed the isolated execution environment. (string)
-* `job_type`:  (choice)
-    - `run`: Run
-    - `check`: Check
-* `inventory`:  (id)
-* `limit`:  (string)
-* `credential`:  (id)
-* `module_name`:  (choice)
-    - `command`
-    - `shell`
-    - `yum`
-    - `apt`
-    - `apt_key`
-    - `apt_repository`
-    - `apt_rpm`
-    - `service`
-    - `group`
-    - `user`
-    - `mount`
-    - `ping`
-    - `selinux`
-    - `setup`
-    - `win_ping`
-    - `win_service`
-    - `win_updates`
-    - `win_group`
-    - `win_user`
-* `module_args`:  (string)
-* `forks`:  (integer)
-* `verbosity`:  (choice)
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `extra_vars`:  (string)
-* `become_enabled`:  (boolean)
-* `diff_mode`:  (boolean)
-
-
-
-## Sorting
-
-To specify that ad hoc commands are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+GroupsGroupsAdHocCommandsList  List Ad Hoc Commands for a Group
+ Make a GET request to this resource to retrieve a list of ad hoc commands associated with the selected group.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of ad hoc commands found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more ad hoc command records.    ## Results  Each ad hoc command data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this ad hoc command. (integer) * &#x60;type&#x60;: Data type for this ad hoc command. (choice) * &#x60;url&#x60;: URL for this ad hoc command. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this ad hoc command was created. (datetime) * &#x60;modified&#x60;: Timestamp when this ad hoc command was last modified. (datetime) * &#x60;name&#x60;: Name of this ad hoc command. (string) * &#x60;launch_type&#x60;:  (choice)     - &#x60;manual&#x60;: Manual     - &#x60;relaunch&#x60;: Relaunch     - &#x60;callback&#x60;: Callback     - &#x60;scheduled&#x60;: Scheduled     - &#x60;dependency&#x60;: Dependency     - &#x60;workflow&#x60;: Workflow     - &#x60;webhook&#x60;: Webhook     - &#x60;sync&#x60;: Sync     - &#x60;scm&#x60;: SCM Update * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled * &#x60;failed&#x60;:  (boolean) * &#x60;started&#x60;: The date and time the job was queued for starting. (datetime) * &#x60;finished&#x60;: The date and time the job finished execution. (datetime) * &#x60;canceled_on&#x60;: The date and time when the cancel request was sent. (datetime) * &#x60;elapsed&#x60;: Elapsed time in seconds that the job ran. (decimal) * &#x60;job_explanation&#x60;: A status field to indicate the state of the job if it wasn&amp;#39;t able to run and capture stdout (string) * &#x60;execution_node&#x60;: The node the job executed on. (string) * &#x60;controller_node&#x60;: The instance that managed the isolated execution environment. (string) * &#x60;job_type&#x60;:  (choice)     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;inventory&#x60;:  (id) * &#x60;limit&#x60;:  (string) * &#x60;credential&#x60;:  (id) * &#x60;module_name&#x60;:  (choice)     - &#x60;command&#x60;     - &#x60;shell&#x60;     - &#x60;yum&#x60;     - &#x60;apt&#x60;     - &#x60;apt_key&#x60;     - &#x60;apt_repository&#x60;     - &#x60;apt_rpm&#x60;     - &#x60;service&#x60;     - &#x60;group&#x60;     - &#x60;user&#x60;     - &#x60;mount&#x60;     - &#x60;ping&#x60;     - &#x60;selinux&#x60;     - &#x60;setup&#x60;     - &#x60;win_ping&#x60;     - &#x60;win_service&#x60;     - &#x60;win_updates&#x60;     - &#x60;win_group&#x60;     - &#x60;win_user&#x60; * &#x60;module_args&#x60;:  (string) * &#x60;forks&#x60;:  (integer) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;extra_vars&#x60;:  (string) * &#x60;become_enabled&#x60;:  (boolean) * &#x60;diff_mode&#x60;:  (boolean)    ## Sorting  To specify that ad hoc commands are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiGroupsGroupsAdHocCommandsListRequest
- */
-func (a *GroupsApiService) GroupsGroupsAdHocCommandsList(ctx _context.Context, id string) ApiGroupsGroupsAdHocCommandsListRequest {
-	return ApiGroupsGroupsAdHocCommandsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsAdHocCommandsListExecute(r ApiGroupsGroupsAdHocCommandsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsAdHocCommandsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *GroupsApiService) GroupsGroupsAdHocCommandsList(ctx _context.Context, id string, localVarOptionals *GroupsGroupsAdHocCommandsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -577,26 +222,22 @@ func (a *GroupsApiService) GroupsGroupsAdHocCommandsListExecute(r ApiGroupsGroup
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsAdHocCommandsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/{id}/ad_hoc_commands/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/{id}/ad_hoc_commands/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -615,12 +256,12 @@ func (a *GroupsApiService) GroupsGroupsAdHocCommandsListExecute(r ApiGroupsGroup
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -642,134 +283,24 @@ func (a *GroupsApiService) GroupsGroupsAdHocCommandsListExecute(r ApiGroupsGroup
 	return localVarHTTPResponse, nil
 }
 
-type ApiGroupsGroupsAllHostsListRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiGroupsGroupsAllHostsListRequest) Page(page int32) ApiGroupsGroupsAllHostsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiGroupsGroupsAllHostsListRequest) PageSize(pageSize int32) ApiGroupsGroupsAllHostsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiGroupsGroupsAllHostsListRequest) Search(search string) ApiGroupsGroupsAllHostsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiGroupsGroupsAllHostsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsAllHostsListExecute(r)
+// GroupsGroupsAllHostsListOpts Optional parameters for the method 'GroupsGroupsAllHostsList'
+type GroupsGroupsAllHostsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * GroupsGroupsAllHostsList  List All Hosts for a Group
- * 
-Make a GET request to this resource to retrieve a list of all
-hosts directly or indirectly belonging to this
-group.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of hosts
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more host records.  
-
-## Results
-
-Each host data structure includes the following fields:
-
-* `id`: Database ID for this host. (integer)
-* `type`: Data type for this host. (choice)
-* `url`: URL for this host. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this host was created. (datetime)
-* `modified`: Timestamp when this host was last modified. (datetime)
-* `name`: Name of this host. (string)
-* `description`: Optional description of this host. (string)
-* `inventory`:  (id)
-* `enabled`: Is this host online and available for running jobs? (boolean)
-* `instance_id`: The value used by the remote inventory source to uniquely identify the host (string)
-* `variables`: Host variables in JSON or YAML format. (json)
-* `has_active_failures`:  (field)
-* `has_inventory_sources`:  (field)
-* `last_job`:  (id)
-* `last_job_host_summary`:  (id)
-* `insights_system_id`: Red Hat Insights host unique identifier. (string)
-* `ansible_facts_modified`: The date and time ansible_facts was last modified. (datetime)
-
-
-
-## Sorting
-
-To specify that hosts are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+GroupsGroupsAllHostsList  List All Hosts for a Group
+ Make a GET request to this resource to retrieve a list of all hosts directly or indirectly belonging to this group.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of hosts found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more host records.    ## Results  Each host data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this host. (integer) * &#x60;type&#x60;: Data type for this host. (choice) * &#x60;url&#x60;: URL for this host. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this host was created. (datetime) * &#x60;modified&#x60;: Timestamp when this host was last modified. (datetime) * &#x60;name&#x60;: Name of this host. (string) * &#x60;description&#x60;: Optional description of this host. (string) * &#x60;inventory&#x60;:  (id) * &#x60;enabled&#x60;: Is this host online and available for running jobs? (boolean) * &#x60;instance_id&#x60;: The value used by the remote inventory source to uniquely identify the host (string) * &#x60;variables&#x60;: Host variables in JSON or YAML format. (json) * &#x60;has_active_failures&#x60;:  (field) * &#x60;has_inventory_sources&#x60;:  (field) * &#x60;last_job&#x60;:  (id) * &#x60;last_job_host_summary&#x60;:  (id) * &#x60;insights_system_id&#x60;: Red Hat Insights host unique identifier. (string) * &#x60;ansible_facts_modified&#x60;: The date and time ansible_facts was last modified. (datetime)    ## Sorting  To specify that hosts are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiGroupsGroupsAllHostsListRequest
- */
-func (a *GroupsApiService) GroupsGroupsAllHostsList(ctx _context.Context, id string) ApiGroupsGroupsAllHostsListRequest {
-	return ApiGroupsGroupsAllHostsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsAllHostsListExecute(r ApiGroupsGroupsAllHostsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsAllHostsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *GroupsApiService) GroupsGroupsAllHostsList(ctx _context.Context, id string, localVarOptionals *GroupsGroupsAllHostsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -778,26 +309,22 @@ func (a *GroupsApiService) GroupsGroupsAllHostsListExecute(r ApiGroupsGroupsAllH
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsAllHostsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/{id}/all_hosts/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/{id}/all_hosts/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -816,12 +343,12 @@ func (a *GroupsApiService) GroupsGroupsAllHostsListExecute(r ApiGroupsGroupsAllH
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -843,75 +370,20 @@ func (a *GroupsApiService) GroupsGroupsAllHostsListExecute(r ApiGroupsGroupsAllH
 	return localVarHTTPResponse, nil
 }
 
-type ApiGroupsGroupsChildrenCreateRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiGroupsGroupsChildrenCreateRequest) Data(data map[string]interface{}) ApiGroupsGroupsChildrenCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiGroupsGroupsChildrenCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsChildrenCreateExecute(r)
+// GroupsGroupsChildrenCreateOpts Optional parameters for the method 'GroupsGroupsChildrenCreate'
+type GroupsGroupsChildrenCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * GroupsGroupsChildrenCreate  Create a Group for a Group
- * 
-Make a POST request to this resource with the following group
-fields to create a new group associated with this
-group.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this group. (string, required)
-* `description`: Optional description of this group. (string, default=`""`)
-* `inventory`:  (id, required)
-* `variables`: Group variables in JSON or YAML format. (json, default=``)
-
-
-
-
-
-
-
-
-# Add Groups for a Group:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing group with this group.
-
-# Remove Groups from this Group:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the group from this group
- without deleting the group.
+GroupsGroupsChildrenCreate  Create a Group for a Group
+ Make a POST request to this resource with the following group fields to create a new group associated with this group.          * &#x60;name&#x60;: Name of this group. (string, required) * &#x60;description&#x60;: Optional description of this group. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;inventory&#x60;:  (id, required) * &#x60;variables&#x60;: Group variables in JSON or YAML format. (json, default&#x3D;&#x60;&#x60;)         # Add Groups for a Group:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing group with this group.  # Remove Groups from this Group:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the group from this group  without deleting the group.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiGroupsGroupsChildrenCreateRequest
- */
-func (a *GroupsApiService) GroupsGroupsChildrenCreate(ctx _context.Context, id string) ApiGroupsGroupsChildrenCreateRequest {
-	return ApiGroupsGroupsChildrenCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsChildrenCreateExecute(r ApiGroupsGroupsChildrenCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsChildrenCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *GroupsApiService) GroupsGroupsChildrenCreate(ctx _context.Context, id string, localVarOptionals *GroupsGroupsChildrenCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -920,13 +392,9 @@ func (a *GroupsApiService) GroupsGroupsChildrenCreateExecute(r ApiGroupsGroupsCh
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsChildrenCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/{id}/children/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/{id}/children/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -950,13 +418,16 @@ func (a *GroupsApiService) GroupsGroupsChildrenCreateExecute(r ApiGroupsGroupsCh
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -978,126 +449,24 @@ func (a *GroupsApiService) GroupsGroupsChildrenCreateExecute(r ApiGroupsGroupsCh
 	return localVarHTTPResponse, nil
 }
 
-type ApiGroupsGroupsChildrenListRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiGroupsGroupsChildrenListRequest) Page(page int32) ApiGroupsGroupsChildrenListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiGroupsGroupsChildrenListRequest) PageSize(pageSize int32) ApiGroupsGroupsChildrenListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiGroupsGroupsChildrenListRequest) Search(search string) ApiGroupsGroupsChildrenListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiGroupsGroupsChildrenListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsChildrenListExecute(r)
+// GroupsGroupsChildrenListOpts Optional parameters for the method 'GroupsGroupsChildrenList'
+type GroupsGroupsChildrenListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * GroupsGroupsChildrenList  List Groups for a Group
- * 
-Make a GET request to this resource to retrieve a list of
-groups associated with the selected
-group.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of groups
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more group records.  
-
-## Results
-
-Each group data structure includes the following fields:
-
-* `id`: Database ID for this group. (integer)
-* `type`: Data type for this group. (choice)
-* `url`: URL for this group. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this group was created. (datetime)
-* `modified`: Timestamp when this group was last modified. (datetime)
-* `name`: Name of this group. (string)
-* `description`: Optional description of this group. (string)
-* `inventory`:  (id)
-* `variables`: Group variables in JSON or YAML format. (json)
-
-
-
-## Sorting
-
-To specify that groups are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+GroupsGroupsChildrenList  List Groups for a Group
+ Make a GET request to this resource to retrieve a list of groups associated with the selected group.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of groups found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more group records.    ## Results  Each group data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this group. (integer) * &#x60;type&#x60;: Data type for this group. (choice) * &#x60;url&#x60;: URL for this group. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this group was created. (datetime) * &#x60;modified&#x60;: Timestamp when this group was last modified. (datetime) * &#x60;name&#x60;: Name of this group. (string) * &#x60;description&#x60;: Optional description of this group. (string) * &#x60;inventory&#x60;:  (id) * &#x60;variables&#x60;: Group variables in JSON or YAML format. (json)    ## Sorting  To specify that groups are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiGroupsGroupsChildrenListRequest
- */
-func (a *GroupsApiService) GroupsGroupsChildrenList(ctx _context.Context, id string) ApiGroupsGroupsChildrenListRequest {
-	return ApiGroupsGroupsChildrenListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsChildrenListExecute(r ApiGroupsGroupsChildrenListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsChildrenListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *GroupsApiService) GroupsGroupsChildrenList(ctx _context.Context, id string, localVarOptionals *GroupsGroupsChildrenListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1106,26 +475,22 @@ func (a *GroupsApiService) GroupsGroupsChildrenListExecute(r ApiGroupsGroupsChil
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsChildrenList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/{id}/children/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/{id}/children/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1144,12 +509,12 @@ func (a *GroupsApiService) GroupsGroupsChildrenListExecute(r ApiGroupsGroupsChil
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1171,53 +536,19 @@ func (a *GroupsApiService) GroupsGroupsChildrenListExecute(r ApiGroupsGroupsChil
 	return localVarHTTPResponse, nil
 }
 
-type ApiGroupsGroupsCreateRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	data *InlineObject5
-}
-
-func (r ApiGroupsGroupsCreateRequest) Data(data InlineObject5) ApiGroupsGroupsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiGroupsGroupsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsCreateExecute(r)
+// GroupsGroupsCreateOpts Optional parameters for the method 'GroupsGroupsCreate'
+type GroupsGroupsCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * GroupsGroupsCreate  Create a Group
- * 
-Make a POST request to this resource with the following group
-fields to create a new group:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this group. (string, required)
-* `description`: Optional description of this group. (string, default=`""`)
-* `inventory`:  (id, required)
-* `variables`: Group variables in JSON or YAML format. (json, default=``)
+GroupsGroupsCreate  Create a Group
+ Make a POST request to this resource with the following group fields to create a new group:          * &#x60;name&#x60;: Name of this group. (string, required) * &#x60;description&#x60;: Optional description of this group. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;inventory&#x60;:  (id, required) * &#x60;variables&#x60;: Group variables in JSON or YAML format. (json, default&#x3D;&#x60;&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiGroupsGroupsCreateRequest
- */
-func (a *GroupsApiService) GroupsGroupsCreate(ctx _context.Context) ApiGroupsGroupsCreateRequest {
-	return ApiGroupsGroupsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsCreateExecute(r ApiGroupsGroupsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject5) - 
+*/
+func (a *GroupsApiService) GroupsGroupsCreate(ctx _context.Context, localVarOptionals *GroupsGroupsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -1226,13 +557,8 @@ func (a *GroupsApiService) GroupsGroupsCreateExecute(r ApiGroupsGroupsCreateRequ
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -1255,13 +581,20 @@ func (a *GroupsApiService) GroupsGroupsCreateExecute(r ApiGroupsGroupsCreateRequ
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject5)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject5")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1283,42 +616,20 @@ func (a *GroupsApiService) GroupsGroupsCreateExecute(r ApiGroupsGroupsCreateRequ
 	return localVarHTTPResponse, nil
 }
 
-type ApiGroupsGroupsDeleteRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	id string
-	search *string
-}
-
-func (r ApiGroupsGroupsDeleteRequest) Search(search string) ApiGroupsGroupsDeleteRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiGroupsGroupsDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsDeleteExecute(r)
+// GroupsGroupsDeleteOpts Optional parameters for the method 'GroupsGroupsDelete'
+type GroupsGroupsDeleteOpts struct {
+    Search optional.String
 }
 
 /*
- * GroupsGroupsDelete  Delete a Group
- * 
-Make a DELETE request to this resource to delete this group.
+GroupsGroupsDelete  Delete a Group
+ Make a DELETE request to this resource to delete this group.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiGroupsGroupsDeleteRequest
- */
-func (a *GroupsApiService) GroupsGroupsDelete(ctx _context.Context, id string) ApiGroupsGroupsDeleteRequest {
-	return ApiGroupsGroupsDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsDeleteExecute(r ApiGroupsGroupsDeleteRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsDeleteOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *GroupsApiService) GroupsGroupsDelete(ctx _context.Context, id string, localVarOptionals *GroupsGroupsDeleteOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -1327,20 +638,16 @@ func (a *GroupsApiService) GroupsGroupsDeleteExecute(r ApiGroupsGroupsDeleteRequ
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1359,12 +666,12 @@ func (a *GroupsApiService) GroupsGroupsDeleteExecute(r ApiGroupsGroupsDeleteRequ
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1386,83 +693,20 @@ func (a *GroupsApiService) GroupsGroupsDeleteExecute(r ApiGroupsGroupsDeleteRequ
 	return localVarHTTPResponse, nil
 }
 
-type ApiGroupsGroupsHostsCreateRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiGroupsGroupsHostsCreateRequest) Data(data map[string]interface{}) ApiGroupsGroupsHostsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiGroupsGroupsHostsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsHostsCreateExecute(r)
+// GroupsGroupsHostsCreateOpts Optional parameters for the method 'GroupsGroupsHostsCreate'
+type GroupsGroupsHostsCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * GroupsGroupsHostsCreate  Create a Host for a Group
- * 
-Make a POST request to this resource with the following host
-fields to create a new host associated with this
-group.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this host. (string, required)
-* `description`: Optional description of this host. (string, default=`""`)
-* `inventory`:  (id, required)
-* `enabled`: Is this host online and available for running jobs? (boolean, default=`True`)
-* `instance_id`: The value used by the remote inventory source to uniquely identify the host (string, default=`""`)
-* `variables`: Host variables in JSON or YAML format. (json, default=``)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Add Hosts for a Group:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing host with this group.
-
-# Remove Hosts from this Group:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the host from this group
- without deleting the host.
+GroupsGroupsHostsCreate  Create a Host for a Group
+ Make a POST request to this resource with the following host fields to create a new host associated with this group.          * &#x60;name&#x60;: Name of this host. (string, required) * &#x60;description&#x60;: Optional description of this host. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;inventory&#x60;:  (id, required) * &#x60;enabled&#x60;: Is this host online and available for running jobs? (boolean, default&#x3D;&#x60;True&#x60;) * &#x60;instance_id&#x60;: The value used by the remote inventory source to uniquely identify the host (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;variables&#x60;: Host variables in JSON or YAML format. (json, default&#x3D;&#x60;&#x60;)               # Add Hosts for a Group:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing host with this group.  # Remove Hosts from this Group:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the host from this group  without deleting the host.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiGroupsGroupsHostsCreateRequest
- */
-func (a *GroupsApiService) GroupsGroupsHostsCreate(ctx _context.Context, id string) ApiGroupsGroupsHostsCreateRequest {
-	return ApiGroupsGroupsHostsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsHostsCreateExecute(r ApiGroupsGroupsHostsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsHostsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *GroupsApiService) GroupsGroupsHostsCreate(ctx _context.Context, id string, localVarOptionals *GroupsGroupsHostsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -1471,13 +715,9 @@ func (a *GroupsApiService) GroupsGroupsHostsCreateExecute(r ApiGroupsGroupsHosts
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsHostsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/{id}/hosts/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/{id}/hosts/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1501,13 +741,16 @@ func (a *GroupsApiService) GroupsGroupsHostsCreateExecute(r ApiGroupsGroupsHosts
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1529,134 +772,24 @@ func (a *GroupsApiService) GroupsGroupsHostsCreateExecute(r ApiGroupsGroupsHosts
 	return localVarHTTPResponse, nil
 }
 
-type ApiGroupsGroupsHostsListRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiGroupsGroupsHostsListRequest) Page(page int32) ApiGroupsGroupsHostsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiGroupsGroupsHostsListRequest) PageSize(pageSize int32) ApiGroupsGroupsHostsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiGroupsGroupsHostsListRequest) Search(search string) ApiGroupsGroupsHostsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiGroupsGroupsHostsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsHostsListExecute(r)
+// GroupsGroupsHostsListOpts Optional parameters for the method 'GroupsGroupsHostsList'
+type GroupsGroupsHostsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * GroupsGroupsHostsList  List Hosts for a Group
- * 
-Make a GET request to this resource to retrieve a list of
-hosts associated with the selected
-group.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of hosts
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more host records.  
-
-## Results
-
-Each host data structure includes the following fields:
-
-* `id`: Database ID for this host. (integer)
-* `type`: Data type for this host. (choice)
-* `url`: URL for this host. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this host was created. (datetime)
-* `modified`: Timestamp when this host was last modified. (datetime)
-* `name`: Name of this host. (string)
-* `description`: Optional description of this host. (string)
-* `inventory`:  (id)
-* `enabled`: Is this host online and available for running jobs? (boolean)
-* `instance_id`: The value used by the remote inventory source to uniquely identify the host (string)
-* `variables`: Host variables in JSON or YAML format. (json)
-* `has_active_failures`:  (field)
-* `has_inventory_sources`:  (field)
-* `last_job`:  (id)
-* `last_job_host_summary`:  (id)
-* `insights_system_id`: Red Hat Insights host unique identifier. (string)
-* `ansible_facts_modified`: The date and time ansible_facts was last modified. (datetime)
-
-
-
-## Sorting
-
-To specify that hosts are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+GroupsGroupsHostsList  List Hosts for a Group
+ Make a GET request to this resource to retrieve a list of hosts associated with the selected group.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of hosts found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more host records.    ## Results  Each host data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this host. (integer) * &#x60;type&#x60;: Data type for this host. (choice) * &#x60;url&#x60;: URL for this host. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this host was created. (datetime) * &#x60;modified&#x60;: Timestamp when this host was last modified. (datetime) * &#x60;name&#x60;: Name of this host. (string) * &#x60;description&#x60;: Optional description of this host. (string) * &#x60;inventory&#x60;:  (id) * &#x60;enabled&#x60;: Is this host online and available for running jobs? (boolean) * &#x60;instance_id&#x60;: The value used by the remote inventory source to uniquely identify the host (string) * &#x60;variables&#x60;: Host variables in JSON or YAML format. (json) * &#x60;has_active_failures&#x60;:  (field) * &#x60;has_inventory_sources&#x60;:  (field) * &#x60;last_job&#x60;:  (id) * &#x60;last_job_host_summary&#x60;:  (id) * &#x60;insights_system_id&#x60;: Red Hat Insights host unique identifier. (string) * &#x60;ansible_facts_modified&#x60;: The date and time ansible_facts was last modified. (datetime)    ## Sorting  To specify that hosts are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiGroupsGroupsHostsListRequest
- */
-func (a *GroupsApiService) GroupsGroupsHostsList(ctx _context.Context, id string) ApiGroupsGroupsHostsListRequest {
-	return ApiGroupsGroupsHostsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsHostsListExecute(r ApiGroupsGroupsHostsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsHostsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *GroupsApiService) GroupsGroupsHostsList(ctx _context.Context, id string, localVarOptionals *GroupsGroupsHostsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1665,26 +798,22 @@ func (a *GroupsApiService) GroupsGroupsHostsListExecute(r ApiGroupsGroupsHostsLi
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsHostsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/{id}/hosts/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/{id}/hosts/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1703,12 +832,12 @@ func (a *GroupsApiService) GroupsGroupsHostsListExecute(r ApiGroupsGroupsHostsLi
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1730,172 +859,24 @@ func (a *GroupsApiService) GroupsGroupsHostsListExecute(r ApiGroupsGroupsHostsLi
 	return localVarHTTPResponse, nil
 }
 
-type ApiGroupsGroupsInventorySourcesListRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiGroupsGroupsInventorySourcesListRequest) Page(page int32) ApiGroupsGroupsInventorySourcesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiGroupsGroupsInventorySourcesListRequest) PageSize(pageSize int32) ApiGroupsGroupsInventorySourcesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiGroupsGroupsInventorySourcesListRequest) Search(search string) ApiGroupsGroupsInventorySourcesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiGroupsGroupsInventorySourcesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsInventorySourcesListExecute(r)
+// GroupsGroupsInventorySourcesListOpts Optional parameters for the method 'GroupsGroupsInventorySourcesList'
+type GroupsGroupsInventorySourcesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * GroupsGroupsInventorySourcesList  List Inventory Sources for a Group
- * 
-Make a GET request to this resource to retrieve a list of
-inventory sources associated with the selected
-group.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of inventory sources
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more inventory source records.  
-
-## Results
-
-Each inventory source data structure includes the following fields:
-
-* `id`: Database ID for this inventory source. (integer)
-* `type`: Data type for this inventory source. (choice)
-* `url`: URL for this inventory source. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this inventory source was created. (datetime)
-* `modified`: Timestamp when this inventory source was last modified. (datetime)
-* `name`: Name of this inventory source. (string)
-* `description`: Optional description of this inventory source. (string)
-* `source`:  (choice)
-    - `file`: File, Directory or Script
-    - `scm`: Sourced from a Project
-    - `ec2`: Amazon EC2
-    - `gce`: Google Compute Engine
-    - `azure_rm`: Microsoft Azure Resource Manager
-    - `vmware`: VMware vCenter
-    - `satellite6`: Red Hat Satellite 6
-    - `openstack`: OpenStack
-    - `rhv`: Red Hat Virtualization
-    - `tower`: Ansible Tower
-    - `custom`: Custom Script
-* `source_path`:  (string)
-* `source_script`:  (id)
-* `source_vars`: Inventory source variables in YAML or JSON format. (string)
-* `credential`: Cloud credential to use for inventory updates. (integer)
-* `enabled_var`: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &quot;foo.bar&quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&quot;foo&quot;, {}).get(&quot;bar&quot;, default) (string)
-* `enabled_value`: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var=&quot;status.power_state&quot;and enabled_value=&quot;powered_on&quot; with host variables:{   &quot;status&quot;: {     &quot;power_state&quot;: &quot;powered_on&quot;,     &quot;created&quot;: &quot;2018-02-01T08:00:00.000000Z:00&quot;,     &quot;healthy&quot;: true    },    &quot;name&quot;: &quot;foobar&quot;,    &quot;ip_address&quot;: &quot;192.168.2.1&quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string)
-* `host_filter`: Regex where only matching hosts will be imported into Tower. (string)
-* `overwrite`: Overwrite local groups and hosts from remote inventory source. (boolean)
-* `overwrite_vars`: Overwrite local variables from remote inventory source. (boolean)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string)
-* `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer)
-* `verbosity`:  (choice)
-    - `0`: 0 (WARNING)
-    - `1`: 1 (INFO)
-    - `2`: 2 (DEBUG)
-* `last_job_run`:  (datetime)
-* `last_job_failed`:  (boolean)
-* `next_job_run`:  (datetime)
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-    - `never updated`: Never Updated
-    - `none`: No External Source
-* `inventory`:  (id)
-* `update_on_launch`:  (boolean)
-* `update_cache_timeout`:  (integer)
-* `source_project`: Project containing inventory file used as source. (id)
-* `update_on_project_update`:  (boolean)
-* `last_update_failed`:  (boolean)
-* `last_updated`:  (datetime)
-
-
-
-## Sorting
-
-To specify that inventory sources are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+GroupsGroupsInventorySourcesList  List Inventory Sources for a Group
+ Make a GET request to this resource to retrieve a list of inventory sources associated with the selected group.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of inventory sources found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more inventory source records.    ## Results  Each inventory source data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this inventory source. (integer) * &#x60;type&#x60;: Data type for this inventory source. (choice) * &#x60;url&#x60;: URL for this inventory source. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this inventory source was created. (datetime) * &#x60;modified&#x60;: Timestamp when this inventory source was last modified. (datetime) * &#x60;name&#x60;: Name of this inventory source. (string) * &#x60;description&#x60;: Optional description of this inventory source. (string) * &#x60;source&#x60;:  (choice)     - &#x60;file&#x60;: File, Directory or Script     - &#x60;scm&#x60;: Sourced from a Project     - &#x60;ec2&#x60;: Amazon EC2     - &#x60;gce&#x60;: Google Compute Engine     - &#x60;azure_rm&#x60;: Microsoft Azure Resource Manager     - &#x60;vmware&#x60;: VMware vCenter     - &#x60;satellite6&#x60;: Red Hat Satellite 6     - &#x60;openstack&#x60;: OpenStack     - &#x60;rhv&#x60;: Red Hat Virtualization     - &#x60;tower&#x60;: Ansible Tower     - &#x60;custom&#x60;: Custom Script * &#x60;source_path&#x60;:  (string) * &#x60;source_script&#x60;:  (id) * &#x60;source_vars&#x60;: Inventory source variables in YAML or JSON format. (string) * &#x60;credential&#x60;: Cloud credential to use for inventory updates. (integer) * &#x60;enabled_var&#x60;: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &amp;quot;foo.bar&amp;quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&amp;quot;foo&amp;quot;, {}).get(&amp;quot;bar&amp;quot;, default) (string) * &#x60;enabled_value&#x60;: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var&#x3D;&amp;quot;status.power_state&amp;quot;and enabled_value&#x3D;&amp;quot;powered_on&amp;quot; with host variables:{   &amp;quot;status&amp;quot;: {     &amp;quot;power_state&amp;quot;: &amp;quot;powered_on&amp;quot;,     &amp;quot;created&amp;quot;: &amp;quot;2018-02-01T08:00:00.000000Z:00&amp;quot;,     &amp;quot;healthy&amp;quot;: true    },    &amp;quot;name&amp;quot;: &amp;quot;foobar&amp;quot;,    &amp;quot;ip_address&amp;quot;: &amp;quot;192.168.2.1&amp;quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string) * &#x60;host_filter&#x60;: Regex where only matching hosts will be imported into Tower. (string) * &#x60;overwrite&#x60;: Overwrite local groups and hosts from remote inventory source. (boolean) * &#x60;overwrite_vars&#x60;: Overwrite local variables from remote inventory source. (boolean) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string) * &#x60;timeout&#x60;: The amount of time (in seconds) to run before the task is canceled. (integer) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (WARNING)     - &#x60;1&#x60;: 1 (INFO)     - &#x60;2&#x60;: 2 (DEBUG) * &#x60;last_job_run&#x60;:  (datetime) * &#x60;last_job_failed&#x60;:  (boolean) * &#x60;next_job_run&#x60;:  (datetime) * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled     - &#x60;never updated&#x60;: Never Updated     - &#x60;none&#x60;: No External Source * &#x60;inventory&#x60;:  (id) * &#x60;update_on_launch&#x60;:  (boolean) * &#x60;update_cache_timeout&#x60;:  (integer) * &#x60;source_project&#x60;: Project containing inventory file used as source. (id) * &#x60;update_on_project_update&#x60;:  (boolean) * &#x60;last_update_failed&#x60;:  (boolean) * &#x60;last_updated&#x60;:  (datetime)    ## Sorting  To specify that inventory sources are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiGroupsGroupsInventorySourcesListRequest
- */
-func (a *GroupsApiService) GroupsGroupsInventorySourcesList(ctx _context.Context, id string) ApiGroupsGroupsInventorySourcesListRequest {
-	return ApiGroupsGroupsInventorySourcesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsInventorySourcesListExecute(r ApiGroupsGroupsInventorySourcesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsInventorySourcesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *GroupsApiService) GroupsGroupsInventorySourcesList(ctx _context.Context, id string, localVarOptionals *GroupsGroupsInventorySourcesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1904,26 +885,22 @@ func (a *GroupsApiService) GroupsGroupsInventorySourcesListExecute(r ApiGroupsGr
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsInventorySourcesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/{id}/inventory_sources/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/{id}/inventory_sources/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1942,12 +919,12 @@ func (a *GroupsApiService) GroupsGroupsInventorySourcesListExecute(r ApiGroupsGr
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1969,175 +946,24 @@ func (a *GroupsApiService) GroupsGroupsInventorySourcesListExecute(r ApiGroupsGr
 	return localVarHTTPResponse, nil
 }
 
-type ApiGroupsGroupsJobEventsListRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiGroupsGroupsJobEventsListRequest) Page(page int32) ApiGroupsGroupsJobEventsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiGroupsGroupsJobEventsListRequest) PageSize(pageSize int32) ApiGroupsGroupsJobEventsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiGroupsGroupsJobEventsListRequest) Search(search string) ApiGroupsGroupsJobEventsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiGroupsGroupsJobEventsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsJobEventsListExecute(r)
+// GroupsGroupsJobEventsListOpts Optional parameters for the method 'GroupsGroupsJobEventsList'
+type GroupsGroupsJobEventsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * GroupsGroupsJobEventsList  List Job Events for a Group
- * 
-Make a GET request to this resource to retrieve a list of
-job events associated with the selected
-group.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of job events
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more job event records.  
-
-## Results
-
-Each job event data structure includes the following fields:
-
-* `id`: Database ID for this job event. (integer)
-* `type`: Data type for this job event. (choice)
-* `url`: URL for this job event. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this job event was created. (datetime)
-* `modified`: Timestamp when this job event was last modified. (datetime)
-* `job`:  (id)
-* `event`:  (choice)
-    - `runner_on_failed`: Host Failed
-    - `runner_on_start`: Host Started
-    - `runner_on_ok`: Host OK
-    - `runner_on_error`: Host Failure
-    - `runner_on_skipped`: Host Skipped
-    - `runner_on_unreachable`: Host Unreachable
-    - `runner_on_no_hosts`: No Hosts Remaining
-    - `runner_on_async_poll`: Host Polling
-    - `runner_on_async_ok`: Host Async OK
-    - `runner_on_async_failed`: Host Async Failure
-    - `runner_item_on_ok`: Item OK
-    - `runner_item_on_failed`: Item Failed
-    - `runner_item_on_skipped`: Item Skipped
-    - `runner_retry`: Host Retry
-    - `runner_on_file_diff`: File Difference
-    - `playbook_on_start`: Playbook Started
-    - `playbook_on_notify`: Running Handlers
-    - `playbook_on_include`: Including File
-    - `playbook_on_no_hosts_matched`: No Hosts Matched
-    - `playbook_on_no_hosts_remaining`: No Hosts Remaining
-    - `playbook_on_task_start`: Task Started
-    - `playbook_on_vars_prompt`: Variables Prompted
-    - `playbook_on_setup`: Gathering Facts
-    - `playbook_on_import_for_host`: internal: on Import for Host
-    - `playbook_on_not_import_for_host`: internal: on Not Import for Host
-    - `playbook_on_play_start`: Play Started
-    - `playbook_on_stats`: Playbook Complete
-    - `debug`: Debug
-    - `verbose`: Verbose
-    - `deprecated`: Deprecated
-    - `warning`: Warning
-    - `system_warning`: System Warning
-    - `error`: Error
-* `counter`:  (integer)
-* `event_display`:  (string)
-* `event_data`:  (json)
-* `event_level`:  (integer)
-* `failed`:  (boolean)
-* `changed`:  (boolean)
-* `uuid`:  (string)
-* `parent_uuid`:  (string)
-* `host`:  (id)
-* `host_name`:  (string)
-* `playbook`:  (string)
-* `play`:  (string)
-* `task`:  (string)
-* `role`:  (string)
-* `stdout`:  (string)
-* `start_line`:  (integer)
-* `end_line`:  (integer)
-* `verbosity`:  (integer)
-
-
-
-## Sorting
-
-To specify that job events are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+GroupsGroupsJobEventsList  List Job Events for a Group
+ Make a GET request to this resource to retrieve a list of job events associated with the selected group.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of job events found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more job event records.    ## Results  Each job event data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this job event. (integer) * &#x60;type&#x60;: Data type for this job event. (choice) * &#x60;url&#x60;: URL for this job event. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this job event was created. (datetime) * &#x60;modified&#x60;: Timestamp when this job event was last modified. (datetime) * &#x60;job&#x60;:  (id) * &#x60;event&#x60;:  (choice)     - &#x60;runner_on_failed&#x60;: Host Failed     - &#x60;runner_on_start&#x60;: Host Started     - &#x60;runner_on_ok&#x60;: Host OK     - &#x60;runner_on_error&#x60;: Host Failure     - &#x60;runner_on_skipped&#x60;: Host Skipped     - &#x60;runner_on_unreachable&#x60;: Host Unreachable     - &#x60;runner_on_no_hosts&#x60;: No Hosts Remaining     - &#x60;runner_on_async_poll&#x60;: Host Polling     - &#x60;runner_on_async_ok&#x60;: Host Async OK     - &#x60;runner_on_async_failed&#x60;: Host Async Failure     - &#x60;runner_item_on_ok&#x60;: Item OK     - &#x60;runner_item_on_failed&#x60;: Item Failed     - &#x60;runner_item_on_skipped&#x60;: Item Skipped     - &#x60;runner_retry&#x60;: Host Retry     - &#x60;runner_on_file_diff&#x60;: File Difference     - &#x60;playbook_on_start&#x60;: Playbook Started     - &#x60;playbook_on_notify&#x60;: Running Handlers     - &#x60;playbook_on_include&#x60;: Including File     - &#x60;playbook_on_no_hosts_matched&#x60;: No Hosts Matched     - &#x60;playbook_on_no_hosts_remaining&#x60;: No Hosts Remaining     - &#x60;playbook_on_task_start&#x60;: Task Started     - &#x60;playbook_on_vars_prompt&#x60;: Variables Prompted     - &#x60;playbook_on_setup&#x60;: Gathering Facts     - &#x60;playbook_on_import_for_host&#x60;: internal: on Import for Host     - &#x60;playbook_on_not_import_for_host&#x60;: internal: on Not Import for Host     - &#x60;playbook_on_play_start&#x60;: Play Started     - &#x60;playbook_on_stats&#x60;: Playbook Complete     - &#x60;debug&#x60;: Debug     - &#x60;verbose&#x60;: Verbose     - &#x60;deprecated&#x60;: Deprecated     - &#x60;warning&#x60;: Warning     - &#x60;system_warning&#x60;: System Warning     - &#x60;error&#x60;: Error * &#x60;counter&#x60;:  (integer) * &#x60;event_display&#x60;:  (string) * &#x60;event_data&#x60;:  (json) * &#x60;event_level&#x60;:  (integer) * &#x60;failed&#x60;:  (boolean) * &#x60;changed&#x60;:  (boolean) * &#x60;uuid&#x60;:  (string) * &#x60;parent_uuid&#x60;:  (string) * &#x60;host&#x60;:  (id) * &#x60;host_name&#x60;:  (string) * &#x60;playbook&#x60;:  (string) * &#x60;play&#x60;:  (string) * &#x60;task&#x60;:  (string) * &#x60;role&#x60;:  (string) * &#x60;stdout&#x60;:  (string) * &#x60;start_line&#x60;:  (integer) * &#x60;end_line&#x60;:  (integer) * &#x60;verbosity&#x60;:  (integer)    ## Sorting  To specify that job events are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiGroupsGroupsJobEventsListRequest
- */
-func (a *GroupsApiService) GroupsGroupsJobEventsList(ctx _context.Context, id string) ApiGroupsGroupsJobEventsListRequest {
-	return ApiGroupsGroupsJobEventsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsJobEventsListExecute(r ApiGroupsGroupsJobEventsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsJobEventsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *GroupsApiService) GroupsGroupsJobEventsList(ctx _context.Context, id string, localVarOptionals *GroupsGroupsJobEventsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2146,26 +972,22 @@ func (a *GroupsApiService) GroupsGroupsJobEventsListExecute(r ApiGroupsGroupsJob
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsJobEventsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/{id}/job_events/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/{id}/job_events/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2184,12 +1006,12 @@ func (a *GroupsApiService) GroupsGroupsJobEventsListExecute(r ApiGroupsGroupsJob
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2211,134 +1033,24 @@ func (a *GroupsApiService) GroupsGroupsJobEventsListExecute(r ApiGroupsGroupsJob
 	return localVarHTTPResponse, nil
 }
 
-type ApiGroupsGroupsJobHostSummariesListRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiGroupsGroupsJobHostSummariesListRequest) Page(page int32) ApiGroupsGroupsJobHostSummariesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiGroupsGroupsJobHostSummariesListRequest) PageSize(pageSize int32) ApiGroupsGroupsJobHostSummariesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiGroupsGroupsJobHostSummariesListRequest) Search(search string) ApiGroupsGroupsJobHostSummariesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiGroupsGroupsJobHostSummariesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsJobHostSummariesListExecute(r)
+// GroupsGroupsJobHostSummariesListOpts Optional parameters for the method 'GroupsGroupsJobHostSummariesList'
+type GroupsGroupsJobHostSummariesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * GroupsGroupsJobHostSummariesList  List Job Host Summaries for a Group
- * 
-Make a GET request to this resource to retrieve a list of
-job host summaries associated with the selected
-group.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of job host summaries
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more job host summary records.  
-
-## Results
-
-Each job host summary data structure includes the following fields:
-
-* `id`: Database ID for this job host summary. (integer)
-* `type`: Data type for this job host summary. (choice)
-* `url`: URL for this job host summary. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this job host summary was created. (datetime)
-* `modified`: Timestamp when this job host summary was last modified. (datetime)
-* `job`:  (id)
-* `host`:  (id)
-* `host_name`:  (string)
-* `changed`:  (integer)
-* `dark`:  (integer)
-* `failures`:  (integer)
-* `ok`:  (integer)
-* `processed`:  (integer)
-* `skipped`:  (integer)
-* `failed`:  (boolean)
-* `ignored`:  (integer)
-* `rescued`:  (integer)
-
-
-
-## Sorting
-
-To specify that job host summaries are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+GroupsGroupsJobHostSummariesList  List Job Host Summaries for a Group
+ Make a GET request to this resource to retrieve a list of job host summaries associated with the selected group.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of job host summaries found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more job host summary records.    ## Results  Each job host summary data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this job host summary. (integer) * &#x60;type&#x60;: Data type for this job host summary. (choice) * &#x60;url&#x60;: URL for this job host summary. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this job host summary was created. (datetime) * &#x60;modified&#x60;: Timestamp when this job host summary was last modified. (datetime) * &#x60;job&#x60;:  (id) * &#x60;host&#x60;:  (id) * &#x60;host_name&#x60;:  (string) * &#x60;changed&#x60;:  (integer) * &#x60;dark&#x60;:  (integer) * &#x60;failures&#x60;:  (integer) * &#x60;ok&#x60;:  (integer) * &#x60;processed&#x60;:  (integer) * &#x60;skipped&#x60;:  (integer) * &#x60;failed&#x60;:  (boolean) * &#x60;ignored&#x60;:  (integer) * &#x60;rescued&#x60;:  (integer)    ## Sorting  To specify that job host summaries are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiGroupsGroupsJobHostSummariesListRequest
- */
-func (a *GroupsApiService) GroupsGroupsJobHostSummariesList(ctx _context.Context, id string) ApiGroupsGroupsJobHostSummariesListRequest {
-	return ApiGroupsGroupsJobHostSummariesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsJobHostSummariesListExecute(r ApiGroupsGroupsJobHostSummariesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsJobHostSummariesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *GroupsApiService) GroupsGroupsJobHostSummariesList(ctx _context.Context, id string, localVarOptionals *GroupsGroupsJobHostSummariesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2347,26 +1059,22 @@ func (a *GroupsApiService) GroupsGroupsJobHostSummariesListExecute(r ApiGroupsGr
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsJobHostSummariesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/{id}/job_host_summaries/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/{id}/job_host_summaries/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2385,12 +1093,12 @@ func (a *GroupsApiService) GroupsGroupsJobHostSummariesListExecute(r ApiGroupsGr
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2412,122 +1120,23 @@ func (a *GroupsApiService) GroupsGroupsJobHostSummariesListExecute(r ApiGroupsGr
 	return localVarHTTPResponse, nil
 }
 
-type ApiGroupsGroupsListRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiGroupsGroupsListRequest) Page(page int32) ApiGroupsGroupsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiGroupsGroupsListRequest) PageSize(pageSize int32) ApiGroupsGroupsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiGroupsGroupsListRequest) Search(search string) ApiGroupsGroupsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiGroupsGroupsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsListExecute(r)
+// GroupsGroupsListOpts Optional parameters for the method 'GroupsGroupsList'
+type GroupsGroupsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * GroupsGroupsList  List Groups
- * 
-Make a GET request to this resource to retrieve the list of
-groups.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of groups
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more group records.  
-
-## Results
-
-Each group data structure includes the following fields:
-
-* `id`: Database ID for this group. (integer)
-* `type`: Data type for this group. (choice)
-* `url`: URL for this group. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this group was created. (datetime)
-* `modified`: Timestamp when this group was last modified. (datetime)
-* `name`: Name of this group. (string)
-* `description`: Optional description of this group. (string)
-* `inventory`:  (id)
-* `variables`: Group variables in JSON or YAML format. (json)
-
-
-
-## Sorting
-
-To specify that groups are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+GroupsGroupsList  List Groups
+ Make a GET request to this resource to retrieve the list of groups.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of groups found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more group records.    ## Results  Each group data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this group. (integer) * &#x60;type&#x60;: Data type for this group. (choice) * &#x60;url&#x60;: URL for this group. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this group was created. (datetime) * &#x60;modified&#x60;: Timestamp when this group was last modified. (datetime) * &#x60;name&#x60;: Name of this group. (string) * &#x60;description&#x60;: Optional description of this group. (string) * &#x60;inventory&#x60;:  (id) * &#x60;variables&#x60;: Group variables in JSON or YAML format. (json)    ## Sorting  To specify that groups are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiGroupsGroupsListRequest
- */
-func (a *GroupsApiService) GroupsGroupsList(ctx _context.Context) ApiGroupsGroupsListRequest {
-	return ApiGroupsGroupsListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsListExecute(r ApiGroupsGroupsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *GroupsApiService) GroupsGroupsList(ctx _context.Context, localVarOptionals *GroupsGroupsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2536,25 +1145,20 @@ func (a *GroupsApiService) GroupsGroupsListExecute(r ApiGroupsGroupsListRequest)
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2573,12 +1177,12 @@ func (a *GroupsApiService) GroupsGroupsListExecute(r ApiGroupsGroupsListRequest)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2600,70 +1204,22 @@ func (a *GroupsApiService) GroupsGroupsListExecute(r ApiGroupsGroupsListRequest)
 	return localVarHTTPResponse, nil
 }
 
-type ApiGroupsGroupsPartialUpdateRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	id string
-	search *string
-	data *InlineObject6
-}
-
-func (r ApiGroupsGroupsPartialUpdateRequest) Search(search string) ApiGroupsGroupsPartialUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiGroupsGroupsPartialUpdateRequest) Data(data InlineObject6) ApiGroupsGroupsPartialUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiGroupsGroupsPartialUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsPartialUpdateExecute(r)
+// GroupsGroupsPartialUpdateOpts Optional parameters for the method 'GroupsGroupsPartialUpdate'
+type GroupsGroupsPartialUpdateOpts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * GroupsGroupsPartialUpdate  Update a Group
- * 
-Make a PUT or PATCH request to this resource to update this
-group.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this group. (string, required)
-* `description`: Optional description of this group. (string, default=`""`)
-* `inventory`:  (id, required)
-* `variables`: Group variables in JSON or YAML format. (json, default=``)
-
-
-
-
-
-
-
-
-For a PATCH request, include only the fields that are being modified.
+GroupsGroupsPartialUpdate  Update a Group
+ Make a PUT or PATCH request to this resource to update this group.  The following fields may be modified:          * &#x60;name&#x60;: Name of this group. (string, required) * &#x60;description&#x60;: Optional description of this group. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;inventory&#x60;:  (id, required) * &#x60;variables&#x60;: Group variables in JSON or YAML format. (json, default&#x3D;&#x60;&#x60;)         For a PATCH request, include only the fields that are being modified.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiGroupsGroupsPartialUpdateRequest
- */
-func (a *GroupsApiService) GroupsGroupsPartialUpdate(ctx _context.Context, id string) ApiGroupsGroupsPartialUpdateRequest {
-	return ApiGroupsGroupsPartialUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsPartialUpdateExecute(r ApiGroupsGroupsPartialUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsPartialUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject6) - 
+*/
+func (a *GroupsApiService) GroupsGroupsPartialUpdate(ctx _context.Context, id string, localVarOptionals *GroupsGroupsPartialUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPatch
 		localVarPostBody     interface{}
@@ -2672,20 +1228,16 @@ func (a *GroupsApiService) GroupsGroupsPartialUpdateExecute(r ApiGroupsGroupsPar
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsPartialUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -2705,13 +1257,20 @@ func (a *GroupsApiService) GroupsGroupsPartialUpdateExecute(r ApiGroupsGroupsPar
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject6)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject6")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2733,126 +1292,24 @@ func (a *GroupsApiService) GroupsGroupsPartialUpdateExecute(r ApiGroupsGroupsPar
 	return localVarHTTPResponse, nil
 }
 
-type ApiGroupsGroupsPotentialChildrenListRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiGroupsGroupsPotentialChildrenListRequest) Page(page int32) ApiGroupsGroupsPotentialChildrenListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiGroupsGroupsPotentialChildrenListRequest) PageSize(pageSize int32) ApiGroupsGroupsPotentialChildrenListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiGroupsGroupsPotentialChildrenListRequest) Search(search string) ApiGroupsGroupsPotentialChildrenListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiGroupsGroupsPotentialChildrenListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsPotentialChildrenListExecute(r)
+// GroupsGroupsPotentialChildrenListOpts Optional parameters for the method 'GroupsGroupsPotentialChildrenList'
+type GroupsGroupsPotentialChildrenListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * GroupsGroupsPotentialChildrenList  List Potential Child Groups for a Group
- * 
-Make a GET request to this resource to retrieve a list of
-groups available to be added as children of the
-current group.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of groups
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more group records.  
-
-## Results
-
-Each group data structure includes the following fields:
-
-* `id`: Database ID for this group. (integer)
-* `type`: Data type for this group. (choice)
-* `url`: URL for this group. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this group was created. (datetime)
-* `modified`: Timestamp when this group was last modified. (datetime)
-* `name`: Name of this group. (string)
-* `description`: Optional description of this group. (string)
-* `inventory`:  (id)
-* `variables`: Group variables in JSON or YAML format. (json)
-
-
-
-## Sorting
-
-To specify that groups are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+GroupsGroupsPotentialChildrenList  List Potential Child Groups for a Group
+ Make a GET request to this resource to retrieve a list of groups available to be added as children of the current group.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of groups found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more group records.    ## Results  Each group data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this group. (integer) * &#x60;type&#x60;: Data type for this group. (choice) * &#x60;url&#x60;: URL for this group. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this group was created. (datetime) * &#x60;modified&#x60;: Timestamp when this group was last modified. (datetime) * &#x60;name&#x60;: Name of this group. (string) * &#x60;description&#x60;: Optional description of this group. (string) * &#x60;inventory&#x60;:  (id) * &#x60;variables&#x60;: Group variables in JSON or YAML format. (json)    ## Sorting  To specify that groups are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiGroupsGroupsPotentialChildrenListRequest
- */
-func (a *GroupsApiService) GroupsGroupsPotentialChildrenList(ctx _context.Context, id string) ApiGroupsGroupsPotentialChildrenListRequest {
-	return ApiGroupsGroupsPotentialChildrenListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsPotentialChildrenListExecute(r ApiGroupsGroupsPotentialChildrenListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsPotentialChildrenListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *GroupsApiService) GroupsGroupsPotentialChildrenList(ctx _context.Context, id string, localVarOptionals *GroupsGroupsPotentialChildrenListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2861,26 +1318,22 @@ func (a *GroupsApiService) GroupsGroupsPotentialChildrenListExecute(r ApiGroupsG
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsPotentialChildrenList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/{id}/potential_children/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/{id}/potential_children/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2899,12 +1352,12 @@ func (a *GroupsApiService) GroupsGroupsPotentialChildrenListExecute(r ApiGroupsG
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2926,55 +1379,20 @@ func (a *GroupsApiService) GroupsGroupsPotentialChildrenListExecute(r ApiGroupsG
 	return localVarHTTPResponse, nil
 }
 
-type ApiGroupsGroupsReadRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	id string
-	search *string
-}
-
-func (r ApiGroupsGroupsReadRequest) Search(search string) ApiGroupsGroupsReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiGroupsGroupsReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsReadExecute(r)
+// GroupsGroupsReadOpts Optional parameters for the method 'GroupsGroupsRead'
+type GroupsGroupsReadOpts struct {
+    Search optional.String
 }
 
 /*
- * GroupsGroupsRead  Retrieve a Group
- * 
-Make GET request to this resource to retrieve a single group
-record containing the following fields:
-
-* `id`: Database ID for this group. (integer)
-* `type`: Data type for this group. (choice)
-* `url`: URL for this group. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this group was created. (datetime)
-* `modified`: Timestamp when this group was last modified. (datetime)
-* `name`: Name of this group. (string)
-* `description`: Optional description of this group. (string)
-* `inventory`:  (id)
-* `variables`: Group variables in JSON or YAML format. (json)
+GroupsGroupsRead  Retrieve a Group
+ Make GET request to this resource to retrieve a single group record containing the following fields:  * &#x60;id&#x60;: Database ID for this group. (integer) * &#x60;type&#x60;: Data type for this group. (choice) * &#x60;url&#x60;: URL for this group. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this group was created. (datetime) * &#x60;modified&#x60;: Timestamp when this group was last modified. (datetime) * &#x60;name&#x60;: Name of this group. (string) * &#x60;description&#x60;: Optional description of this group. (string) * &#x60;inventory&#x60;:  (id) * &#x60;variables&#x60;: Group variables in JSON or YAML format. (json)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiGroupsGroupsReadRequest
- */
-func (a *GroupsApiService) GroupsGroupsRead(ctx _context.Context, id string) ApiGroupsGroupsReadRequest {
-	return ApiGroupsGroupsReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsReadExecute(r ApiGroupsGroupsReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *GroupsApiService) GroupsGroupsRead(ctx _context.Context, id string, localVarOptionals *GroupsGroupsReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2983,20 +1401,16 @@ func (a *GroupsApiService) GroupsGroupsReadExecute(r ApiGroupsGroupsReadRequest)
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -3015,12 +1429,12 @@ func (a *GroupsApiService) GroupsGroupsReadExecute(r ApiGroupsGroupsReadRequest)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3042,68 +1456,22 @@ func (a *GroupsApiService) GroupsGroupsReadExecute(r ApiGroupsGroupsReadRequest)
 	return localVarHTTPResponse, nil
 }
 
-type ApiGroupsGroupsUpdateRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	id string
-	search *string
-	data *map[string]interface{}
-}
-
-func (r ApiGroupsGroupsUpdateRequest) Search(search string) ApiGroupsGroupsUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiGroupsGroupsUpdateRequest) Data(data map[string]interface{}) ApiGroupsGroupsUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiGroupsGroupsUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsUpdateExecute(r)
+// GroupsGroupsUpdateOpts Optional parameters for the method 'GroupsGroupsUpdate'
+type GroupsGroupsUpdateOpts struct {
+    Search optional.String
+    Data optional.Map[string]interface{}
 }
 
 /*
- * GroupsGroupsUpdate  Update a Group
- * 
-Make a PUT or PATCH request to this resource to update this
-group.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this group. (string, required)
-* `description`: Optional description of this group. (string, default=`""`)
-* `inventory`:  (id, required)
-* `variables`: Group variables in JSON or YAML format. (json, default=``)
-
-
-
-
-
-
-For a PUT request, include **all** fields in the request.
+GroupsGroupsUpdate  Update a Group
+ Make a PUT or PATCH request to this resource to update this group.  The following fields may be modified:          * &#x60;name&#x60;: Name of this group. (string, required) * &#x60;description&#x60;: Optional description of this group. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;inventory&#x60;:  (id, required) * &#x60;variables&#x60;: Group variables in JSON or YAML format. (json, default&#x3D;&#x60;&#x60;)       For a PUT request, include **all** fields in the request.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiGroupsGroupsUpdateRequest
- */
-func (a *GroupsApiService) GroupsGroupsUpdate(ctx _context.Context, id string) ApiGroupsGroupsUpdateRequest {
-	return ApiGroupsGroupsUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsUpdateExecute(r ApiGroupsGroupsUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *GroupsApiService) GroupsGroupsUpdate(ctx _context.Context, id string, localVarOptionals *GroupsGroupsUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -3112,20 +1480,16 @@ func (a *GroupsApiService) GroupsGroupsUpdateExecute(r ApiGroupsGroupsUpdateRequ
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -3145,13 +1509,16 @@ func (a *GroupsApiService) GroupsGroupsUpdateExecute(r ApiGroupsGroupsUpdateRequ
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3173,48 +1540,22 @@ func (a *GroupsApiService) GroupsGroupsUpdateExecute(r ApiGroupsGroupsUpdateRequ
 	return localVarHTTPResponse, nil
 }
 
-type ApiGroupsGroupsVariableDataPartialUpdateRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	id string
-	search *string
-	data *InlineObject9
-}
-
-func (r ApiGroupsGroupsVariableDataPartialUpdateRequest) Search(search string) ApiGroupsGroupsVariableDataPartialUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiGroupsGroupsVariableDataPartialUpdateRequest) Data(data InlineObject9) ApiGroupsGroupsVariableDataPartialUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiGroupsGroupsVariableDataPartialUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsVariableDataPartialUpdateExecute(r)
+// GroupsGroupsVariableDataPartialUpdateOpts Optional parameters for the method 'GroupsGroupsVariableDataPartialUpdate'
+type GroupsGroupsVariableDataPartialUpdateOpts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * GroupsGroupsVariableDataPartialUpdate  Update Group Variable Data
- * 
-Make a PUT or PATCH request to this resource to update variables defined for a
-group.
+GroupsGroupsVariableDataPartialUpdate  Update Group Variable Data
+ Make a PUT or PATCH request to this resource to update variables defined for a group.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiGroupsGroupsVariableDataPartialUpdateRequest
- */
-func (a *GroupsApiService) GroupsGroupsVariableDataPartialUpdate(ctx _context.Context, id string) ApiGroupsGroupsVariableDataPartialUpdateRequest {
-	return ApiGroupsGroupsVariableDataPartialUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsVariableDataPartialUpdateExecute(r ApiGroupsGroupsVariableDataPartialUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsVariableDataPartialUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject9) - 
+*/
+func (a *GroupsApiService) GroupsGroupsVariableDataPartialUpdate(ctx _context.Context, id string, localVarOptionals *GroupsGroupsVariableDataPartialUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPatch
 		localVarPostBody     interface{}
@@ -3223,20 +1564,16 @@ func (a *GroupsApiService) GroupsGroupsVariableDataPartialUpdateExecute(r ApiGro
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsVariableDataPartialUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/{id}/variable_data/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/{id}/variable_data/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -3256,13 +1593,20 @@ func (a *GroupsApiService) GroupsGroupsVariableDataPartialUpdateExecute(r ApiGro
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject9)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject9")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3284,43 +1628,20 @@ func (a *GroupsApiService) GroupsGroupsVariableDataPartialUpdateExecute(r ApiGro
 	return localVarHTTPResponse, nil
 }
 
-type ApiGroupsGroupsVariableDataReadRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	id string
-	search *string
-}
-
-func (r ApiGroupsGroupsVariableDataReadRequest) Search(search string) ApiGroupsGroupsVariableDataReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiGroupsGroupsVariableDataReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsVariableDataReadExecute(r)
+// GroupsGroupsVariableDataReadOpts Optional parameters for the method 'GroupsGroupsVariableDataRead'
+type GroupsGroupsVariableDataReadOpts struct {
+    Search optional.String
 }
 
 /*
- * GroupsGroupsVariableDataRead  Retrieve Group Variable Data
- * 
-Make a GET request to this resource to retrieve all variables defined for a
-group.
+GroupsGroupsVariableDataRead  Retrieve Group Variable Data
+ Make a GET request to this resource to retrieve all variables defined for a group.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiGroupsGroupsVariableDataReadRequest
- */
-func (a *GroupsApiService) GroupsGroupsVariableDataRead(ctx _context.Context, id string) ApiGroupsGroupsVariableDataReadRequest {
-	return ApiGroupsGroupsVariableDataReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsVariableDataReadExecute(r ApiGroupsGroupsVariableDataReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsVariableDataReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *GroupsApiService) GroupsGroupsVariableDataRead(ctx _context.Context, id string, localVarOptionals *GroupsGroupsVariableDataReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -3329,20 +1650,16 @@ func (a *GroupsApiService) GroupsGroupsVariableDataReadExecute(r ApiGroupsGroups
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsVariableDataRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/{id}/variable_data/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/{id}/variable_data/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -3361,12 +1678,12 @@ func (a *GroupsApiService) GroupsGroupsVariableDataReadExecute(r ApiGroupsGroups
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3388,48 +1705,22 @@ func (a *GroupsApiService) GroupsGroupsVariableDataReadExecute(r ApiGroupsGroups
 	return localVarHTTPResponse, nil
 }
 
-type ApiGroupsGroupsVariableDataUpdateRequest struct {
-	ctx _context.Context
-	ApiService *GroupsApiService
-	id string
-	search *string
-	data *InlineObject8
-}
-
-func (r ApiGroupsGroupsVariableDataUpdateRequest) Search(search string) ApiGroupsGroupsVariableDataUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiGroupsGroupsVariableDataUpdateRequest) Data(data InlineObject8) ApiGroupsGroupsVariableDataUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiGroupsGroupsVariableDataUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.GroupsGroupsVariableDataUpdateExecute(r)
+// GroupsGroupsVariableDataUpdateOpts Optional parameters for the method 'GroupsGroupsVariableDataUpdate'
+type GroupsGroupsVariableDataUpdateOpts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * GroupsGroupsVariableDataUpdate  Update Group Variable Data
- * 
-Make a PUT or PATCH request to this resource to update variables defined for a
-group.
+GroupsGroupsVariableDataUpdate  Update Group Variable Data
+ Make a PUT or PATCH request to this resource to update variables defined for a group.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiGroupsGroupsVariableDataUpdateRequest
- */
-func (a *GroupsApiService) GroupsGroupsVariableDataUpdate(ctx _context.Context, id string) ApiGroupsGroupsVariableDataUpdateRequest {
-	return ApiGroupsGroupsVariableDataUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *GroupsApiService) GroupsGroupsVariableDataUpdateExecute(r ApiGroupsGroupsVariableDataUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *GroupsGroupsVariableDataUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject8) - 
+*/
+func (a *GroupsApiService) GroupsGroupsVariableDataUpdate(ctx _context.Context, id string, localVarOptionals *GroupsGroupsVariableDataUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -3438,20 +1729,16 @@ func (a *GroupsApiService) GroupsGroupsVariableDataUpdateExecute(r ApiGroupsGrou
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GroupsApiService.GroupsGroupsVariableDataUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/groups/{id}/variable_data/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/groups/{id}/variable_data/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -3471,13 +1758,20 @@ func (a *GroupsApiService) GroupsGroupsVariableDataUpdateExecute(r ApiGroupsGrou
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject8)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject8")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

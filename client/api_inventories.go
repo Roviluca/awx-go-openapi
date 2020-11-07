@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,130 +26,24 @@ var (
 // InventoriesApiService InventoriesApi service
 type InventoriesApiService service
 
-type ApiInventoriesInventoriesAccessListListRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventoriesInventoriesAccessListListRequest) Page(page int32) ApiInventoriesInventoriesAccessListListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventoriesInventoriesAccessListListRequest) PageSize(pageSize int32) ApiInventoriesInventoriesAccessListListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventoriesInventoriesAccessListListRequest) Search(search string) ApiInventoriesInventoriesAccessListListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventoriesInventoriesAccessListListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesAccessListListExecute(r)
+// InventoriesInventoriesAccessListListOpts Optional parameters for the method 'InventoriesInventoriesAccessListList'
+type InventoriesInventoriesAccessListListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventoriesInventoriesAccessListList  List Users
- * 
-Make a GET request to this resource to retrieve the list of
-users.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of users
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more user records.  
-
-## Results
-
-Each user data structure includes the following fields:
-
-* `id`: Database ID for this user. (integer)
-* `type`: Data type for this user. (choice)
-* `url`: URL for this user. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this user was created. (datetime)
-* `username`: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string)
-* `first_name`:  (string)
-* `last_name`:  (string)
-* `email`:  (string)
-* `is_superuser`: Designates that this user has all permissions without explicitly assigning them. (boolean)
-* `is_system_auditor`:  (boolean)
-
-* `ldap_dn`:  (string)
-* `last_login`:  (datetime)
-* `external_account`: Set if the account is managed by an external service (field)
-
-
-
-## Sorting
-
-To specify that users are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=username
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-username
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=username,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InventoriesInventoriesAccessListList  List Users
+ Make a GET request to this resource to retrieve the list of users.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of users found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more user records.    ## Results  Each user data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this user. (integer) * &#x60;type&#x60;: Data type for this user. (choice) * &#x60;url&#x60;: URL for this user. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this user was created. (datetime) * &#x60;username&#x60;: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. (string) * &#x60;first_name&#x60;:  (string) * &#x60;last_name&#x60;:  (string) * &#x60;email&#x60;:  (string) * &#x60;is_superuser&#x60;: Designates that this user has all permissions without explicitly assigning them. (boolean) * &#x60;is_system_auditor&#x60;:  (boolean)  * &#x60;ldap_dn&#x60;:  (string) * &#x60;last_login&#x60;:  (datetime) * &#x60;external_account&#x60;: Set if the account is managed by an external service (field)    ## Sorting  To specify that users are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;username  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-username  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;username,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesAccessListListRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesAccessListList(ctx _context.Context, id string) ApiInventoriesInventoriesAccessListListRequest {
-	return ApiInventoriesInventoriesAccessListListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesAccessListListExecute(r ApiInventoriesInventoriesAccessListListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesAccessListListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventoriesApiService) InventoriesInventoriesAccessListList(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesAccessListListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -157,26 +52,22 @@ func (a *InventoriesApiService) InventoriesInventoriesAccessListListExecute(r Ap
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesAccessListList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/access_list/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/access_list/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -195,12 +86,12 @@ func (a *InventoriesApiService) InventoriesInventoriesAccessListListExecute(r Ap
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -222,133 +113,24 @@ func (a *InventoriesApiService) InventoriesInventoriesAccessListListExecute(r Ap
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesActivityStreamListRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventoriesInventoriesActivityStreamListRequest) Page(page int32) ApiInventoriesInventoriesActivityStreamListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventoriesInventoriesActivityStreamListRequest) PageSize(pageSize int32) ApiInventoriesInventoriesActivityStreamListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventoriesInventoriesActivityStreamListRequest) Search(search string) ApiInventoriesInventoriesActivityStreamListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventoriesInventoriesActivityStreamListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesActivityStreamListExecute(r)
+// InventoriesInventoriesActivityStreamListOpts Optional parameters for the method 'InventoriesInventoriesActivityStreamList'
+type InventoriesInventoriesActivityStreamListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventoriesInventoriesActivityStreamList  List Activity Streams for an Inventory
- * 
-Make a GET request to this resource to retrieve a list of
-activity streams associated with the selected
-inventory.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of activity streams
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more activity stream records.  
-
-## Results
-
-Each activity stream data structure includes the following fields:
-
-* `id`: Database ID for this activity stream. (integer)
-* `type`: Data type for this activity stream. (choice)
-* `url`: URL for this activity stream. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `timestamp`:  (datetime)
-* `operation`: The action taken with respect to the given object(s). (choice)
-    - `create`: Entity Created
-    - `update`: Entity Updated
-    - `delete`: Entity Deleted
-    - `associate`: Entity Associated with another Entity
-    - `disassociate`: Entity was Disassociated with another Entity
-* `changes`: A summary of the new and changed values when an object is created, updated, or deleted (json)
-* `object1`: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string)
-* `object2`: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string)
-* `object_association`: When present, shows the field name of the role or relationship that changed. (field)
-* `action_node`: The cluster node the activity took place on. (string)
-* `object_type`: When present, shows the model on which the role or relationship was defined. (field)
-
-
-
-## Sorting
-
-To specify that activity streams are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InventoriesInventoriesActivityStreamList  List Activity Streams for an Inventory
+ Make a GET request to this resource to retrieve a list of activity streams associated with the selected inventory.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of activity streams found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more activity stream records.    ## Results  Each activity stream data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this activity stream. (integer) * &#x60;type&#x60;: Data type for this activity stream. (choice) * &#x60;url&#x60;: URL for this activity stream. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;timestamp&#x60;:  (datetime) * &#x60;operation&#x60;: The action taken with respect to the given object(s). (choice)     - &#x60;create&#x60;: Entity Created     - &#x60;update&#x60;: Entity Updated     - &#x60;delete&#x60;: Entity Deleted     - &#x60;associate&#x60;: Entity Associated with another Entity     - &#x60;disassociate&#x60;: Entity was Disassociated with another Entity * &#x60;changes&#x60;: A summary of the new and changed values when an object is created, updated, or deleted (json) * &#x60;object1&#x60;: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string) * &#x60;object2&#x60;: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string) * &#x60;object_association&#x60;: When present, shows the field name of the role or relationship that changed. (field) * &#x60;action_node&#x60;: The cluster node the activity took place on. (string) * &#x60;object_type&#x60;: When present, shows the model on which the role or relationship was defined. (field)    ## Sorting  To specify that activity streams are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesActivityStreamListRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesActivityStreamList(ctx _context.Context, id string) ApiInventoriesInventoriesActivityStreamListRequest {
-	return ApiInventoriesInventoriesActivityStreamListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesActivityStreamListExecute(r ApiInventoriesInventoriesActivityStreamListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesActivityStreamListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventoriesApiService) InventoriesInventoriesActivityStreamList(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesActivityStreamListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -357,26 +139,22 @@ func (a *InventoriesApiService) InventoriesInventoriesActivityStreamListExecute(
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesActivityStreamList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/activity_stream/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/activity_stream/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -395,12 +173,12 @@ func (a *InventoriesApiService) InventoriesInventoriesActivityStreamListExecute(
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -422,102 +200,20 @@ func (a *InventoriesApiService) InventoriesInventoriesActivityStreamListExecute(
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesAdHocCommandsCreateRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiInventoriesInventoriesAdHocCommandsCreateRequest) Data(data map[string]interface{}) ApiInventoriesInventoriesAdHocCommandsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInventoriesInventoriesAdHocCommandsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesAdHocCommandsCreateExecute(r)
+// InventoriesInventoriesAdHocCommandsCreateOpts Optional parameters for the method 'InventoriesInventoriesAdHocCommandsCreate'
+type InventoriesInventoriesAdHocCommandsCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * InventoriesInventoriesAdHocCommandsCreate  Create an Ad Hoc Command for an Inventory
- * 
-Make a POST request to this resource with the following ad hoc command
-fields to create a new ad hoc command associated with this
-inventory.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-* `job_type`:  (choice)
-    - `run`: Run (default)
-    - `check`: Check
-
-* `limit`:  (string, default=`""`)
-* `credential`:  (id, default=``)
-* `module_name`:  (choice)
-    - `command` (default)
-    - `shell`
-    - `yum`
-    - `apt`
-    - `apt_key`
-    - `apt_repository`
-    - `apt_rpm`
-    - `service`
-    - `group`
-    - `user`
-    - `mount`
-    - `ping`
-    - `selinux`
-    - `setup`
-    - `win_ping`
-    - `win_service`
-    - `win_updates`
-    - `win_group`
-    - `win_user`
-* `module_args`:  (string, default=`""`)
-* `forks`:  (integer, default=`0`)
-* `verbosity`:  (choice)
-    - `0`: 0 (Normal) (default)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `extra_vars`:  (string, default=`""`)
-* `become_enabled`:  (boolean, default=`False`)
-* `diff_mode`:  (boolean, default=`False`)
+InventoriesInventoriesAdHocCommandsCreate  Create an Ad Hoc Command for an Inventory
+ Make a POST request to this resource with the following ad hoc command fields to create a new ad hoc command associated with this inventory.                     * &#x60;job_type&#x60;:  (choice)     - &#x60;run&#x60;: Run (default)     - &#x60;check&#x60;: Check  * &#x60;limit&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;credential&#x60;:  (id, default&#x3D;&#x60;&#x60;) * &#x60;module_name&#x60;:  (choice)     - &#x60;command&#x60; (default)     - &#x60;shell&#x60;     - &#x60;yum&#x60;     - &#x60;apt&#x60;     - &#x60;apt_key&#x60;     - &#x60;apt_repository&#x60;     - &#x60;apt_rpm&#x60;     - &#x60;service&#x60;     - &#x60;group&#x60;     - &#x60;user&#x60;     - &#x60;mount&#x60;     - &#x60;ping&#x60;     - &#x60;selinux&#x60;     - &#x60;setup&#x60;     - &#x60;win_ping&#x60;     - &#x60;win_service&#x60;     - &#x60;win_updates&#x60;     - &#x60;win_group&#x60;     - &#x60;win_user&#x60; * &#x60;module_args&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;forks&#x60;:  (integer, default&#x3D;&#x60;0&#x60;) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (Normal) (default)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;extra_vars&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;become_enabled&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;diff_mode&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesAdHocCommandsCreateRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesAdHocCommandsCreate(ctx _context.Context, id string) ApiInventoriesInventoriesAdHocCommandsCreateRequest {
-	return ApiInventoriesInventoriesAdHocCommandsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesAdHocCommandsCreateExecute(r ApiInventoriesInventoriesAdHocCommandsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesAdHocCommandsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *InventoriesApiService) InventoriesInventoriesAdHocCommandsCreate(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesAdHocCommandsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -526,13 +222,9 @@ func (a *InventoriesApiService) InventoriesInventoriesAdHocCommandsCreateExecute
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesAdHocCommandsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/ad_hoc_commands/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/ad_hoc_commands/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -556,13 +248,16 @@ func (a *InventoriesApiService) InventoriesInventoriesAdHocCommandsCreateExecute
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -584,188 +279,24 @@ func (a *InventoriesApiService) InventoriesInventoriesAdHocCommandsCreateExecute
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesAdHocCommandsListRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventoriesInventoriesAdHocCommandsListRequest) Page(page int32) ApiInventoriesInventoriesAdHocCommandsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventoriesInventoriesAdHocCommandsListRequest) PageSize(pageSize int32) ApiInventoriesInventoriesAdHocCommandsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventoriesInventoriesAdHocCommandsListRequest) Search(search string) ApiInventoriesInventoriesAdHocCommandsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventoriesInventoriesAdHocCommandsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesAdHocCommandsListExecute(r)
+// InventoriesInventoriesAdHocCommandsListOpts Optional parameters for the method 'InventoriesInventoriesAdHocCommandsList'
+type InventoriesInventoriesAdHocCommandsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventoriesInventoriesAdHocCommandsList  List Ad Hoc Commands for an Inventory
- * 
-Make a GET request to this resource to retrieve a list of
-ad hoc commands associated with the selected
-inventory.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of ad hoc commands
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more ad hoc command records.  
-
-## Results
-
-Each ad hoc command data structure includes the following fields:
-
-* `id`: Database ID for this ad hoc command. (integer)
-* `type`: Data type for this ad hoc command. (choice)
-* `url`: URL for this ad hoc command. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this ad hoc command was created. (datetime)
-* `modified`: Timestamp when this ad hoc command was last modified. (datetime)
-* `name`: Name of this ad hoc command. (string)
-* `launch_type`:  (choice)
-    - `manual`: Manual
-    - `relaunch`: Relaunch
-    - `callback`: Callback
-    - `scheduled`: Scheduled
-    - `dependency`: Dependency
-    - `workflow`: Workflow
-    - `webhook`: Webhook
-    - `sync`: Sync
-    - `scm`: SCM Update
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-* `failed`:  (boolean)
-* `started`: The date and time the job was queued for starting. (datetime)
-* `finished`: The date and time the job finished execution. (datetime)
-* `canceled_on`: The date and time when the cancel request was sent. (datetime)
-* `elapsed`: Elapsed time in seconds that the job ran. (decimal)
-* `job_explanation`: A status field to indicate the state of the job if it wasn&#39;t able to run and capture stdout (string)
-* `execution_node`: The node the job executed on. (string)
-* `controller_node`: The instance that managed the isolated execution environment. (string)
-* `job_type`:  (choice)
-    - `run`: Run
-    - `check`: Check
-* `inventory`:  (id)
-* `limit`:  (string)
-* `credential`:  (id)
-* `module_name`:  (choice)
-    - `command`
-    - `shell`
-    - `yum`
-    - `apt`
-    - `apt_key`
-    - `apt_repository`
-    - `apt_rpm`
-    - `service`
-    - `group`
-    - `user`
-    - `mount`
-    - `ping`
-    - `selinux`
-    - `setup`
-    - `win_ping`
-    - `win_service`
-    - `win_updates`
-    - `win_group`
-    - `win_user`
-* `module_args`:  (string)
-* `forks`:  (integer)
-* `verbosity`:  (choice)
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `extra_vars`:  (string)
-* `become_enabled`:  (boolean)
-* `diff_mode`:  (boolean)
-
-
-
-## Sorting
-
-To specify that ad hoc commands are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InventoriesInventoriesAdHocCommandsList  List Ad Hoc Commands for an Inventory
+ Make a GET request to this resource to retrieve a list of ad hoc commands associated with the selected inventory.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of ad hoc commands found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more ad hoc command records.    ## Results  Each ad hoc command data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this ad hoc command. (integer) * &#x60;type&#x60;: Data type for this ad hoc command. (choice) * &#x60;url&#x60;: URL for this ad hoc command. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this ad hoc command was created. (datetime) * &#x60;modified&#x60;: Timestamp when this ad hoc command was last modified. (datetime) * &#x60;name&#x60;: Name of this ad hoc command. (string) * &#x60;launch_type&#x60;:  (choice)     - &#x60;manual&#x60;: Manual     - &#x60;relaunch&#x60;: Relaunch     - &#x60;callback&#x60;: Callback     - &#x60;scheduled&#x60;: Scheduled     - &#x60;dependency&#x60;: Dependency     - &#x60;workflow&#x60;: Workflow     - &#x60;webhook&#x60;: Webhook     - &#x60;sync&#x60;: Sync     - &#x60;scm&#x60;: SCM Update * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled * &#x60;failed&#x60;:  (boolean) * &#x60;started&#x60;: The date and time the job was queued for starting. (datetime) * &#x60;finished&#x60;: The date and time the job finished execution. (datetime) * &#x60;canceled_on&#x60;: The date and time when the cancel request was sent. (datetime) * &#x60;elapsed&#x60;: Elapsed time in seconds that the job ran. (decimal) * &#x60;job_explanation&#x60;: A status field to indicate the state of the job if it wasn&amp;#39;t able to run and capture stdout (string) * &#x60;execution_node&#x60;: The node the job executed on. (string) * &#x60;controller_node&#x60;: The instance that managed the isolated execution environment. (string) * &#x60;job_type&#x60;:  (choice)     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;inventory&#x60;:  (id) * &#x60;limit&#x60;:  (string) * &#x60;credential&#x60;:  (id) * &#x60;module_name&#x60;:  (choice)     - &#x60;command&#x60;     - &#x60;shell&#x60;     - &#x60;yum&#x60;     - &#x60;apt&#x60;     - &#x60;apt_key&#x60;     - &#x60;apt_repository&#x60;     - &#x60;apt_rpm&#x60;     - &#x60;service&#x60;     - &#x60;group&#x60;     - &#x60;user&#x60;     - &#x60;mount&#x60;     - &#x60;ping&#x60;     - &#x60;selinux&#x60;     - &#x60;setup&#x60;     - &#x60;win_ping&#x60;     - &#x60;win_service&#x60;     - &#x60;win_updates&#x60;     - &#x60;win_group&#x60;     - &#x60;win_user&#x60; * &#x60;module_args&#x60;:  (string) * &#x60;forks&#x60;:  (integer) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;extra_vars&#x60;:  (string) * &#x60;become_enabled&#x60;:  (boolean) * &#x60;diff_mode&#x60;:  (boolean)    ## Sorting  To specify that ad hoc commands are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesAdHocCommandsListRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesAdHocCommandsList(ctx _context.Context, id string) ApiInventoriesInventoriesAdHocCommandsListRequest {
-	return ApiInventoriesInventoriesAdHocCommandsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesAdHocCommandsListExecute(r ApiInventoriesInventoriesAdHocCommandsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesAdHocCommandsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventoriesApiService) InventoriesInventoriesAdHocCommandsList(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesAdHocCommandsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -774,26 +305,22 @@ func (a *InventoriesApiService) InventoriesInventoriesAdHocCommandsListExecute(r
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesAdHocCommandsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/ad_hoc_commands/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/ad_hoc_commands/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -812,12 +339,12 @@ func (a *InventoriesApiService) InventoriesInventoriesAdHocCommandsListExecute(r
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -839,40 +366,19 @@ func (a *InventoriesApiService) InventoriesInventoriesAdHocCommandsListExecute(r
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesCopyCreateRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	data *InlineObject21
-}
-
-func (r ApiInventoriesInventoriesCopyCreateRequest) Data(data InlineObject21) ApiInventoriesInventoriesCopyCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInventoriesInventoriesCopyCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesCopyCreateExecute(r)
+// InventoriesInventoriesCopyCreateOpts Optional parameters for the method 'InventoriesInventoriesCopyCreate'
+type InventoriesInventoriesCopyCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * InventoriesInventoriesCopyCreate Method for InventoriesInventoriesCopyCreate
+InventoriesInventoriesCopyCreate Method for InventoriesInventoriesCopyCreate
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesCopyCreateRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesCopyCreate(ctx _context.Context, id string) ApiInventoriesInventoriesCopyCreateRequest {
-	return ApiInventoriesInventoriesCopyCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesCopyCreateExecute(r ApiInventoriesInventoriesCopyCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesCopyCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject21) - 
+*/
+func (a *InventoriesApiService) InventoriesInventoriesCopyCreate(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesCopyCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -881,13 +387,9 @@ func (a *InventoriesApiService) InventoriesInventoriesCopyCreateExecute(r ApiInv
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesCopyCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/copy/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/copy/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -911,13 +413,20 @@ func (a *InventoriesApiService) InventoriesInventoriesCopyCreateExecute(r ApiInv
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject21)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject21")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -939,50 +448,23 @@ func (a *InventoriesApiService) InventoriesInventoriesCopyCreateExecute(r ApiInv
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesCopyListRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventoriesInventoriesCopyListRequest) Page(page int32) ApiInventoriesInventoriesCopyListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventoriesInventoriesCopyListRequest) PageSize(pageSize int32) ApiInventoriesInventoriesCopyListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventoriesInventoriesCopyListRequest) Search(search string) ApiInventoriesInventoriesCopyListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventoriesInventoriesCopyListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesCopyListExecute(r)
+// InventoriesInventoriesCopyListOpts Optional parameters for the method 'InventoriesInventoriesCopyList'
+type InventoriesInventoriesCopyListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventoriesInventoriesCopyList Method for InventoriesInventoriesCopyList
+InventoriesInventoriesCopyList Method for InventoriesInventoriesCopyList
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesCopyListRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesCopyList(ctx _context.Context, id string) ApiInventoriesInventoriesCopyListRequest {
-	return ApiInventoriesInventoriesCopyListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesCopyListExecute(r ApiInventoriesInventoriesCopyListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesCopyListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventoriesApiService) InventoriesInventoriesCopyList(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesCopyListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -991,26 +473,22 @@ func (a *InventoriesApiService) InventoriesInventoriesCopyListExecute(r ApiInven
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesCopyList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/copy/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/copy/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1029,12 +507,12 @@ func (a *InventoriesApiService) InventoriesInventoriesCopyListExecute(r ApiInven
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1056,65 +534,19 @@ func (a *InventoriesApiService) InventoriesInventoriesCopyListExecute(r ApiInven
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesCreateRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	data *map[string]interface{}
-}
-
-func (r ApiInventoriesInventoriesCreateRequest) Data(data map[string]interface{}) ApiInventoriesInventoriesCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInventoriesInventoriesCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesCreateExecute(r)
+// InventoriesInventoriesCreateOpts Optional parameters for the method 'InventoriesInventoriesCreate'
+type InventoriesInventoriesCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * InventoriesInventoriesCreate  Create an Inventory
- * 
-Make a POST request to this resource with the following inventory
-fields to create a new inventory:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this inventory. (string, required)
-* `description`: Optional description of this inventory. (string, default=`""`)
-* `organization`: Organization containing this inventory. (id, required)
-* `kind`: Kind of inventory being represented. (choice)
-    - `""`: Hosts have a direct link to this inventory. (default)
-    - `smart`: Hosts for inventory generated using the host_filter property.
-* `host_filter`: Filter that will be applied to the hosts of this inventory. (string, default=`""`)
-* `variables`: Inventory variables in JSON or YAML format. (json, default=``)
-
-
-
-
-
-
-
-* `insights_credential`: Credentials to be used by hosts belonging to this inventory when accessing Red Hat Insights API. (id, default=``)
+InventoriesInventoriesCreate  Create an Inventory
+ Make a POST request to this resource with the following inventory fields to create a new inventory:          * &#x60;name&#x60;: Name of this inventory. (string, required) * &#x60;description&#x60;: Optional description of this inventory. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;: Organization containing this inventory. (id, required) * &#x60;kind&#x60;: Kind of inventory being represented. (choice)     - &#x60;\&quot;\&quot;&#x60;: Hosts have a direct link to this inventory. (default)     - &#x60;smart&#x60;: Hosts for inventory generated using the host_filter property. * &#x60;host_filter&#x60;: Filter that will be applied to the hosts of this inventory. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;variables&#x60;: Inventory variables in JSON or YAML format. (json, default&#x3D;&#x60;&#x60;)        * &#x60;insights_credential&#x60;: Credentials to be used by hosts belonging to this inventory when accessing Red Hat Insights API. (id, default&#x3D;&#x60;&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiInventoriesInventoriesCreateRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesCreate(ctx _context.Context) ApiInventoriesInventoriesCreateRequest {
-	return ApiInventoriesInventoriesCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesCreateExecute(r ApiInventoriesInventoriesCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *InventoriesApiService) InventoriesInventoriesCreate(ctx _context.Context, localVarOptionals *InventoriesInventoriesCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -1123,13 +555,8 @@ func (a *InventoriesApiService) InventoriesInventoriesCreateExecute(r ApiInvento
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -1152,13 +579,16 @@ func (a *InventoriesApiService) InventoriesInventoriesCreateExecute(r ApiInvento
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1180,42 +610,20 @@ func (a *InventoriesApiService) InventoriesInventoriesCreateExecute(r ApiInvento
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesDeleteRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	search *string
-}
-
-func (r ApiInventoriesInventoriesDeleteRequest) Search(search string) ApiInventoriesInventoriesDeleteRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventoriesInventoriesDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesDeleteExecute(r)
+// InventoriesInventoriesDeleteOpts Optional parameters for the method 'InventoriesInventoriesDelete'
+type InventoriesInventoriesDeleteOpts struct {
+    Search optional.String
 }
 
 /*
- * InventoriesInventoriesDelete  Delete an Inventory
- * 
-Make a DELETE request to this resource to delete this inventory.
+InventoriesInventoriesDelete  Delete an Inventory
+ Make a DELETE request to this resource to delete this inventory.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesDeleteRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesDelete(ctx _context.Context, id string) ApiInventoriesInventoriesDeleteRequest {
-	return ApiInventoriesInventoriesDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesDeleteExecute(r ApiInventoriesInventoriesDeleteRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesDeleteOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventoriesApiService) InventoriesInventoriesDelete(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesDeleteOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -1224,20 +632,16 @@ func (a *InventoriesApiService) InventoriesInventoriesDeleteExecute(r ApiInvento
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1256,12 +660,12 @@ func (a *InventoriesApiService) InventoriesInventoriesDeleteExecute(r ApiInvento
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1283,74 +687,20 @@ func (a *InventoriesApiService) InventoriesInventoriesDeleteExecute(r ApiInvento
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesGroupsCreateRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiInventoriesInventoriesGroupsCreateRequest) Data(data map[string]interface{}) ApiInventoriesInventoriesGroupsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInventoriesInventoriesGroupsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesGroupsCreateExecute(r)
+// InventoriesInventoriesGroupsCreateOpts Optional parameters for the method 'InventoriesInventoriesGroupsCreate'
+type InventoriesInventoriesGroupsCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * InventoriesInventoriesGroupsCreate  Create a Group for an Inventory
- * 
-Make a POST request to this resource with the following group
-fields to create a new group associated with this
-inventory.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this group. (string, required)
-* `description`: Optional description of this group. (string, default=`""`)
-
-* `variables`: Group variables in JSON or YAML format. (json, default=``)
-
-
-
-
-
-
-
-
-# Remove Inventory Groups:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-delete the associated group.
-
-    {
-        "id": 123,
-        "disassociate": true
-    }
+InventoriesInventoriesGroupsCreate  Create a Group for an Inventory
+ Make a POST request to this resource with the following group fields to create a new group associated with this inventory.          * &#x60;name&#x60;: Name of this group. (string, required) * &#x60;description&#x60;: Optional description of this group. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)  * &#x60;variables&#x60;: Group variables in JSON or YAML format. (json, default&#x3D;&#x60;&#x60;)         # Remove Inventory Groups:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to delete the associated group.      {         \&quot;id\&quot;: 123,         \&quot;disassociate\&quot;: true     }
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesGroupsCreateRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesGroupsCreate(ctx _context.Context, id string) ApiInventoriesInventoriesGroupsCreateRequest {
-	return ApiInventoriesInventoriesGroupsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesGroupsCreateExecute(r ApiInventoriesInventoriesGroupsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesGroupsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *InventoriesApiService) InventoriesInventoriesGroupsCreate(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesGroupsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -1359,13 +709,9 @@ func (a *InventoriesApiService) InventoriesInventoriesGroupsCreateExecute(r ApiI
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesGroupsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/groups/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/groups/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1389,13 +735,16 @@ func (a *InventoriesApiService) InventoriesInventoriesGroupsCreateExecute(r ApiI
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1417,126 +766,24 @@ func (a *InventoriesApiService) InventoriesInventoriesGroupsCreateExecute(r ApiI
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesGroupsListRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventoriesInventoriesGroupsListRequest) Page(page int32) ApiInventoriesInventoriesGroupsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventoriesInventoriesGroupsListRequest) PageSize(pageSize int32) ApiInventoriesInventoriesGroupsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventoriesInventoriesGroupsListRequest) Search(search string) ApiInventoriesInventoriesGroupsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventoriesInventoriesGroupsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesGroupsListExecute(r)
+// InventoriesInventoriesGroupsListOpts Optional parameters for the method 'InventoriesInventoriesGroupsList'
+type InventoriesInventoriesGroupsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventoriesInventoriesGroupsList  List Groups for an Inventory
- * 
-Make a GET request to this resource to retrieve a list of
-groups associated with the selected
-inventory.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of groups
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more group records.  
-
-## Results
-
-Each group data structure includes the following fields:
-
-* `id`: Database ID for this group. (integer)
-* `type`: Data type for this group. (choice)
-* `url`: URL for this group. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this group was created. (datetime)
-* `modified`: Timestamp when this group was last modified. (datetime)
-* `name`: Name of this group. (string)
-* `description`: Optional description of this group. (string)
-* `inventory`:  (id)
-* `variables`: Group variables in JSON or YAML format. (json)
-
-
-
-## Sorting
-
-To specify that groups are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InventoriesInventoriesGroupsList  List Groups for an Inventory
+ Make a GET request to this resource to retrieve a list of groups associated with the selected inventory.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of groups found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more group records.    ## Results  Each group data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this group. (integer) * &#x60;type&#x60;: Data type for this group. (choice) * &#x60;url&#x60;: URL for this group. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this group was created. (datetime) * &#x60;modified&#x60;: Timestamp when this group was last modified. (datetime) * &#x60;name&#x60;: Name of this group. (string) * &#x60;description&#x60;: Optional description of this group. (string) * &#x60;inventory&#x60;:  (id) * &#x60;variables&#x60;: Group variables in JSON or YAML format. (json)    ## Sorting  To specify that groups are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesGroupsListRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesGroupsList(ctx _context.Context, id string) ApiInventoriesInventoriesGroupsListRequest {
-	return ApiInventoriesInventoriesGroupsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesGroupsListExecute(r ApiInventoriesInventoriesGroupsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesGroupsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventoriesApiService) InventoriesInventoriesGroupsList(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesGroupsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1545,26 +792,22 @@ func (a *InventoriesApiService) InventoriesInventoriesGroupsListExecute(r ApiInv
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesGroupsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/groups/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/groups/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1583,12 +826,12 @@ func (a *InventoriesApiService) InventoriesInventoriesGroupsListExecute(r ApiInv
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1610,82 +853,20 @@ func (a *InventoriesApiService) InventoriesInventoriesGroupsListExecute(r ApiInv
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesHostsCreateRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiInventoriesInventoriesHostsCreateRequest) Data(data map[string]interface{}) ApiInventoriesInventoriesHostsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInventoriesInventoriesHostsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesHostsCreateExecute(r)
+// InventoriesInventoriesHostsCreateOpts Optional parameters for the method 'InventoriesInventoriesHostsCreate'
+type InventoriesInventoriesHostsCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * InventoriesInventoriesHostsCreate  Create a Host for an Inventory
- * 
-Make a POST request to this resource with the following host
-fields to create a new host associated with this
-inventory.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this host. (string, required)
-* `description`: Optional description of this host. (string, default=`""`)
-
-* `enabled`: Is this host online and available for running jobs? (boolean, default=`True`)
-* `instance_id`: The value used by the remote inventory source to uniquely identify the host (string, default=`""`)
-* `variables`: Host variables in JSON or YAML format. (json, default=``)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Remove Inventory Hosts:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-delete the associated host.
-
-    {
-        "id": 123,
-        "disassociate": true
-    }
+InventoriesInventoriesHostsCreate  Create a Host for an Inventory
+ Make a POST request to this resource with the following host fields to create a new host associated with this inventory.          * &#x60;name&#x60;: Name of this host. (string, required) * &#x60;description&#x60;: Optional description of this host. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)  * &#x60;enabled&#x60;: Is this host online and available for running jobs? (boolean, default&#x3D;&#x60;True&#x60;) * &#x60;instance_id&#x60;: The value used by the remote inventory source to uniquely identify the host (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;variables&#x60;: Host variables in JSON or YAML format. (json, default&#x3D;&#x60;&#x60;)               # Remove Inventory Hosts:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to delete the associated host.      {         \&quot;id\&quot;: 123,         \&quot;disassociate\&quot;: true     }
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesHostsCreateRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesHostsCreate(ctx _context.Context, id string) ApiInventoriesInventoriesHostsCreateRequest {
-	return ApiInventoriesInventoriesHostsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesHostsCreateExecute(r ApiInventoriesInventoriesHostsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesHostsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *InventoriesApiService) InventoriesInventoriesHostsCreate(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesHostsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -1694,13 +875,9 @@ func (a *InventoriesApiService) InventoriesInventoriesHostsCreateExecute(r ApiIn
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesHostsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/hosts/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/hosts/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1724,13 +901,16 @@ func (a *InventoriesApiService) InventoriesInventoriesHostsCreateExecute(r ApiIn
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1752,134 +932,24 @@ func (a *InventoriesApiService) InventoriesInventoriesHostsCreateExecute(r ApiIn
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesHostsListRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventoriesInventoriesHostsListRequest) Page(page int32) ApiInventoriesInventoriesHostsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventoriesInventoriesHostsListRequest) PageSize(pageSize int32) ApiInventoriesInventoriesHostsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventoriesInventoriesHostsListRequest) Search(search string) ApiInventoriesInventoriesHostsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventoriesInventoriesHostsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesHostsListExecute(r)
+// InventoriesInventoriesHostsListOpts Optional parameters for the method 'InventoriesInventoriesHostsList'
+type InventoriesInventoriesHostsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventoriesInventoriesHostsList  List Hosts for an Inventory
- * 
-Make a GET request to this resource to retrieve a list of
-hosts associated with the selected
-inventory.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of hosts
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more host records.  
-
-## Results
-
-Each host data structure includes the following fields:
-
-* `id`: Database ID for this host. (integer)
-* `type`: Data type for this host. (choice)
-* `url`: URL for this host. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this host was created. (datetime)
-* `modified`: Timestamp when this host was last modified. (datetime)
-* `name`: Name of this host. (string)
-* `description`: Optional description of this host. (string)
-* `inventory`:  (id)
-* `enabled`: Is this host online and available for running jobs? (boolean)
-* `instance_id`: The value used by the remote inventory source to uniquely identify the host (string)
-* `variables`: Host variables in JSON or YAML format. (json)
-* `has_active_failures`:  (field)
-* `has_inventory_sources`:  (field)
-* `last_job`:  (id)
-* `last_job_host_summary`:  (id)
-* `insights_system_id`: Red Hat Insights host unique identifier. (string)
-* `ansible_facts_modified`: The date and time ansible_facts was last modified. (datetime)
-
-
-
-## Sorting
-
-To specify that hosts are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InventoriesInventoriesHostsList  List Hosts for an Inventory
+ Make a GET request to this resource to retrieve a list of hosts associated with the selected inventory.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of hosts found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more host records.    ## Results  Each host data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this host. (integer) * &#x60;type&#x60;: Data type for this host. (choice) * &#x60;url&#x60;: URL for this host. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this host was created. (datetime) * &#x60;modified&#x60;: Timestamp when this host was last modified. (datetime) * &#x60;name&#x60;: Name of this host. (string) * &#x60;description&#x60;: Optional description of this host. (string) * &#x60;inventory&#x60;:  (id) * &#x60;enabled&#x60;: Is this host online and available for running jobs? (boolean) * &#x60;instance_id&#x60;: The value used by the remote inventory source to uniquely identify the host (string) * &#x60;variables&#x60;: Host variables in JSON or YAML format. (json) * &#x60;has_active_failures&#x60;:  (field) * &#x60;has_inventory_sources&#x60;:  (field) * &#x60;last_job&#x60;:  (id) * &#x60;last_job_host_summary&#x60;:  (id) * &#x60;insights_system_id&#x60;: Red Hat Insights host unique identifier. (string) * &#x60;ansible_facts_modified&#x60;: The date and time ansible_facts was last modified. (datetime)    ## Sorting  To specify that hosts are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesHostsListRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesHostsList(ctx _context.Context, id string) ApiInventoriesInventoriesHostsListRequest {
-	return ApiInventoriesInventoriesHostsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesHostsListExecute(r ApiInventoriesInventoriesHostsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesHostsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventoriesApiService) InventoriesInventoriesHostsList(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesHostsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1888,26 +958,22 @@ func (a *InventoriesApiService) InventoriesInventoriesHostsListExecute(r ApiInve
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesHostsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/hosts/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/hosts/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1926,12 +992,12 @@ func (a *InventoriesApiService) InventoriesInventoriesHostsListExecute(r ApiInve
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1953,88 +1019,20 @@ func (a *InventoriesApiService) InventoriesInventoriesHostsListExecute(r ApiInve
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesInstanceGroupsCreateRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiInventoriesInventoriesInstanceGroupsCreateRequest) Data(data map[string]interface{}) ApiInventoriesInventoriesInstanceGroupsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInventoriesInventoriesInstanceGroupsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesInstanceGroupsCreateExecute(r)
+// InventoriesInventoriesInstanceGroupsCreateOpts Optional parameters for the method 'InventoriesInventoriesInstanceGroupsCreate'
+type InventoriesInventoriesInstanceGroupsCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * InventoriesInventoriesInstanceGroupsCreate  Create an Instance Group for an Inventory
- * 
-Make a POST request to this resource with the following instance group
-fields to create a new instance group associated with this
-inventory.
-
-
-
-
-
-
-* `name`: Name of this instance group. (string, required)
-
-
-
-
-
-
-
-
-
-
-
-
-
-* `credential`:  (id, default=``)
-* `policy_instance_percentage`: Minimum percentage of all instances that will be automatically assigned to this group when new instances come online. (integer, default=`0`)
-* `policy_instance_minimum`: Static minimum number of Instances that will be automatically assign to this group when new instances come online. (integer, default=`0`)
-* `policy_instance_list`: List of exact-match Instances that will be assigned to this group (json, default=``)
-* `pod_spec_override`:  (string, default=`""`)
-
-
-
-
-
-
-
-
-
-# Add Instance Groups for an Inventory:
-
-Make a POST request to this resource with only an `id` field to associate an
-existing instance group with this inventory.
-
-# Remove Instance Groups from this Inventory:
-
-Make a POST request to this resource with `id` and `disassociate` fields to
-remove the instance group from this inventory
- without deleting the instance group.
+InventoriesInventoriesInstanceGroupsCreate  Create an Instance Group for an Inventory
+ Make a POST request to this resource with the following instance group fields to create a new instance group associated with this inventory.       * &#x60;name&#x60;: Name of this instance group. (string, required)              * &#x60;credential&#x60;:  (id, default&#x3D;&#x60;&#x60;) * &#x60;policy_instance_percentage&#x60;: Minimum percentage of all instances that will be automatically assigned to this group when new instances come online. (integer, default&#x3D;&#x60;0&#x60;) * &#x60;policy_instance_minimum&#x60;: Static minimum number of Instances that will be automatically assign to this group when new instances come online. (integer, default&#x3D;&#x60;0&#x60;) * &#x60;policy_instance_list&#x60;: List of exact-match Instances that will be assigned to this group (json, default&#x3D;&#x60;&#x60;) * &#x60;pod_spec_override&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)          # Add Instance Groups for an Inventory:  Make a POST request to this resource with only an &#x60;id&#x60; field to associate an existing instance group with this inventory.  # Remove Instance Groups from this Inventory:  Make a POST request to this resource with &#x60;id&#x60; and &#x60;disassociate&#x60; fields to remove the instance group from this inventory  without deleting the instance group.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesInstanceGroupsCreateRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesInstanceGroupsCreate(ctx _context.Context, id string) ApiInventoriesInventoriesInstanceGroupsCreateRequest {
-	return ApiInventoriesInventoriesInstanceGroupsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesInstanceGroupsCreateExecute(r ApiInventoriesInventoriesInstanceGroupsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesInstanceGroupsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *InventoriesApiService) InventoriesInventoriesInstanceGroupsCreate(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesInstanceGroupsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -2043,13 +1041,9 @@ func (a *InventoriesApiService) InventoriesInventoriesInstanceGroupsCreateExecut
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesInstanceGroupsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/instance_groups/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/instance_groups/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -2073,13 +1067,16 @@ func (a *InventoriesApiService) InventoriesInventoriesInstanceGroupsCreateExecut
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2101,139 +1098,24 @@ func (a *InventoriesApiService) InventoriesInventoriesInstanceGroupsCreateExecut
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesInstanceGroupsListRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventoriesInventoriesInstanceGroupsListRequest) Page(page int32) ApiInventoriesInventoriesInstanceGroupsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventoriesInventoriesInstanceGroupsListRequest) PageSize(pageSize int32) ApiInventoriesInventoriesInstanceGroupsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventoriesInventoriesInstanceGroupsListRequest) Search(search string) ApiInventoriesInventoriesInstanceGroupsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventoriesInventoriesInstanceGroupsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesInstanceGroupsListExecute(r)
+// InventoriesInventoriesInstanceGroupsListOpts Optional parameters for the method 'InventoriesInventoriesInstanceGroupsList'
+type InventoriesInventoriesInstanceGroupsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventoriesInventoriesInstanceGroupsList  List Instance Groups for an Inventory
- * 
-Make a GET request to this resource to retrieve a list of
-instance groups associated with the selected
-inventory.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of instance groups
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more instance group records.  
-
-## Results
-
-Each instance group data structure includes the following fields:
-
-* `id`: Database ID for this instance group. (integer)
-* `type`: Data type for this instance group. (choice)
-* `url`: URL for this instance group. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `name`: Name of this instance group. (string)
-* `created`: Timestamp when this instance group was created. (datetime)
-* `modified`: Timestamp when this instance group was last modified. (datetime)
-* `capacity`:  (field)
-* `committed_capacity`:  (field)
-* `consumed_capacity`:  (field)
-* `percent_capacity_remaining`:  (field)
-* `jobs_running`: Count of jobs in the running or waiting state that are targeted for this instance group (integer)
-* `jobs_total`: Count of all jobs that target this instance group (integer)
-* `instances`:  (field)
-* `controller`: Instance Group to remotely control this group. (id)
-* `is_controller`: Indicates whether instance group controls any other group (boolean)
-* `is_isolated`: Indicates whether instances in this group are isolated.Isolated groups have a designated controller group. (boolean)
-* `is_containerized`: Indicates whether instances in this group are containerized.Containerized groups have a designated Openshift or Kubernetes cluster. (boolean)
-* `credential`:  (id)
-* `policy_instance_percentage`: Minimum percentage of all instances that will be automatically assigned to this group when new instances come online. (integer)
-* `policy_instance_minimum`: Static minimum number of Instances that will be automatically assign to this group when new instances come online. (integer)
-* `policy_instance_list`: List of exact-match Instances that will be assigned to this group (json)
-* `pod_spec_override`:  (string)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-
-
-
-## Sorting
-
-To specify that instance groups are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InventoriesInventoriesInstanceGroupsList  List Instance Groups for an Inventory
+ Make a GET request to this resource to retrieve a list of instance groups associated with the selected inventory.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of instance groups found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more instance group records.    ## Results  Each instance group data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this instance group. (integer) * &#x60;type&#x60;: Data type for this instance group. (choice) * &#x60;url&#x60;: URL for this instance group. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;name&#x60;: Name of this instance group. (string) * &#x60;created&#x60;: Timestamp when this instance group was created. (datetime) * &#x60;modified&#x60;: Timestamp when this instance group was last modified. (datetime) * &#x60;capacity&#x60;:  (field) * &#x60;committed_capacity&#x60;:  (field) * &#x60;consumed_capacity&#x60;:  (field) * &#x60;percent_capacity_remaining&#x60;:  (field) * &#x60;jobs_running&#x60;: Count of jobs in the running or waiting state that are targeted for this instance group (integer) * &#x60;jobs_total&#x60;: Count of all jobs that target this instance group (integer) * &#x60;instances&#x60;:  (field) * &#x60;controller&#x60;: Instance Group to remotely control this group. (id) * &#x60;is_controller&#x60;: Indicates whether instance group controls any other group (boolean) * &#x60;is_isolated&#x60;: Indicates whether instances in this group are isolated.Isolated groups have a designated controller group. (boolean) * &#x60;is_containerized&#x60;: Indicates whether instances in this group are containerized.Containerized groups have a designated Openshift or Kubernetes cluster. (boolean) * &#x60;credential&#x60;:  (id) * &#x60;policy_instance_percentage&#x60;: Minimum percentage of all instances that will be automatically assigned to this group when new instances come online. (integer) * &#x60;policy_instance_minimum&#x60;: Static minimum number of Instances that will be automatically assign to this group when new instances come online. (integer) * &#x60;policy_instance_list&#x60;: List of exact-match Instances that will be assigned to this group (json) * &#x60;pod_spec_override&#x60;:  (string) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)    ## Sorting  To specify that instance groups are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesInstanceGroupsListRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesInstanceGroupsList(ctx _context.Context, id string) ApiInventoriesInventoriesInstanceGroupsListRequest {
-	return ApiInventoriesInventoriesInstanceGroupsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesInstanceGroupsListExecute(r ApiInventoriesInventoriesInstanceGroupsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesInstanceGroupsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventoriesApiService) InventoriesInventoriesInstanceGroupsList(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesInstanceGroupsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2242,26 +1124,22 @@ func (a *InventoriesApiService) InventoriesInventoriesInstanceGroupsListExecute(
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesInstanceGroupsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/instance_groups/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/instance_groups/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2280,12 +1158,12 @@ func (a *InventoriesApiService) InventoriesInventoriesInstanceGroupsListExecute(
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2307,91 +1185,20 @@ func (a *InventoriesApiService) InventoriesInventoriesInstanceGroupsListExecute(
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesInventorySourcesCreateRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiInventoriesInventoriesInventorySourcesCreateRequest) Data(data map[string]interface{}) ApiInventoriesInventoriesInventorySourcesCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInventoriesInventoriesInventorySourcesCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesInventorySourcesCreateExecute(r)
+// InventoriesInventoriesInventorySourcesCreateOpts Optional parameters for the method 'InventoriesInventoriesInventorySourcesCreate'
+type InventoriesInventoriesInventorySourcesCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * InventoriesInventoriesInventorySourcesCreate  Create an Inventory Source for an Inventory
- * 
-Make a POST request to this resource with the following inventory source
-fields to create a new inventory source associated with this
-inventory.
-
-
-
-
-
-
-
-
-
-* `name`: Name of this inventory source. (string, required)
-* `description`: Optional description of this inventory source. (string, default=`""`)
-* `source`:  (choice)
-    - `file`: File, Directory or Script
-    - `scm`: Sourced from a Project
-    - `ec2`: Amazon EC2
-    - `gce`: Google Compute Engine
-    - `azure_rm`: Microsoft Azure Resource Manager
-    - `vmware`: VMware vCenter
-    - `satellite6`: Red Hat Satellite 6
-    - `openstack`: OpenStack
-    - `rhv`: Red Hat Virtualization
-    - `tower`: Ansible Tower
-    - `custom`: Custom Script
-* `source_path`:  (string, default=`""`)
-* `source_script`:  (id, default=``)
-* `source_vars`: Inventory source variables in YAML or JSON format. (string, default=`""`)
-* `credential`: Cloud credential to use for inventory updates. (integer, default=`None`)
-* `enabled_var`: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &quot;foo.bar&quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&quot;foo&quot;, {}).get(&quot;bar&quot;, default) (string, default=`""`)
-* `enabled_value`: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var=&quot;status.power_state&quot;and enabled_value=&quot;powered_on&quot; with host variables:{   &quot;status&quot;: {     &quot;power_state&quot;: &quot;powered_on&quot;,     &quot;created&quot;: &quot;2018-02-01T08:00:00.000000Z:00&quot;,     &quot;healthy&quot;: true    },    &quot;name&quot;: &quot;foobar&quot;,    &quot;ip_address&quot;: &quot;192.168.2.1&quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string, default=`""`)
-* `host_filter`: Regex where only matching hosts will be imported into Tower. (string, default=`""`)
-* `overwrite`: Overwrite local groups and hosts from remote inventory source. (boolean, default=`False`)
-* `overwrite_vars`: Overwrite local variables from remote inventory source. (boolean, default=`False`)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string, default=`""`)
-* `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer, default=`0`)
-* `verbosity`:  (choice)
-    - `0`: 0 (WARNING)
-    - `1`: 1 (INFO) (default)
-    - `2`: 2 (DEBUG)
-
-
-
-
-
-* `update_on_launch`:  (boolean, default=`False`)
-* `update_cache_timeout`:  (integer, default=`0`)
-* `source_project`: Project containing inventory file used as source. (id, default=``)
-* `update_on_project_update`:  (boolean, default=`False`)
+InventoriesInventoriesInventorySourcesCreate  Create an Inventory Source for an Inventory
+ Make a POST request to this resource with the following inventory source fields to create a new inventory source associated with this inventory.          * &#x60;name&#x60;: Name of this inventory source. (string, required) * &#x60;description&#x60;: Optional description of this inventory source. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;source&#x60;:  (choice)     - &#x60;file&#x60;: File, Directory or Script     - &#x60;scm&#x60;: Sourced from a Project     - &#x60;ec2&#x60;: Amazon EC2     - &#x60;gce&#x60;: Google Compute Engine     - &#x60;azure_rm&#x60;: Microsoft Azure Resource Manager     - &#x60;vmware&#x60;: VMware vCenter     - &#x60;satellite6&#x60;: Red Hat Satellite 6     - &#x60;openstack&#x60;: OpenStack     - &#x60;rhv&#x60;: Red Hat Virtualization     - &#x60;tower&#x60;: Ansible Tower     - &#x60;custom&#x60;: Custom Script * &#x60;source_path&#x60;:  (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;source_script&#x60;:  (id, default&#x3D;&#x60;&#x60;) * &#x60;source_vars&#x60;: Inventory source variables in YAML or JSON format. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;credential&#x60;: Cloud credential to use for inventory updates. (integer, default&#x3D;&#x60;None&#x60;) * &#x60;enabled_var&#x60;: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &amp;quot;foo.bar&amp;quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&amp;quot;foo&amp;quot;, {}).get(&amp;quot;bar&amp;quot;, default) (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;enabled_value&#x60;: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var&#x3D;&amp;quot;status.power_state&amp;quot;and enabled_value&#x3D;&amp;quot;powered_on&amp;quot; with host variables:{   &amp;quot;status&amp;quot;: {     &amp;quot;power_state&amp;quot;: &amp;quot;powered_on&amp;quot;,     &amp;quot;created&amp;quot;: &amp;quot;2018-02-01T08:00:00.000000Z:00&amp;quot;,     &amp;quot;healthy&amp;quot;: true    },    &amp;quot;name&amp;quot;: &amp;quot;foobar&amp;quot;,    &amp;quot;ip_address&amp;quot;: &amp;quot;192.168.2.1&amp;quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;host_filter&#x60;: Regex where only matching hosts will be imported into Tower. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;overwrite&#x60;: Overwrite local groups and hosts from remote inventory source. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;overwrite_vars&#x60;: Overwrite local variables from remote inventory source. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;timeout&#x60;: The amount of time (in seconds) to run before the task is canceled. (integer, default&#x3D;&#x60;0&#x60;) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (WARNING)     - &#x60;1&#x60;: 1 (INFO) (default)     - &#x60;2&#x60;: 2 (DEBUG)      * &#x60;update_on_launch&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;update_cache_timeout&#x60;:  (integer, default&#x3D;&#x60;0&#x60;) * &#x60;source_project&#x60;: Project containing inventory file used as source. (id, default&#x3D;&#x60;&#x60;) * &#x60;update_on_project_update&#x60;:  (boolean, default&#x3D;&#x60;False&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesInventorySourcesCreateRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesInventorySourcesCreate(ctx _context.Context, id string) ApiInventoriesInventoriesInventorySourcesCreateRequest {
-	return ApiInventoriesInventoriesInventorySourcesCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesInventorySourcesCreateExecute(r ApiInventoriesInventoriesInventorySourcesCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesInventorySourcesCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *InventoriesApiService) InventoriesInventoriesInventorySourcesCreate(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesInventorySourcesCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -2400,13 +1207,9 @@ func (a *InventoriesApiService) InventoriesInventoriesInventorySourcesCreateExec
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesInventorySourcesCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/inventory_sources/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/inventory_sources/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -2430,13 +1233,16 @@ func (a *InventoriesApiService) InventoriesInventoriesInventorySourcesCreateExec
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2458,172 +1264,24 @@ func (a *InventoriesApiService) InventoriesInventoriesInventorySourcesCreateExec
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesInventorySourcesListRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventoriesInventoriesInventorySourcesListRequest) Page(page int32) ApiInventoriesInventoriesInventorySourcesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventoriesInventoriesInventorySourcesListRequest) PageSize(pageSize int32) ApiInventoriesInventoriesInventorySourcesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventoriesInventoriesInventorySourcesListRequest) Search(search string) ApiInventoriesInventoriesInventorySourcesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventoriesInventoriesInventorySourcesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesInventorySourcesListExecute(r)
+// InventoriesInventoriesInventorySourcesListOpts Optional parameters for the method 'InventoriesInventoriesInventorySourcesList'
+type InventoriesInventoriesInventorySourcesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventoriesInventoriesInventorySourcesList  List Inventory Sources for an Inventory
- * 
-Make a GET request to this resource to retrieve a list of
-inventory sources associated with the selected
-inventory.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of inventory sources
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more inventory source records.  
-
-## Results
-
-Each inventory source data structure includes the following fields:
-
-* `id`: Database ID for this inventory source. (integer)
-* `type`: Data type for this inventory source. (choice)
-* `url`: URL for this inventory source. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this inventory source was created. (datetime)
-* `modified`: Timestamp when this inventory source was last modified. (datetime)
-* `name`: Name of this inventory source. (string)
-* `description`: Optional description of this inventory source. (string)
-* `source`:  (choice)
-    - `file`: File, Directory or Script
-    - `scm`: Sourced from a Project
-    - `ec2`: Amazon EC2
-    - `gce`: Google Compute Engine
-    - `azure_rm`: Microsoft Azure Resource Manager
-    - `vmware`: VMware vCenter
-    - `satellite6`: Red Hat Satellite 6
-    - `openstack`: OpenStack
-    - `rhv`: Red Hat Virtualization
-    - `tower`: Ansible Tower
-    - `custom`: Custom Script
-* `source_path`:  (string)
-* `source_script`:  (id)
-* `source_vars`: Inventory source variables in YAML or JSON format. (string)
-* `credential`: Cloud credential to use for inventory updates. (integer)
-* `enabled_var`: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &quot;foo.bar&quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&quot;foo&quot;, {}).get(&quot;bar&quot;, default) (string)
-* `enabled_value`: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var=&quot;status.power_state&quot;and enabled_value=&quot;powered_on&quot; with host variables:{   &quot;status&quot;: {     &quot;power_state&quot;: &quot;powered_on&quot;,     &quot;created&quot;: &quot;2018-02-01T08:00:00.000000Z:00&quot;,     &quot;healthy&quot;: true    },    &quot;name&quot;: &quot;foobar&quot;,    &quot;ip_address&quot;: &quot;192.168.2.1&quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string)
-* `host_filter`: Regex where only matching hosts will be imported into Tower. (string)
-* `overwrite`: Overwrite local groups and hosts from remote inventory source. (boolean)
-* `overwrite_vars`: Overwrite local variables from remote inventory source. (boolean)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string)
-* `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer)
-* `verbosity`:  (choice)
-    - `0`: 0 (WARNING)
-    - `1`: 1 (INFO)
-    - `2`: 2 (DEBUG)
-* `last_job_run`:  (datetime)
-* `last_job_failed`:  (boolean)
-* `next_job_run`:  (datetime)
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-    - `never updated`: Never Updated
-    - `none`: No External Source
-* `inventory`:  (id)
-* `update_on_launch`:  (boolean)
-* `update_cache_timeout`:  (integer)
-* `source_project`: Project containing inventory file used as source. (id)
-* `update_on_project_update`:  (boolean)
-* `last_update_failed`:  (boolean)
-* `last_updated`:  (datetime)
-
-
-
-## Sorting
-
-To specify that inventory sources are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InventoriesInventoriesInventorySourcesList  List Inventory Sources for an Inventory
+ Make a GET request to this resource to retrieve a list of inventory sources associated with the selected inventory.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of inventory sources found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more inventory source records.    ## Results  Each inventory source data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this inventory source. (integer) * &#x60;type&#x60;: Data type for this inventory source. (choice) * &#x60;url&#x60;: URL for this inventory source. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this inventory source was created. (datetime) * &#x60;modified&#x60;: Timestamp when this inventory source was last modified. (datetime) * &#x60;name&#x60;: Name of this inventory source. (string) * &#x60;description&#x60;: Optional description of this inventory source. (string) * &#x60;source&#x60;:  (choice)     - &#x60;file&#x60;: File, Directory or Script     - &#x60;scm&#x60;: Sourced from a Project     - &#x60;ec2&#x60;: Amazon EC2     - &#x60;gce&#x60;: Google Compute Engine     - &#x60;azure_rm&#x60;: Microsoft Azure Resource Manager     - &#x60;vmware&#x60;: VMware vCenter     - &#x60;satellite6&#x60;: Red Hat Satellite 6     - &#x60;openstack&#x60;: OpenStack     - &#x60;rhv&#x60;: Red Hat Virtualization     - &#x60;tower&#x60;: Ansible Tower     - &#x60;custom&#x60;: Custom Script * &#x60;source_path&#x60;:  (string) * &#x60;source_script&#x60;:  (id) * &#x60;source_vars&#x60;: Inventory source variables in YAML or JSON format. (string) * &#x60;credential&#x60;: Cloud credential to use for inventory updates. (integer) * &#x60;enabled_var&#x60;: Retrieve the enabled state from the given dict of host variables. The enabled variable may be specified as &amp;quot;foo.bar&amp;quot;, in which case the lookup will traverse into nested dicts, equivalent to: from_dict.get(&amp;quot;foo&amp;quot;, {}).get(&amp;quot;bar&amp;quot;, default) (string) * &#x60;enabled_value&#x60;: Only used when enabled_var is set. Value when the host is considered enabled. For example if enabled_var&#x3D;&amp;quot;status.power_state&amp;quot;and enabled_value&#x3D;&amp;quot;powered_on&amp;quot; with host variables:{   &amp;quot;status&amp;quot;: {     &amp;quot;power_state&amp;quot;: &amp;quot;powered_on&amp;quot;,     &amp;quot;created&amp;quot;: &amp;quot;2018-02-01T08:00:00.000000Z:00&amp;quot;,     &amp;quot;healthy&amp;quot;: true    },    &amp;quot;name&amp;quot;: &amp;quot;foobar&amp;quot;,    &amp;quot;ip_address&amp;quot;: &amp;quot;192.168.2.1&amp;quot;}The host would be marked enabled. If power_state where any value other than powered_on then the host would be disabled when imported into Tower. If the key is not found then the host will be enabled (string) * &#x60;host_filter&#x60;: Regex where only matching hosts will be imported into Tower. (string) * &#x60;overwrite&#x60;: Overwrite local groups and hosts from remote inventory source. (boolean) * &#x60;overwrite_vars&#x60;: Overwrite local variables from remote inventory source. (boolean) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string) * &#x60;timeout&#x60;: The amount of time (in seconds) to run before the task is canceled. (integer) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (WARNING)     - &#x60;1&#x60;: 1 (INFO)     - &#x60;2&#x60;: 2 (DEBUG) * &#x60;last_job_run&#x60;:  (datetime) * &#x60;last_job_failed&#x60;:  (boolean) * &#x60;next_job_run&#x60;:  (datetime) * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled     - &#x60;never updated&#x60;: Never Updated     - &#x60;none&#x60;: No External Source * &#x60;inventory&#x60;:  (id) * &#x60;update_on_launch&#x60;:  (boolean) * &#x60;update_cache_timeout&#x60;:  (integer) * &#x60;source_project&#x60;: Project containing inventory file used as source. (id) * &#x60;update_on_project_update&#x60;:  (boolean) * &#x60;last_update_failed&#x60;:  (boolean) * &#x60;last_updated&#x60;:  (datetime)    ## Sorting  To specify that inventory sources are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesInventorySourcesListRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesInventorySourcesList(ctx _context.Context, id string) ApiInventoriesInventoriesInventorySourcesListRequest {
-	return ApiInventoriesInventoriesInventorySourcesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesInventorySourcesListExecute(r ApiInventoriesInventoriesInventorySourcesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesInventorySourcesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventoriesApiService) InventoriesInventoriesInventorySourcesList(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesInventorySourcesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2632,26 +1290,22 @@ func (a *InventoriesApiService) InventoriesInventoriesInventorySourcesListExecut
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesInventorySourcesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/inventory_sources/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/inventory_sources/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2670,12 +1324,12 @@ func (a *InventoriesApiService) InventoriesInventoriesInventorySourcesListExecut
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2697,183 +1351,24 @@ func (a *InventoriesApiService) InventoriesInventoriesInventorySourcesListExecut
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesJobTemplatesListRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventoriesInventoriesJobTemplatesListRequest) Page(page int32) ApiInventoriesInventoriesJobTemplatesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventoriesInventoriesJobTemplatesListRequest) PageSize(pageSize int32) ApiInventoriesInventoriesJobTemplatesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventoriesInventoriesJobTemplatesListRequest) Search(search string) ApiInventoriesInventoriesJobTemplatesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventoriesInventoriesJobTemplatesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesJobTemplatesListExecute(r)
+// InventoriesInventoriesJobTemplatesListOpts Optional parameters for the method 'InventoriesInventoriesJobTemplatesList'
+type InventoriesInventoriesJobTemplatesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventoriesInventoriesJobTemplatesList  List Job Templates for an Inventory
- * 
-Make a GET request to this resource to retrieve a list of
-job templates associated with the selected
-inventory.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of job templates
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more job template records.  
-
-## Results
-
-Each job template data structure includes the following fields:
-
-* `id`: Database ID for this job template. (integer)
-* `type`: Data type for this job template. (choice)
-* `url`: URL for this job template. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this job template was created. (datetime)
-* `modified`: Timestamp when this job template was last modified. (datetime)
-* `name`: Name of this job template. (string)
-* `description`: Optional description of this job template. (string)
-* `job_type`:  (choice)
-    - `run`: Run
-    - `check`: Check
-* `inventory`:  (id)
-* `project`:  (id)
-* `playbook`:  (string)
-* `scm_branch`: Branch to use in job run. Project default used if blank. Only allowed if project allow_override field is set to true. (string)
-* `forks`:  (integer)
-* `limit`:  (string)
-* `verbosity`:  (choice)
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `extra_vars`:  (json)
-* `job_tags`:  (string)
-* `force_handlers`:  (boolean)
-* `skip_tags`:  (string)
-* `start_at_task`:  (string)
-* `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer)
-* `use_fact_cache`: If enabled, Tower will act as an Ansible Fact Cache Plugin; persisting facts at the end of a playbook run to the database and caching facts for use by Ansible. (boolean)
-* `organization`: The organization used to determine access to this template. (id)
-* `last_job_run`:  (datetime)
-* `last_job_failed`:  (boolean)
-* `next_job_run`:  (datetime)
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-    - `never updated`: Never Updated
-* `host_config_key`:  (string)
-* `ask_scm_branch_on_launch`:  (boolean)
-* `ask_diff_mode_on_launch`:  (boolean)
-* `ask_variables_on_launch`:  (boolean)
-* `ask_limit_on_launch`:  (boolean)
-* `ask_tags_on_launch`:  (boolean)
-* `ask_skip_tags_on_launch`:  (boolean)
-* `ask_job_type_on_launch`:  (boolean)
-* `ask_verbosity_on_launch`:  (boolean)
-* `ask_inventory_on_launch`:  (boolean)
-* `ask_credential_on_launch`:  (boolean)
-* `survey_enabled`:  (boolean)
-* `become_enabled`:  (boolean)
-* `diff_mode`: If enabled, textual changes made to any templated files on the host are shown in the standard output (boolean)
-* `allow_simultaneous`:  (boolean)
-* `custom_virtualenv`: Local absolute file path containing a custom Python virtualenv to use (string)
-* `job_slice_count`: The number of jobs to slice into at runtime. Will cause the Job Template to launch a workflow if value is greater than 1. (integer)
-* `webhook_service`: Service that webhook requests will be accepted from (choice)
-    - `""`: ---------
-    - `github`: GitHub
-    - `gitlab`: GitLab
-* `webhook_credential`: Personal Access Token for posting back the status to the service API (id)
-
-
-
-## Sorting
-
-To specify that job templates are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InventoriesInventoriesJobTemplatesList  List Job Templates for an Inventory
+ Make a GET request to this resource to retrieve a list of job templates associated with the selected inventory.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of job templates found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more job template records.    ## Results  Each job template data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this job template. (integer) * &#x60;type&#x60;: Data type for this job template. (choice) * &#x60;url&#x60;: URL for this job template. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this job template was created. (datetime) * &#x60;modified&#x60;: Timestamp when this job template was last modified. (datetime) * &#x60;name&#x60;: Name of this job template. (string) * &#x60;description&#x60;: Optional description of this job template. (string) * &#x60;job_type&#x60;:  (choice)     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check * &#x60;inventory&#x60;:  (id) * &#x60;project&#x60;:  (id) * &#x60;playbook&#x60;:  (string) * &#x60;scm_branch&#x60;: Branch to use in job run. Project default used if blank. Only allowed if project allow_override field is set to true. (string) * &#x60;forks&#x60;:  (integer) * &#x60;limit&#x60;:  (string) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;extra_vars&#x60;:  (json) * &#x60;job_tags&#x60;:  (string) * &#x60;force_handlers&#x60;:  (boolean) * &#x60;skip_tags&#x60;:  (string) * &#x60;start_at_task&#x60;:  (string) * &#x60;timeout&#x60;: The amount of time (in seconds) to run before the task is canceled. (integer) * &#x60;use_fact_cache&#x60;: If enabled, Tower will act as an Ansible Fact Cache Plugin; persisting facts at the end of a playbook run to the database and caching facts for use by Ansible. (boolean) * &#x60;organization&#x60;: The organization used to determine access to this template. (id) * &#x60;last_job_run&#x60;:  (datetime) * &#x60;last_job_failed&#x60;:  (boolean) * &#x60;next_job_run&#x60;:  (datetime) * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled     - &#x60;never updated&#x60;: Never Updated * &#x60;host_config_key&#x60;:  (string) * &#x60;ask_scm_branch_on_launch&#x60;:  (boolean) * &#x60;ask_diff_mode_on_launch&#x60;:  (boolean) * &#x60;ask_variables_on_launch&#x60;:  (boolean) * &#x60;ask_limit_on_launch&#x60;:  (boolean) * &#x60;ask_tags_on_launch&#x60;:  (boolean) * &#x60;ask_skip_tags_on_launch&#x60;:  (boolean) * &#x60;ask_job_type_on_launch&#x60;:  (boolean) * &#x60;ask_verbosity_on_launch&#x60;:  (boolean) * &#x60;ask_inventory_on_launch&#x60;:  (boolean) * &#x60;ask_credential_on_launch&#x60;:  (boolean) * &#x60;survey_enabled&#x60;:  (boolean) * &#x60;become_enabled&#x60;:  (boolean) * &#x60;diff_mode&#x60;: If enabled, textual changes made to any templated files on the host are shown in the standard output (boolean) * &#x60;allow_simultaneous&#x60;:  (boolean) * &#x60;custom_virtualenv&#x60;: Local absolute file path containing a custom Python virtualenv to use (string) * &#x60;job_slice_count&#x60;: The number of jobs to slice into at runtime. Will cause the Job Template to launch a workflow if value is greater than 1. (integer) * &#x60;webhook_service&#x60;: Service that webhook requests will be accepted from (choice)     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;github&#x60;: GitHub     - &#x60;gitlab&#x60;: GitLab * &#x60;webhook_credential&#x60;: Personal Access Token for posting back the status to the service API (id)    ## Sorting  To specify that job templates are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesJobTemplatesListRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesJobTemplatesList(ctx _context.Context, id string) ApiInventoriesInventoriesJobTemplatesListRequest {
-	return ApiInventoriesInventoriesJobTemplatesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesJobTemplatesListExecute(r ApiInventoriesInventoriesJobTemplatesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesJobTemplatesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventoriesApiService) InventoriesInventoriesJobTemplatesList(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesJobTemplatesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2882,26 +1377,22 @@ func (a *InventoriesApiService) InventoriesInventoriesJobTemplatesListExecute(r 
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesJobTemplatesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/job_templates/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/job_templates/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2920,12 +1411,12 @@ func (a *InventoriesApiService) InventoriesInventoriesJobTemplatesListExecute(r 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2947,135 +1438,23 @@ func (a *InventoriesApiService) InventoriesInventoriesJobTemplatesListExecute(r 
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesListRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventoriesInventoriesListRequest) Page(page int32) ApiInventoriesInventoriesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventoriesInventoriesListRequest) PageSize(pageSize int32) ApiInventoriesInventoriesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventoriesInventoriesListRequest) Search(search string) ApiInventoriesInventoriesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventoriesInventoriesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesListExecute(r)
+// InventoriesInventoriesListOpts Optional parameters for the method 'InventoriesInventoriesList'
+type InventoriesInventoriesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventoriesInventoriesList  List Inventories
- * 
-Make a GET request to this resource to retrieve the list of
-inventories.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of inventories
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more inventory records.  
-
-## Results
-
-Each inventory data structure includes the following fields:
-
-* `id`: Database ID for this inventory. (integer)
-* `type`: Data type for this inventory. (choice)
-* `url`: URL for this inventory. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this inventory was created. (datetime)
-* `modified`: Timestamp when this inventory was last modified. (datetime)
-* `name`: Name of this inventory. (string)
-* `description`: Optional description of this inventory. (string)
-* `organization`: Organization containing this inventory. (id)
-* `kind`: Kind of inventory being represented. (choice)
-    - `""`: Hosts have a direct link to this inventory.
-    - `smart`: Hosts for inventory generated using the host_filter property.
-* `host_filter`: Filter that will be applied to the hosts of this inventory. (string)
-* `variables`: Inventory variables in JSON or YAML format. (json)
-* `has_active_failures`: This field is deprecated and will be removed in a future release. Flag indicating whether any hosts in this inventory have failed. (boolean)
-* `total_hosts`: This field is deprecated and will be removed in a future release. Total number of hosts in this inventory. (integer)
-* `hosts_with_active_failures`: This field is deprecated and will be removed in a future release. Number of hosts in this inventory with active failures. (integer)
-* `total_groups`: This field is deprecated and will be removed in a future release. Total number of groups in this inventory. (integer)
-* `has_inventory_sources`: This field is deprecated and will be removed in a future release. Flag indicating whether this inventory has any external inventory sources. (boolean)
-* `total_inventory_sources`: Total number of external inventory sources configured within this inventory. (integer)
-* `inventory_sources_with_failures`: Number of external inventory sources in this inventory with failures. (integer)
-* `insights_credential`: Credentials to be used by hosts belonging to this inventory when accessing Red Hat Insights API. (id)
-* `pending_deletion`: Flag indicating the inventory is being deleted. (boolean)
-
-
-
-## Sorting
-
-To specify that inventories are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InventoriesInventoriesList  List Inventories
+ Make a GET request to this resource to retrieve the list of inventories.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of inventories found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more inventory records.    ## Results  Each inventory data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this inventory. (integer) * &#x60;type&#x60;: Data type for this inventory. (choice) * &#x60;url&#x60;: URL for this inventory. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this inventory was created. (datetime) * &#x60;modified&#x60;: Timestamp when this inventory was last modified. (datetime) * &#x60;name&#x60;: Name of this inventory. (string) * &#x60;description&#x60;: Optional description of this inventory. (string) * &#x60;organization&#x60;: Organization containing this inventory. (id) * &#x60;kind&#x60;: Kind of inventory being represented. (choice)     - &#x60;\&quot;\&quot;&#x60;: Hosts have a direct link to this inventory.     - &#x60;smart&#x60;: Hosts for inventory generated using the host_filter property. * &#x60;host_filter&#x60;: Filter that will be applied to the hosts of this inventory. (string) * &#x60;variables&#x60;: Inventory variables in JSON or YAML format. (json) * &#x60;has_active_failures&#x60;: This field is deprecated and will be removed in a future release. Flag indicating whether any hosts in this inventory have failed. (boolean) * &#x60;total_hosts&#x60;: This field is deprecated and will be removed in a future release. Total number of hosts in this inventory. (integer) * &#x60;hosts_with_active_failures&#x60;: This field is deprecated and will be removed in a future release. Number of hosts in this inventory with active failures. (integer) * &#x60;total_groups&#x60;: This field is deprecated and will be removed in a future release. Total number of groups in this inventory. (integer) * &#x60;has_inventory_sources&#x60;: This field is deprecated and will be removed in a future release. Flag indicating whether this inventory has any external inventory sources. (boolean) * &#x60;total_inventory_sources&#x60;: Total number of external inventory sources configured within this inventory. (integer) * &#x60;inventory_sources_with_failures&#x60;: Number of external inventory sources in this inventory with failures. (integer) * &#x60;insights_credential&#x60;: Credentials to be used by hosts belonging to this inventory when accessing Red Hat Insights API. (id) * &#x60;pending_deletion&#x60;: Flag indicating the inventory is being deleted. (boolean)    ## Sorting  To specify that inventories are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiInventoriesInventoriesListRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesList(ctx _context.Context) ApiInventoriesInventoriesListRequest {
-	return ApiInventoriesInventoriesListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesListExecute(r ApiInventoriesInventoriesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventoriesApiService) InventoriesInventoriesList(ctx _context.Context, localVarOptionals *InventoriesInventoriesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -3084,25 +1463,20 @@ func (a *InventoriesApiService) InventoriesInventoriesListExecute(r ApiInventori
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -3121,12 +1495,12 @@ func (a *InventoriesApiService) InventoriesInventoriesListExecute(r ApiInventori
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3148,122 +1522,24 @@ func (a *InventoriesApiService) InventoriesInventoriesListExecute(r ApiInventori
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesObjectRolesListRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventoriesInventoriesObjectRolesListRequest) Page(page int32) ApiInventoriesInventoriesObjectRolesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventoriesInventoriesObjectRolesListRequest) PageSize(pageSize int32) ApiInventoriesInventoriesObjectRolesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventoriesInventoriesObjectRolesListRequest) Search(search string) ApiInventoriesInventoriesObjectRolesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventoriesInventoriesObjectRolesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesObjectRolesListExecute(r)
+// InventoriesInventoriesObjectRolesListOpts Optional parameters for the method 'InventoriesInventoriesObjectRolesList'
+type InventoriesInventoriesObjectRolesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventoriesInventoriesObjectRolesList  List Roles for an Inventory
- * 
-Make a GET request to this resource to retrieve a list of
-roles associated with the selected
-inventory.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of roles
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more role records.  
-
-## Results
-
-Each role data structure includes the following fields:
-
-* `id`: Database ID for this role. (integer)
-* `type`: Data type for this role. (choice)
-* `url`: URL for this role. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `name`: Name of this role. (field)
-* `description`: Optional description of this role. (field)
-
-
-
-## Sorting
-
-To specify that roles are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InventoriesInventoriesObjectRolesList  List Roles for an Inventory
+ Make a GET request to this resource to retrieve a list of roles associated with the selected inventory.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of roles found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more role records.    ## Results  Each role data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this role. (integer) * &#x60;type&#x60;: Data type for this role. (choice) * &#x60;url&#x60;: URL for this role. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;name&#x60;: Name of this role. (field) * &#x60;description&#x60;: Optional description of this role. (field)    ## Sorting  To specify that roles are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesObjectRolesListRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesObjectRolesList(ctx _context.Context, id string) ApiInventoriesInventoriesObjectRolesListRequest {
-	return ApiInventoriesInventoriesObjectRolesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesObjectRolesListExecute(r ApiInventoriesInventoriesObjectRolesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesObjectRolesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventoriesApiService) InventoriesInventoriesObjectRolesList(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesObjectRolesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -3272,26 +1548,22 @@ func (a *InventoriesApiService) InventoriesInventoriesObjectRolesListExecute(r A
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesObjectRolesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/object_roles/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/object_roles/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -3310,12 +1582,12 @@ func (a *InventoriesApiService) InventoriesInventoriesObjectRolesListExecute(r A
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3337,83 +1609,22 @@ func (a *InventoriesApiService) InventoriesInventoriesObjectRolesListExecute(r A
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesPartialUpdateRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	search *string
-	data *map[string]interface{}
-}
-
-func (r ApiInventoriesInventoriesPartialUpdateRequest) Search(search string) ApiInventoriesInventoriesPartialUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiInventoriesInventoriesPartialUpdateRequest) Data(data map[string]interface{}) ApiInventoriesInventoriesPartialUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInventoriesInventoriesPartialUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesPartialUpdateExecute(r)
+// InventoriesInventoriesPartialUpdateOpts Optional parameters for the method 'InventoriesInventoriesPartialUpdate'
+type InventoriesInventoriesPartialUpdateOpts struct {
+    Search optional.String
+    Data optional.Map[string]interface{}
 }
 
 /*
- * InventoriesInventoriesPartialUpdate  Update an Inventory
- * 
-Make a PUT or PATCH request to this resource to update this
-inventory.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this inventory. (string, required)
-* `description`: Optional description of this inventory. (string, default=`""`)
-* `organization`: Organization containing this inventory. (id, required)
-* `kind`: Kind of inventory being represented. (choice)
-    - `""`: Hosts have a direct link to this inventory. (default)
-    - `smart`: Hosts for inventory generated using the host_filter property.
-* `host_filter`: Filter that will be applied to the hosts of this inventory. (string, default=`""`)
-* `variables`: Inventory variables in JSON or YAML format. (json, default=``)
-
-
-
-
-
-
-
-* `insights_credential`: Credentials to be used by hosts belonging to this inventory when accessing Red Hat Insights API. (id, default=``)
-
-
-
-
-
-
-
-
-
-For a PATCH request, include only the fields that are being modified.
+InventoriesInventoriesPartialUpdate  Update an Inventory
+ Make a PUT or PATCH request to this resource to update this inventory.  The following fields may be modified:          * &#x60;name&#x60;: Name of this inventory. (string, required) * &#x60;description&#x60;: Optional description of this inventory. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;: Organization containing this inventory. (id, required) * &#x60;kind&#x60;: Kind of inventory being represented. (choice)     - &#x60;\&quot;\&quot;&#x60;: Hosts have a direct link to this inventory. (default)     - &#x60;smart&#x60;: Hosts for inventory generated using the host_filter property. * &#x60;host_filter&#x60;: Filter that will be applied to the hosts of this inventory. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;variables&#x60;: Inventory variables in JSON or YAML format. (json, default&#x3D;&#x60;&#x60;)        * &#x60;insights_credential&#x60;: Credentials to be used by hosts belonging to this inventory when accessing Red Hat Insights API. (id, default&#x3D;&#x60;&#x60;)          For a PATCH request, include only the fields that are being modified.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesPartialUpdateRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesPartialUpdate(ctx _context.Context, id string) ApiInventoriesInventoriesPartialUpdateRequest {
-	return ApiInventoriesInventoriesPartialUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesPartialUpdateExecute(r ApiInventoriesInventoriesPartialUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesPartialUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *InventoriesApiService) InventoriesInventoriesPartialUpdate(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesPartialUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPatch
 		localVarPostBody     interface{}
@@ -3422,20 +1633,16 @@ func (a *InventoriesApiService) InventoriesInventoriesPartialUpdateExecute(r Api
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesPartialUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -3455,13 +1662,16 @@ func (a *InventoriesApiService) InventoriesInventoriesPartialUpdateExecute(r Api
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3483,68 +1693,20 @@ func (a *InventoriesApiService) InventoriesInventoriesPartialUpdateExecute(r Api
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesReadRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	search *string
-}
-
-func (r ApiInventoriesInventoriesReadRequest) Search(search string) ApiInventoriesInventoriesReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventoriesInventoriesReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesReadExecute(r)
+// InventoriesInventoriesReadOpts Optional parameters for the method 'InventoriesInventoriesRead'
+type InventoriesInventoriesReadOpts struct {
+    Search optional.String
 }
 
 /*
- * InventoriesInventoriesRead  Retrieve an Inventory
- * 
-Make GET request to this resource to retrieve a single inventory
-record containing the following fields:
-
-* `id`: Database ID for this inventory. (integer)
-* `type`: Data type for this inventory. (choice)
-* `url`: URL for this inventory. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this inventory was created. (datetime)
-* `modified`: Timestamp when this inventory was last modified. (datetime)
-* `name`: Name of this inventory. (string)
-* `description`: Optional description of this inventory. (string)
-* `organization`: Organization containing this inventory. (id)
-* `kind`: Kind of inventory being represented. (choice)
-    - `""`: Hosts have a direct link to this inventory.
-    - `smart`: Hosts for inventory generated using the host_filter property.
-* `host_filter`: Filter that will be applied to the hosts of this inventory. (string)
-* `variables`: Inventory variables in JSON or YAML format. (json)
-* `has_active_failures`: This field is deprecated and will be removed in a future release. Flag indicating whether any hosts in this inventory have failed. (boolean)
-* `total_hosts`: This field is deprecated and will be removed in a future release. Total number of hosts in this inventory. (integer)
-* `hosts_with_active_failures`: This field is deprecated and will be removed in a future release. Number of hosts in this inventory with active failures. (integer)
-* `total_groups`: This field is deprecated and will be removed in a future release. Total number of groups in this inventory. (integer)
-* `has_inventory_sources`: This field is deprecated and will be removed in a future release. Flag indicating whether this inventory has any external inventory sources. (boolean)
-* `total_inventory_sources`: Total number of external inventory sources configured within this inventory. (integer)
-* `inventory_sources_with_failures`: Number of external inventory sources in this inventory with failures. (integer)
-* `insights_credential`: Credentials to be used by hosts belonging to this inventory when accessing Red Hat Insights API. (id)
-* `pending_deletion`: Flag indicating the inventory is being deleted. (boolean)
+InventoriesInventoriesRead  Retrieve an Inventory
+ Make GET request to this resource to retrieve a single inventory record containing the following fields:  * &#x60;id&#x60;: Database ID for this inventory. (integer) * &#x60;type&#x60;: Data type for this inventory. (choice) * &#x60;url&#x60;: URL for this inventory. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this inventory was created. (datetime) * &#x60;modified&#x60;: Timestamp when this inventory was last modified. (datetime) * &#x60;name&#x60;: Name of this inventory. (string) * &#x60;description&#x60;: Optional description of this inventory. (string) * &#x60;organization&#x60;: Organization containing this inventory. (id) * &#x60;kind&#x60;: Kind of inventory being represented. (choice)     - &#x60;\&quot;\&quot;&#x60;: Hosts have a direct link to this inventory.     - &#x60;smart&#x60;: Hosts for inventory generated using the host_filter property. * &#x60;host_filter&#x60;: Filter that will be applied to the hosts of this inventory. (string) * &#x60;variables&#x60;: Inventory variables in JSON or YAML format. (json) * &#x60;has_active_failures&#x60;: This field is deprecated and will be removed in a future release. Flag indicating whether any hosts in this inventory have failed. (boolean) * &#x60;total_hosts&#x60;: This field is deprecated and will be removed in a future release. Total number of hosts in this inventory. (integer) * &#x60;hosts_with_active_failures&#x60;: This field is deprecated and will be removed in a future release. Number of hosts in this inventory with active failures. (integer) * &#x60;total_groups&#x60;: This field is deprecated and will be removed in a future release. Total number of groups in this inventory. (integer) * &#x60;has_inventory_sources&#x60;: This field is deprecated and will be removed in a future release. Flag indicating whether this inventory has any external inventory sources. (boolean) * &#x60;total_inventory_sources&#x60;: Total number of external inventory sources configured within this inventory. (integer) * &#x60;inventory_sources_with_failures&#x60;: Number of external inventory sources in this inventory with failures. (integer) * &#x60;insights_credential&#x60;: Credentials to be used by hosts belonging to this inventory when accessing Red Hat Insights API. (id) * &#x60;pending_deletion&#x60;: Flag indicating the inventory is being deleted. (boolean)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesReadRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesRead(ctx _context.Context, id string) ApiInventoriesInventoriesReadRequest {
-	return ApiInventoriesInventoriesReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesReadExecute(r ApiInventoriesInventoriesReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventoriesApiService) InventoriesInventoriesRead(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -3553,20 +1715,16 @@ func (a *InventoriesApiService) InventoriesInventoriesReadExecute(r ApiInventori
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -3585,12 +1743,12 @@ func (a *InventoriesApiService) InventoriesInventoriesReadExecute(r ApiInventori
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3612,40 +1770,19 @@ func (a *InventoriesApiService) InventoriesInventoriesReadExecute(r ApiInventori
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesRootGroupsCreateRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	data *InlineObject22
-}
-
-func (r ApiInventoriesInventoriesRootGroupsCreateRequest) Data(data InlineObject22) ApiInventoriesInventoriesRootGroupsCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInventoriesInventoriesRootGroupsCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesRootGroupsCreateExecute(r)
+// InventoriesInventoriesRootGroupsCreateOpts Optional parameters for the method 'InventoriesInventoriesRootGroupsCreate'
+type InventoriesInventoriesRootGroupsCreateOpts struct {
+    Data optional.Interface
 }
 
 /*
- * InventoriesInventoriesRootGroupsCreate Method for InventoriesInventoriesRootGroupsCreate
+InventoriesInventoriesRootGroupsCreate Method for InventoriesInventoriesRootGroupsCreate
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesRootGroupsCreateRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesRootGroupsCreate(ctx _context.Context, id string) ApiInventoriesInventoriesRootGroupsCreateRequest {
-	return ApiInventoriesInventoriesRootGroupsCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesRootGroupsCreateExecute(r ApiInventoriesInventoriesRootGroupsCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesRootGroupsCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Interface of InlineObject22) - 
+*/
+func (a *InventoriesApiService) InventoriesInventoriesRootGroupsCreate(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesRootGroupsCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -3654,13 +1791,9 @@ func (a *InventoriesApiService) InventoriesInventoriesRootGroupsCreateExecute(r 
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesRootGroupsCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/root_groups/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/root_groups/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -3684,13 +1817,20 @@ func (a *InventoriesApiService) InventoriesInventoriesRootGroupsCreateExecute(r 
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject22)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject22")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3712,126 +1852,24 @@ func (a *InventoriesApiService) InventoriesInventoriesRootGroupsCreateExecute(r 
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesRootGroupsListRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiInventoriesInventoriesRootGroupsListRequest) Page(page int32) ApiInventoriesInventoriesRootGroupsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiInventoriesInventoriesRootGroupsListRequest) PageSize(pageSize int32) ApiInventoriesInventoriesRootGroupsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiInventoriesInventoriesRootGroupsListRequest) Search(search string) ApiInventoriesInventoriesRootGroupsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventoriesInventoriesRootGroupsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesRootGroupsListExecute(r)
+// InventoriesInventoriesRootGroupsListOpts Optional parameters for the method 'InventoriesInventoriesRootGroupsList'
+type InventoriesInventoriesRootGroupsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * InventoriesInventoriesRootGroupsList  List Root Groups for an Inventory
- * 
-Make a GET request to this resource to retrieve a list of root (top-level)
-groups associated with this
-inventory.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of groups
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more group records.  
-
-## Results
-
-Each group data structure includes the following fields:
-
-* `id`: Database ID for this group. (integer)
-* `type`: Data type for this group. (choice)
-* `url`: URL for this group. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this group was created. (datetime)
-* `modified`: Timestamp when this group was last modified. (datetime)
-* `name`: Name of this group. (string)
-* `description`: Optional description of this group. (string)
-* `inventory`:  (id)
-* `variables`: Group variables in JSON or YAML format. (json)
-
-
-
-## Sorting
-
-To specify that groups are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+InventoriesInventoriesRootGroupsList  List Root Groups for an Inventory
+ Make a GET request to this resource to retrieve a list of root (top-level) groups associated with this inventory.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of groups found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more group records.    ## Results  Each group data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this group. (integer) * &#x60;type&#x60;: Data type for this group. (choice) * &#x60;url&#x60;: URL for this group. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this group was created. (datetime) * &#x60;modified&#x60;: Timestamp when this group was last modified. (datetime) * &#x60;name&#x60;: Name of this group. (string) * &#x60;description&#x60;: Optional description of this group. (string) * &#x60;inventory&#x60;:  (id) * &#x60;variables&#x60;: Group variables in JSON or YAML format. (json)    ## Sorting  To specify that groups are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesRootGroupsListRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesRootGroupsList(ctx _context.Context, id string) ApiInventoriesInventoriesRootGroupsListRequest {
-	return ApiInventoriesInventoriesRootGroupsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesRootGroupsListExecute(r ApiInventoriesInventoriesRootGroupsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesRootGroupsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventoriesApiService) InventoriesInventoriesRootGroupsList(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesRootGroupsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -3840,26 +1878,22 @@ func (a *InventoriesApiService) InventoriesInventoriesRootGroupsListExecute(r Ap
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesRootGroupsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/root_groups/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/root_groups/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -3878,12 +1912,12 @@ func (a *InventoriesApiService) InventoriesInventoriesRootGroupsListExecute(r Ap
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -3905,73 +1939,13 @@ func (a *InventoriesApiService) InventoriesInventoriesRootGroupsListExecute(r Ap
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesScriptReadRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-}
-
-
-func (r ApiInventoriesInventoriesScriptReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesScriptReadExecute(r)
-}
-
 /*
- * InventoriesInventoriesScriptRead Generate inventory group and host data as needed for an inventory script.
- * 
-Refer to [Dynamic Inventory](http://docs.ansible.com/intro_dynamic_inventory.html)
-for more information on inventory scripts.
-
-## List Response
-
-Make a GET request to this resource without query parameters to retrieve a JSON
-object containing groups, including the hosts, children and variables for each
-group.  The response data is equivalent to that returned by passing the
-`--list` argument to an inventory script.
-
-Specify a query string of `?hostvars=1` to retrieve the JSON
-object above including all host variables.  The `['_meta']['hostvars']` object
-in the response contains an entry for each host with its variables.  This
-response format can be used with Ansible 1.3 and later to avoid making a
-separate API request for each host.  Refer to
-[Tuning the External Inventory Script](http://docs.ansible.com/developing_inventory.html#tuning-the-external-inventory-script)
-for more information on this feature.
-
-By default, the inventory script will only return hosts that
-are enabled in the inventory.  This feature allows disabled hosts to be skipped
-when running jobs without removing them from the inventory.  Specify a query
-string of `?all=1` to return all hosts, including disabled ones.
-
-Specify a query string of `?towervars=1` to add variables
-to the hostvars of each host that specifies its enabled state and database ID.
-
-Specify a query string of `?subset=slice2of5` to produce an inventory that
-has a restricted number of hosts according to the rules of job slicing.
-
-To apply multiple query strings, join them with the `&` character, like `?hostvars=1&all=1`.
-
-## Host Response
-
-Make a GET request to this resource with a query string similar to
-`?host=HOSTNAME` to retrieve a JSON object containing host variables for the
-specified host.  The response data is equivalent to that returned by passing
-the `--host HOSTNAME` argument to an inventory script.
+InventoriesInventoriesScriptRead Generate inventory group and host data as needed for an inventory script.
+ Refer to [Dynamic Inventory](http://docs.ansible.com/intro_dynamic_inventory.html) for more information on inventory scripts.  ## List Response  Make a GET request to this resource without query parameters to retrieve a JSON object containing groups, including the hosts, children and variables for each group.  The response data is equivalent to that returned by passing the &#x60;--list&#x60; argument to an inventory script.  Specify a query string of &#x60;?hostvars&#x3D;1&#x60; to retrieve the JSON object above including all host variables.  The &#x60;[&#39;_meta&#39;][&#39;hostvars&#39;]&#x60; object in the response contains an entry for each host with its variables.  This response format can be used with Ansible 1.3 and later to avoid making a separate API request for each host.  Refer to [Tuning the External Inventory Script](http://docs.ansible.com/developing_inventory.html#tuning-the-external-inventory-script) for more information on this feature.  By default, the inventory script will only return hosts that are enabled in the inventory.  This feature allows disabled hosts to be skipped when running jobs without removing them from the inventory.  Specify a query string of &#x60;?all&#x3D;1&#x60; to return all hosts, including disabled ones.  Specify a query string of &#x60;?towervars&#x3D;1&#x60; to add variables to the hostvars of each host that specifies its enabled state and database ID.  Specify a query string of &#x60;?subset&#x3D;slice2of5&#x60; to produce an inventory that has a restricted number of hosts according to the rules of job slicing.  To apply multiple query strings, join them with the &#x60;&amp;&#x60; character, like &#x60;?hostvars&#x3D;1&amp;all&#x3D;1&#x60;.  ## Host Response  Make a GET request to this resource with a query string similar to &#x60;?host&#x3D;HOSTNAME&#x60; to retrieve a JSON object containing host variables for the specified host.  The response data is equivalent to that returned by passing the &#x60;--host HOSTNAME&#x60; argument to an inventory script.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesScriptReadRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesScriptRead(ctx _context.Context, id string) ApiInventoriesInventoriesScriptReadRequest {
-	return ApiInventoriesInventoriesScriptReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesScriptReadExecute(r ApiInventoriesInventoriesScriptReadRequest) (*_nethttp.Response, error) {
+*/
+func (a *InventoriesApiService) InventoriesInventoriesScriptRead(ctx _context.Context, id string) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -3980,13 +1954,9 @@ func (a *InventoriesApiService) InventoriesInventoriesScriptReadExecute(r ApiInv
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesScriptRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/script/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/script/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -4009,12 +1979,12 @@ func (a *InventoriesApiService) InventoriesInventoriesScriptReadExecute(r ApiInv
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -4036,58 +2006,13 @@ func (a *InventoriesApiService) InventoriesInventoriesScriptReadExecute(r ApiInv
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesTreeReadRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-}
-
-
-func (r ApiInventoriesInventoriesTreeReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesTreeReadExecute(r)
-}
-
 /*
- * InventoriesInventoriesTreeRead  Group Tree for an Inventory
- * 
-Make a GET request to this resource to retrieve a hierarchical view of groups
-associated with the selected inventory.
-
-The resulting data structure contains a list of root groups, with each group
-also containing a list of its children.
-
-## Results
-
-Each group data structure includes the following fields:
-
-* `id`: Database ID for this group. (integer)
-* `type`: Data type for this group. (choice)
-* `url`: URL for this group. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this group was created. (datetime)
-* `modified`: Timestamp when this group was last modified. (datetime)
-* `name`: Name of this group. (string)
-* `description`: Optional description of this group. (string)
-* `inventory`:  (id)
-* `variables`: Group variables in JSON or YAML format. (json)
-* `children`:  (field)
+InventoriesInventoriesTreeRead  Group Tree for an Inventory
+ Make a GET request to this resource to retrieve a hierarchical view of groups associated with the selected inventory.  The resulting data structure contains a list of root groups, with each group also containing a list of its children.  ## Results  Each group data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this group. (integer) * &#x60;type&#x60;: Data type for this group. (choice) * &#x60;url&#x60;: URL for this group. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this group was created. (datetime) * &#x60;modified&#x60;: Timestamp when this group was last modified. (datetime) * &#x60;name&#x60;: Name of this group. (string) * &#x60;description&#x60;: Optional description of this group. (string) * &#x60;inventory&#x60;:  (id) * &#x60;variables&#x60;: Group variables in JSON or YAML format. (json) * &#x60;children&#x60;:  (field)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesTreeReadRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesTreeRead(ctx _context.Context, id string) ApiInventoriesInventoriesTreeReadRequest {
-	return ApiInventoriesInventoriesTreeReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesTreeReadExecute(r ApiInventoriesInventoriesTreeReadRequest) (*_nethttp.Response, error) {
+*/
+func (a *InventoriesApiService) InventoriesInventoriesTreeRead(ctx _context.Context, id string) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -4096,13 +2021,9 @@ func (a *InventoriesApiService) InventoriesInventoriesTreeReadExecute(r ApiInven
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesTreeRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/tree/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/tree/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -4125,12 +2046,12 @@ func (a *InventoriesApiService) InventoriesInventoriesTreeReadExecute(r ApiInven
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -4152,81 +2073,22 @@ func (a *InventoriesApiService) InventoriesInventoriesTreeReadExecute(r ApiInven
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesUpdateRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	search *string
-	data *map[string]interface{}
-}
-
-func (r ApiInventoriesInventoriesUpdateRequest) Search(search string) ApiInventoriesInventoriesUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiInventoriesInventoriesUpdateRequest) Data(data map[string]interface{}) ApiInventoriesInventoriesUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInventoriesInventoriesUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesUpdateExecute(r)
+// InventoriesInventoriesUpdateOpts Optional parameters for the method 'InventoriesInventoriesUpdate'
+type InventoriesInventoriesUpdateOpts struct {
+    Search optional.String
+    Data optional.Map[string]interface{}
 }
 
 /*
- * InventoriesInventoriesUpdate  Update an Inventory
- * 
-Make a PUT or PATCH request to this resource to update this
-inventory.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this inventory. (string, required)
-* `description`: Optional description of this inventory. (string, default=`""`)
-* `organization`: Organization containing this inventory. (id, required)
-* `kind`: Kind of inventory being represented. (choice)
-    - `""`: Hosts have a direct link to this inventory. (default)
-    - `smart`: Hosts for inventory generated using the host_filter property.
-* `host_filter`: Filter that will be applied to the hosts of this inventory. (string, default=`""`)
-* `variables`: Inventory variables in JSON or YAML format. (json, default=``)
-
-
-
-
-
-
-
-* `insights_credential`: Credentials to be used by hosts belonging to this inventory when accessing Red Hat Insights API. (id, default=``)
-
-
-
-
-
-
-
-For a PUT request, include **all** fields in the request.
+InventoriesInventoriesUpdate  Update an Inventory
+ Make a PUT or PATCH request to this resource to update this inventory.  The following fields may be modified:          * &#x60;name&#x60;: Name of this inventory. (string, required) * &#x60;description&#x60;: Optional description of this inventory. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;organization&#x60;: Organization containing this inventory. (id, required) * &#x60;kind&#x60;: Kind of inventory being represented. (choice)     - &#x60;\&quot;\&quot;&#x60;: Hosts have a direct link to this inventory. (default)     - &#x60;smart&#x60;: Hosts for inventory generated using the host_filter property. * &#x60;host_filter&#x60;: Filter that will be applied to the hosts of this inventory. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;variables&#x60;: Inventory variables in JSON or YAML format. (json, default&#x3D;&#x60;&#x60;)        * &#x60;insights_credential&#x60;: Credentials to be used by hosts belonging to this inventory when accessing Red Hat Insights API. (id, default&#x3D;&#x60;&#x60;)        For a PUT request, include **all** fields in the request.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesUpdateRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesUpdate(ctx _context.Context, id string) ApiInventoriesInventoriesUpdateRequest {
-	return ApiInventoriesInventoriesUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesUpdateExecute(r ApiInventoriesInventoriesUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *InventoriesApiService) InventoriesInventoriesUpdate(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -4235,20 +2097,16 @@ func (a *InventoriesApiService) InventoriesInventoriesUpdateExecute(r ApiInvento
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -4268,13 +2126,16 @@ func (a *InventoriesApiService) InventoriesInventoriesUpdateExecute(r ApiInvento
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -4296,55 +2157,13 @@ func (a *InventoriesApiService) InventoriesInventoriesUpdateExecute(r ApiInvento
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesUpdateInventorySourcesCreateRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-}
-
-
-func (r ApiInventoriesInventoriesUpdateInventorySourcesCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesUpdateInventorySourcesCreateExecute(r)
-}
-
 /*
- * InventoriesInventoriesUpdateInventorySourcesCreate  Update Inventory Sources
- * 
-Make a GET request to this resource to determine if any of the inventory sources for
-this inventory can be updated. The response will include the following fields for each
-inventory source:
-
-* `inventory_source`: ID of the inventory_source
-  (integer, read-only)
-* `can_update`: Flag indicating if this inventory source can be updated
-  (boolean, read-only)
-
-Make a POST request to this resource to update the inventory sources. The response
-status code will be a 202. The response will contain the follow fields for each of the individual
-inventory sources:
-
-* `status`: `started` or message why the update could not be started.
-  (string, read-only)
-* `inventory_update`: ID of the inventory update job that was started.
-  (integer, read-only)
-* `project_update`: ID of the project update job that was started if this inventory source is an SCM source.
-  (interger, read-only, optional)
+InventoriesInventoriesUpdateInventorySourcesCreate  Update Inventory Sources
+ Make a GET request to this resource to determine if any of the inventory sources for this inventory can be updated. The response will include the following fields for each inventory source:  * &#x60;inventory_source&#x60;: ID of the inventory_source   (integer, read-only) * &#x60;can_update&#x60;: Flag indicating if this inventory source can be updated   (boolean, read-only)  Make a POST request to this resource to update the inventory sources. The response status code will be a 202. The response will contain the follow fields for each of the individual inventory sources:  * &#x60;status&#x60;: &#x60;started&#x60; or message why the update could not be started.   (string, read-only) * &#x60;inventory_update&#x60;: ID of the inventory update job that was started.   (integer, read-only) * &#x60;project_update&#x60;: ID of the project update job that was started if this inventory source is an SCM source.   (interger, read-only, optional)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesUpdateInventorySourcesCreateRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesUpdateInventorySourcesCreate(ctx _context.Context, id string) ApiInventoriesInventoriesUpdateInventorySourcesCreateRequest {
-	return ApiInventoriesInventoriesUpdateInventorySourcesCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesUpdateInventorySourcesCreateExecute(r ApiInventoriesInventoriesUpdateInventorySourcesCreateRequest) (*_nethttp.Response, error) {
+*/
+func (a *InventoriesApiService) InventoriesInventoriesUpdateInventorySourcesCreate(ctx _context.Context, id string) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -4353,13 +2172,9 @@ func (a *InventoriesApiService) InventoriesInventoriesUpdateInventorySourcesCrea
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesUpdateInventorySourcesCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/update_inventory_sources/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/update_inventory_sources/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -4382,12 +2197,12 @@ func (a *InventoriesApiService) InventoriesInventoriesUpdateInventorySourcesCrea
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -4409,60 +2224,20 @@ func (a *InventoriesApiService) InventoriesInventoriesUpdateInventorySourcesCrea
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesUpdateInventorySourcesReadRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	search *string
-}
-
-func (r ApiInventoriesInventoriesUpdateInventorySourcesReadRequest) Search(search string) ApiInventoriesInventoriesUpdateInventorySourcesReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventoriesInventoriesUpdateInventorySourcesReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesUpdateInventorySourcesReadExecute(r)
+// InventoriesInventoriesUpdateInventorySourcesReadOpts Optional parameters for the method 'InventoriesInventoriesUpdateInventorySourcesRead'
+type InventoriesInventoriesUpdateInventorySourcesReadOpts struct {
+    Search optional.String
 }
 
 /*
- * InventoriesInventoriesUpdateInventorySourcesRead  Update Inventory Sources
- * 
-Make a GET request to this resource to determine if any of the inventory sources for
-this inventory can be updated. The response will include the following fields for each
-inventory source:
-
-* `inventory_source`: ID of the inventory_source
-  (integer, read-only)
-* `can_update`: Flag indicating if this inventory source can be updated
-  (boolean, read-only)
-
-Make a POST request to this resource to update the inventory sources. The response
-status code will be a 202. The response will contain the follow fields for each of the individual
-inventory sources:
-
-* `status`: `started` or message why the update could not be started.
-  (string, read-only)
-* `inventory_update`: ID of the inventory update job that was started.
-  (integer, read-only)
-* `project_update`: ID of the project update job that was started if this inventory source is an SCM source.
-  (interger, read-only, optional)
+InventoriesInventoriesUpdateInventorySourcesRead  Update Inventory Sources
+ Make a GET request to this resource to determine if any of the inventory sources for this inventory can be updated. The response will include the following fields for each inventory source:  * &#x60;inventory_source&#x60;: ID of the inventory_source   (integer, read-only) * &#x60;can_update&#x60;: Flag indicating if this inventory source can be updated   (boolean, read-only)  Make a POST request to this resource to update the inventory sources. The response status code will be a 202. The response will contain the follow fields for each of the individual inventory sources:  * &#x60;status&#x60;: &#x60;started&#x60; or message why the update could not be started.   (string, read-only) * &#x60;inventory_update&#x60;: ID of the inventory update job that was started.   (integer, read-only) * &#x60;project_update&#x60;: ID of the project update job that was started if this inventory source is an SCM source.   (interger, read-only, optional)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesUpdateInventorySourcesReadRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesUpdateInventorySourcesRead(ctx _context.Context, id string) ApiInventoriesInventoriesUpdateInventorySourcesReadRequest {
-	return ApiInventoriesInventoriesUpdateInventorySourcesReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesUpdateInventorySourcesReadExecute(r ApiInventoriesInventoriesUpdateInventorySourcesReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesUpdateInventorySourcesReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventoriesApiService) InventoriesInventoriesUpdateInventorySourcesRead(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesUpdateInventorySourcesReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -4471,20 +2246,16 @@ func (a *InventoriesApiService) InventoriesInventoriesUpdateInventorySourcesRead
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesUpdateInventorySourcesRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/update_inventory_sources/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/update_inventory_sources/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -4503,12 +2274,12 @@ func (a *InventoriesApiService) InventoriesInventoriesUpdateInventorySourcesRead
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -4530,48 +2301,22 @@ func (a *InventoriesApiService) InventoriesInventoriesUpdateInventorySourcesRead
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesVariableDataPartialUpdateRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	search *string
-	data *map[string]interface{}
-}
-
-func (r ApiInventoriesInventoriesVariableDataPartialUpdateRequest) Search(search string) ApiInventoriesInventoriesVariableDataPartialUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiInventoriesInventoriesVariableDataPartialUpdateRequest) Data(data map[string]interface{}) ApiInventoriesInventoriesVariableDataPartialUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInventoriesInventoriesVariableDataPartialUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesVariableDataPartialUpdateExecute(r)
+// InventoriesInventoriesVariableDataPartialUpdateOpts Optional parameters for the method 'InventoriesInventoriesVariableDataPartialUpdate'
+type InventoriesInventoriesVariableDataPartialUpdateOpts struct {
+    Search optional.String
+    Data optional.Map[string]interface{}
 }
 
 /*
- * InventoriesInventoriesVariableDataPartialUpdate  Update Inventory Variable Data
- * 
-Make a PUT or PATCH request to this resource to update variables defined for a
-inventory.
+InventoriesInventoriesVariableDataPartialUpdate  Update Inventory Variable Data
+ Make a PUT or PATCH request to this resource to update variables defined for a inventory.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesVariableDataPartialUpdateRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesVariableDataPartialUpdate(ctx _context.Context, id string) ApiInventoriesInventoriesVariableDataPartialUpdateRequest {
-	return ApiInventoriesInventoriesVariableDataPartialUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesVariableDataPartialUpdateExecute(r ApiInventoriesInventoriesVariableDataPartialUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesVariableDataPartialUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *InventoriesApiService) InventoriesInventoriesVariableDataPartialUpdate(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesVariableDataPartialUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPatch
 		localVarPostBody     interface{}
@@ -4580,20 +2325,16 @@ func (a *InventoriesApiService) InventoriesInventoriesVariableDataPartialUpdateE
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesVariableDataPartialUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/variable_data/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/variable_data/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -4613,13 +2354,16 @@ func (a *InventoriesApiService) InventoriesInventoriesVariableDataPartialUpdateE
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -4641,43 +2385,20 @@ func (a *InventoriesApiService) InventoriesInventoriesVariableDataPartialUpdateE
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesVariableDataReadRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	search *string
-}
-
-func (r ApiInventoriesInventoriesVariableDataReadRequest) Search(search string) ApiInventoriesInventoriesVariableDataReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiInventoriesInventoriesVariableDataReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesVariableDataReadExecute(r)
+// InventoriesInventoriesVariableDataReadOpts Optional parameters for the method 'InventoriesInventoriesVariableDataRead'
+type InventoriesInventoriesVariableDataReadOpts struct {
+    Search optional.String
 }
 
 /*
- * InventoriesInventoriesVariableDataRead  Retrieve Inventory Variable Data
- * 
-Make a GET request to this resource to retrieve all variables defined for a
-inventory.
+InventoriesInventoriesVariableDataRead  Retrieve Inventory Variable Data
+ Make a GET request to this resource to retrieve all variables defined for a inventory.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesVariableDataReadRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesVariableDataRead(ctx _context.Context, id string) ApiInventoriesInventoriesVariableDataReadRequest {
-	return ApiInventoriesInventoriesVariableDataReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesVariableDataReadExecute(r ApiInventoriesInventoriesVariableDataReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesVariableDataReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *InventoriesApiService) InventoriesInventoriesVariableDataRead(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesVariableDataReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -4686,20 +2407,16 @@ func (a *InventoriesApiService) InventoriesInventoriesVariableDataReadExecute(r 
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesVariableDataRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/variable_data/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/variable_data/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -4718,12 +2435,12 @@ func (a *InventoriesApiService) InventoriesInventoriesVariableDataReadExecute(r 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -4745,48 +2462,22 @@ func (a *InventoriesApiService) InventoriesInventoriesVariableDataReadExecute(r 
 	return localVarHTTPResponse, nil
 }
 
-type ApiInventoriesInventoriesVariableDataUpdateRequest struct {
-	ctx _context.Context
-	ApiService *InventoriesApiService
-	id string
-	search *string
-	data *map[string]interface{}
-}
-
-func (r ApiInventoriesInventoriesVariableDataUpdateRequest) Search(search string) ApiInventoriesInventoriesVariableDataUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiInventoriesInventoriesVariableDataUpdateRequest) Data(data map[string]interface{}) ApiInventoriesInventoriesVariableDataUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiInventoriesInventoriesVariableDataUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.InventoriesInventoriesVariableDataUpdateExecute(r)
+// InventoriesInventoriesVariableDataUpdateOpts Optional parameters for the method 'InventoriesInventoriesVariableDataUpdate'
+type InventoriesInventoriesVariableDataUpdateOpts struct {
+    Search optional.String
+    Data optional.Map[string]interface{}
 }
 
 /*
- * InventoriesInventoriesVariableDataUpdate  Update Inventory Variable Data
- * 
-Make a PUT or PATCH request to this resource to update variables defined for a
-inventory.
+InventoriesInventoriesVariableDataUpdate  Update Inventory Variable Data
+ Make a PUT or PATCH request to this resource to update variables defined for a inventory.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiInventoriesInventoriesVariableDataUpdateRequest
- */
-func (a *InventoriesApiService) InventoriesInventoriesVariableDataUpdate(ctx _context.Context, id string) ApiInventoriesInventoriesVariableDataUpdateRequest {
-	return ApiInventoriesInventoriesVariableDataUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *InventoriesApiService) InventoriesInventoriesVariableDataUpdateExecute(r ApiInventoriesInventoriesVariableDataUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *InventoriesInventoriesVariableDataUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *InventoriesApiService) InventoriesInventoriesVariableDataUpdate(ctx _context.Context, id string, localVarOptionals *InventoriesInventoriesVariableDataUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -4795,20 +2486,16 @@ func (a *InventoriesApiService) InventoriesInventoriesVariableDataUpdateExecute(
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InventoriesApiService.InventoriesInventoriesVariableDataUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/inventories/{id}/variable_data/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/inventories/{id}/variable_data/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -4828,13 +2515,16 @@ func (a *InventoriesApiService) InventoriesInventoriesVariableDataUpdateExecute(
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

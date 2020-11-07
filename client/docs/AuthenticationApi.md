@@ -26,59 +26,32 @@ Method | HTTP request | Description
 
 ## AuthenticationApplicationsActivityStreamList
 
-> AuthenticationApplicationsActivityStreamList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> AuthenticationApplicationsActivityStreamList(ctx, id, optional)
 
  List Activity Streams for an Application
 
+ Make a GET request to this resource to retrieve a list of activity streams associated with the selected application.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of activity streams found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more activity stream records.    ## Results  Each activity stream data structure includes the following fields:  * `id`: Database ID for this activity stream. (integer) * `type`: Data type for this activity stream. (choice) * `url`: URL for this activity stream. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `timestamp`:  (datetime) * `operation`: The action taken with respect to the given object(s). (choice)     - `create`: Entity Created     - `update`: Entity Updated     - `delete`: Entity Deleted     - `associate`: Entity Associated with another Entity     - `disassociate`: Entity was Disassociated with another Entity * `changes`: A summary of the new and changed values when an object is created, updated, or deleted (json) * `object1`: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string) * `object2`: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string) * `object_association`: When present, shows the field name of the role or relationship that changed. (field) * `action_node`: The cluster node the activity took place on. (string) * `object_type`: When present, shows the model on which the role or relationship was defined. (field)    ## Sorting  To specify that activity streams are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationApplicationsActivityStreamList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationApplicationsActivityStreamList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***AuthenticationApplicationsActivityStreamListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiAuthenticationApplicationsActivityStreamListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a AuthenticationApplicationsActivityStreamListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -100,49 +73,28 @@ No authorization required
 
 ## AuthenticationApplicationsCreate0
 
-> AuthenticationApplicationsCreate0(ctx).Data(data).Execute()
+> AuthenticationApplicationsCreate0(ctx, optional)
 
  Create an Application
 
+ Make a POST request to this resource with the following application fields to create a new application:          * `name`: Name of this application. (string, required) * `description`: Optional description of this application. (string, default=`\"\"`)   * `client_type`: Set to Public or Confidential depending on how secure the client device is. (choice, required)     - `confidential`: Confidential     - `public`: Public * `redirect_uris`: Allowed URIs list, space separated (string, default=`\"\"`) * `authorization_grant_type`: The Grant type the user must use for acquire tokens for this application. (choice, required)     - `authorization-code`: Authorization code     - `password`: Resource owner password-based * `skip_authorization`: Set True to skip authorization step for completely trusted applications. (boolean, default=`False`) * `organization`: Organization containing this application. (id, required)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationApplicationsCreate0(context.Background(), ).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationApplicationsCreate0``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiAuthenticationApplicationsCreate0Request struct via the builder pattern
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **data** | **map[string]interface{}** |  | 
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***AuthenticationApplicationsCreate0Opts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a AuthenticationApplicationsCreate0Opts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -164,55 +116,30 @@ No authorization required
 
 ## AuthenticationApplicationsDelete0
 
-> AuthenticationApplicationsDelete0(ctx, id).Search(search).Execute()
+> AuthenticationApplicationsDelete0(ctx, id, optional)
 
  Delete an Application
 
+ Make a DELETE request to this resource to delete this application.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationApplicationsDelete0(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationApplicationsDelete0``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***AuthenticationApplicationsDelete0Opts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiAuthenticationApplicationsDelete0Request struct via the builder pattern
+Optional parameters are passed through a pointer to a AuthenticationApplicationsDelete0Opts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -234,53 +161,30 @@ No authorization required
 
 ## AuthenticationApplicationsList0
 
-> AuthenticationApplicationsList0(ctx).Page(page).PageSize(pageSize).Search(search).Execute()
+> AuthenticationApplicationsList0(ctx, optional)
 
  List Applications
 
+ Make a GET request to this resource to retrieve the list of applications.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of applications found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more application records.    ## Results  Each application data structure includes the following fields:  * `id`: Database ID for this application. (integer) * `type`: Data type for this application. (choice) * `url`: URL for this application. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this application was created. (datetime) * `modified`: Timestamp when this application was last modified. (datetime) * `name`: Name of this application. (string) * `description`: Optional description of this application. (string) * `client_id`:  (string) * `client_secret`: Used for more stringent verification of access to an application when creating a token. (string) * `client_type`: Set to Public or Confidential depending on how secure the client device is. (choice)     - `confidential`: Confidential     - `public`: Public * `redirect_uris`: Allowed URIs list, space separated (string) * `authorization_grant_type`: The Grant type the user must use for acquire tokens for this application. (choice)     - `authorization-code`: Authorization code     - `password`: Resource owner password-based * `skip_authorization`: Set True to skip authorization step for completely trusted applications. (boolean) * `organization`: Organization containing this application. (id)    ## Sorting  To specify that applications are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationApplicationsList0(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationApplicationsList0``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiAuthenticationApplicationsList0Request struct via the builder pattern
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***AuthenticationApplicationsList0Opts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a AuthenticationApplicationsList0Opts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -302,57 +206,31 @@ No authorization required
 
 ## AuthenticationApplicationsPartialUpdate0
 
-> AuthenticationApplicationsPartialUpdate0(ctx, id).Search(search).Data(data).Execute()
+> AuthenticationApplicationsPartialUpdate0(ctx, id, optional)
 
  Update an Application
 
+ Make a PUT or PATCH request to this resource to update this application.  The following fields may be modified:          * `name`: Name of this application. (string, required) * `description`: Optional description of this application. (string, default=`\"\"`)   * `client_type`: Set to Public or Confidential depending on how secure the client device is. (choice, required)     - `confidential`: Confidential     - `public`: Public * `redirect_uris`: Allowed URIs list, space separated (string, default=`\"\"`) * `authorization_grant_type`: The Grant type the user must use for acquire tokens for this application. (choice, required)     - `authorization-code`: Authorization code     - `password`: Resource owner password-based * `skip_authorization`: Set True to skip authorization step for completely trusted applications. (boolean, default=`False`) * `organization`: Organization containing this application. (id, required)         For a PATCH request, include only the fields that are being modified.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationApplicationsPartialUpdate0(context.Background(), id).Search(search).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationApplicationsPartialUpdate0``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***AuthenticationApplicationsPartialUpdate0Opts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiAuthenticationApplicationsPartialUpdate0Request struct via the builder pattern
+Optional parameters are passed through a pointer to a AuthenticationApplicationsPartialUpdate0Opts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
- **data** | **map[string]interface{}** |  | 
+ **search** | **optional.String**| A search term. | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -374,55 +252,30 @@ No authorization required
 
 ## AuthenticationApplicationsRead0
 
-> AuthenticationApplicationsRead0(ctx, id).Search(search).Execute()
+> AuthenticationApplicationsRead0(ctx, id, optional)
 
  Retrieve an Application
 
+ Make GET request to this resource to retrieve a single application record containing the following fields:  * `id`: Database ID for this application. (integer) * `type`: Data type for this application. (choice) * `url`: URL for this application. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this application was created. (datetime) * `modified`: Timestamp when this application was last modified. (datetime) * `name`: Name of this application. (string) * `description`: Optional description of this application. (string) * `client_id`:  (string) * `client_secret`: Used for more stringent verification of access to an application when creating a token. (string) * `client_type`: Set to Public or Confidential depending on how secure the client device is. (choice)     - `confidential`: Confidential     - `public`: Public * `redirect_uris`: Allowed URIs list, space separated (string) * `authorization_grant_type`: The Grant type the user must use for acquire tokens for this application. (choice)     - `authorization-code`: Authorization code     - `password`: Resource owner password-based * `skip_authorization`: Set True to skip authorization step for completely trusted applications. (boolean) * `organization`: Organization containing this application. (id)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationApplicationsRead0(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationApplicationsRead0``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***AuthenticationApplicationsRead0Opts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiAuthenticationApplicationsRead0Request struct via the builder pattern
+Optional parameters are passed through a pointer to a AuthenticationApplicationsRead0Opts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -444,55 +297,30 @@ No authorization required
 
 ## AuthenticationApplicationsTokensCreate0
 
-> AuthenticationApplicationsTokensCreate0(ctx, id).Data(data).Execute()
+> AuthenticationApplicationsTokensCreate0(ctx, id, optional)
 
  Create an Access Token for an Application
 
+ Make a POST request to this resource with the following access token fields to create a new access token associated with this application.          * `description`: Optional description of this access token. (string, default=`\"\"`)      * `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string, default=`\"write\"`)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationApplicationsTokensCreate0(context.Background(), id).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationApplicationsTokensCreate0``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***AuthenticationApplicationsTokensCreate0Opts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiAuthenticationApplicationsTokensCreate0Request struct via the builder pattern
+Optional parameters are passed through a pointer to a AuthenticationApplicationsTokensCreate0Opts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **data** | **map[string]interface{}** |  | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -514,59 +342,32 @@ No authorization required
 
 ## AuthenticationApplicationsTokensList0
 
-> AuthenticationApplicationsTokensList0(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> AuthenticationApplicationsTokensList0(ctx, id, optional)
 
  List Access Tokens for an Application
 
+ Make a GET request to this resource to retrieve a list of access tokens associated with the selected application.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of access tokens found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more access token records.    ## Results  Each access token data structure includes the following fields:  * `id`: Database ID for this access token. (integer) * `type`: Data type for this access token. (choice) * `url`: URL for this access token. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this access token was created. (datetime) * `modified`: Timestamp when this access token was last modified. (datetime) * `description`: Optional description of this access token. (string) * `user`: The user representing the token owner (id) * `token`:  (string) * `refresh_token`:  (field) * `application`:  (id) * `expires`:  (datetime) * `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string)    ## Sorting  To specify that access tokens are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationApplicationsTokensList0(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationApplicationsTokensList0``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***AuthenticationApplicationsTokensList0Opts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiAuthenticationApplicationsTokensList0Request struct via the builder pattern
+Optional parameters are passed through a pointer to a AuthenticationApplicationsTokensList0Opts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -588,57 +389,31 @@ No authorization required
 
 ## AuthenticationApplicationsUpdate0
 
-> AuthenticationApplicationsUpdate0(ctx, id).Search(search).Data(data).Execute()
+> AuthenticationApplicationsUpdate0(ctx, id, optional)
 
  Update an Application
 
+ Make a PUT or PATCH request to this resource to update this application.  The following fields may be modified:          * `name`: Name of this application. (string, required) * `description`: Optional description of this application. (string, default=`\"\"`)   * `client_type`: Set to Public or Confidential depending on how secure the client device is. (choice, required)     - `confidential`: Confidential     - `public`: Public * `redirect_uris`: Allowed URIs list, space separated (string, default=`\"\"`) * `authorization_grant_type`: The Grant type the user must use for acquire tokens for this application. (choice, required)     - `authorization-code`: Authorization code     - `password`: Resource owner password-based * `skip_authorization`: Set True to skip authorization step for completely trusted applications. (boolean, default=`False`) * `organization`: Organization containing this application. (id, required)       For a PUT request, include **all** fields in the request.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-    data := openapiclient.inline_object{AuthorizationGrantType: "AuthorizationGrantType_example", ClientType: "ClientType_example", Description: "Description_example", Name: "Name_example", Organization: 123, RedirectUris: "RedirectUris_example", SkipAuthorization: false} // InlineObject |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationApplicationsUpdate0(context.Background(), id).Search(search).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationApplicationsUpdate0``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***AuthenticationApplicationsUpdate0Opts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiAuthenticationApplicationsUpdate0Request struct via the builder pattern
+Optional parameters are passed through a pointer to a AuthenticationApplicationsUpdate0Opts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
- **data** | [**InlineObject**](InlineObject.md) |  | 
+ **search** | **optional.String**| A search term. | 
+ **data** | [**optional.Interface of InlineObject**](InlineObject.md)|  | 
 
 ### Return type
 
@@ -660,44 +435,15 @@ No authorization required
 
 ## AuthenticationOList
 
-> AuthenticationOList(ctx).Execute()
+> AuthenticationOList(ctx, )
 
  Token Handling using OAuth2
 
+ This page lists OAuth 2 utility endpoints used for authorization, token refresh and revoke. Note endpoints other than `/api/o/authorize/` are not meant to be used in browsers and do not support HTTP GET. The endpoints here strictly follow [RFC specs for OAuth2](https://tools.ietf.org/html/rfc6749), so please use that for detailed reference. Note AWX net location default to `http://localhost:8013` in examples:   ## Create Token for an Application using Authorization code grant type Given an application \"AuthCodeApp\" of grant type `authorization-code`,  from the client app, the user makes a GET to the Authorize endpoint with   * `response_type` * `client_id` * `redirect_uris` * `scope`    AWX will respond with the authorization `code` and `state` to the redirect_uri specified in the application. The client application will then make a POST to the `api/o/token/` endpoint on AWX with  * `code` * `client_id` * `client_secret` * `grant_type` * `redirect_uri`  AWX will respond with the `access_token`, `token_type`, `refresh_token`, and `expires_in`. For more information on testing this flow, refer to [django-oauth-toolkit](http://django-oauth-toolkit.readthedocs.io/en/latest/tutorial/tutorial_01.html#test-your-authorization-server).   ## Create Token for an Application using Password grant type  Log in is not required for `password` grant type, so a simple `curl` can be used to acquire a personal access token via `/api/o/token/` with   * `grant_type`: Required to be \"password\" * `username` * `password` * `client_id`: Associated application must have grant_type \"password\" * `client_secret`  For example:  ```bash curl -X POST \\   -H \"Content-Type: application/x-www-form-urlencoded\" \\   -d \"grant_type=password&username=<username>&password=<password>&scope=read\" \\   -u \"gwSPoasWSdNkMDtBN3Hu2WYQpPWCO9SwUEsKK22l:fI6ZpfocHYBGfm1tP92r0yIgCyfRdDQt0Tos9L8a4fNsJjQQMwp9569e IaUBsaVDgt2eiwOGe0bg5m5vCSstClZmtdy359RVx2rQK5YlIWyPlrolpt2LEpVeKXWaiybo\" \\   http://localhost:8013/api/o/token/ -i ``` In the above post request, parameters `username` and `password` are username and password of the related AWX user of the underlying application, and the authentication information is of format `<client_id>:<client_secret>`, where `client_id` and `client_secret` are the corresponding fields of underlying application.  Upon success, access token, refresh token and other information are given in the response body in JSON
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationOList(context.Background(), ).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationOList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 This endpoint does not need any parameter.
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiAuthenticationOListRequest struct via the builder pattern
-
 
 ### Return type
 
@@ -719,59 +465,32 @@ No authorization required
 
 ## AuthenticationTokensActivityStreamList
 
-> AuthenticationTokensActivityStreamList(ctx, id).Page(page).PageSize(pageSize).Search(search).Execute()
+> AuthenticationTokensActivityStreamList(ctx, id, optional)
 
  List Activity Streams for an Access Token
 
+ Make a GET request to this resource to retrieve a list of activity streams associated with the selected access token.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of activity streams found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more activity stream records.    ## Results  Each activity stream data structure includes the following fields:  * `id`: Database ID for this activity stream. (integer) * `type`: Data type for this activity stream. (choice) * `url`: URL for this activity stream. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `timestamp`:  (datetime) * `operation`: The action taken with respect to the given object(s). (choice)     - `create`: Entity Created     - `update`: Entity Updated     - `delete`: Entity Deleted     - `associate`: Entity Associated with another Entity     - `disassociate`: Entity was Disassociated with another Entity * `changes`: A summary of the new and changed values when an object is created, updated, or deleted (json) * `object1`: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string) * `object2`: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string) * `object_association`: When present, shows the field name of the role or relationship that changed. (field) * `action_node`: The cluster node the activity took place on. (string) * `object_type`: When present, shows the model on which the role or relationship was defined. (field)    ## Sorting  To specify that activity streams are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationTokensActivityStreamList(context.Background(), id).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationTokensActivityStreamList``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***AuthenticationTokensActivityStreamListOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiAuthenticationTokensActivityStreamListRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a AuthenticationTokensActivityStreamListOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -793,49 +512,28 @@ No authorization required
 
 ## AuthenticationTokensCreate0
 
-> AuthenticationTokensCreate0(ctx).Data(data).Execute()
+> AuthenticationTokensCreate0(ctx, optional)
 
  Create an Access Token
 
+ Make a POST request to this resource with the following access token fields to create a new access token:          * `description`: Optional description of this access token. (string, default=`\"\"`)    * `application`:  (id, default=``)  * `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string, default=`\"write\"`)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationTokensCreate0(context.Background(), ).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationTokensCreate0``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiAuthenticationTokensCreate0Request struct via the builder pattern
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **data** | **map[string]interface{}** |  | 
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***AuthenticationTokensCreate0Opts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a AuthenticationTokensCreate0Opts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -857,55 +555,30 @@ No authorization required
 
 ## AuthenticationTokensDelete
 
-> AuthenticationTokensDelete(ctx, id).Search(search).Execute()
+> AuthenticationTokensDelete(ctx, id, optional)
 
  Delete an Access Token
 
+ Make a DELETE request to this resource to delete this access token.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationTokensDelete(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationTokensDelete``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***AuthenticationTokensDeleteOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiAuthenticationTokensDeleteRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a AuthenticationTokensDeleteOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -927,53 +600,30 @@ No authorization required
 
 ## AuthenticationTokensList0
 
-> AuthenticationTokensList0(ctx).Page(page).PageSize(pageSize).Search(search).Execute()
+> AuthenticationTokensList0(ctx, optional)
 
  List Access Tokens
 
+ Make a GET request to this resource to retrieve the list of access tokens.  The resulting data structure contains:      {         \"count\": 99,         \"next\": null,         \"previous\": null,         \"results\": [             ...         ]     }  The `count` field indicates the total number of access tokens found for the given query.  The `next` and `previous` fields provides links to additional results if there are more than will fit on a single page.  The `results` list contains zero or more access token records.    ## Results  Each access token data structure includes the following fields:  * `id`: Database ID for this access token. (integer) * `type`: Data type for this access token. (choice) * `url`: URL for this access token. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this access token was created. (datetime) * `modified`: Timestamp when this access token was last modified. (datetime) * `description`: Optional description of this access token. (string) * `user`: The user representing the token owner (id) * `token`:  (string) * `refresh_token`:  (field) * `application`:  (id) * `expires`:  (datetime) * `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string)    ## Sorting  To specify that access tokens are returned in a particular order, use the `order_by` query string parameter on the GET request.      ?order_by=name  Prefix the field name with a dash `-` to sort in reverse:      ?order_by=-name  Multiple sorting fields may be specified by separating the field names with a comma `,`:      ?order_by=name,some_other_field  ## Pagination  Use the `page_size` query string parameter to change the number of results returned for each request.  Use the `page` query string parameter to retrieve a particular page of results.      ?page_size=100&page=2  The `previous` and `next` links returned with the results will set these query string parameters automatically.  ## Searching  Use the `search` query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search=findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search=findme
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    page := 987 // int32 | A page number within the paginated result set. (optional)
-    pageSize := 987 // int32 | Number of results to return per page. (optional)
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationTokensList0(context.Background(), ).Page(page).PageSize(pageSize).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationTokensList0``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiAuthenticationTokensList0Request struct via the builder pattern
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **page** | **int32** | A page number within the paginated result set. | 
- **pageSize** | **int32** | Number of results to return per page. | 
- **search** | **string** | A search term. | 
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***AuthenticationTokensList0Opts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a AuthenticationTokensList0Opts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **page** | **optional.Int32**| A page number within the paginated result set. | 
+ **pageSize** | **optional.Int32**| Number of results to return per page. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -995,57 +645,31 @@ No authorization required
 
 ## AuthenticationTokensPartialUpdate
 
-> AuthenticationTokensPartialUpdate(ctx, id).Search(search).Data(data).Execute()
+> AuthenticationTokensPartialUpdate(ctx, id, optional)
 
  Update an Access Token
 
+ Make a PUT or PATCH request to this resource to update this access token.  The following fields may be modified:          * `description`: Optional description of this access token. (string, default=`\"\"`)      * `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string, default=`\"write\"`)         For a PATCH request, include only the fields that are being modified.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-    data := 987 // map[string]interface{} |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationTokensPartialUpdate(context.Background(), id).Search(search).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationTokensPartialUpdate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***AuthenticationTokensPartialUpdateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiAuthenticationTokensPartialUpdateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a AuthenticationTokensPartialUpdateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
- **data** | **map[string]interface{}** |  | 
+ **search** | **optional.String**| A search term. | 
+ **data** | **optional.Map[string]interface{}**|  | 
 
 ### Return type
 
@@ -1067,55 +691,30 @@ No authorization required
 
 ## AuthenticationTokensRead
 
-> AuthenticationTokensRead(ctx, id).Search(search).Execute()
+> AuthenticationTokensRead(ctx, id, optional)
 
  Retrieve an Access Token
 
+ Make GET request to this resource to retrieve a single access token record containing the following fields:  * `id`: Database ID for this access token. (integer) * `type`: Data type for this access token. (choice) * `url`: URL for this access token. (string) * `related`: Data structure with URLs of related resources. (object) * `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * `created`: Timestamp when this access token was created. (datetime) * `modified`: Timestamp when this access token was last modified. (datetime) * `description`: Optional description of this access token. (string) * `user`: The user representing the token owner (id) * `token`:  (string) * `refresh_token`:  (field) * `application`:  (id) * `expires`:  (datetime) * `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string)
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationTokensRead(context.Background(), id).Search(search).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationTokensRead``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***AuthenticationTokensReadOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiAuthenticationTokensReadRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a AuthenticationTokensReadOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
+ **search** | **optional.String**| A search term. | 
 
 ### Return type
 
@@ -1137,57 +736,31 @@ No authorization required
 
 ## AuthenticationTokensUpdate
 
-> AuthenticationTokensUpdate(ctx, id).Search(search).Data(data).Execute()
+> AuthenticationTokensUpdate(ctx, id, optional)
 
  Update an Access Token
 
+ Make a PUT or PATCH request to this resource to update this access token.  The following fields may be modified:          * `description`: Optional description of this access token. (string, default=`\"\"`)      * `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string, default=`\"write\"`)       For a PUT request, include **all** fields in the request.
 
-
-### Example
-
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "os"
-    openapiclient "./openapi"
-)
-
-func main() {
-    id := "id_example" // string | 
-    search := "search_example" // string | A search term. (optional)
-    data := openapiclient.inline_object_68{Description: "Description_example", Scope: "Scope_example"} // InlineObject68 |  (optional)
-
-    configuration := openapiclient.NewConfiguration()
-    api_client := openapiclient.NewAPIClient(configuration)
-    resp, r, err := api_client.AuthenticationApi.AuthenticationTokensUpdate(context.Background(), id).Search(search).Data(data).Execute()
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `AuthenticationApi.AuthenticationTokensUpdate``: %v\n", err)
-        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-    }
-}
-```
-
-### Path Parameters
+### Required Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string** |  | 
+**id** | **string**|  | 
+ **optional** | ***AuthenticationTokensUpdateOpts** | optional parameters | nil if no parameters
 
-### Other Parameters
+### Optional Parameters
 
-Other parameters are passed through a pointer to a apiAuthenticationTokensUpdateRequest struct via the builder pattern
+Optional parameters are passed through a pointer to a AuthenticationTokensUpdateOpts struct
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **search** | **string** | A search term. | 
- **data** | [**InlineObject68**](InlineObject68.md) |  | 
+ **search** | **optional.String**| A search term. | 
+ **data** | [**optional.Interface of InlineObject68**](InlineObject68.md)|  | 
 
 ### Return type
 

@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,133 +26,24 @@ var (
 // AuthenticationApiService AuthenticationApi service
 type AuthenticationApiService service
 
-type ApiAuthenticationApplicationsActivityStreamListRequest struct {
-	ctx _context.Context
-	ApiService *AuthenticationApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiAuthenticationApplicationsActivityStreamListRequest) Page(page int32) ApiAuthenticationApplicationsActivityStreamListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiAuthenticationApplicationsActivityStreamListRequest) PageSize(pageSize int32) ApiAuthenticationApplicationsActivityStreamListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiAuthenticationApplicationsActivityStreamListRequest) Search(search string) ApiAuthenticationApplicationsActivityStreamListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiAuthenticationApplicationsActivityStreamListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AuthenticationApplicationsActivityStreamListExecute(r)
+// AuthenticationApplicationsActivityStreamListOpts Optional parameters for the method 'AuthenticationApplicationsActivityStreamList'
+type AuthenticationApplicationsActivityStreamListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * AuthenticationApplicationsActivityStreamList  List Activity Streams for an Application
- * 
-Make a GET request to this resource to retrieve a list of
-activity streams associated with the selected
-application.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of activity streams
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more activity stream records.  
-
-## Results
-
-Each activity stream data structure includes the following fields:
-
-* `id`: Database ID for this activity stream. (integer)
-* `type`: Data type for this activity stream. (choice)
-* `url`: URL for this activity stream. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `timestamp`:  (datetime)
-* `operation`: The action taken with respect to the given object(s). (choice)
-    - `create`: Entity Created
-    - `update`: Entity Updated
-    - `delete`: Entity Deleted
-    - `associate`: Entity Associated with another Entity
-    - `disassociate`: Entity was Disassociated with another Entity
-* `changes`: A summary of the new and changed values when an object is created, updated, or deleted (json)
-* `object1`: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string)
-* `object2`: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string)
-* `object_association`: When present, shows the field name of the role or relationship that changed. (field)
-* `action_node`: The cluster node the activity took place on. (string)
-* `object_type`: When present, shows the model on which the role or relationship was defined. (field)
-
-
-
-## Sorting
-
-To specify that activity streams are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+AuthenticationApplicationsActivityStreamList  List Activity Streams for an Application
+ Make a GET request to this resource to retrieve a list of activity streams associated with the selected application.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of activity streams found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more activity stream records.    ## Results  Each activity stream data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this activity stream. (integer) * &#x60;type&#x60;: Data type for this activity stream. (choice) * &#x60;url&#x60;: URL for this activity stream. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;timestamp&#x60;:  (datetime) * &#x60;operation&#x60;: The action taken with respect to the given object(s). (choice)     - &#x60;create&#x60;: Entity Created     - &#x60;update&#x60;: Entity Updated     - &#x60;delete&#x60;: Entity Deleted     - &#x60;associate&#x60;: Entity Associated with another Entity     - &#x60;disassociate&#x60;: Entity was Disassociated with another Entity * &#x60;changes&#x60;: A summary of the new and changed values when an object is created, updated, or deleted (json) * &#x60;object1&#x60;: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string) * &#x60;object2&#x60;: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string) * &#x60;object_association&#x60;: When present, shows the field name of the role or relationship that changed. (field) * &#x60;action_node&#x60;: The cluster node the activity took place on. (string) * &#x60;object_type&#x60;: When present, shows the model on which the role or relationship was defined. (field)    ## Sorting  To specify that activity streams are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAuthenticationApplicationsActivityStreamListRequest
- */
-func (a *AuthenticationApiService) AuthenticationApplicationsActivityStreamList(ctx _context.Context, id string) ApiAuthenticationApplicationsActivityStreamListRequest {
-	return ApiAuthenticationApplicationsActivityStreamListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AuthenticationApiService) AuthenticationApplicationsActivityStreamListExecute(r ApiAuthenticationApplicationsActivityStreamListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *AuthenticationApplicationsActivityStreamListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *AuthenticationApiService) AuthenticationApplicationsActivityStreamList(ctx _context.Context, id string, localVarOptionals *AuthenticationApplicationsActivityStreamListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -160,26 +52,22 @@ func (a *AuthenticationApiService) AuthenticationApplicationsActivityStreamListE
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AuthenticationApiService.AuthenticationApplicationsActivityStreamList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/applications/{id}/activity_stream/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/applications/{id}/activity_stream/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -198,12 +86,12 @@ func (a *AuthenticationApiService) AuthenticationApplicationsActivityStreamListE
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -225,62 +113,19 @@ func (a *AuthenticationApiService) AuthenticationApplicationsActivityStreamListE
 	return localVarHTTPResponse, nil
 }
 
-type ApiAuthenticationApplicationsCreate0Request struct {
-	ctx _context.Context
-	ApiService *AuthenticationApiService
-	data *map[string]interface{}
-}
-
-func (r ApiAuthenticationApplicationsCreate0Request) Data(data map[string]interface{}) ApiAuthenticationApplicationsCreate0Request {
-	r.data = &data
-	return r
-}
-
-func (r ApiAuthenticationApplicationsCreate0Request) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AuthenticationApplicationsCreate0Execute(r)
+// AuthenticationApplicationsCreate0Opts Optional parameters for the method 'AuthenticationApplicationsCreate0'
+type AuthenticationApplicationsCreate0Opts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * AuthenticationApplicationsCreate0  Create an Application
- * 
-Make a POST request to this resource with the following application
-fields to create a new application:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this application. (string, required)
-* `description`: Optional description of this application. (string, default=`""`)
-
-
-* `client_type`: Set to Public or Confidential depending on how secure the client device is. (choice, required)
-    - `confidential`: Confidential
-    - `public`: Public
-* `redirect_uris`: Allowed URIs list, space separated (string, default=`""`)
-* `authorization_grant_type`: The Grant type the user must use for acquire tokens for this application. (choice, required)
-    - `authorization-code`: Authorization code
-    - `password`: Resource owner password-based
-* `skip_authorization`: Set True to skip authorization step for completely trusted applications. (boolean, default=`False`)
-* `organization`: Organization containing this application. (id, required)
+AuthenticationApplicationsCreate0  Create an Application
+ Make a POST request to this resource with the following application fields to create a new application:          * &#x60;name&#x60;: Name of this application. (string, required) * &#x60;description&#x60;: Optional description of this application. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)   * &#x60;client_type&#x60;: Set to Public or Confidential depending on how secure the client device is. (choice, required)     - &#x60;confidential&#x60;: Confidential     - &#x60;public&#x60;: Public * &#x60;redirect_uris&#x60;: Allowed URIs list, space separated (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;authorization_grant_type&#x60;: The Grant type the user must use for acquire tokens for this application. (choice, required)     - &#x60;authorization-code&#x60;: Authorization code     - &#x60;password&#x60;: Resource owner password-based * &#x60;skip_authorization&#x60;: Set True to skip authorization step for completely trusted applications. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;organization&#x60;: Organization containing this application. (id, required)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiAuthenticationApplicationsCreate0Request
- */
-func (a *AuthenticationApiService) AuthenticationApplicationsCreate0(ctx _context.Context) ApiAuthenticationApplicationsCreate0Request {
-	return ApiAuthenticationApplicationsCreate0Request{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AuthenticationApiService) AuthenticationApplicationsCreate0Execute(r ApiAuthenticationApplicationsCreate0Request) (*_nethttp.Response, error) {
+ * @param optional nil or *AuthenticationApplicationsCreate0Opts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *AuthenticationApiService) AuthenticationApplicationsCreate0(ctx _context.Context, localVarOptionals *AuthenticationApplicationsCreate0Opts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -289,13 +134,8 @@ func (a *AuthenticationApiService) AuthenticationApplicationsCreate0Execute(r Ap
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AuthenticationApiService.AuthenticationApplicationsCreate0")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/applications/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/applications/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -318,13 +158,16 @@ func (a *AuthenticationApiService) AuthenticationApplicationsCreate0Execute(r Ap
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -346,42 +189,20 @@ func (a *AuthenticationApiService) AuthenticationApplicationsCreate0Execute(r Ap
 	return localVarHTTPResponse, nil
 }
 
-type ApiAuthenticationApplicationsDelete0Request struct {
-	ctx _context.Context
-	ApiService *AuthenticationApiService
-	id string
-	search *string
-}
-
-func (r ApiAuthenticationApplicationsDelete0Request) Search(search string) ApiAuthenticationApplicationsDelete0Request {
-	r.search = &search
-	return r
-}
-
-func (r ApiAuthenticationApplicationsDelete0Request) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AuthenticationApplicationsDelete0Execute(r)
+// AuthenticationApplicationsDelete0Opts Optional parameters for the method 'AuthenticationApplicationsDelete0'
+type AuthenticationApplicationsDelete0Opts struct {
+    Search optional.String
 }
 
 /*
- * AuthenticationApplicationsDelete0  Delete an Application
- * 
-Make a DELETE request to this resource to delete this application.
+AuthenticationApplicationsDelete0  Delete an Application
+ Make a DELETE request to this resource to delete this application.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAuthenticationApplicationsDelete0Request
- */
-func (a *AuthenticationApiService) AuthenticationApplicationsDelete0(ctx _context.Context, id string) ApiAuthenticationApplicationsDelete0Request {
-	return ApiAuthenticationApplicationsDelete0Request{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AuthenticationApiService) AuthenticationApplicationsDelete0Execute(r ApiAuthenticationApplicationsDelete0Request) (*_nethttp.Response, error) {
+ * @param optional nil or *AuthenticationApplicationsDelete0Opts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *AuthenticationApiService) AuthenticationApplicationsDelete0(ctx _context.Context, id string, localVarOptionals *AuthenticationApplicationsDelete0Opts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -390,20 +211,16 @@ func (a *AuthenticationApiService) AuthenticationApplicationsDelete0Execute(r Ap
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AuthenticationApiService.AuthenticationApplicationsDelete0")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/applications/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/applications/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -422,12 +239,12 @@ func (a *AuthenticationApiService) AuthenticationApplicationsDelete0Execute(r Ap
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -449,131 +266,23 @@ func (a *AuthenticationApiService) AuthenticationApplicationsDelete0Execute(r Ap
 	return localVarHTTPResponse, nil
 }
 
-type ApiAuthenticationApplicationsList0Request struct {
-	ctx _context.Context
-	ApiService *AuthenticationApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiAuthenticationApplicationsList0Request) Page(page int32) ApiAuthenticationApplicationsList0Request {
-	r.page = &page
-	return r
-}
-func (r ApiAuthenticationApplicationsList0Request) PageSize(pageSize int32) ApiAuthenticationApplicationsList0Request {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiAuthenticationApplicationsList0Request) Search(search string) ApiAuthenticationApplicationsList0Request {
-	r.search = &search
-	return r
-}
-
-func (r ApiAuthenticationApplicationsList0Request) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AuthenticationApplicationsList0Execute(r)
+// AuthenticationApplicationsList0Opts Optional parameters for the method 'AuthenticationApplicationsList0'
+type AuthenticationApplicationsList0Opts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * AuthenticationApplicationsList0  List Applications
- * 
-Make a GET request to this resource to retrieve the list of
-applications.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of applications
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more application records.  
-
-## Results
-
-Each application data structure includes the following fields:
-
-* `id`: Database ID for this application. (integer)
-* `type`: Data type for this application. (choice)
-* `url`: URL for this application. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this application was created. (datetime)
-* `modified`: Timestamp when this application was last modified. (datetime)
-* `name`: Name of this application. (string)
-* `description`: Optional description of this application. (string)
-* `client_id`:  (string)
-* `client_secret`: Used for more stringent verification of access to an application when creating a token. (string)
-* `client_type`: Set to Public or Confidential depending on how secure the client device is. (choice)
-    - `confidential`: Confidential
-    - `public`: Public
-* `redirect_uris`: Allowed URIs list, space separated (string)
-* `authorization_grant_type`: The Grant type the user must use for acquire tokens for this application. (choice)
-    - `authorization-code`: Authorization code
-    - `password`: Resource owner password-based
-* `skip_authorization`: Set True to skip authorization step for completely trusted applications. (boolean)
-* `organization`: Organization containing this application. (id)
-
-
-
-## Sorting
-
-To specify that applications are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+AuthenticationApplicationsList0  List Applications
+ Make a GET request to this resource to retrieve the list of applications.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of applications found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more application records.    ## Results  Each application data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this application. (integer) * &#x60;type&#x60;: Data type for this application. (choice) * &#x60;url&#x60;: URL for this application. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this application was created. (datetime) * &#x60;modified&#x60;: Timestamp when this application was last modified. (datetime) * &#x60;name&#x60;: Name of this application. (string) * &#x60;description&#x60;: Optional description of this application. (string) * &#x60;client_id&#x60;:  (string) * &#x60;client_secret&#x60;: Used for more stringent verification of access to an application when creating a token. (string) * &#x60;client_type&#x60;: Set to Public or Confidential depending on how secure the client device is. (choice)     - &#x60;confidential&#x60;: Confidential     - &#x60;public&#x60;: Public * &#x60;redirect_uris&#x60;: Allowed URIs list, space separated (string) * &#x60;authorization_grant_type&#x60;: The Grant type the user must use for acquire tokens for this application. (choice)     - &#x60;authorization-code&#x60;: Authorization code     - &#x60;password&#x60;: Resource owner password-based * &#x60;skip_authorization&#x60;: Set True to skip authorization step for completely trusted applications. (boolean) * &#x60;organization&#x60;: Organization containing this application. (id)    ## Sorting  To specify that applications are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiAuthenticationApplicationsList0Request
- */
-func (a *AuthenticationApiService) AuthenticationApplicationsList0(ctx _context.Context) ApiAuthenticationApplicationsList0Request {
-	return ApiAuthenticationApplicationsList0Request{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AuthenticationApiService) AuthenticationApplicationsList0Execute(r ApiAuthenticationApplicationsList0Request) (*_nethttp.Response, error) {
+ * @param optional nil or *AuthenticationApplicationsList0Opts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *AuthenticationApiService) AuthenticationApplicationsList0(ctx _context.Context, localVarOptionals *AuthenticationApplicationsList0Opts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -582,25 +291,20 @@ func (a *AuthenticationApiService) AuthenticationApplicationsList0Execute(r ApiA
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AuthenticationApiService.AuthenticationApplicationsList0")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/applications/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/applications/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -619,12 +323,12 @@ func (a *AuthenticationApiService) AuthenticationApplicationsList0Execute(r ApiA
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -646,79 +350,22 @@ func (a *AuthenticationApiService) AuthenticationApplicationsList0Execute(r ApiA
 	return localVarHTTPResponse, nil
 }
 
-type ApiAuthenticationApplicationsPartialUpdate0Request struct {
-	ctx _context.Context
-	ApiService *AuthenticationApiService
-	id string
-	search *string
-	data *map[string]interface{}
-}
-
-func (r ApiAuthenticationApplicationsPartialUpdate0Request) Search(search string) ApiAuthenticationApplicationsPartialUpdate0Request {
-	r.search = &search
-	return r
-}
-func (r ApiAuthenticationApplicationsPartialUpdate0Request) Data(data map[string]interface{}) ApiAuthenticationApplicationsPartialUpdate0Request {
-	r.data = &data
-	return r
-}
-
-func (r ApiAuthenticationApplicationsPartialUpdate0Request) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AuthenticationApplicationsPartialUpdate0Execute(r)
+// AuthenticationApplicationsPartialUpdate0Opts Optional parameters for the method 'AuthenticationApplicationsPartialUpdate0'
+type AuthenticationApplicationsPartialUpdate0Opts struct {
+    Search optional.String
+    Data optional.Map[string]interface{}
 }
 
 /*
- * AuthenticationApplicationsPartialUpdate0  Update an Application
- * 
-Make a PUT or PATCH request to this resource to update this
-application.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this application. (string, required)
-* `description`: Optional description of this application. (string, default=`""`)
-
-
-* `client_type`: Set to Public or Confidential depending on how secure the client device is. (choice, required)
-    - `confidential`: Confidential
-    - `public`: Public
-* `redirect_uris`: Allowed URIs list, space separated (string, default=`""`)
-* `authorization_grant_type`: The Grant type the user must use for acquire tokens for this application. (choice, required)
-    - `authorization-code`: Authorization code
-    - `password`: Resource owner password-based
-* `skip_authorization`: Set True to skip authorization step for completely trusted applications. (boolean, default=`False`)
-* `organization`: Organization containing this application. (id, required)
-
-
-
-
-
-
-
-
-For a PATCH request, include only the fields that are being modified.
+AuthenticationApplicationsPartialUpdate0  Update an Application
+ Make a PUT or PATCH request to this resource to update this application.  The following fields may be modified:          * &#x60;name&#x60;: Name of this application. (string, required) * &#x60;description&#x60;: Optional description of this application. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)   * &#x60;client_type&#x60;: Set to Public or Confidential depending on how secure the client device is. (choice, required)     - &#x60;confidential&#x60;: Confidential     - &#x60;public&#x60;: Public * &#x60;redirect_uris&#x60;: Allowed URIs list, space separated (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;authorization_grant_type&#x60;: The Grant type the user must use for acquire tokens for this application. (choice, required)     - &#x60;authorization-code&#x60;: Authorization code     - &#x60;password&#x60;: Resource owner password-based * &#x60;skip_authorization&#x60;: Set True to skip authorization step for completely trusted applications. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;organization&#x60;: Organization containing this application. (id, required)         For a PATCH request, include only the fields that are being modified.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAuthenticationApplicationsPartialUpdate0Request
- */
-func (a *AuthenticationApiService) AuthenticationApplicationsPartialUpdate0(ctx _context.Context, id string) ApiAuthenticationApplicationsPartialUpdate0Request {
-	return ApiAuthenticationApplicationsPartialUpdate0Request{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AuthenticationApiService) AuthenticationApplicationsPartialUpdate0Execute(r ApiAuthenticationApplicationsPartialUpdate0Request) (*_nethttp.Response, error) {
+ * @param optional nil or *AuthenticationApplicationsPartialUpdate0Opts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *AuthenticationApiService) AuthenticationApplicationsPartialUpdate0(ctx _context.Context, id string, localVarOptionals *AuthenticationApplicationsPartialUpdate0Opts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPatch
 		localVarPostBody     interface{}
@@ -727,20 +374,16 @@ func (a *AuthenticationApiService) AuthenticationApplicationsPartialUpdate0Execu
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AuthenticationApiService.AuthenticationApplicationsPartialUpdate0")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/applications/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/applications/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -760,13 +403,16 @@ func (a *AuthenticationApiService) AuthenticationApplicationsPartialUpdate0Execu
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -788,64 +434,20 @@ func (a *AuthenticationApiService) AuthenticationApplicationsPartialUpdate0Execu
 	return localVarHTTPResponse, nil
 }
 
-type ApiAuthenticationApplicationsRead0Request struct {
-	ctx _context.Context
-	ApiService *AuthenticationApiService
-	id string
-	search *string
-}
-
-func (r ApiAuthenticationApplicationsRead0Request) Search(search string) ApiAuthenticationApplicationsRead0Request {
-	r.search = &search
-	return r
-}
-
-func (r ApiAuthenticationApplicationsRead0Request) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AuthenticationApplicationsRead0Execute(r)
+// AuthenticationApplicationsRead0Opts Optional parameters for the method 'AuthenticationApplicationsRead0'
+type AuthenticationApplicationsRead0Opts struct {
+    Search optional.String
 }
 
 /*
- * AuthenticationApplicationsRead0  Retrieve an Application
- * 
-Make GET request to this resource to retrieve a single application
-record containing the following fields:
-
-* `id`: Database ID for this application. (integer)
-* `type`: Data type for this application. (choice)
-* `url`: URL for this application. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this application was created. (datetime)
-* `modified`: Timestamp when this application was last modified. (datetime)
-* `name`: Name of this application. (string)
-* `description`: Optional description of this application. (string)
-* `client_id`:  (string)
-* `client_secret`: Used for more stringent verification of access to an application when creating a token. (string)
-* `client_type`: Set to Public or Confidential depending on how secure the client device is. (choice)
-    - `confidential`: Confidential
-    - `public`: Public
-* `redirect_uris`: Allowed URIs list, space separated (string)
-* `authorization_grant_type`: The Grant type the user must use for acquire tokens for this application. (choice)
-    - `authorization-code`: Authorization code
-    - `password`: Resource owner password-based
-* `skip_authorization`: Set True to skip authorization step for completely trusted applications. (boolean)
-* `organization`: Organization containing this application. (id)
+AuthenticationApplicationsRead0  Retrieve an Application
+ Make GET request to this resource to retrieve a single application record containing the following fields:  * &#x60;id&#x60;: Database ID for this application. (integer) * &#x60;type&#x60;: Data type for this application. (choice) * &#x60;url&#x60;: URL for this application. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this application was created. (datetime) * &#x60;modified&#x60;: Timestamp when this application was last modified. (datetime) * &#x60;name&#x60;: Name of this application. (string) * &#x60;description&#x60;: Optional description of this application. (string) * &#x60;client_id&#x60;:  (string) * &#x60;client_secret&#x60;: Used for more stringent verification of access to an application when creating a token. (string) * &#x60;client_type&#x60;: Set to Public or Confidential depending on how secure the client device is. (choice)     - &#x60;confidential&#x60;: Confidential     - &#x60;public&#x60;: Public * &#x60;redirect_uris&#x60;: Allowed URIs list, space separated (string) * &#x60;authorization_grant_type&#x60;: The Grant type the user must use for acquire tokens for this application. (choice)     - &#x60;authorization-code&#x60;: Authorization code     - &#x60;password&#x60;: Resource owner password-based * &#x60;skip_authorization&#x60;: Set True to skip authorization step for completely trusted applications. (boolean) * &#x60;organization&#x60;: Organization containing this application. (id)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAuthenticationApplicationsRead0Request
- */
-func (a *AuthenticationApiService) AuthenticationApplicationsRead0(ctx _context.Context, id string) ApiAuthenticationApplicationsRead0Request {
-	return ApiAuthenticationApplicationsRead0Request{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AuthenticationApiService) AuthenticationApplicationsRead0Execute(r ApiAuthenticationApplicationsRead0Request) (*_nethttp.Response, error) {
+ * @param optional nil or *AuthenticationApplicationsRead0Opts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *AuthenticationApiService) AuthenticationApplicationsRead0(ctx _context.Context, id string, localVarOptionals *AuthenticationApplicationsRead0Opts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -854,20 +456,16 @@ func (a *AuthenticationApiService) AuthenticationApplicationsRead0Execute(r ApiA
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AuthenticationApiService.AuthenticationApplicationsRead0")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/applications/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/applications/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -886,12 +484,12 @@ func (a *AuthenticationApiService) AuthenticationApplicationsRead0Execute(r ApiA
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -913,60 +511,20 @@ func (a *AuthenticationApiService) AuthenticationApplicationsRead0Execute(r ApiA
 	return localVarHTTPResponse, nil
 }
 
-type ApiAuthenticationApplicationsTokensCreate0Request struct {
-	ctx _context.Context
-	ApiService *AuthenticationApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiAuthenticationApplicationsTokensCreate0Request) Data(data map[string]interface{}) ApiAuthenticationApplicationsTokensCreate0Request {
-	r.data = &data
-	return r
-}
-
-func (r ApiAuthenticationApplicationsTokensCreate0Request) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AuthenticationApplicationsTokensCreate0Execute(r)
+// AuthenticationApplicationsTokensCreate0Opts Optional parameters for the method 'AuthenticationApplicationsTokensCreate0'
+type AuthenticationApplicationsTokensCreate0Opts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * AuthenticationApplicationsTokensCreate0  Create an Access Token for an Application
- * 
-Make a POST request to this resource with the following access token
-fields to create a new access token associated with this
-application.
-
-
-
-
-
-
-
-
-
-* `description`: Optional description of this access token. (string, default=`""`)
-
-
-
-
-
-* `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string, default=`"write"`)
+AuthenticationApplicationsTokensCreate0  Create an Access Token for an Application
+ Make a POST request to this resource with the following access token fields to create a new access token associated with this application.          * &#x60;description&#x60;: Optional description of this access token. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)      * &#x60;scope&#x60;: Allowed scopes, further restricts user&amp;#39;s permissions. Must be a simple space-separated string with allowed scopes [&amp;#39;read&amp;#39;, &amp;#39;write&amp;#39;]. (string, default&#x3D;&#x60;\&quot;write\&quot;&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAuthenticationApplicationsTokensCreate0Request
- */
-func (a *AuthenticationApiService) AuthenticationApplicationsTokensCreate0(ctx _context.Context, id string) ApiAuthenticationApplicationsTokensCreate0Request {
-	return ApiAuthenticationApplicationsTokensCreate0Request{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AuthenticationApiService) AuthenticationApplicationsTokensCreate0Execute(r ApiAuthenticationApplicationsTokensCreate0Request) (*_nethttp.Response, error) {
+ * @param optional nil or *AuthenticationApplicationsTokensCreate0Opts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *AuthenticationApiService) AuthenticationApplicationsTokensCreate0(ctx _context.Context, id string, localVarOptionals *AuthenticationApplicationsTokensCreate0Opts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -975,13 +533,9 @@ func (a *AuthenticationApiService) AuthenticationApplicationsTokensCreate0Execut
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AuthenticationApiService.AuthenticationApplicationsTokensCreate0")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/applications/{id}/tokens/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/applications/{id}/tokens/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -1005,13 +559,16 @@ func (a *AuthenticationApiService) AuthenticationApplicationsTokensCreate0Execut
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1033,129 +590,24 @@ func (a *AuthenticationApiService) AuthenticationApplicationsTokensCreate0Execut
 	return localVarHTTPResponse, nil
 }
 
-type ApiAuthenticationApplicationsTokensList0Request struct {
-	ctx _context.Context
-	ApiService *AuthenticationApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiAuthenticationApplicationsTokensList0Request) Page(page int32) ApiAuthenticationApplicationsTokensList0Request {
-	r.page = &page
-	return r
-}
-func (r ApiAuthenticationApplicationsTokensList0Request) PageSize(pageSize int32) ApiAuthenticationApplicationsTokensList0Request {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiAuthenticationApplicationsTokensList0Request) Search(search string) ApiAuthenticationApplicationsTokensList0Request {
-	r.search = &search
-	return r
-}
-
-func (r ApiAuthenticationApplicationsTokensList0Request) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AuthenticationApplicationsTokensList0Execute(r)
+// AuthenticationApplicationsTokensList0Opts Optional parameters for the method 'AuthenticationApplicationsTokensList0'
+type AuthenticationApplicationsTokensList0Opts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * AuthenticationApplicationsTokensList0  List Access Tokens for an Application
- * 
-Make a GET request to this resource to retrieve a list of
-access tokens associated with the selected
-application.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of access tokens
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more access token records.  
-
-## Results
-
-Each access token data structure includes the following fields:
-
-* `id`: Database ID for this access token. (integer)
-* `type`: Data type for this access token. (choice)
-* `url`: URL for this access token. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this access token was created. (datetime)
-* `modified`: Timestamp when this access token was last modified. (datetime)
-* `description`: Optional description of this access token. (string)
-* `user`: The user representing the token owner (id)
-* `token`:  (string)
-* `refresh_token`:  (field)
-* `application`:  (id)
-* `expires`:  (datetime)
-* `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string)
-
-
-
-## Sorting
-
-To specify that access tokens are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+AuthenticationApplicationsTokensList0  List Access Tokens for an Application
+ Make a GET request to this resource to retrieve a list of access tokens associated with the selected application.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of access tokens found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more access token records.    ## Results  Each access token data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this access token. (integer) * &#x60;type&#x60;: Data type for this access token. (choice) * &#x60;url&#x60;: URL for this access token. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this access token was created. (datetime) * &#x60;modified&#x60;: Timestamp when this access token was last modified. (datetime) * &#x60;description&#x60;: Optional description of this access token. (string) * &#x60;user&#x60;: The user representing the token owner (id) * &#x60;token&#x60;:  (string) * &#x60;refresh_token&#x60;:  (field) * &#x60;application&#x60;:  (id) * &#x60;expires&#x60;:  (datetime) * &#x60;scope&#x60;: Allowed scopes, further restricts user&amp;#39;s permissions. Must be a simple space-separated string with allowed scopes [&amp;#39;read&amp;#39;, &amp;#39;write&amp;#39;]. (string)    ## Sorting  To specify that access tokens are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAuthenticationApplicationsTokensList0Request
- */
-func (a *AuthenticationApiService) AuthenticationApplicationsTokensList0(ctx _context.Context, id string) ApiAuthenticationApplicationsTokensList0Request {
-	return ApiAuthenticationApplicationsTokensList0Request{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AuthenticationApiService) AuthenticationApplicationsTokensList0Execute(r ApiAuthenticationApplicationsTokensList0Request) (*_nethttp.Response, error) {
+ * @param optional nil or *AuthenticationApplicationsTokensList0Opts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *AuthenticationApiService) AuthenticationApplicationsTokensList0(ctx _context.Context, id string, localVarOptionals *AuthenticationApplicationsTokensList0Opts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1164,26 +616,22 @@ func (a *AuthenticationApiService) AuthenticationApplicationsTokensList0Execute(
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AuthenticationApiService.AuthenticationApplicationsTokensList0")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/applications/{id}/tokens/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/applications/{id}/tokens/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1202,12 +650,12 @@ func (a *AuthenticationApiService) AuthenticationApplicationsTokensList0Execute(
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1229,77 +677,22 @@ func (a *AuthenticationApiService) AuthenticationApplicationsTokensList0Execute(
 	return localVarHTTPResponse, nil
 }
 
-type ApiAuthenticationApplicationsUpdate0Request struct {
-	ctx _context.Context
-	ApiService *AuthenticationApiService
-	id string
-	search *string
-	data *InlineObject
-}
-
-func (r ApiAuthenticationApplicationsUpdate0Request) Search(search string) ApiAuthenticationApplicationsUpdate0Request {
-	r.search = &search
-	return r
-}
-func (r ApiAuthenticationApplicationsUpdate0Request) Data(data InlineObject) ApiAuthenticationApplicationsUpdate0Request {
-	r.data = &data
-	return r
-}
-
-func (r ApiAuthenticationApplicationsUpdate0Request) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AuthenticationApplicationsUpdate0Execute(r)
+// AuthenticationApplicationsUpdate0Opts Optional parameters for the method 'AuthenticationApplicationsUpdate0'
+type AuthenticationApplicationsUpdate0Opts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * AuthenticationApplicationsUpdate0  Update an Application
- * 
-Make a PUT or PATCH request to this resource to update this
-application.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `name`: Name of this application. (string, required)
-* `description`: Optional description of this application. (string, default=`""`)
-
-
-* `client_type`: Set to Public or Confidential depending on how secure the client device is. (choice, required)
-    - `confidential`: Confidential
-    - `public`: Public
-* `redirect_uris`: Allowed URIs list, space separated (string, default=`""`)
-* `authorization_grant_type`: The Grant type the user must use for acquire tokens for this application. (choice, required)
-    - `authorization-code`: Authorization code
-    - `password`: Resource owner password-based
-* `skip_authorization`: Set True to skip authorization step for completely trusted applications. (boolean, default=`False`)
-* `organization`: Organization containing this application. (id, required)
-
-
-
-
-
-
-For a PUT request, include **all** fields in the request.
+AuthenticationApplicationsUpdate0  Update an Application
+ Make a PUT or PATCH request to this resource to update this application.  The following fields may be modified:          * &#x60;name&#x60;: Name of this application. (string, required) * &#x60;description&#x60;: Optional description of this application. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)   * &#x60;client_type&#x60;: Set to Public or Confidential depending on how secure the client device is. (choice, required)     - &#x60;confidential&#x60;: Confidential     - &#x60;public&#x60;: Public * &#x60;redirect_uris&#x60;: Allowed URIs list, space separated (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;authorization_grant_type&#x60;: The Grant type the user must use for acquire tokens for this application. (choice, required)     - &#x60;authorization-code&#x60;: Authorization code     - &#x60;password&#x60;: Resource owner password-based * &#x60;skip_authorization&#x60;: Set True to skip authorization step for completely trusted applications. (boolean, default&#x3D;&#x60;False&#x60;) * &#x60;organization&#x60;: Organization containing this application. (id, required)       For a PUT request, include **all** fields in the request.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAuthenticationApplicationsUpdate0Request
- */
-func (a *AuthenticationApiService) AuthenticationApplicationsUpdate0(ctx _context.Context, id string) ApiAuthenticationApplicationsUpdate0Request {
-	return ApiAuthenticationApplicationsUpdate0Request{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AuthenticationApiService) AuthenticationApplicationsUpdate0Execute(r ApiAuthenticationApplicationsUpdate0Request) (*_nethttp.Response, error) {
+ * @param optional nil or *AuthenticationApplicationsUpdate0Opts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject) - 
+*/
+func (a *AuthenticationApiService) AuthenticationApplicationsUpdate0(ctx _context.Context, id string, localVarOptionals *AuthenticationApplicationsUpdate0Opts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -1308,20 +701,16 @@ func (a *AuthenticationApiService) AuthenticationApplicationsUpdate0Execute(r Ap
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AuthenticationApiService.AuthenticationApplicationsUpdate0")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/applications/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/applications/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -1341,13 +730,20 @@ func (a *AuthenticationApiService) AuthenticationApplicationsUpdate0Execute(r Ap
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1369,90 +765,12 @@ func (a *AuthenticationApiService) AuthenticationApplicationsUpdate0Execute(r Ap
 	return localVarHTTPResponse, nil
 }
 
-type ApiAuthenticationOListRequest struct {
-	ctx _context.Context
-	ApiService *AuthenticationApiService
-}
-
-
-func (r ApiAuthenticationOListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AuthenticationOListExecute(r)
-}
-
 /*
- * AuthenticationOList  Token Handling using OAuth2
- * 
-This page lists OAuth 2 utility endpoints used for authorization, token refresh and revoke.
-Note endpoints other than `/api/o/authorize/` are not meant to be used in browsers and do not
-support HTTP GET. The endpoints here strictly follow
-[RFC specs for OAuth2](https://tools.ietf.org/html/rfc6749), so please use that for detailed
-reference. Note AWX net location default to `http://localhost:8013` in examples:
-
-
-## Create Token for an Application using Authorization code grant type
-Given an application "AuthCodeApp" of grant type `authorization-code`, 
-from the client app, the user makes a GET to the Authorize endpoint with 
-
-* `response_type`
-* `client_id`
-* `redirect_uris`
-* `scope`  
-
-AWX will respond with the authorization `code` and `state`
-to the redirect_uri specified in the application. The client application will then make a POST to the
-`api/o/token/` endpoint on AWX with
-
-* `code`
-* `client_id`
-* `client_secret`
-* `grant_type`
-* `redirect_uri`
-
-AWX will respond with the `access_token`, `token_type`, `refresh_token`, and `expires_in`. For more
-information on testing this flow, refer to [django-oauth-toolkit](http://django-oauth-toolkit.readthedocs.io/en/latest/tutorial/tutorial_01.html#test-your-authorization-server).
-
-
-## Create Token for an Application using Password grant type
-
-Log in is not required for `password` grant type, so a simple `curl` can be used to acquire a personal access token
-via `/api/o/token/` with 
-
-* `grant_type`: Required to be "password"
-* `username`
-* `password`
-* `client_id`: Associated application must have grant_type "password"
-* `client_secret`
-
-For example:
-
-```bash
-curl -X POST \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=password&username=<username>&password=<password>&scope=read" \
-  -u "gwSPoasWSdNkMDtBN3Hu2WYQpPWCO9SwUEsKK22l:fI6ZpfocHYBGfm1tP92r0yIgCyfRdDQt0Tos9L8a4fNsJjQQMwp9569e
-IaUBsaVDgt2eiwOGe0bg5m5vCSstClZmtdy359RVx2rQK5YlIWyPlrolpt2LEpVeKXWaiybo" \
-  http://localhost:8013/api/o/token/ -i
-```
-In the above post request, parameters `username` and `password` are username and password of the related
-AWX user of the underlying application, and the authentication information is of format
-`<client_id>:<client_secret>`, where `client_id` and `client_secret` are the corresponding fields of
-underlying application.
-
-Upon success, access token, refresh token and other information are given in the response body in JSON
+AuthenticationOList  Token Handling using OAuth2
+ This page lists OAuth 2 utility endpoints used for authorization, token refresh and revoke. Note endpoints other than &#x60;/api/o/authorize/&#x60; are not meant to be used in browsers and do not support HTTP GET. The endpoints here strictly follow [RFC specs for OAuth2](https://tools.ietf.org/html/rfc6749), so please use that for detailed reference. Note AWX net location default to &#x60;http://localhost:8013&#x60; in examples:   ## Create Token for an Application using Authorization code grant type Given an application \&quot;AuthCodeApp\&quot; of grant type &#x60;authorization-code&#x60;,  from the client app, the user makes a GET to the Authorize endpoint with   * &#x60;response_type&#x60; * &#x60;client_id&#x60; * &#x60;redirect_uris&#x60; * &#x60;scope&#x60;    AWX will respond with the authorization &#x60;code&#x60; and &#x60;state&#x60; to the redirect_uri specified in the application. The client application will then make a POST to the &#x60;api/o/token/&#x60; endpoint on AWX with  * &#x60;code&#x60; * &#x60;client_id&#x60; * &#x60;client_secret&#x60; * &#x60;grant_type&#x60; * &#x60;redirect_uri&#x60;  AWX will respond with the &#x60;access_token&#x60;, &#x60;token_type&#x60;, &#x60;refresh_token&#x60;, and &#x60;expires_in&#x60;. For more information on testing this flow, refer to [django-oauth-toolkit](http://django-oauth-toolkit.readthedocs.io/en/latest/tutorial/tutorial_01.html#test-your-authorization-server).   ## Create Token for an Application using Password grant type  Log in is not required for &#x60;password&#x60; grant type, so a simple &#x60;curl&#x60; can be used to acquire a personal access token via &#x60;/api/o/token/&#x60; with   * &#x60;grant_type&#x60;: Required to be \&quot;password\&quot; * &#x60;username&#x60; * &#x60;password&#x60; * &#x60;client_id&#x60;: Associated application must have grant_type \&quot;password\&quot; * &#x60;client_secret&#x60;  For example:  &#x60;&#x60;&#x60;bash curl -X POST \\   -H \&quot;Content-Type: application/x-www-form-urlencoded\&quot; \\   -d \&quot;grant_type&#x3D;password&amp;username&#x3D;&lt;username&gt;&amp;password&#x3D;&lt;password&gt;&amp;scope&#x3D;read\&quot; \\   -u \&quot;gwSPoasWSdNkMDtBN3Hu2WYQpPWCO9SwUEsKK22l:fI6ZpfocHYBGfm1tP92r0yIgCyfRdDQt0Tos9L8a4fNsJjQQMwp9569e IaUBsaVDgt2eiwOGe0bg5m5vCSstClZmtdy359RVx2rQK5YlIWyPlrolpt2LEpVeKXWaiybo\&quot; \\   http://localhost:8013/api/o/token/ -i &#x60;&#x60;&#x60; In the above post request, parameters &#x60;username&#x60; and &#x60;password&#x60; are username and password of the related AWX user of the underlying application, and the authentication information is of format &#x60;&lt;client_id&gt;:&lt;client_secret&gt;&#x60;, where &#x60;client_id&#x60; and &#x60;client_secret&#x60; are the corresponding fields of underlying application.  Upon success, access token, refresh token and other information are given in the response body in JSON
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiAuthenticationOListRequest
- */
-func (a *AuthenticationApiService) AuthenticationOList(ctx _context.Context) ApiAuthenticationOListRequest {
-	return ApiAuthenticationOListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AuthenticationApiService) AuthenticationOListExecute(r ApiAuthenticationOListRequest) (*_nethttp.Response, error) {
+*/
+func (a *AuthenticationApiService) AuthenticationOList(ctx _context.Context) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1461,13 +779,8 @@ func (a *AuthenticationApiService) AuthenticationOListExecute(r ApiAuthenticatio
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AuthenticationApiService.AuthenticationOList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/o/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/o/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -1489,12 +802,12 @@ func (a *AuthenticationApiService) AuthenticationOListExecute(r ApiAuthenticatio
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1516,133 +829,24 @@ func (a *AuthenticationApiService) AuthenticationOListExecute(r ApiAuthenticatio
 	return localVarHTTPResponse, nil
 }
 
-type ApiAuthenticationTokensActivityStreamListRequest struct {
-	ctx _context.Context
-	ApiService *AuthenticationApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiAuthenticationTokensActivityStreamListRequest) Page(page int32) ApiAuthenticationTokensActivityStreamListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiAuthenticationTokensActivityStreamListRequest) PageSize(pageSize int32) ApiAuthenticationTokensActivityStreamListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiAuthenticationTokensActivityStreamListRequest) Search(search string) ApiAuthenticationTokensActivityStreamListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiAuthenticationTokensActivityStreamListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AuthenticationTokensActivityStreamListExecute(r)
+// AuthenticationTokensActivityStreamListOpts Optional parameters for the method 'AuthenticationTokensActivityStreamList'
+type AuthenticationTokensActivityStreamListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * AuthenticationTokensActivityStreamList  List Activity Streams for an Access Token
- * 
-Make a GET request to this resource to retrieve a list of
-activity streams associated with the selected
-access token.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of activity streams
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more activity stream records.  
-
-## Results
-
-Each activity stream data structure includes the following fields:
-
-* `id`: Database ID for this activity stream. (integer)
-* `type`: Data type for this activity stream. (choice)
-* `url`: URL for this activity stream. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `timestamp`:  (datetime)
-* `operation`: The action taken with respect to the given object(s). (choice)
-    - `create`: Entity Created
-    - `update`: Entity Updated
-    - `delete`: Entity Deleted
-    - `associate`: Entity Associated with another Entity
-    - `disassociate`: Entity was Disassociated with another Entity
-* `changes`: A summary of the new and changed values when an object is created, updated, or deleted (json)
-* `object1`: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string)
-* `object2`: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string)
-* `object_association`: When present, shows the field name of the role or relationship that changed. (field)
-* `action_node`: The cluster node the activity took place on. (string)
-* `object_type`: When present, shows the model on which the role or relationship was defined. (field)
-
-
-
-## Sorting
-
-To specify that activity streams are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+AuthenticationTokensActivityStreamList  List Activity Streams for an Access Token
+ Make a GET request to this resource to retrieve a list of activity streams associated with the selected access token.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of activity streams found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more activity stream records.    ## Results  Each activity stream data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this activity stream. (integer) * &#x60;type&#x60;: Data type for this activity stream. (choice) * &#x60;url&#x60;: URL for this activity stream. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;timestamp&#x60;:  (datetime) * &#x60;operation&#x60;: The action taken with respect to the given object(s). (choice)     - &#x60;create&#x60;: Entity Created     - &#x60;update&#x60;: Entity Updated     - &#x60;delete&#x60;: Entity Deleted     - &#x60;associate&#x60;: Entity Associated with another Entity     - &#x60;disassociate&#x60;: Entity was Disassociated with another Entity * &#x60;changes&#x60;: A summary of the new and changed values when an object is created, updated, or deleted (json) * &#x60;object1&#x60;: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string) * &#x60;object2&#x60;: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string) * &#x60;object_association&#x60;: When present, shows the field name of the role or relationship that changed. (field) * &#x60;action_node&#x60;: The cluster node the activity took place on. (string) * &#x60;object_type&#x60;: When present, shows the model on which the role or relationship was defined. (field)    ## Sorting  To specify that activity streams are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAuthenticationTokensActivityStreamListRequest
- */
-func (a *AuthenticationApiService) AuthenticationTokensActivityStreamList(ctx _context.Context, id string) ApiAuthenticationTokensActivityStreamListRequest {
-	return ApiAuthenticationTokensActivityStreamListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AuthenticationApiService) AuthenticationTokensActivityStreamListExecute(r ApiAuthenticationTokensActivityStreamListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *AuthenticationTokensActivityStreamListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *AuthenticationApiService) AuthenticationTokensActivityStreamList(ctx _context.Context, id string, localVarOptionals *AuthenticationTokensActivityStreamListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1651,26 +855,22 @@ func (a *AuthenticationApiService) AuthenticationTokensActivityStreamListExecute
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AuthenticationApiService.AuthenticationTokensActivityStreamList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/tokens/{id}/activity_stream/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/tokens/{id}/activity_stream/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1689,12 +889,12 @@ func (a *AuthenticationApiService) AuthenticationTokensActivityStreamListExecute
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1716,56 +916,19 @@ func (a *AuthenticationApiService) AuthenticationTokensActivityStreamListExecute
 	return localVarHTTPResponse, nil
 }
 
-type ApiAuthenticationTokensCreate0Request struct {
-	ctx _context.Context
-	ApiService *AuthenticationApiService
-	data *map[string]interface{}
-}
-
-func (r ApiAuthenticationTokensCreate0Request) Data(data map[string]interface{}) ApiAuthenticationTokensCreate0Request {
-	r.data = &data
-	return r
-}
-
-func (r ApiAuthenticationTokensCreate0Request) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AuthenticationTokensCreate0Execute(r)
+// AuthenticationTokensCreate0Opts Optional parameters for the method 'AuthenticationTokensCreate0'
+type AuthenticationTokensCreate0Opts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * AuthenticationTokensCreate0  Create an Access Token
- * 
-Make a POST request to this resource with the following access token
-fields to create a new access token:
-
-
-
-
-
-
-
-
-
-* `description`: Optional description of this access token. (string, default=`""`)
-
-
-
-* `application`:  (id, default=``)
-
-* `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string, default=`"write"`)
+AuthenticationTokensCreate0  Create an Access Token
+ Make a POST request to this resource with the following access token fields to create a new access token:          * &#x60;description&#x60;: Optional description of this access token. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)    * &#x60;application&#x60;:  (id, default&#x3D;&#x60;&#x60;)  * &#x60;scope&#x60;: Allowed scopes, further restricts user&amp;#39;s permissions. Must be a simple space-separated string with allowed scopes [&amp;#39;read&amp;#39;, &amp;#39;write&amp;#39;]. (string, default&#x3D;&#x60;\&quot;write\&quot;&#x60;)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiAuthenticationTokensCreate0Request
- */
-func (a *AuthenticationApiService) AuthenticationTokensCreate0(ctx _context.Context) ApiAuthenticationTokensCreate0Request {
-	return ApiAuthenticationTokensCreate0Request{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AuthenticationApiService) AuthenticationTokensCreate0Execute(r ApiAuthenticationTokensCreate0Request) (*_nethttp.Response, error) {
+ * @param optional nil or *AuthenticationTokensCreate0Opts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *AuthenticationApiService) AuthenticationTokensCreate0(ctx _context.Context, localVarOptionals *AuthenticationTokensCreate0Opts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -1774,13 +937,8 @@ func (a *AuthenticationApiService) AuthenticationTokensCreate0Execute(r ApiAuthe
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AuthenticationApiService.AuthenticationTokensCreate0")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/tokens/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/tokens/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -1803,13 +961,16 @@ func (a *AuthenticationApiService) AuthenticationTokensCreate0Execute(r ApiAuthe
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1831,42 +992,20 @@ func (a *AuthenticationApiService) AuthenticationTokensCreate0Execute(r ApiAuthe
 	return localVarHTTPResponse, nil
 }
 
-type ApiAuthenticationTokensDeleteRequest struct {
-	ctx _context.Context
-	ApiService *AuthenticationApiService
-	id string
-	search *string
-}
-
-func (r ApiAuthenticationTokensDeleteRequest) Search(search string) ApiAuthenticationTokensDeleteRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiAuthenticationTokensDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AuthenticationTokensDeleteExecute(r)
+// AuthenticationTokensDeleteOpts Optional parameters for the method 'AuthenticationTokensDelete'
+type AuthenticationTokensDeleteOpts struct {
+    Search optional.String
 }
 
 /*
- * AuthenticationTokensDelete  Delete an Access Token
- * 
-Make a DELETE request to this resource to delete this access token.
+AuthenticationTokensDelete  Delete an Access Token
+ Make a DELETE request to this resource to delete this access token.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAuthenticationTokensDeleteRequest
- */
-func (a *AuthenticationApiService) AuthenticationTokensDelete(ctx _context.Context, id string) ApiAuthenticationTokensDeleteRequest {
-	return ApiAuthenticationTokensDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AuthenticationApiService) AuthenticationTokensDeleteExecute(r ApiAuthenticationTokensDeleteRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *AuthenticationTokensDeleteOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *AuthenticationApiService) AuthenticationTokensDelete(ctx _context.Context, id string, localVarOptionals *AuthenticationTokensDeleteOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -1875,20 +1014,16 @@ func (a *AuthenticationApiService) AuthenticationTokensDeleteExecute(r ApiAuthen
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AuthenticationApiService.AuthenticationTokensDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/tokens/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/tokens/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1907,12 +1042,12 @@ func (a *AuthenticationApiService) AuthenticationTokensDeleteExecute(r ApiAuthen
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1934,125 +1069,23 @@ func (a *AuthenticationApiService) AuthenticationTokensDeleteExecute(r ApiAuthen
 	return localVarHTTPResponse, nil
 }
 
-type ApiAuthenticationTokensList0Request struct {
-	ctx _context.Context
-	ApiService *AuthenticationApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiAuthenticationTokensList0Request) Page(page int32) ApiAuthenticationTokensList0Request {
-	r.page = &page
-	return r
-}
-func (r ApiAuthenticationTokensList0Request) PageSize(pageSize int32) ApiAuthenticationTokensList0Request {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiAuthenticationTokensList0Request) Search(search string) ApiAuthenticationTokensList0Request {
-	r.search = &search
-	return r
-}
-
-func (r ApiAuthenticationTokensList0Request) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AuthenticationTokensList0Execute(r)
+// AuthenticationTokensList0Opts Optional parameters for the method 'AuthenticationTokensList0'
+type AuthenticationTokensList0Opts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * AuthenticationTokensList0  List Access Tokens
- * 
-Make a GET request to this resource to retrieve the list of
-access tokens.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of access tokens
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more access token records.  
-
-## Results
-
-Each access token data structure includes the following fields:
-
-* `id`: Database ID for this access token. (integer)
-* `type`: Data type for this access token. (choice)
-* `url`: URL for this access token. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this access token was created. (datetime)
-* `modified`: Timestamp when this access token was last modified. (datetime)
-* `description`: Optional description of this access token. (string)
-* `user`: The user representing the token owner (id)
-* `token`:  (string)
-* `refresh_token`:  (field)
-* `application`:  (id)
-* `expires`:  (datetime)
-* `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string)
-
-
-
-## Sorting
-
-To specify that access tokens are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+AuthenticationTokensList0  List Access Tokens
+ Make a GET request to this resource to retrieve the list of access tokens.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of access tokens found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more access token records.    ## Results  Each access token data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this access token. (integer) * &#x60;type&#x60;: Data type for this access token. (choice) * &#x60;url&#x60;: URL for this access token. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this access token was created. (datetime) * &#x60;modified&#x60;: Timestamp when this access token was last modified. (datetime) * &#x60;description&#x60;: Optional description of this access token. (string) * &#x60;user&#x60;: The user representing the token owner (id) * &#x60;token&#x60;:  (string) * &#x60;refresh_token&#x60;:  (field) * &#x60;application&#x60;:  (id) * &#x60;expires&#x60;:  (datetime) * &#x60;scope&#x60;: Allowed scopes, further restricts user&amp;#39;s permissions. Must be a simple space-separated string with allowed scopes [&amp;#39;read&amp;#39;, &amp;#39;write&amp;#39;]. (string)    ## Sorting  To specify that access tokens are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiAuthenticationTokensList0Request
- */
-func (a *AuthenticationApiService) AuthenticationTokensList0(ctx _context.Context) ApiAuthenticationTokensList0Request {
-	return ApiAuthenticationTokensList0Request{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AuthenticationApiService) AuthenticationTokensList0Execute(r ApiAuthenticationTokensList0Request) (*_nethttp.Response, error) {
+ * @param optional nil or *AuthenticationTokensList0Opts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *AuthenticationApiService) AuthenticationTokensList0(ctx _context.Context, localVarOptionals *AuthenticationTokensList0Opts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2061,25 +1094,20 @@ func (a *AuthenticationApiService) AuthenticationTokensList0Execute(r ApiAuthent
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AuthenticationApiService.AuthenticationTokensList0")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/tokens/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/tokens/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2098,12 +1126,12 @@ func (a *AuthenticationApiService) AuthenticationTokensList0Execute(r ApiAuthent
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2125,73 +1153,22 @@ func (a *AuthenticationApiService) AuthenticationTokensList0Execute(r ApiAuthent
 	return localVarHTTPResponse, nil
 }
 
-type ApiAuthenticationTokensPartialUpdateRequest struct {
-	ctx _context.Context
-	ApiService *AuthenticationApiService
-	id string
-	search *string
-	data *map[string]interface{}
-}
-
-func (r ApiAuthenticationTokensPartialUpdateRequest) Search(search string) ApiAuthenticationTokensPartialUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiAuthenticationTokensPartialUpdateRequest) Data(data map[string]interface{}) ApiAuthenticationTokensPartialUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiAuthenticationTokensPartialUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AuthenticationTokensPartialUpdateExecute(r)
+// AuthenticationTokensPartialUpdateOpts Optional parameters for the method 'AuthenticationTokensPartialUpdate'
+type AuthenticationTokensPartialUpdateOpts struct {
+    Search optional.String
+    Data optional.Map[string]interface{}
 }
 
 /*
- * AuthenticationTokensPartialUpdate  Update an Access Token
- * 
-Make a PUT or PATCH request to this resource to update this
-access token.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `description`: Optional description of this access token. (string, default=`""`)
-
-
-
-
-
-* `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string, default=`"write"`)
-
-
-
-
-
-
-
-
-For a PATCH request, include only the fields that are being modified.
+AuthenticationTokensPartialUpdate  Update an Access Token
+ Make a PUT or PATCH request to this resource to update this access token.  The following fields may be modified:          * &#x60;description&#x60;: Optional description of this access token. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)      * &#x60;scope&#x60;: Allowed scopes, further restricts user&amp;#39;s permissions. Must be a simple space-separated string with allowed scopes [&amp;#39;read&amp;#39;, &amp;#39;write&amp;#39;]. (string, default&#x3D;&#x60;\&quot;write\&quot;&#x60;)         For a PATCH request, include only the fields that are being modified.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAuthenticationTokensPartialUpdateRequest
- */
-func (a *AuthenticationApiService) AuthenticationTokensPartialUpdate(ctx _context.Context, id string) ApiAuthenticationTokensPartialUpdateRequest {
-	return ApiAuthenticationTokensPartialUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AuthenticationApiService) AuthenticationTokensPartialUpdateExecute(r ApiAuthenticationTokensPartialUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *AuthenticationTokensPartialUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *AuthenticationApiService) AuthenticationTokensPartialUpdate(ctx _context.Context, id string, localVarOptionals *AuthenticationTokensPartialUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPatch
 		localVarPostBody     interface{}
@@ -2200,20 +1177,16 @@ func (a *AuthenticationApiService) AuthenticationTokensPartialUpdateExecute(r Ap
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AuthenticationApiService.AuthenticationTokensPartialUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/tokens/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/tokens/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -2233,13 +1206,16 @@ func (a *AuthenticationApiService) AuthenticationTokensPartialUpdateExecute(r Ap
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2261,58 +1237,20 @@ func (a *AuthenticationApiService) AuthenticationTokensPartialUpdateExecute(r Ap
 	return localVarHTTPResponse, nil
 }
 
-type ApiAuthenticationTokensReadRequest struct {
-	ctx _context.Context
-	ApiService *AuthenticationApiService
-	id string
-	search *string
-}
-
-func (r ApiAuthenticationTokensReadRequest) Search(search string) ApiAuthenticationTokensReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiAuthenticationTokensReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AuthenticationTokensReadExecute(r)
+// AuthenticationTokensReadOpts Optional parameters for the method 'AuthenticationTokensRead'
+type AuthenticationTokensReadOpts struct {
+    Search optional.String
 }
 
 /*
- * AuthenticationTokensRead  Retrieve an Access Token
- * 
-Make GET request to this resource to retrieve a single access token
-record containing the following fields:
-
-* `id`: Database ID for this access token. (integer)
-* `type`: Data type for this access token. (choice)
-* `url`: URL for this access token. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this access token was created. (datetime)
-* `modified`: Timestamp when this access token was last modified. (datetime)
-* `description`: Optional description of this access token. (string)
-* `user`: The user representing the token owner (id)
-* `token`:  (string)
-* `refresh_token`:  (field)
-* `application`:  (id)
-* `expires`:  (datetime)
-* `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string)
+AuthenticationTokensRead  Retrieve an Access Token
+ Make GET request to this resource to retrieve a single access token record containing the following fields:  * &#x60;id&#x60;: Database ID for this access token. (integer) * &#x60;type&#x60;: Data type for this access token. (choice) * &#x60;url&#x60;: URL for this access token. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this access token was created. (datetime) * &#x60;modified&#x60;: Timestamp when this access token was last modified. (datetime) * &#x60;description&#x60;: Optional description of this access token. (string) * &#x60;user&#x60;: The user representing the token owner (id) * &#x60;token&#x60;:  (string) * &#x60;refresh_token&#x60;:  (field) * &#x60;application&#x60;:  (id) * &#x60;expires&#x60;:  (datetime) * &#x60;scope&#x60;: Allowed scopes, further restricts user&amp;#39;s permissions. Must be a simple space-separated string with allowed scopes [&amp;#39;read&amp;#39;, &amp;#39;write&amp;#39;]. (string)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAuthenticationTokensReadRequest
- */
-func (a *AuthenticationApiService) AuthenticationTokensRead(ctx _context.Context, id string) ApiAuthenticationTokensReadRequest {
-	return ApiAuthenticationTokensReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AuthenticationApiService) AuthenticationTokensReadExecute(r ApiAuthenticationTokensReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *AuthenticationTokensReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *AuthenticationApiService) AuthenticationTokensRead(ctx _context.Context, id string, localVarOptionals *AuthenticationTokensReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2321,20 +1259,16 @@ func (a *AuthenticationApiService) AuthenticationTokensReadExecute(r ApiAuthenti
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AuthenticationApiService.AuthenticationTokensRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/tokens/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/tokens/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2353,12 +1287,12 @@ func (a *AuthenticationApiService) AuthenticationTokensReadExecute(r ApiAuthenti
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2380,71 +1314,22 @@ func (a *AuthenticationApiService) AuthenticationTokensReadExecute(r ApiAuthenti
 	return localVarHTTPResponse, nil
 }
 
-type ApiAuthenticationTokensUpdateRequest struct {
-	ctx _context.Context
-	ApiService *AuthenticationApiService
-	id string
-	search *string
-	data *InlineObject68
-}
-
-func (r ApiAuthenticationTokensUpdateRequest) Search(search string) ApiAuthenticationTokensUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiAuthenticationTokensUpdateRequest) Data(data InlineObject68) ApiAuthenticationTokensUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiAuthenticationTokensUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.AuthenticationTokensUpdateExecute(r)
+// AuthenticationTokensUpdateOpts Optional parameters for the method 'AuthenticationTokensUpdate'
+type AuthenticationTokensUpdateOpts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * AuthenticationTokensUpdate  Update an Access Token
- * 
-Make a PUT or PATCH request to this resource to update this
-access token.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `description`: Optional description of this access token. (string, default=`""`)
-
-
-
-
-
-* `scope`: Allowed scopes, further restricts user&#39;s permissions. Must be a simple space-separated string with allowed scopes [&#39;read&#39;, &#39;write&#39;]. (string, default=`"write"`)
-
-
-
-
-
-
-For a PUT request, include **all** fields in the request.
+AuthenticationTokensUpdate  Update an Access Token
+ Make a PUT or PATCH request to this resource to update this access token.  The following fields may be modified:          * &#x60;description&#x60;: Optional description of this access token. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;)      * &#x60;scope&#x60;: Allowed scopes, further restricts user&amp;#39;s permissions. Must be a simple space-separated string with allowed scopes [&amp;#39;read&amp;#39;, &amp;#39;write&amp;#39;]. (string, default&#x3D;&#x60;\&quot;write\&quot;&#x60;)       For a PUT request, include **all** fields in the request.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiAuthenticationTokensUpdateRequest
- */
-func (a *AuthenticationApiService) AuthenticationTokensUpdate(ctx _context.Context, id string) ApiAuthenticationTokensUpdateRequest {
-	return ApiAuthenticationTokensUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *AuthenticationApiService) AuthenticationTokensUpdateExecute(r ApiAuthenticationTokensUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *AuthenticationTokensUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject68) - 
+*/
+func (a *AuthenticationApiService) AuthenticationTokensUpdate(ctx _context.Context, id string, localVarOptionals *AuthenticationTokensUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -2453,20 +1338,16 @@ func (a *AuthenticationApiService) AuthenticationTokensUpdateExecute(r ApiAuthen
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AuthenticationApiService.AuthenticationTokensUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/tokens/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/tokens/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -2486,13 +1367,20 @@ func (a *AuthenticationApiService) AuthenticationTokensUpdateExecute(r ApiAuthen
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject68)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject68")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

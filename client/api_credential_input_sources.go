@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,54 +26,19 @@ var (
 // CredentialInputSourcesApiService CredentialInputSourcesApi service
 type CredentialInputSourcesApiService service
 
-type ApiCredentialInputSourcesCredentialInputSourcesCreateRequest struct {
-	ctx _context.Context
-	ApiService *CredentialInputSourcesApiService
-	data *map[string]interface{}
-}
-
-func (r ApiCredentialInputSourcesCredentialInputSourcesCreateRequest) Data(data map[string]interface{}) ApiCredentialInputSourcesCredentialInputSourcesCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiCredentialInputSourcesCredentialInputSourcesCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CredentialInputSourcesCredentialInputSourcesCreateExecute(r)
+// CredentialInputSourcesCredentialInputSourcesCreateOpts Optional parameters for the method 'CredentialInputSourcesCredentialInputSourcesCreate'
+type CredentialInputSourcesCredentialInputSourcesCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * CredentialInputSourcesCredentialInputSourcesCreate  Create a Credential Input Source
- * 
-Make a POST request to this resource with the following credential input source
-fields to create a new credential input source:
-
-
-
-
-
-
-
-
-
-* `description`: Optional description of this credential input source. (string, default=`""`)
-* `input_field_name`:  (string, required)
-* `metadata`:  (json, default=`{}`)
-* `target_credential`:  (id, required)
-* `source_credential`:  (id, required)
+CredentialInputSourcesCredentialInputSourcesCreate  Create a Credential Input Source
+ Make a POST request to this resource with the following credential input source fields to create a new credential input source:          * &#x60;description&#x60;: Optional description of this credential input source. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;input_field_name&#x60;:  (string, required) * &#x60;metadata&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;target_credential&#x60;:  (id, required) * &#x60;source_credential&#x60;:  (id, required)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiCredentialInputSourcesCredentialInputSourcesCreateRequest
- */
-func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInputSourcesCreate(ctx _context.Context) ApiCredentialInputSourcesCredentialInputSourcesCreateRequest {
-	return ApiCredentialInputSourcesCredentialInputSourcesCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInputSourcesCreateExecute(r ApiCredentialInputSourcesCredentialInputSourcesCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CredentialInputSourcesCredentialInputSourcesCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInputSourcesCreate(ctx _context.Context, localVarOptionals *CredentialInputSourcesCredentialInputSourcesCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -81,13 +47,8 @@ func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInput
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CredentialInputSourcesApiService.CredentialInputSourcesCredentialInputSourcesCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/credential_input_sources/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/credential_input_sources/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -110,13 +71,16 @@ func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInput
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -138,42 +102,20 @@ func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInput
 	return localVarHTTPResponse, nil
 }
 
-type ApiCredentialInputSourcesCredentialInputSourcesDeleteRequest struct {
-	ctx _context.Context
-	ApiService *CredentialInputSourcesApiService
-	id string
-	search *string
-}
-
-func (r ApiCredentialInputSourcesCredentialInputSourcesDeleteRequest) Search(search string) ApiCredentialInputSourcesCredentialInputSourcesDeleteRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiCredentialInputSourcesCredentialInputSourcesDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CredentialInputSourcesCredentialInputSourcesDeleteExecute(r)
+// CredentialInputSourcesCredentialInputSourcesDeleteOpts Optional parameters for the method 'CredentialInputSourcesCredentialInputSourcesDelete'
+type CredentialInputSourcesCredentialInputSourcesDeleteOpts struct {
+    Search optional.String
 }
 
 /*
- * CredentialInputSourcesCredentialInputSourcesDelete  Delete a Credential Input Source
- * 
-Make a DELETE request to this resource to delete this credential input source.
+CredentialInputSourcesCredentialInputSourcesDelete  Delete a Credential Input Source
+ Make a DELETE request to this resource to delete this credential input source.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiCredentialInputSourcesCredentialInputSourcesDeleteRequest
- */
-func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInputSourcesDelete(ctx _context.Context, id string) ApiCredentialInputSourcesCredentialInputSourcesDeleteRequest {
-	return ApiCredentialInputSourcesCredentialInputSourcesDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInputSourcesDeleteExecute(r ApiCredentialInputSourcesCredentialInputSourcesDeleteRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CredentialInputSourcesCredentialInputSourcesDeleteOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInputSourcesDelete(ctx _context.Context, id string, localVarOptionals *CredentialInputSourcesCredentialInputSourcesDeleteOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -182,20 +124,16 @@ func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInput
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CredentialInputSourcesApiService.CredentialInputSourcesCredentialInputSourcesDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/credential_input_sources/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/credential_input_sources/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -214,12 +152,12 @@ func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInput
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -241,123 +179,23 @@ func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInput
 	return localVarHTTPResponse, nil
 }
 
-type ApiCredentialInputSourcesCredentialInputSourcesListRequest struct {
-	ctx _context.Context
-	ApiService *CredentialInputSourcesApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiCredentialInputSourcesCredentialInputSourcesListRequest) Page(page int32) ApiCredentialInputSourcesCredentialInputSourcesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiCredentialInputSourcesCredentialInputSourcesListRequest) PageSize(pageSize int32) ApiCredentialInputSourcesCredentialInputSourcesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiCredentialInputSourcesCredentialInputSourcesListRequest) Search(search string) ApiCredentialInputSourcesCredentialInputSourcesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiCredentialInputSourcesCredentialInputSourcesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CredentialInputSourcesCredentialInputSourcesListExecute(r)
+// CredentialInputSourcesCredentialInputSourcesListOpts Optional parameters for the method 'CredentialInputSourcesCredentialInputSourcesList'
+type CredentialInputSourcesCredentialInputSourcesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * CredentialInputSourcesCredentialInputSourcesList  List Credential Input Sources
- * 
-Make a GET request to this resource to retrieve the list of
-credential input sources.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of credential input sources
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more credential input source records.  
-
-## Results
-
-Each credential input source data structure includes the following fields:
-
-* `id`: Database ID for this credential input source. (integer)
-* `type`: Data type for this credential input source. (choice)
-* `url`: URL for this credential input source. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this credential input source was created. (datetime)
-* `modified`: Timestamp when this credential input source was last modified. (datetime)
-* `description`: Optional description of this credential input source. (string)
-* `input_field_name`:  (string)
-* `metadata`:  (json)
-* `target_credential`:  (id)
-* `source_credential`:  (id)
-
-
-
-## Sorting
-
-To specify that credential input sources are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+CredentialInputSourcesCredentialInputSourcesList  List Credential Input Sources
+ Make a GET request to this resource to retrieve the list of credential input sources.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of credential input sources found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more credential input source records.    ## Results  Each credential input source data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this credential input source. (integer) * &#x60;type&#x60;: Data type for this credential input source. (choice) * &#x60;url&#x60;: URL for this credential input source. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this credential input source was created. (datetime) * &#x60;modified&#x60;: Timestamp when this credential input source was last modified. (datetime) * &#x60;description&#x60;: Optional description of this credential input source. (string) * &#x60;input_field_name&#x60;:  (string) * &#x60;metadata&#x60;:  (json) * &#x60;target_credential&#x60;:  (id) * &#x60;source_credential&#x60;:  (id)    ## Sorting  To specify that credential input sources are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiCredentialInputSourcesCredentialInputSourcesListRequest
- */
-func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInputSourcesList(ctx _context.Context) ApiCredentialInputSourcesCredentialInputSourcesListRequest {
-	return ApiCredentialInputSourcesCredentialInputSourcesListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInputSourcesListExecute(r ApiCredentialInputSourcesCredentialInputSourcesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CredentialInputSourcesCredentialInputSourcesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInputSourcesList(ctx _context.Context, localVarOptionals *CredentialInputSourcesCredentialInputSourcesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -366,25 +204,20 @@ func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInput
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CredentialInputSourcesApiService.CredentialInputSourcesCredentialInputSourcesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/credential_input_sources/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/credential_input_sources/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -403,12 +236,12 @@ func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInput
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -430,71 +263,22 @@ func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInput
 	return localVarHTTPResponse, nil
 }
 
-type ApiCredentialInputSourcesCredentialInputSourcesPartialUpdateRequest struct {
-	ctx _context.Context
-	ApiService *CredentialInputSourcesApiService
-	id string
-	search *string
-	data *map[string]interface{}
-}
-
-func (r ApiCredentialInputSourcesCredentialInputSourcesPartialUpdateRequest) Search(search string) ApiCredentialInputSourcesCredentialInputSourcesPartialUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiCredentialInputSourcesCredentialInputSourcesPartialUpdateRequest) Data(data map[string]interface{}) ApiCredentialInputSourcesCredentialInputSourcesPartialUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiCredentialInputSourcesCredentialInputSourcesPartialUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CredentialInputSourcesCredentialInputSourcesPartialUpdateExecute(r)
+// CredentialInputSourcesCredentialInputSourcesPartialUpdateOpts Optional parameters for the method 'CredentialInputSourcesCredentialInputSourcesPartialUpdate'
+type CredentialInputSourcesCredentialInputSourcesPartialUpdateOpts struct {
+    Search optional.String
+    Data optional.Map[string]interface{}
 }
 
 /*
- * CredentialInputSourcesCredentialInputSourcesPartialUpdate  Update a Credential Input Source
- * 
-Make a PUT or PATCH request to this resource to update this
-credential input source.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `description`: Optional description of this credential input source. (string, default=`""`)
-* `input_field_name`:  (string, required)
-* `metadata`:  (json, default=`{}`)
-* `target_credential`:  (id, required)
-* `source_credential`:  (id, required)
-
-
-
-
-
-
-
-
-For a PATCH request, include only the fields that are being modified.
+CredentialInputSourcesCredentialInputSourcesPartialUpdate  Update a Credential Input Source
+ Make a PUT or PATCH request to this resource to update this credential input source.  The following fields may be modified:          * &#x60;description&#x60;: Optional description of this credential input source. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;input_field_name&#x60;:  (string, required) * &#x60;metadata&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;target_credential&#x60;:  (id, required) * &#x60;source_credential&#x60;:  (id, required)         For a PATCH request, include only the fields that are being modified.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiCredentialInputSourcesCredentialInputSourcesPartialUpdateRequest
- */
-func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInputSourcesPartialUpdate(ctx _context.Context, id string) ApiCredentialInputSourcesCredentialInputSourcesPartialUpdateRequest {
-	return ApiCredentialInputSourcesCredentialInputSourcesPartialUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInputSourcesPartialUpdateExecute(r ApiCredentialInputSourcesCredentialInputSourcesPartialUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CredentialInputSourcesCredentialInputSourcesPartialUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInputSourcesPartialUpdate(ctx _context.Context, id string, localVarOptionals *CredentialInputSourcesCredentialInputSourcesPartialUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPatch
 		localVarPostBody     interface{}
@@ -503,20 +287,16 @@ func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInput
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CredentialInputSourcesApiService.CredentialInputSourcesCredentialInputSourcesPartialUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/credential_input_sources/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/credential_input_sources/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -536,13 +316,16 @@ func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInput
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -564,56 +347,20 @@ func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInput
 	return localVarHTTPResponse, nil
 }
 
-type ApiCredentialInputSourcesCredentialInputSourcesReadRequest struct {
-	ctx _context.Context
-	ApiService *CredentialInputSourcesApiService
-	id string
-	search *string
-}
-
-func (r ApiCredentialInputSourcesCredentialInputSourcesReadRequest) Search(search string) ApiCredentialInputSourcesCredentialInputSourcesReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiCredentialInputSourcesCredentialInputSourcesReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CredentialInputSourcesCredentialInputSourcesReadExecute(r)
+// CredentialInputSourcesCredentialInputSourcesReadOpts Optional parameters for the method 'CredentialInputSourcesCredentialInputSourcesRead'
+type CredentialInputSourcesCredentialInputSourcesReadOpts struct {
+    Search optional.String
 }
 
 /*
- * CredentialInputSourcesCredentialInputSourcesRead  Retrieve a Credential Input Source
- * 
-Make GET request to this resource to retrieve a single credential input source
-record containing the following fields:
-
-* `id`: Database ID for this credential input source. (integer)
-* `type`: Data type for this credential input source. (choice)
-* `url`: URL for this credential input source. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this credential input source was created. (datetime)
-* `modified`: Timestamp when this credential input source was last modified. (datetime)
-* `description`: Optional description of this credential input source. (string)
-* `input_field_name`:  (string)
-* `metadata`:  (json)
-* `target_credential`:  (id)
-* `source_credential`:  (id)
+CredentialInputSourcesCredentialInputSourcesRead  Retrieve a Credential Input Source
+ Make GET request to this resource to retrieve a single credential input source record containing the following fields:  * &#x60;id&#x60;: Database ID for this credential input source. (integer) * &#x60;type&#x60;: Data type for this credential input source. (choice) * &#x60;url&#x60;: URL for this credential input source. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this credential input source was created. (datetime) * &#x60;modified&#x60;: Timestamp when this credential input source was last modified. (datetime) * &#x60;description&#x60;: Optional description of this credential input source. (string) * &#x60;input_field_name&#x60;:  (string) * &#x60;metadata&#x60;:  (json) * &#x60;target_credential&#x60;:  (id) * &#x60;source_credential&#x60;:  (id)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiCredentialInputSourcesCredentialInputSourcesReadRequest
- */
-func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInputSourcesRead(ctx _context.Context, id string) ApiCredentialInputSourcesCredentialInputSourcesReadRequest {
-	return ApiCredentialInputSourcesCredentialInputSourcesReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInputSourcesReadExecute(r ApiCredentialInputSourcesCredentialInputSourcesReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CredentialInputSourcesCredentialInputSourcesReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInputSourcesRead(ctx _context.Context, id string, localVarOptionals *CredentialInputSourcesCredentialInputSourcesReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -622,20 +369,16 @@ func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInput
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CredentialInputSourcesApiService.CredentialInputSourcesCredentialInputSourcesRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/credential_input_sources/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/credential_input_sources/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -654,12 +397,12 @@ func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInput
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -681,69 +424,22 @@ func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInput
 	return localVarHTTPResponse, nil
 }
 
-type ApiCredentialInputSourcesCredentialInputSourcesUpdateRequest struct {
-	ctx _context.Context
-	ApiService *CredentialInputSourcesApiService
-	id string
-	search *string
-	data *InlineObject1
-}
-
-func (r ApiCredentialInputSourcesCredentialInputSourcesUpdateRequest) Search(search string) ApiCredentialInputSourcesCredentialInputSourcesUpdateRequest {
-	r.search = &search
-	return r
-}
-func (r ApiCredentialInputSourcesCredentialInputSourcesUpdateRequest) Data(data InlineObject1) ApiCredentialInputSourcesCredentialInputSourcesUpdateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiCredentialInputSourcesCredentialInputSourcesUpdateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.CredentialInputSourcesCredentialInputSourcesUpdateExecute(r)
+// CredentialInputSourcesCredentialInputSourcesUpdateOpts Optional parameters for the method 'CredentialInputSourcesCredentialInputSourcesUpdate'
+type CredentialInputSourcesCredentialInputSourcesUpdateOpts struct {
+    Search optional.String
+    Data optional.Interface
 }
 
 /*
- * CredentialInputSourcesCredentialInputSourcesUpdate  Update a Credential Input Source
- * 
-Make a PUT or PATCH request to this resource to update this
-credential input source.  The following fields may be modified:
-
-
-
-
-
-
-
-
-
-* `description`: Optional description of this credential input source. (string, default=`""`)
-* `input_field_name`:  (string, required)
-* `metadata`:  (json, default=`{}`)
-* `target_credential`:  (id, required)
-* `source_credential`:  (id, required)
-
-
-
-
-
-
-For a PUT request, include **all** fields in the request.
+CredentialInputSourcesCredentialInputSourcesUpdate  Update a Credential Input Source
+ Make a PUT or PATCH request to this resource to update this credential input source.  The following fields may be modified:          * &#x60;description&#x60;: Optional description of this credential input source. (string, default&#x3D;&#x60;\&quot;\&quot;&#x60;) * &#x60;input_field_name&#x60;:  (string, required) * &#x60;metadata&#x60;:  (json, default&#x3D;&#x60;{}&#x60;) * &#x60;target_credential&#x60;:  (id, required) * &#x60;source_credential&#x60;:  (id, required)       For a PUT request, include **all** fields in the request.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiCredentialInputSourcesCredentialInputSourcesUpdateRequest
- */
-func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInputSourcesUpdate(ctx _context.Context, id string) ApiCredentialInputSourcesCredentialInputSourcesUpdateRequest {
-	return ApiCredentialInputSourcesCredentialInputSourcesUpdateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInputSourcesUpdateExecute(r ApiCredentialInputSourcesCredentialInputSourcesUpdateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *CredentialInputSourcesCredentialInputSourcesUpdateOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+ * @param "Data" (optional.Interface of InlineObject1) - 
+*/
+func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInputSourcesUpdate(ctx _context.Context, id string, localVarOptionals *CredentialInputSourcesCredentialInputSourcesUpdateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPut
 		localVarPostBody     interface{}
@@ -752,20 +448,16 @@ func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInput
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CredentialInputSourcesApiService.CredentialInputSourcesCredentialInputSourcesUpdate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/credential_input_sources/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/credential_input_sources/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -785,13 +477,20 @@ func (a *CredentialInputSourcesApiService) CredentialInputSourcesCredentialInput
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarOptionalData, localVarOptionalDataok := localVarOptionals.Data.Value().(InlineObject1)
+		if !localVarOptionalDataok {
+			return nil, reportError("data should be InlineObject1")
+		}
+		localVarPostBody = &localVarOptionalData
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

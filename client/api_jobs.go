@@ -15,6 +15,7 @@ import (
 	_nethttp "net/http"
 	_neturl "net/url"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -25,133 +26,24 @@ var (
 // JobsApiService JobsApi service
 type JobsApiService service
 
-type ApiJobsJobsActivityStreamListRequest struct {
-	ctx _context.Context
-	ApiService *JobsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiJobsJobsActivityStreamListRequest) Page(page int32) ApiJobsJobsActivityStreamListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiJobsJobsActivityStreamListRequest) PageSize(pageSize int32) ApiJobsJobsActivityStreamListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiJobsJobsActivityStreamListRequest) Search(search string) ApiJobsJobsActivityStreamListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiJobsJobsActivityStreamListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.JobsJobsActivityStreamListExecute(r)
+// JobsJobsActivityStreamListOpts Optional parameters for the method 'JobsJobsActivityStreamList'
+type JobsJobsActivityStreamListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * JobsJobsActivityStreamList  List Activity Streams for a Job
- * 
-Make a GET request to this resource to retrieve a list of
-activity streams associated with the selected
-job.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of activity streams
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more activity stream records.  
-
-## Results
-
-Each activity stream data structure includes the following fields:
-
-* `id`: Database ID for this activity stream. (integer)
-* `type`: Data type for this activity stream. (choice)
-* `url`: URL for this activity stream. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `timestamp`:  (datetime)
-* `operation`: The action taken with respect to the given object(s). (choice)
-    - `create`: Entity Created
-    - `update`: Entity Updated
-    - `delete`: Entity Deleted
-    - `associate`: Entity Associated with another Entity
-    - `disassociate`: Entity was Disassociated with another Entity
-* `changes`: A summary of the new and changed values when an object is created, updated, or deleted (json)
-* `object1`: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string)
-* `object2`: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string)
-* `object_association`: When present, shows the field name of the role or relationship that changed. (field)
-* `action_node`: The cluster node the activity took place on. (string)
-* `object_type`: When present, shows the model on which the role or relationship was defined. (field)
-
-
-
-## Sorting
-
-To specify that activity streams are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+JobsJobsActivityStreamList  List Activity Streams for a Job
+ Make a GET request to this resource to retrieve a list of activity streams associated with the selected job.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of activity streams found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more activity stream records.    ## Results  Each activity stream data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this activity stream. (integer) * &#x60;type&#x60;: Data type for this activity stream. (choice) * &#x60;url&#x60;: URL for this activity stream. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;timestamp&#x60;:  (datetime) * &#x60;operation&#x60;: The action taken with respect to the given object(s). (choice)     - &#x60;create&#x60;: Entity Created     - &#x60;update&#x60;: Entity Updated     - &#x60;delete&#x60;: Entity Deleted     - &#x60;associate&#x60;: Entity Associated with another Entity     - &#x60;disassociate&#x60;: Entity was Disassociated with another Entity * &#x60;changes&#x60;: A summary of the new and changed values when an object is created, updated, or deleted (json) * &#x60;object1&#x60;: For create, update, and delete events this is the object type that was affected. For associate and disassociate events this is the object type associated or disassociated with object2. (string) * &#x60;object2&#x60;: Unpopulated for create, update, and delete events. For associate and disassociate events this is the object type that object1 is being associated with. (string) * &#x60;object_association&#x60;: When present, shows the field name of the role or relationship that changed. (field) * &#x60;action_node&#x60;: The cluster node the activity took place on. (string) * &#x60;object_type&#x60;: When present, shows the model on which the role or relationship was defined. (field)    ## Sorting  To specify that activity streams are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiJobsJobsActivityStreamListRequest
- */
-func (a *JobsApiService) JobsJobsActivityStreamList(ctx _context.Context, id string) ApiJobsJobsActivityStreamListRequest {
-	return ApiJobsJobsActivityStreamListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *JobsApiService) JobsJobsActivityStreamListExecute(r ApiJobsJobsActivityStreamListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *JobsJobsActivityStreamListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *JobsApiService) JobsJobsActivityStreamList(ctx _context.Context, id string, localVarOptionals *JobsJobsActivityStreamListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -160,26 +52,22 @@ func (a *JobsApiService) JobsJobsActivityStreamListExecute(r ApiJobsJobsActivity
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "JobsApiService.JobsJobsActivityStreamList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/jobs/{id}/activity_stream/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/jobs/{id}/activity_stream/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -198,12 +86,12 @@ func (a *JobsApiService) JobsJobsActivityStreamListExecute(r ApiJobsJobsActivity
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -225,38 +113,13 @@ func (a *JobsApiService) JobsJobsActivityStreamListExecute(r ApiJobsJobsActivity
 	return localVarHTTPResponse, nil
 }
 
-type ApiJobsJobsCancelCreateRequest struct {
-	ctx _context.Context
-	ApiService *JobsApiService
-	id string
-}
-
-
-func (r ApiJobsJobsCancelCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.JobsJobsCancelCreateExecute(r)
-}
-
 /*
- * JobsJobsCancelCreate  Cancel a Job
- * Make a POST request to this resource to cancel a pending or running job.  The
-response status code will be 202 if successful, or 405 if the job cannot be
-canceled.
+JobsJobsCancelCreate  Cancel a Job
+Make a POST request to this resource to cancel a pending or running job.  The response status code will be 202 if successful, or 405 if the job cannot be canceled.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiJobsJobsCancelCreateRequest
- */
-func (a *JobsApiService) JobsJobsCancelCreate(ctx _context.Context, id string) ApiJobsJobsCancelCreateRequest {
-	return ApiJobsJobsCancelCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *JobsApiService) JobsJobsCancelCreateExecute(r ApiJobsJobsCancelCreateRequest) (*_nethttp.Response, error) {
+*/
+func (a *JobsApiService) JobsJobsCancelCreate(ctx _context.Context, id string) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -265,13 +128,9 @@ func (a *JobsApiService) JobsJobsCancelCreateExecute(r ApiJobsJobsCancelCreateRe
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "JobsApiService.JobsJobsCancelCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/jobs/{id}/cancel/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/jobs/{id}/cancel/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -294,12 +153,12 @@ func (a *JobsApiService) JobsJobsCancelCreateExecute(r ApiJobsJobsCancelCreateRe
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -321,45 +180,20 @@ func (a *JobsApiService) JobsJobsCancelCreateExecute(r ApiJobsJobsCancelCreateRe
 	return localVarHTTPResponse, nil
 }
 
-type ApiJobsJobsCancelReadRequest struct {
-	ctx _context.Context
-	ApiService *JobsApiService
-	id string
-	search *string
-}
-
-func (r ApiJobsJobsCancelReadRequest) Search(search string) ApiJobsJobsCancelReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiJobsJobsCancelReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.JobsJobsCancelReadExecute(r)
+// JobsJobsCancelReadOpts Optional parameters for the method 'JobsJobsCancelRead'
+type JobsJobsCancelReadOpts struct {
+    Search optional.String
 }
 
 /*
- * JobsJobsCancelRead  Determine if a Job can be canceled
- * 
-Make a GET request to this resource to determine if the job can be canceled.
-The response will include the following field:
-
-* `can_cancel`: Indicates whether this job can be canceled (boolean, read-only)
+JobsJobsCancelRead  Determine if a Job can be canceled
+ Make a GET request to this resource to determine if the job can be canceled. The response will include the following field:  * &#x60;can_cancel&#x60;: Indicates whether this job can be canceled (boolean, read-only)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiJobsJobsCancelReadRequest
- */
-func (a *JobsApiService) JobsJobsCancelRead(ctx _context.Context, id string) ApiJobsJobsCancelReadRequest {
-	return ApiJobsJobsCancelReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *JobsApiService) JobsJobsCancelReadExecute(r ApiJobsJobsCancelReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *JobsJobsCancelReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *JobsApiService) JobsJobsCancelRead(ctx _context.Context, id string, localVarOptionals *JobsJobsCancelReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -368,20 +202,16 @@ func (a *JobsApiService) JobsJobsCancelReadExecute(r ApiJobsJobsCancelReadReques
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "JobsApiService.JobsJobsCancelRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/jobs/{id}/cancel/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/jobs/{id}/cancel/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -400,12 +230,12 @@ func (a *JobsApiService) JobsJobsCancelReadExecute(r ApiJobsJobsCancelReadReques
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -427,46 +257,13 @@ func (a *JobsApiService) JobsJobsCancelReadExecute(r ApiJobsJobsCancelReadReques
 	return localVarHTTPResponse, nil
 }
 
-type ApiJobsJobsCreateScheduleCreateRequest struct {
-	ctx _context.Context
-	ApiService *JobsApiService
-	id string
-}
-
-
-func (r ApiJobsJobsCreateScheduleCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.JobsJobsCreateScheduleCreateExecute(r)
-}
-
 /*
- * JobsJobsCreateScheduleCreate Create a schedule based on a job
- * 
-Make a POST request to this endpoint to create a schedule that launches
-the job template that launched this job, and uses the same
-parameters that the job was launched with. These parameters include all
-"prompted" resources such as `extra_vars`, `inventory`, `limit`, etc.
-
-Jobs that were launched with user-provided passwords cannot have a schedule
-created from them.
-
-Make a GET request for information about what those prompts are and
-whether or not a schedule can be created.
+JobsJobsCreateScheduleCreate Create a schedule based on a job
+ Make a POST request to this endpoint to create a schedule that launches the job template that launched this job, and uses the same parameters that the job was launched with. These parameters include all \&quot;prompted\&quot; resources such as &#x60;extra_vars&#x60;, &#x60;inventory&#x60;, &#x60;limit&#x60;, etc.  Jobs that were launched with user-provided passwords cannot have a schedule created from them.  Make a GET request for information about what those prompts are and whether or not a schedule can be created.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiJobsJobsCreateScheduleCreateRequest
- */
-func (a *JobsApiService) JobsJobsCreateScheduleCreate(ctx _context.Context, id string) ApiJobsJobsCreateScheduleCreateRequest {
-	return ApiJobsJobsCreateScheduleCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *JobsApiService) JobsJobsCreateScheduleCreateExecute(r ApiJobsJobsCreateScheduleCreateRequest) (*_nethttp.Response, error) {
+*/
+func (a *JobsApiService) JobsJobsCreateScheduleCreate(ctx _context.Context, id string) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -475,13 +272,9 @@ func (a *JobsApiService) JobsJobsCreateScheduleCreateExecute(r ApiJobsJobsCreate
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "JobsApiService.JobsJobsCreateScheduleCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/jobs/{id}/create_schedule/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/jobs/{id}/create_schedule/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -504,12 +297,12 @@ func (a *JobsApiService) JobsJobsCreateScheduleCreateExecute(r ApiJobsJobsCreate
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -531,51 +324,20 @@ func (a *JobsApiService) JobsJobsCreateScheduleCreateExecute(r ApiJobsJobsCreate
 	return localVarHTTPResponse, nil
 }
 
-type ApiJobsJobsCreateScheduleReadRequest struct {
-	ctx _context.Context
-	ApiService *JobsApiService
-	id string
-	search *string
-}
-
-func (r ApiJobsJobsCreateScheduleReadRequest) Search(search string) ApiJobsJobsCreateScheduleReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiJobsJobsCreateScheduleReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.JobsJobsCreateScheduleReadExecute(r)
+// JobsJobsCreateScheduleReadOpts Optional parameters for the method 'JobsJobsCreateScheduleRead'
+type JobsJobsCreateScheduleReadOpts struct {
+    Search optional.String
 }
 
 /*
- * JobsJobsCreateScheduleRead Create a schedule based on a job
- * 
-Make a POST request to this endpoint to create a schedule that launches
-the job template that launched this job, and uses the same
-parameters that the job was launched with. These parameters include all
-"prompted" resources such as `extra_vars`, `inventory`, `limit`, etc.
-
-Jobs that were launched with user-provided passwords cannot have a schedule
-created from them.
-
-Make a GET request for information about what those prompts are and
-whether or not a schedule can be created.
+JobsJobsCreateScheduleRead Create a schedule based on a job
+ Make a POST request to this endpoint to create a schedule that launches the job template that launched this job, and uses the same parameters that the job was launched with. These parameters include all \&quot;prompted\&quot; resources such as &#x60;extra_vars&#x60;, &#x60;inventory&#x60;, &#x60;limit&#x60;, etc.  Jobs that were launched with user-provided passwords cannot have a schedule created from them.  Make a GET request for information about what those prompts are and whether or not a schedule can be created.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiJobsJobsCreateScheduleReadRequest
- */
-func (a *JobsApiService) JobsJobsCreateScheduleRead(ctx _context.Context, id string) ApiJobsJobsCreateScheduleReadRequest {
-	return ApiJobsJobsCreateScheduleReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *JobsApiService) JobsJobsCreateScheduleReadExecute(r ApiJobsJobsCreateScheduleReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *JobsJobsCreateScheduleReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *JobsApiService) JobsJobsCreateScheduleRead(ctx _context.Context, id string, localVarOptionals *JobsJobsCreateScheduleReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -584,20 +346,16 @@ func (a *JobsApiService) JobsJobsCreateScheduleReadExecute(r ApiJobsJobsCreateSc
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "JobsApiService.JobsJobsCreateScheduleRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/jobs/{id}/create_schedule/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/jobs/{id}/create_schedule/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -616,12 +374,12 @@ func (a *JobsApiService) JobsJobsCreateScheduleReadExecute(r ApiJobsJobsCreateSc
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -643,131 +401,24 @@ func (a *JobsApiService) JobsJobsCreateScheduleReadExecute(r ApiJobsJobsCreateSc
 	return localVarHTTPResponse, nil
 }
 
-type ApiJobsJobsCredentialsListRequest struct {
-	ctx _context.Context
-	ApiService *JobsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiJobsJobsCredentialsListRequest) Page(page int32) ApiJobsJobsCredentialsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiJobsJobsCredentialsListRequest) PageSize(pageSize int32) ApiJobsJobsCredentialsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiJobsJobsCredentialsListRequest) Search(search string) ApiJobsJobsCredentialsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiJobsJobsCredentialsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.JobsJobsCredentialsListExecute(r)
+// JobsJobsCredentialsListOpts Optional parameters for the method 'JobsJobsCredentialsList'
+type JobsJobsCredentialsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * JobsJobsCredentialsList  List Credentials for a Job
- * 
-Make a GET request to this resource to retrieve a list of
-credentials associated with the selected
-job.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of credentials
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more credential records.  
-
-## Results
-
-Each credential data structure includes the following fields:
-
-* `id`: Database ID for this credential. (integer)
-* `type`: Data type for this credential. (choice)
-* `url`: URL for this credential. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this credential was created. (datetime)
-* `modified`: Timestamp when this credential was last modified. (datetime)
-* `name`: Name of this credential. (string)
-* `description`: Optional description of this credential. (string)
-* `organization`:  (id)
-* `credential_type`: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id)
-* `managed_by_tower`:  (boolean)
-* `inputs`: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json)
-* `kind`:  (field)
-* `cloud`:  (field)
-* `kubernetes`:  (field)
-
-
-
-## Sorting
-
-To specify that credentials are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+JobsJobsCredentialsList  List Credentials for a Job
+ Make a GET request to this resource to retrieve a list of credentials associated with the selected job.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of credentials found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more credential records.    ## Results  Each credential data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this credential. (integer) * &#x60;type&#x60;: Data type for this credential. (choice) * &#x60;url&#x60;: URL for this credential. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this credential was created. (datetime) * &#x60;modified&#x60;: Timestamp when this credential was last modified. (datetime) * &#x60;name&#x60;: Name of this credential. (string) * &#x60;description&#x60;: Optional description of this credential. (string) * &#x60;organization&#x60;:  (id) * &#x60;credential_type&#x60;: Specify the type of credential you want to create. Refer to the Ansible Tower documentation for details on each type. (id) * &#x60;managed_by_tower&#x60;:  (boolean) * &#x60;inputs&#x60;: Enter inputs using either JSON or YAML syntax. Refer to the Ansible Tower documentation for example syntax. (json) * &#x60;kind&#x60;:  (field) * &#x60;cloud&#x60;:  (field) * &#x60;kubernetes&#x60;:  (field)    ## Sorting  To specify that credentials are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiJobsJobsCredentialsListRequest
- */
-func (a *JobsApiService) JobsJobsCredentialsList(ctx _context.Context, id string) ApiJobsJobsCredentialsListRequest {
-	return ApiJobsJobsCredentialsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *JobsApiService) JobsJobsCredentialsListExecute(r ApiJobsJobsCredentialsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *JobsJobsCredentialsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *JobsApiService) JobsJobsCredentialsList(ctx _context.Context, id string, localVarOptionals *JobsJobsCredentialsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -776,26 +427,22 @@ func (a *JobsApiService) JobsJobsCredentialsListExecute(r ApiJobsJobsCredentials
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "JobsApiService.JobsJobsCredentialsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/jobs/{id}/credentials/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/jobs/{id}/credentials/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -814,12 +461,12 @@ func (a *JobsApiService) JobsJobsCredentialsListExecute(r ApiJobsJobsCredentials
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -841,42 +488,20 @@ func (a *JobsApiService) JobsJobsCredentialsListExecute(r ApiJobsJobsCredentials
 	return localVarHTTPResponse, nil
 }
 
-type ApiJobsJobsDeleteRequest struct {
-	ctx _context.Context
-	ApiService *JobsApiService
-	id string
-	search *string
-}
-
-func (r ApiJobsJobsDeleteRequest) Search(search string) ApiJobsJobsDeleteRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiJobsJobsDeleteRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.JobsJobsDeleteExecute(r)
+// JobsJobsDeleteOpts Optional parameters for the method 'JobsJobsDelete'
+type JobsJobsDeleteOpts struct {
+    Search optional.String
 }
 
 /*
- * JobsJobsDelete  Delete a Job
- * 
-Make a DELETE request to this resource to delete this job.
+JobsJobsDelete  Delete a Job
+ Make a DELETE request to this resource to delete this job.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiJobsJobsDeleteRequest
- */
-func (a *JobsApiService) JobsJobsDelete(ctx _context.Context, id string) ApiJobsJobsDeleteRequest {
-	return ApiJobsJobsDeleteRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *JobsApiService) JobsJobsDeleteExecute(r ApiJobsJobsDeleteRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *JobsJobsDeleteOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *JobsApiService) JobsJobsDelete(ctx _context.Context, id string, localVarOptionals *JobsJobsDeleteOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodDelete
 		localVarPostBody     interface{}
@@ -885,20 +510,16 @@ func (a *JobsApiService) JobsJobsDeleteExecute(r ApiJobsJobsDeleteRequest) (*_ne
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "JobsApiService.JobsJobsDelete")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/jobs/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/jobs/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -917,12 +538,12 @@ func (a *JobsApiService) JobsJobsDeleteExecute(r ApiJobsJobsDeleteRequest) (*_ne
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -944,175 +565,24 @@ func (a *JobsApiService) JobsJobsDeleteExecute(r ApiJobsJobsDeleteRequest) (*_ne
 	return localVarHTTPResponse, nil
 }
 
-type ApiJobsJobsJobEventsListRequest struct {
-	ctx _context.Context
-	ApiService *JobsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiJobsJobsJobEventsListRequest) Page(page int32) ApiJobsJobsJobEventsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiJobsJobsJobEventsListRequest) PageSize(pageSize int32) ApiJobsJobsJobEventsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiJobsJobsJobEventsListRequest) Search(search string) ApiJobsJobsJobEventsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiJobsJobsJobEventsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.JobsJobsJobEventsListExecute(r)
+// JobsJobsJobEventsListOpts Optional parameters for the method 'JobsJobsJobEventsList'
+type JobsJobsJobEventsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * JobsJobsJobEventsList  List Job Events for a Job
- * 
-Make a GET request to this resource to retrieve a list of
-job events associated with the selected
-job.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of job events
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more job event records.  
-
-## Results
-
-Each job event data structure includes the following fields:
-
-* `id`: Database ID for this job event. (integer)
-* `type`: Data type for this job event. (choice)
-* `url`: URL for this job event. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this job event was created. (datetime)
-* `modified`: Timestamp when this job event was last modified. (datetime)
-* `job`:  (id)
-* `event`:  (choice)
-    - `runner_on_failed`: Host Failed
-    - `runner_on_start`: Host Started
-    - `runner_on_ok`: Host OK
-    - `runner_on_error`: Host Failure
-    - `runner_on_skipped`: Host Skipped
-    - `runner_on_unreachable`: Host Unreachable
-    - `runner_on_no_hosts`: No Hosts Remaining
-    - `runner_on_async_poll`: Host Polling
-    - `runner_on_async_ok`: Host Async OK
-    - `runner_on_async_failed`: Host Async Failure
-    - `runner_item_on_ok`: Item OK
-    - `runner_item_on_failed`: Item Failed
-    - `runner_item_on_skipped`: Item Skipped
-    - `runner_retry`: Host Retry
-    - `runner_on_file_diff`: File Difference
-    - `playbook_on_start`: Playbook Started
-    - `playbook_on_notify`: Running Handlers
-    - `playbook_on_include`: Including File
-    - `playbook_on_no_hosts_matched`: No Hosts Matched
-    - `playbook_on_no_hosts_remaining`: No Hosts Remaining
-    - `playbook_on_task_start`: Task Started
-    - `playbook_on_vars_prompt`: Variables Prompted
-    - `playbook_on_setup`: Gathering Facts
-    - `playbook_on_import_for_host`: internal: on Import for Host
-    - `playbook_on_not_import_for_host`: internal: on Not Import for Host
-    - `playbook_on_play_start`: Play Started
-    - `playbook_on_stats`: Playbook Complete
-    - `debug`: Debug
-    - `verbose`: Verbose
-    - `deprecated`: Deprecated
-    - `warning`: Warning
-    - `system_warning`: System Warning
-    - `error`: Error
-* `counter`:  (integer)
-* `event_display`:  (string)
-* `event_data`:  (json)
-* `event_level`:  (integer)
-* `failed`:  (boolean)
-* `changed`:  (boolean)
-* `uuid`:  (string)
-* `parent_uuid`:  (string)
-* `host`:  (id)
-* `host_name`:  (string)
-* `playbook`:  (string)
-* `play`:  (string)
-* `task`:  (string)
-* `role`:  (string)
-* `stdout`:  (string)
-* `start_line`:  (integer)
-* `end_line`:  (integer)
-* `verbosity`:  (integer)
-
-
-
-## Sorting
-
-To specify that job events are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+JobsJobsJobEventsList  List Job Events for a Job
+ Make a GET request to this resource to retrieve a list of job events associated with the selected job.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of job events found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more job event records.    ## Results  Each job event data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this job event. (integer) * &#x60;type&#x60;: Data type for this job event. (choice) * &#x60;url&#x60;: URL for this job event. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this job event was created. (datetime) * &#x60;modified&#x60;: Timestamp when this job event was last modified. (datetime) * &#x60;job&#x60;:  (id) * &#x60;event&#x60;:  (choice)     - &#x60;runner_on_failed&#x60;: Host Failed     - &#x60;runner_on_start&#x60;: Host Started     - &#x60;runner_on_ok&#x60;: Host OK     - &#x60;runner_on_error&#x60;: Host Failure     - &#x60;runner_on_skipped&#x60;: Host Skipped     - &#x60;runner_on_unreachable&#x60;: Host Unreachable     - &#x60;runner_on_no_hosts&#x60;: No Hosts Remaining     - &#x60;runner_on_async_poll&#x60;: Host Polling     - &#x60;runner_on_async_ok&#x60;: Host Async OK     - &#x60;runner_on_async_failed&#x60;: Host Async Failure     - &#x60;runner_item_on_ok&#x60;: Item OK     - &#x60;runner_item_on_failed&#x60;: Item Failed     - &#x60;runner_item_on_skipped&#x60;: Item Skipped     - &#x60;runner_retry&#x60;: Host Retry     - &#x60;runner_on_file_diff&#x60;: File Difference     - &#x60;playbook_on_start&#x60;: Playbook Started     - &#x60;playbook_on_notify&#x60;: Running Handlers     - &#x60;playbook_on_include&#x60;: Including File     - &#x60;playbook_on_no_hosts_matched&#x60;: No Hosts Matched     - &#x60;playbook_on_no_hosts_remaining&#x60;: No Hosts Remaining     - &#x60;playbook_on_task_start&#x60;: Task Started     - &#x60;playbook_on_vars_prompt&#x60;: Variables Prompted     - &#x60;playbook_on_setup&#x60;: Gathering Facts     - &#x60;playbook_on_import_for_host&#x60;: internal: on Import for Host     - &#x60;playbook_on_not_import_for_host&#x60;: internal: on Not Import for Host     - &#x60;playbook_on_play_start&#x60;: Play Started     - &#x60;playbook_on_stats&#x60;: Playbook Complete     - &#x60;debug&#x60;: Debug     - &#x60;verbose&#x60;: Verbose     - &#x60;deprecated&#x60;: Deprecated     - &#x60;warning&#x60;: Warning     - &#x60;system_warning&#x60;: System Warning     - &#x60;error&#x60;: Error * &#x60;counter&#x60;:  (integer) * &#x60;event_display&#x60;:  (string) * &#x60;event_data&#x60;:  (json) * &#x60;event_level&#x60;:  (integer) * &#x60;failed&#x60;:  (boolean) * &#x60;changed&#x60;:  (boolean) * &#x60;uuid&#x60;:  (string) * &#x60;parent_uuid&#x60;:  (string) * &#x60;host&#x60;:  (id) * &#x60;host_name&#x60;:  (string) * &#x60;playbook&#x60;:  (string) * &#x60;play&#x60;:  (string) * &#x60;task&#x60;:  (string) * &#x60;role&#x60;:  (string) * &#x60;stdout&#x60;:  (string) * &#x60;start_line&#x60;:  (integer) * &#x60;end_line&#x60;:  (integer) * &#x60;verbosity&#x60;:  (integer)    ## Sorting  To specify that job events are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiJobsJobsJobEventsListRequest
- */
-func (a *JobsApiService) JobsJobsJobEventsList(ctx _context.Context, id string) ApiJobsJobsJobEventsListRequest {
-	return ApiJobsJobsJobEventsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *JobsApiService) JobsJobsJobEventsListExecute(r ApiJobsJobsJobEventsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *JobsJobsJobEventsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *JobsApiService) JobsJobsJobEventsList(ctx _context.Context, id string, localVarOptionals *JobsJobsJobEventsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1121,26 +591,22 @@ func (a *JobsApiService) JobsJobsJobEventsListExecute(r ApiJobsJobsJobEventsList
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "JobsApiService.JobsJobsJobEventsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/jobs/{id}/job_events/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/jobs/{id}/job_events/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1159,12 +625,12 @@ func (a *JobsApiService) JobsJobsJobEventsListExecute(r ApiJobsJobsJobEventsList
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1186,134 +652,24 @@ func (a *JobsApiService) JobsJobsJobEventsListExecute(r ApiJobsJobsJobEventsList
 	return localVarHTTPResponse, nil
 }
 
-type ApiJobsJobsJobHostSummariesListRequest struct {
-	ctx _context.Context
-	ApiService *JobsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiJobsJobsJobHostSummariesListRequest) Page(page int32) ApiJobsJobsJobHostSummariesListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiJobsJobsJobHostSummariesListRequest) PageSize(pageSize int32) ApiJobsJobsJobHostSummariesListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiJobsJobsJobHostSummariesListRequest) Search(search string) ApiJobsJobsJobHostSummariesListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiJobsJobsJobHostSummariesListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.JobsJobsJobHostSummariesListExecute(r)
+// JobsJobsJobHostSummariesListOpts Optional parameters for the method 'JobsJobsJobHostSummariesList'
+type JobsJobsJobHostSummariesListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * JobsJobsJobHostSummariesList  List Job Host Summaries for a Job
- * 
-Make a GET request to this resource to retrieve a list of
-job host summaries associated with the selected
-job.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of job host summaries
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more job host summary records.  
-
-## Results
-
-Each job host summary data structure includes the following fields:
-
-* `id`: Database ID for this job host summary. (integer)
-* `type`: Data type for this job host summary. (choice)
-* `url`: URL for this job host summary. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this job host summary was created. (datetime)
-* `modified`: Timestamp when this job host summary was last modified. (datetime)
-* `job`:  (id)
-* `host`:  (id)
-* `host_name`:  (string)
-* `changed`:  (integer)
-* `dark`:  (integer)
-* `failures`:  (integer)
-* `ok`:  (integer)
-* `processed`:  (integer)
-* `skipped`:  (integer)
-* `failed`:  (boolean)
-* `ignored`:  (integer)
-* `rescued`:  (integer)
-
-
-
-## Sorting
-
-To specify that job host summaries are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+JobsJobsJobHostSummariesList  List Job Host Summaries for a Job
+ Make a GET request to this resource to retrieve a list of job host summaries associated with the selected job.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of job host summaries found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more job host summary records.    ## Results  Each job host summary data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this job host summary. (integer) * &#x60;type&#x60;: Data type for this job host summary. (choice) * &#x60;url&#x60;: URL for this job host summary. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this job host summary was created. (datetime) * &#x60;modified&#x60;: Timestamp when this job host summary was last modified. (datetime) * &#x60;job&#x60;:  (id) * &#x60;host&#x60;:  (id) * &#x60;host_name&#x60;:  (string) * &#x60;changed&#x60;:  (integer) * &#x60;dark&#x60;:  (integer) * &#x60;failures&#x60;:  (integer) * &#x60;ok&#x60;:  (integer) * &#x60;processed&#x60;:  (integer) * &#x60;skipped&#x60;:  (integer) * &#x60;failed&#x60;:  (boolean) * &#x60;ignored&#x60;:  (integer) * &#x60;rescued&#x60;:  (integer)    ## Sorting  To specify that job host summaries are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiJobsJobsJobHostSummariesListRequest
- */
-func (a *JobsApiService) JobsJobsJobHostSummariesList(ctx _context.Context, id string) ApiJobsJobsJobHostSummariesListRequest {
-	return ApiJobsJobsJobHostSummariesListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *JobsApiService) JobsJobsJobHostSummariesListExecute(r ApiJobsJobsJobHostSummariesListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *JobsJobsJobHostSummariesListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *JobsApiService) JobsJobsJobHostSummariesList(ctx _context.Context, id string, localVarOptionals *JobsJobsJobHostSummariesListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1322,26 +678,22 @@ func (a *JobsApiService) JobsJobsJobHostSummariesListExecute(r ApiJobsJobsJobHos
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "JobsApiService.JobsJobsJobHostSummariesList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/jobs/{id}/job_host_summaries/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/jobs/{id}/job_host_summaries/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1360,12 +712,12 @@ func (a *JobsApiService) JobsJobsJobHostSummariesListExecute(r ApiJobsJobsJobHos
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1387,124 +739,24 @@ func (a *JobsApiService) JobsJobsJobHostSummariesListExecute(r ApiJobsJobsJobHos
 	return localVarHTTPResponse, nil
 }
 
-type ApiJobsJobsLabelsListRequest struct {
-	ctx _context.Context
-	ApiService *JobsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiJobsJobsLabelsListRequest) Page(page int32) ApiJobsJobsLabelsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiJobsJobsLabelsListRequest) PageSize(pageSize int32) ApiJobsJobsLabelsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiJobsJobsLabelsListRequest) Search(search string) ApiJobsJobsLabelsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiJobsJobsLabelsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.JobsJobsLabelsListExecute(r)
+// JobsJobsLabelsListOpts Optional parameters for the method 'JobsJobsLabelsList'
+type JobsJobsLabelsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * JobsJobsLabelsList  List Labels for a Job
- * 
-Make a GET request to this resource to retrieve a list of
-labels associated with the selected
-job.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of labels
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more label records.  
-
-## Results
-
-Each label data structure includes the following fields:
-
-* `id`: Database ID for this label. (integer)
-* `type`: Data type for this label. (choice)
-* `url`: URL for this label. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this label was created. (datetime)
-* `modified`: Timestamp when this label was last modified. (datetime)
-* `name`: Name of this label. (string)
-* `organization`: Organization this label belongs to. (id)
-
-
-
-## Sorting
-
-To specify that labels are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+JobsJobsLabelsList  List Labels for a Job
+ Make a GET request to this resource to retrieve a list of labels associated with the selected job.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of labels found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more label records.    ## Results  Each label data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this label. (integer) * &#x60;type&#x60;: Data type for this label. (choice) * &#x60;url&#x60;: URL for this label. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this label was created. (datetime) * &#x60;modified&#x60;: Timestamp when this label was last modified. (datetime) * &#x60;name&#x60;: Name of this label. (string) * &#x60;organization&#x60;: Organization this label belongs to. (id)    ## Sorting  To specify that labels are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiJobsJobsLabelsListRequest
- */
-func (a *JobsApiService) JobsJobsLabelsList(ctx _context.Context, id string) ApiJobsJobsLabelsListRequest {
-	return ApiJobsJobsLabelsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *JobsApiService) JobsJobsLabelsListExecute(r ApiJobsJobsLabelsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *JobsJobsLabelsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *JobsApiService) JobsJobsLabelsList(ctx _context.Context, id string, localVarOptionals *JobsJobsLabelsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1513,26 +765,22 @@ func (a *JobsApiService) JobsJobsLabelsListExecute(r ApiJobsJobsLabelsListReques
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "JobsApiService.JobsJobsLabelsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/jobs/{id}/labels/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/jobs/{id}/labels/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1551,12 +799,12 @@ func (a *JobsApiService) JobsJobsLabelsListExecute(r ApiJobsJobsLabelsListReques
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1578,188 +826,23 @@ func (a *JobsApiService) JobsJobsLabelsListExecute(r ApiJobsJobsLabelsListReques
 	return localVarHTTPResponse, nil
 }
 
-type ApiJobsJobsListRequest struct {
-	ctx _context.Context
-	ApiService *JobsApiService
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiJobsJobsListRequest) Page(page int32) ApiJobsJobsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiJobsJobsListRequest) PageSize(pageSize int32) ApiJobsJobsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiJobsJobsListRequest) Search(search string) ApiJobsJobsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiJobsJobsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.JobsJobsListExecute(r)
+// JobsJobsListOpts Optional parameters for the method 'JobsJobsList'
+type JobsJobsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * JobsJobsList  List Jobs
- * 
-Make a GET request to this resource to retrieve the list of
-jobs.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of jobs
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more job records.  
-
-## Results
-
-Each job data structure includes the following fields:
-
-* `id`: Database ID for this job. (integer)
-* `type`: Data type for this job. (choice)
-* `url`: URL for this job. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this job was created. (datetime)
-* `modified`: Timestamp when this job was last modified. (datetime)
-* `name`: Name of this job. (string)
-* `description`: Optional description of this job. (string)
-* `unified_job_template`:  (id)
-* `launch_type`:  (choice)
-    - `manual`: Manual
-    - `relaunch`: Relaunch
-    - `callback`: Callback
-    - `scheduled`: Scheduled
-    - `dependency`: Dependency
-    - `workflow`: Workflow
-    - `webhook`: Webhook
-    - `sync`: Sync
-    - `scm`: SCM Update
-* `status`:  (choice)
-    - `new`: New
-    - `pending`: Pending
-    - `waiting`: Waiting
-    - `running`: Running
-    - `successful`: Successful
-    - `failed`: Failed
-    - `error`: Error
-    - `canceled`: Canceled
-* `failed`:  (boolean)
-* `started`: The date and time the job was queued for starting. (datetime)
-* `finished`: The date and time the job finished execution. (datetime)
-* `canceled_on`: The date and time when the cancel request was sent. (datetime)
-* `elapsed`: Elapsed time in seconds that the job ran. (decimal)
-* `job_explanation`: A status field to indicate the state of the job if it wasn&#39;t able to run and capture stdout (string)
-* `execution_node`: The node the job executed on. (string)
-* `controller_node`: The instance that managed the isolated execution environment. (string)
-* `job_type`:  (choice)
-    - `run`: Run
-    - `check`: Check
-    - `scan`: Scan
-* `inventory`:  (id)
-* `project`:  (id)
-* `playbook`:  (string)
-* `scm_branch`: Branch to use in job run. Project default used if blank. Only allowed if project allow_override field is set to true. (string)
-* `forks`:  (integer)
-* `limit`:  (string)
-* `verbosity`:  (choice)
-    - `0`: 0 (Normal)
-    - `1`: 1 (Verbose)
-    - `2`: 2 (More Verbose)
-    - `3`: 3 (Debug)
-    - `4`: 4 (Connection Debug)
-    - `5`: 5 (WinRM Debug)
-* `extra_vars`:  (json)
-* `job_tags`:  (string)
-* `force_handlers`:  (boolean)
-* `skip_tags`:  (string)
-* `start_at_task`:  (string)
-* `timeout`: The amount of time (in seconds) to run before the task is canceled. (integer)
-* `use_fact_cache`: If enabled, Tower will act as an Ansible Fact Cache Plugin; persisting facts at the end of a playbook run to the database and caching facts for use by Ansible. (boolean)
-* `organization`: The organization used to determine access to this unified job. (id)
-* `job_template`:  (id)
-* `passwords_needed_to_start`:  (field)
-* `allow_simultaneous`:  (boolean)
-* `artifacts`:  (json)
-* `scm_revision`: The SCM Revision from the Project used for this job, if available (string)
-* `instance_group`: The Instance group the job was run under (id)
-* `diff_mode`: If enabled, textual changes made to any templated files on the host are shown in the standard output (boolean)
-* `job_slice_number`: If part of a sliced job, the ID of the inventory slice operated on. If not part of sliced job, parameter is not used. (integer)
-* `job_slice_count`: If ran as part of sliced jobs, the total number of slices. If 1, job is not part of a sliced job. (integer)
-* `webhook_service`: Service that webhook requests will be accepted from (choice)
-    - `""`: ---------
-    - `github`: GitHub
-    - `gitlab`: GitLab
-* `webhook_credential`: Personal Access Token for posting back the status to the service API (id)
-* `webhook_guid`: Unique identifier of the event that triggered this webhook (string)
-
-
-
-## Sorting
-
-To specify that jobs are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+JobsJobsList  List Jobs
+ Make a GET request to this resource to retrieve the list of jobs.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of jobs found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more job records.    ## Results  Each job data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this job. (integer) * &#x60;type&#x60;: Data type for this job. (choice) * &#x60;url&#x60;: URL for this job. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this job was created. (datetime) * &#x60;modified&#x60;: Timestamp when this job was last modified. (datetime) * &#x60;name&#x60;: Name of this job. (string) * &#x60;description&#x60;: Optional description of this job. (string) * &#x60;unified_job_template&#x60;:  (id) * &#x60;launch_type&#x60;:  (choice)     - &#x60;manual&#x60;: Manual     - &#x60;relaunch&#x60;: Relaunch     - &#x60;callback&#x60;: Callback     - &#x60;scheduled&#x60;: Scheduled     - &#x60;dependency&#x60;: Dependency     - &#x60;workflow&#x60;: Workflow     - &#x60;webhook&#x60;: Webhook     - &#x60;sync&#x60;: Sync     - &#x60;scm&#x60;: SCM Update * &#x60;status&#x60;:  (choice)     - &#x60;new&#x60;: New     - &#x60;pending&#x60;: Pending     - &#x60;waiting&#x60;: Waiting     - &#x60;running&#x60;: Running     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed     - &#x60;error&#x60;: Error     - &#x60;canceled&#x60;: Canceled * &#x60;failed&#x60;:  (boolean) * &#x60;started&#x60;: The date and time the job was queued for starting. (datetime) * &#x60;finished&#x60;: The date and time the job finished execution. (datetime) * &#x60;canceled_on&#x60;: The date and time when the cancel request was sent. (datetime) * &#x60;elapsed&#x60;: Elapsed time in seconds that the job ran. (decimal) * &#x60;job_explanation&#x60;: A status field to indicate the state of the job if it wasn&amp;#39;t able to run and capture stdout (string) * &#x60;execution_node&#x60;: The node the job executed on. (string) * &#x60;controller_node&#x60;: The instance that managed the isolated execution environment. (string) * &#x60;job_type&#x60;:  (choice)     - &#x60;run&#x60;: Run     - &#x60;check&#x60;: Check     - &#x60;scan&#x60;: Scan * &#x60;inventory&#x60;:  (id) * &#x60;project&#x60;:  (id) * &#x60;playbook&#x60;:  (string) * &#x60;scm_branch&#x60;: Branch to use in job run. Project default used if blank. Only allowed if project allow_override field is set to true. (string) * &#x60;forks&#x60;:  (integer) * &#x60;limit&#x60;:  (string) * &#x60;verbosity&#x60;:  (choice)     - &#x60;0&#x60;: 0 (Normal)     - &#x60;1&#x60;: 1 (Verbose)     - &#x60;2&#x60;: 2 (More Verbose)     - &#x60;3&#x60;: 3 (Debug)     - &#x60;4&#x60;: 4 (Connection Debug)     - &#x60;5&#x60;: 5 (WinRM Debug) * &#x60;extra_vars&#x60;:  (json) * &#x60;job_tags&#x60;:  (string) * &#x60;force_handlers&#x60;:  (boolean) * &#x60;skip_tags&#x60;:  (string) * &#x60;start_at_task&#x60;:  (string) * &#x60;timeout&#x60;: The amount of time (in seconds) to run before the task is canceled. (integer) * &#x60;use_fact_cache&#x60;: If enabled, Tower will act as an Ansible Fact Cache Plugin; persisting facts at the end of a playbook run to the database and caching facts for use by Ansible. (boolean) * &#x60;organization&#x60;: The organization used to determine access to this unified job. (id) * &#x60;job_template&#x60;:  (id) * &#x60;passwords_needed_to_start&#x60;:  (field) * &#x60;allow_simultaneous&#x60;:  (boolean) * &#x60;artifacts&#x60;:  (json) * &#x60;scm_revision&#x60;: The SCM Revision from the Project used for this job, if available (string) * &#x60;instance_group&#x60;: The Instance group the job was run under (id) * &#x60;diff_mode&#x60;: If enabled, textual changes made to any templated files on the host are shown in the standard output (boolean) * &#x60;job_slice_number&#x60;: If part of a sliced job, the ID of the inventory slice operated on. If not part of sliced job, parameter is not used. (integer) * &#x60;job_slice_count&#x60;: If ran as part of sliced jobs, the total number of slices. If 1, job is not part of a sliced job. (integer) * &#x60;webhook_service&#x60;: Service that webhook requests will be accepted from (choice)     - &#x60;\&quot;\&quot;&#x60;: ---------     - &#x60;github&#x60;: GitHub     - &#x60;gitlab&#x60;: GitLab * &#x60;webhook_credential&#x60;: Personal Access Token for posting back the status to the service API (id) * &#x60;webhook_guid&#x60;: Unique identifier of the event that triggered this webhook (string)    ## Sorting  To specify that jobs are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiJobsJobsListRequest
- */
-func (a *JobsApiService) JobsJobsList(ctx _context.Context) ApiJobsJobsListRequest {
-	return ApiJobsJobsListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *JobsApiService) JobsJobsListExecute(r ApiJobsJobsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *JobsJobsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *JobsApiService) JobsJobsList(ctx _context.Context, localVarOptionals *JobsJobsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1768,25 +851,20 @@ func (a *JobsApiService) JobsJobsListExecute(r ApiJobsJobsListRequest) (*_nethtt
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "JobsApiService.JobsJobsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/jobs/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/jobs/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1805,12 +883,12 @@ func (a *JobsApiService) JobsJobsListExecute(r ApiJobsJobsListRequest) (*_nethtt
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -1832,142 +910,24 @@ func (a *JobsApiService) JobsJobsListExecute(r ApiJobsJobsListRequest) (*_nethtt
 	return localVarHTTPResponse, nil
 }
 
-type ApiJobsJobsNotificationsListRequest struct {
-	ctx _context.Context
-	ApiService *JobsApiService
-	id string
-	page *int32
-	pageSize *int32
-	search *string
-}
-
-func (r ApiJobsJobsNotificationsListRequest) Page(page int32) ApiJobsJobsNotificationsListRequest {
-	r.page = &page
-	return r
-}
-func (r ApiJobsJobsNotificationsListRequest) PageSize(pageSize int32) ApiJobsJobsNotificationsListRequest {
-	r.pageSize = &pageSize
-	return r
-}
-func (r ApiJobsJobsNotificationsListRequest) Search(search string) ApiJobsJobsNotificationsListRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiJobsJobsNotificationsListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.JobsJobsNotificationsListExecute(r)
+// JobsJobsNotificationsListOpts Optional parameters for the method 'JobsJobsNotificationsList'
+type JobsJobsNotificationsListOpts struct {
+    Page optional.Int32
+    PageSize optional.Int32
+    Search optional.String
 }
 
 /*
- * JobsJobsNotificationsList  List Notifications for a Job
- * 
-Make a GET request to this resource to retrieve a list of
-notifications associated with the selected
-job.
-
-The resulting data structure contains:
-
-    {
-        "count": 99,
-        "next": null,
-        "previous": null,
-        "results": [
-            ...
-        ]
-    }
-
-The `count` field indicates the total number of notifications
-found for the given query.  The `next` and `previous` fields provides links to
-additional results if there are more than will fit on a single page.  The
-`results` list contains zero or more notification records.  
-
-## Results
-
-Each notification data structure includes the following fields:
-
-* `id`: Database ID for this notification. (integer)
-* `type`: Data type for this notification. (choice)
-* `url`: URL for this notification. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this notification was created. (datetime)
-* `modified`: Timestamp when this notification was last modified. (datetime)
-* `notification_template`:  (id)
-* `error`:  (string)
-* `status`:  (choice)
-    - `pending`: Pending
-    - `successful`: Successful
-    - `failed`: Failed
-* `notifications_sent`:  (integer)
-* `notification_type`:  (choice)
-    - `email`: Email
-    - `grafana`: Grafana
-    - `irc`: IRC
-    - `mattermost`: Mattermost
-    - `pagerduty`: Pagerduty
-    - `rocketchat`: Rocket.Chat
-    - `slack`: Slack
-    - `twilio`: Twilio
-    - `webhook`: Webhook
-* `recipients`:  (string)
-* `subject`:  (string)
-* `body`: Notification body (json)
-
-
-
-## Sorting
-
-To specify that notifications are returned in a particular
-order, use the `order_by` query string parameter on the GET request.
-
-    ?order_by=name
-
-Prefix the field name with a dash `-` to sort in reverse:
-
-    ?order_by=-name
-
-Multiple sorting fields may be specified by separating the field names with a
-comma `,`:
-
-    ?order_by=name,some_other_field
-
-## Pagination
-
-Use the `page_size` query string parameter to change the number of results
-returned for each request.  Use the `page` query string parameter to retrieve
-a particular page of results.
-
-    ?page_size=100&page=2
-
-The `previous` and `next` links returned with the results will set these query
-string parameters automatically.
-
-## Searching
-
-Use the `search` query string parameter to perform a case-insensitive search
-within all designated text fields of a model.
-
-    ?search=findme
-
-(_Added in Ansible Tower 3.1.0_) Search across related fields:
-
-    ?related__search=findme
+JobsJobsNotificationsList  List Notifications for a Job
+ Make a GET request to this resource to retrieve a list of notifications associated with the selected job.  The resulting data structure contains:      {         \&quot;count\&quot;: 99,         \&quot;next\&quot;: null,         \&quot;previous\&quot;: null,         \&quot;results\&quot;: [             ...         ]     }  The &#x60;count&#x60; field indicates the total number of notifications found for the given query.  The &#x60;next&#x60; and &#x60;previous&#x60; fields provides links to additional results if there are more than will fit on a single page.  The &#x60;results&#x60; list contains zero or more notification records.    ## Results  Each notification data structure includes the following fields:  * &#x60;id&#x60;: Database ID for this notification. (integer) * &#x60;type&#x60;: Data type for this notification. (choice) * &#x60;url&#x60;: URL for this notification. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this notification was created. (datetime) * &#x60;modified&#x60;: Timestamp when this notification was last modified. (datetime) * &#x60;notification_template&#x60;:  (id) * &#x60;error&#x60;:  (string) * &#x60;status&#x60;:  (choice)     - &#x60;pending&#x60;: Pending     - &#x60;successful&#x60;: Successful     - &#x60;failed&#x60;: Failed * &#x60;notifications_sent&#x60;:  (integer) * &#x60;notification_type&#x60;:  (choice)     - &#x60;email&#x60;: Email     - &#x60;grafana&#x60;: Grafana     - &#x60;irc&#x60;: IRC     - &#x60;mattermost&#x60;: Mattermost     - &#x60;pagerduty&#x60;: Pagerduty     - &#x60;rocketchat&#x60;: Rocket.Chat     - &#x60;slack&#x60;: Slack     - &#x60;twilio&#x60;: Twilio     - &#x60;webhook&#x60;: Webhook * &#x60;recipients&#x60;:  (string) * &#x60;subject&#x60;:  (string) * &#x60;body&#x60;: Notification body (json)    ## Sorting  To specify that notifications are returned in a particular order, use the &#x60;order_by&#x60; query string parameter on the GET request.      ?order_by&#x3D;name  Prefix the field name with a dash &#x60;-&#x60; to sort in reverse:      ?order_by&#x3D;-name  Multiple sorting fields may be specified by separating the field names with a comma &#x60;,&#x60;:      ?order_by&#x3D;name,some_other_field  ## Pagination  Use the &#x60;page_size&#x60; query string parameter to change the number of results returned for each request.  Use the &#x60;page&#x60; query string parameter to retrieve a particular page of results.      ?page_size&#x3D;100&amp;page&#x3D;2  The &#x60;previous&#x60; and &#x60;next&#x60; links returned with the results will set these query string parameters automatically.  ## Searching  Use the &#x60;search&#x60; query string parameter to perform a case-insensitive search within all designated text fields of a model.      ?search&#x3D;findme  (_Added in Ansible Tower 3.1.0_) Search across related fields:      ?related__search&#x3D;findme
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiJobsJobsNotificationsListRequest
- */
-func (a *JobsApiService) JobsJobsNotificationsList(ctx _context.Context, id string) ApiJobsJobsNotificationsListRequest {
-	return ApiJobsJobsNotificationsListRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *JobsApiService) JobsJobsNotificationsListExecute(r ApiJobsJobsNotificationsListRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *JobsJobsNotificationsListOpts - Optional Parameters:
+ * @param "Page" (optional.Int32) -  A page number within the paginated result set.
+ * @param "PageSize" (optional.Int32) -  Number of results to return per page.
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *JobsApiService) JobsJobsNotificationsList(ctx _context.Context, id string, localVarOptionals *JobsJobsNotificationsListOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -1976,26 +936,22 @@ func (a *JobsApiService) JobsJobsNotificationsListExecute(r ApiJobsJobsNotificat
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "JobsApiService.JobsJobsNotificationsList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/jobs/{id}/notifications/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/jobs/{id}/notifications/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.page != nil {
-		localVarQueryParams.Add("page", parameterToString(*r.page, ""))
+	if localVarOptionals != nil && localVarOptionals.Page.IsSet() {
+		localVarQueryParams.Add("page", parameterToString(localVarOptionals.Page.Value(), ""))
 	}
-	if r.pageSize != nil {
-		localVarQueryParams.Add("page_size", parameterToString(*r.pageSize, ""))
+	if localVarOptionals != nil && localVarOptionals.PageSize.IsSet() {
+		localVarQueryParams.Add("page_size", parameterToString(localVarOptionals.PageSize.Value(), ""))
 	}
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2014,12 +970,12 @@ func (a *JobsApiService) JobsJobsNotificationsListExecute(r ApiJobsJobsNotificat
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2041,63 +997,20 @@ func (a *JobsApiService) JobsJobsNotificationsListExecute(r ApiJobsJobsNotificat
 	return localVarHTTPResponse, nil
 }
 
-type ApiJobsJobsRead0Request struct {
-	ctx _context.Context
-	ApiService *JobsApiService
-	id string
-	search *string
-}
-
-func (r ApiJobsJobsRead0Request) Search(search string) ApiJobsJobsRead0Request {
-	r.search = &search
-	return r
-}
-
-func (r ApiJobsJobsRead0Request) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.JobsJobsRead0Execute(r)
+// JobsJobsRead0Opts Optional parameters for the method 'JobsJobsRead0'
+type JobsJobsRead0Opts struct {
+    Search optional.String
 }
 
 /*
- * JobsJobsRead0  Retrieve a Job Host Summary
- * 
-Make GET request to this resource to retrieve a single job host summary
-record containing the following fields:
-
-* `id`: Database ID for this job host summary. (integer)
-* `type`: Data type for this job host summary. (choice)
-* `url`: URL for this job host summary. (string)
-* `related`: Data structure with URLs of related resources. (object)
-* `summary_fields`: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object)
-* `created`: Timestamp when this job host summary was created. (datetime)
-* `modified`: Timestamp when this job host summary was last modified. (datetime)
-* `job`:  (id)
-* `host`:  (id)
-* `host_name`:  (string)
-* `changed`:  (integer)
-* `dark`:  (integer)
-* `failures`:  (integer)
-* `ok`:  (integer)
-* `processed`:  (integer)
-* `skipped`:  (integer)
-* `failed`:  (boolean)
-* `ignored`:  (integer)
-* `rescued`:  (integer)
+JobsJobsRead0  Retrieve a Job Host Summary
+ Make GET request to this resource to retrieve a single job host summary record containing the following fields:  * &#x60;id&#x60;: Database ID for this job host summary. (integer) * &#x60;type&#x60;: Data type for this job host summary. (choice) * &#x60;url&#x60;: URL for this job host summary. (string) * &#x60;related&#x60;: Data structure with URLs of related resources. (object) * &#x60;summary_fields&#x60;: Data structure with name/description for related resources.  The output for some objects may be limited for performance reasons. (object) * &#x60;created&#x60;: Timestamp when this job host summary was created. (datetime) * &#x60;modified&#x60;: Timestamp when this job host summary was last modified. (datetime) * &#x60;job&#x60;:  (id) * &#x60;host&#x60;:  (id) * &#x60;host_name&#x60;:  (string) * &#x60;changed&#x60;:  (integer) * &#x60;dark&#x60;:  (integer) * &#x60;failures&#x60;:  (integer) * &#x60;ok&#x60;:  (integer) * &#x60;processed&#x60;:  (integer) * &#x60;skipped&#x60;:  (integer) * &#x60;failed&#x60;:  (boolean) * &#x60;ignored&#x60;:  (integer) * &#x60;rescued&#x60;:  (integer)
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiJobsJobsRead0Request
- */
-func (a *JobsApiService) JobsJobsRead0(ctx _context.Context, id string) ApiJobsJobsRead0Request {
-	return ApiJobsJobsRead0Request{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *JobsApiService) JobsJobsRead0Execute(r ApiJobsJobsRead0Request) (*_nethttp.Response, error) {
+ * @param optional nil or *JobsJobsRead0Opts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *JobsApiService) JobsJobsRead0(ctx _context.Context, id string, localVarOptionals *JobsJobsRead0Opts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2106,20 +1019,16 @@ func (a *JobsApiService) JobsJobsRead0Execute(r ApiJobsJobsRead0Request) (*_neth
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "JobsApiService.JobsJobsRead0")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/jobs/{id}/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/jobs/{id}/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2138,12 +1047,12 @@ func (a *JobsApiService) JobsJobsRead0Execute(r ApiJobsJobsRead0Request) (*_neth
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2165,42 +1074,20 @@ func (a *JobsApiService) JobsJobsRead0Execute(r ApiJobsJobsRead0Request) (*_neth
 	return localVarHTTPResponse, nil
 }
 
-type ApiJobsJobsRelaunchCreateRequest struct {
-	ctx _context.Context
-	ApiService *JobsApiService
-	id string
-	data *map[string]interface{}
-}
-
-func (r ApiJobsJobsRelaunchCreateRequest) Data(data map[string]interface{}) ApiJobsJobsRelaunchCreateRequest {
-	r.data = &data
-	return r
-}
-
-func (r ApiJobsJobsRelaunchCreateRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.JobsJobsRelaunchCreateExecute(r)
+// JobsJobsRelaunchCreateOpts Optional parameters for the method 'JobsJobsRelaunchCreate'
+type JobsJobsRelaunchCreateOpts struct {
+    Data optional.Map[string]interface{}
 }
 
 /*
- * JobsJobsRelaunchCreate Relaunch a Job
- * 
-Make a POST request to this resource to launch a job. If any passwords or variables are required then they should be passed in via POST data.   In order to determine what values are required in order to launch a job based on this job template you may make a GET request to this endpoint.
+JobsJobsRelaunchCreate Relaunch a Job
+ Make a POST request to this resource to launch a job. If any passwords or variables are required then they should be passed in via POST data.   In order to determine what values are required in order to launch a job based on this job template you may make a GET request to this endpoint.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiJobsJobsRelaunchCreateRequest
- */
-func (a *JobsApiService) JobsJobsRelaunchCreate(ctx _context.Context, id string) ApiJobsJobsRelaunchCreateRequest {
-	return ApiJobsJobsRelaunchCreateRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *JobsApiService) JobsJobsRelaunchCreateExecute(r ApiJobsJobsRelaunchCreateRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *JobsJobsRelaunchCreateOpts - Optional Parameters:
+ * @param "Data" (optional.Map[string]interface{}) - 
+*/
+func (a *JobsApiService) JobsJobsRelaunchCreate(ctx _context.Context, id string, localVarOptionals *JobsJobsRelaunchCreateOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
@@ -2209,13 +1096,9 @@ func (a *JobsApiService) JobsJobsRelaunchCreateExecute(r ApiJobsJobsRelaunchCrea
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "JobsApiService.JobsJobsRelaunchCreate")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/jobs/{id}/relaunch/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/jobs/{id}/relaunch/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -2239,13 +1122,16 @@ func (a *JobsApiService) JobsJobsRelaunchCreateExecute(r ApiJobsJobsRelaunchCrea
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.data
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if localVarOptionals != nil && localVarOptionals.Data.IsSet() {
+		localVarPostBody = localVarOptionals.Data.Value()
+	}
+
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2267,42 +1153,20 @@ func (a *JobsApiService) JobsJobsRelaunchCreateExecute(r ApiJobsJobsRelaunchCrea
 	return localVarHTTPResponse, nil
 }
 
-type ApiJobsJobsRelaunchReadRequest struct {
-	ctx _context.Context
-	ApiService *JobsApiService
-	id string
-	search *string
-}
-
-func (r ApiJobsJobsRelaunchReadRequest) Search(search string) ApiJobsJobsRelaunchReadRequest {
-	r.search = &search
-	return r
-}
-
-func (r ApiJobsJobsRelaunchReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.JobsJobsRelaunchReadExecute(r)
+// JobsJobsRelaunchReadOpts Optional parameters for the method 'JobsJobsRelaunchRead'
+type JobsJobsRelaunchReadOpts struct {
+    Search optional.String
 }
 
 /*
- * JobsJobsRelaunchRead Relaunch a Job
- * 
-Make a POST request to this resource to launch a job. If any passwords or variables are required then they should be passed in via POST data.   In order to determine what values are required in order to launch a job based on this job template you may make a GET request to this endpoint.
+JobsJobsRelaunchRead Relaunch a Job
+ Make a POST request to this resource to launch a job. If any passwords or variables are required then they should be passed in via POST data.   In order to determine what values are required in order to launch a job based on this job template you may make a GET request to this endpoint.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiJobsJobsRelaunchReadRequest
- */
-func (a *JobsApiService) JobsJobsRelaunchRead(ctx _context.Context, id string) ApiJobsJobsRelaunchReadRequest {
-	return ApiJobsJobsRelaunchReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *JobsApiService) JobsJobsRelaunchReadExecute(r ApiJobsJobsRelaunchReadRequest) (*_nethttp.Response, error) {
+ * @param optional nil or *JobsJobsRelaunchReadOpts - Optional Parameters:
+ * @param "Search" (optional.String) -  A search term.
+*/
+func (a *JobsApiService) JobsJobsRelaunchRead(ctx _context.Context, id string, localVarOptionals *JobsJobsRelaunchReadOpts) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2311,20 +1175,16 @@ func (a *JobsApiService) JobsJobsRelaunchReadExecute(r ApiJobsJobsRelaunchReadRe
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "JobsApiService.JobsJobsRelaunchRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/jobs/{id}/relaunch/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/jobs/{id}/relaunch/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
-	if r.search != nil {
-		localVarQueryParams.Add("search", parameterToString(*r.search, ""))
+	if localVarOptionals != nil && localVarOptionals.Search.IsSet() {
+		localVarQueryParams.Add("search", parameterToString(localVarOptionals.Search.Value(), ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2343,12 +1203,12 @@ func (a *JobsApiService) JobsJobsRelaunchReadExecute(r ApiJobsJobsRelaunchReadRe
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -2370,61 +1230,13 @@ func (a *JobsApiService) JobsJobsRelaunchReadExecute(r ApiJobsJobsRelaunchReadRe
 	return localVarHTTPResponse, nil
 }
 
-type ApiJobsJobsStdoutReadRequest struct {
-	ctx _context.Context
-	ApiService *JobsApiService
-	id string
-}
-
-
-func (r ApiJobsJobsStdoutReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.JobsJobsStdoutReadExecute(r)
-}
-
 /*
- * JobsJobsStdoutRead  Retrieve Job Stdout
- * 
-Make GET request to this resource to retrieve the stdout from running this
-job.
-
-## Format
-
-Use the `format` query string parameter to specify the output format.
-
-* Browsable API: `?format=api`
-* HTML: `?format=html`
-* Plain Text: `?format=txt`
-* Plain Text with ANSI color codes: `?format=ansi`
-* JSON structure: `?format=json`
-* Downloaded Plain Text: `?format=txt_download`
-* Downloaded Plain Text with ANSI color codes: `?format=ansi_download`
-
-(_New in Ansible Tower 2.0.0_) When using the Browsable API, HTML and JSON
-formats, the `start_line` and `end_line` query string parameters can be used
-to specify a range of line numbers to retrieve.
-
-Use `dark=1` or `dark=0` as a query string parameter to force or disable a
-dark background.
-
-Files over 1.0 MB (configurable)
-will not display in the browser. Use the `txt_download` or `ansi_download`
-formats to download the file directly to view it.
+JobsJobsStdoutRead  Retrieve Job Stdout
+ Make GET request to this resource to retrieve the stdout from running this job.  ## Format  Use the &#x60;format&#x60; query string parameter to specify the output format.  * Browsable API: &#x60;?format&#x3D;api&#x60; * HTML: &#x60;?format&#x3D;html&#x60; * Plain Text: &#x60;?format&#x3D;txt&#x60; * Plain Text with ANSI color codes: &#x60;?format&#x3D;ansi&#x60; * JSON structure: &#x60;?format&#x3D;json&#x60; * Downloaded Plain Text: &#x60;?format&#x3D;txt_download&#x60; * Downloaded Plain Text with ANSI color codes: &#x60;?format&#x3D;ansi_download&#x60;  (_New in Ansible Tower 2.0.0_) When using the Browsable API, HTML and JSON formats, the &#x60;start_line&#x60; and &#x60;end_line&#x60; query string parameters can be used to specify a range of line numbers to retrieve.  Use &#x60;dark&#x3D;1&#x60; or &#x60;dark&#x3D;0&#x60; as a query string parameter to force or disable a dark background.  Files over 1.0 MB (configurable) will not display in the browser. Use the &#x60;txt_download&#x60; or &#x60;ansi_download&#x60; formats to download the file directly to view it.
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param id
- * @return ApiJobsJobsStdoutReadRequest
- */
-func (a *JobsApiService) JobsJobsStdoutRead(ctx _context.Context, id string) ApiJobsJobsStdoutReadRequest {
-	return ApiJobsJobsStdoutReadRequest{
-		ApiService: a,
-		ctx: ctx,
-		id: id,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *JobsApiService) JobsJobsStdoutReadExecute(r ApiJobsJobsStdoutReadRequest) (*_nethttp.Response, error) {
+*/
+func (a *JobsApiService) JobsJobsStdoutRead(ctx _context.Context, id string) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -2433,13 +1245,9 @@ func (a *JobsApiService) JobsJobsStdoutReadExecute(r ApiJobsJobsStdoutReadReques
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "JobsApiService.JobsJobsStdoutRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/jobs/{id}/stdout/"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.PathEscape(parameterToString(r.id, "")) , -1)
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/jobs/{id}/stdout/"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", _neturl.QueryEscape(parameterToString(id, "")) , -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -2462,12 +1270,12 @@ func (a *JobsApiService) JobsJobsStdoutReadExecute(r ApiJobsJobsStdoutReadReques
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}

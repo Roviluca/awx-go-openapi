@@ -24,32 +24,11 @@ var (
 // VersioningApiService VersioningApi service
 type VersioningApiService service
 
-type ApiVersioningListRequest struct {
-	ctx _context.Context
-	ApiService *VersioningApiService
-}
-
-
-func (r ApiVersioningListRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.VersioningListExecute(r)
-}
-
 /*
- * VersioningList List supported API versions
+VersioningList List supported API versions
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiVersioningListRequest
- */
-func (a *VersioningApiService) VersioningList(ctx _context.Context) ApiVersioningListRequest {
-	return ApiVersioningListRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *VersioningApiService) VersioningListExecute(r ApiVersioningListRequest) (*_nethttp.Response, error) {
+*/
+func (a *VersioningApiService) VersioningList(ctx _context.Context) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -58,13 +37,8 @@ func (a *VersioningApiService) VersioningListExecute(r ApiVersioningListRequest)
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "VersioningApiService.VersioningList")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -86,12 +60,12 @@ func (a *VersioningApiService) VersioningListExecute(r ApiVersioningListRequest)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
@@ -113,32 +87,11 @@ func (a *VersioningApiService) VersioningListExecute(r ApiVersioningListRequest)
 	return localVarHTTPResponse, nil
 }
 
-type ApiVersioningReadRequest struct {
-	ctx _context.Context
-	ApiService *VersioningApiService
-}
-
-
-func (r ApiVersioningReadRequest) Execute() (*_nethttp.Response, error) {
-	return r.ApiService.VersioningReadExecute(r)
-}
-
 /*
- * VersioningRead List top level resources
+VersioningRead List top level resources
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @return ApiVersioningReadRequest
- */
-func (a *VersioningApiService) VersioningRead(ctx _context.Context) ApiVersioningReadRequest {
-	return ApiVersioningReadRequest{
-		ApiService: a,
-		ctx: ctx,
-	}
-}
-
-/*
- * Execute executes the request
- */
-func (a *VersioningApiService) VersioningReadExecute(r ApiVersioningReadRequest) (*_nethttp.Response, error) {
+*/
+func (a *VersioningApiService) VersioningRead(ctx _context.Context) (*_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
@@ -147,13 +100,8 @@ func (a *VersioningApiService) VersioningReadExecute(r ApiVersioningReadRequest)
 		localVarFileBytes    []byte
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "VersioningApiService.VersioningRead")
-	if err != nil {
-		return nil, GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/api/v2/"
-
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/api/v2/"
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
@@ -175,12 +123,12 @@ func (a *VersioningApiService) VersioningReadExecute(r ApiVersioningReadRequest)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	localVarHTTPResponse, err := a.client.callAPI(req)
+	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
 		return localVarHTTPResponse, err
 	}
